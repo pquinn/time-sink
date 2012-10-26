@@ -6,3 +6,4 @@ obj/
 *.Debug.cachefile
 *.ccgame
 *.dll
+*.user
