@@ -1,8 +1,8 @@
 *.swp
 *.suo
-**/bin/*
-**/obj/*
+bin/
+obj/
 *.chachefile
 *.Debug.cachefile
 *.ccgame
-!*.dll
+*.dll
