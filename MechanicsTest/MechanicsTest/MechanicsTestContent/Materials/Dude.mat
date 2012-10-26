@@ -4,7 +4,7 @@ AddressModeU: Wrap
 AddressModeV: Wrap
 AddressModeW: Wrap
 DiffuseColor: 0.588 0.588 0.588
-DiffuseMap: "..\..\MechanicsTestContent\Textures\Dude.png"
+DiffuseMap: "..\Textures\giroux.png"
 DoubleSided: False
 EmissiveColor: 0 0 0
 EmissiveMap: ""
