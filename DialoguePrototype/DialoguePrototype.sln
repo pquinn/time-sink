@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialoguePrototype", "DialoguePrototype\DialoguePrototype\DialoguePrototype.csproj", "{97C3B115-ED89-4449-B76C-D4B7E3A8F581}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "DialoguePrototypeContent", "DialoguePrototype\DialoguePrototypeContent\DialoguePrototypeContent.contentproj", "{95448387-BDB2-43AA-A561-124A06DDA8F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97C3B115-ED89-4449-B76C-D4B7E3A8F581}.Debug|x86.ActiveCfg = Debug|x86
+		{97C3B115-ED89-4449-B76C-D4B7E3A8F581}.Debug|x86.Build.0 = Debug|x86
+		{97C3B115-ED89-4449-B76C-D4B7E3A8F581}.Release|x86.ActiveCfg = Release|x86
+		{97C3B115-ED89-4449-B76C-D4B7E3A8F581}.Release|x86.Build.0 = Release|x86
+		{95448387-BDB2-43AA-A561-124A06DDA8F8}.Debug|x86.ActiveCfg = Debug|x86
+		{95448387-BDB2-43AA-A561-124A06DDA8F8}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
