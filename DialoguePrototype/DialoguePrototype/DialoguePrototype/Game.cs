@@ -33,7 +33,9 @@ using Microsoft.Xna.Framework.Input.Touch;
 using SynapseGaming.LightingSystem.Core;
 using SynapseGaming.LightingSystem.Collision;
 using SynapseGaming.LightingSystem.Editor;
-using SynapseGaming.LightingSystem.Rendering;
+using SynapseGaming.LightingSystem.Rendering; 
+
+using GameStateManagement;
 #endregion
 
 
@@ -44,6 +46,9 @@ namespace DialoguePrototype
     /// </summary>
     public class StarterGame : Microsoft.Xna.Framework.Game
     {
+
+        #region Fields
+
         // The SunBurn lighting system.
         SunBurnCoreSystem sunBurnCoreSystem;
         FrameBuffers frameBuffers;
@@ -56,10 +61,18 @@ namespace DialoguePrototype
         SceneEnvironment environment;
 
         // Default XNA members.
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
 
         // Controller related.
         const float moveScale = 100.0f;
+
+        // Screen Manager
+        ScreenManager screenManager;
+        ScreenFactory screenFactory;
+
+        #endregion
+
+        public static StarterGame Instance;
 
         public StarterGame()
         {
@@ -84,7 +97,7 @@ namespace DialoguePrototype
             // container where calls to manager methods on the SceneInterface (such as BeginFrameRendering,
             // Unload, ...) are automatically called on all contained managers.
             //
-            // This design allows managers to be plugged-in like modular components and for managers
+            // This design allows managers to be plugged-in like modular components and for managers 
             // to easily be added, removed, or replaced with custom implementations.
             //
             sceneInterface = new SceneInterface();
@@ -100,6 +113,18 @@ namespace DialoguePrototype
             SystemConsole.AddMessage("Welcome to the SunBurn Engine.", 4);
             SystemConsole.AddMessage("Use an Xbox controller or the W, A, S, D keys to navigate the scene.", 8);
             SystemConsole.AddMessage("Press F11 to open the SunBurn Editor.", 12);
+
+            // Create the screen factory and add it to the Services
+            screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
+            //Create a new instance of the Screen Manager
+            screenManager = new ScreenManager(this);
+            Components.Add(screenManager);
+
+            AddInitialScreens();
+
+            Instance = this;
         }
 
         /// <summary>
@@ -145,6 +170,14 @@ namespace DialoguePrototype
             environment = Content.Load<SceneEnvironment>("Environment/Environment");
 
             // TODO: use this.Content to load your game content here
+        }
+
+
+        private void AddInitialScreens()
+        {
+            // Activate the first screens.
+            screenManager.AddScreen(new BackgroundScreen(), null);
+            screenManager.AddScreen(new MainMenuScreen(), null);
         }
 
         /// <summary>
