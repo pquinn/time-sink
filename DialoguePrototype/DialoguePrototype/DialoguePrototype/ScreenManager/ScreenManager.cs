@@ -268,7 +268,7 @@ namespace GameStateManagement
         /// <summary>
         /// Prints a list of all the screens, for debugging.
         /// </summary>
-        void TraceScreens()
+        public void TraceScreens()
         {
             List<string> screenNames = new List<string>();
 
@@ -299,6 +299,11 @@ namespace GameStateManagement
         #region Public Methods
 
 
+        public void AddScreen(GameScreen screen)
+        {
+            AddScreen(screen, new PlayerIndex());
+        }
+
         /// <summary>
         /// Adds a new screen to the screen manager.
         /// </summary>
@@ -315,9 +320,6 @@ namespace GameStateManagement
             }
 
             screens.Add(screen);
-
-            // update the TouchPanel to respond to gestures this screen is interested in
-            TouchPanel.EnabledGestures = screen.EnabledGestures;
         }
 
 
