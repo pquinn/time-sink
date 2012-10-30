@@ -49,7 +49,7 @@ namespace DialoguePrototype
         /// usage text prompt.
         /// </summary>
         public MessageBoxScreen(string message)
-            : this(message, true)
+            : this(message, true, false)
         { }
 
 
@@ -57,8 +57,9 @@ namespace DialoguePrototype
         /// Constructor lets the caller specify whether to include the standard
         /// "A=ok, B=cancel" usage text prompt.
         /// </summary>
-        public MessageBoxScreen(string message, bool includeUsageText)
+        public MessageBoxScreen(string message, bool includeUsageText, bool includePromptAdvance)
         {
+            const string promptAdvance = "\n{Enter}...";
             const string usageText = "\nA button, Space, Enter = ok" +
                                      "\nB button, Esc = cancel"; 
             
@@ -66,6 +67,9 @@ namespace DialoguePrototype
                 this.message = message + usageText;
             else
                 this.message = message;
+
+            if (includePromptAdvance)
+                this.message = message + promptAdvance;
 
             IsPopup = true;
 

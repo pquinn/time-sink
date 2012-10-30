@@ -33,7 +33,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using SynapseGaming.LightingSystem.Core;
 using SynapseGaming.LightingSystem.Collision;
 using SynapseGaming.LightingSystem.Editor;
-using SynapseGaming.LightingSystem.Rendering; 
+using SynapseGaming.LightingSystem.Rendering;
 
 using GameStateManagement;
 #endregion
@@ -46,25 +46,10 @@ namespace DialoguePrototype
     /// </summary>
     public class StarterGame : Microsoft.Xna.Framework.Game
     {
-
         #region Fields
-
-        // The SunBurn lighting system.
-        SunBurnCoreSystem sunBurnCoreSystem;
-        FrameBuffers frameBuffers;
-        SplashScreenGameComponent splashScreenGameComponent;
-
-        // Scene related members.
-        SceneState sceneState;
-        SceneInterface sceneInterface;
-        ContentRepository contentRepository;
-        SceneEnvironment environment;
 
         // Default XNA members.
         public GraphicsDeviceManager graphics;
-
-        // Controller related.
-        const float moveScale = 100.0f;
 
         // Screen Manager
         ScreenManager screenManager;
@@ -73,6 +58,8 @@ namespace DialoguePrototype
         #endregion
 
         public static StarterGame Instance;
+
+        #region Initialization Methods
 
         public StarterGame()
         {
@@ -83,36 +70,8 @@ namespace DialoguePrototype
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
-
-            // Required for lighting system.
-            splashScreenGameComponent = new SplashScreenGameComponent(this);
-            Components.Add(splashScreenGameComponent);
-
-            // Create the lighting system.
-            sunBurnCoreSystem = new SunBurnCoreSystem(Services, Content);
-            sceneState = new SceneState();
-
-            // Create the scene interface. Acts as a service provider containing all scene managers
-            // and returning them by type (including custom managers). Also acts as a component
-            // container where calls to manager methods on the SceneInterface (such as BeginFrameRendering,
-            // Unload, ...) are automatically called on all contained managers.
-            //
-            // This design allows managers to be plugged-in like modular components and for managers 
-            // to easily be added, removed, or replaced with custom implementations.
-            //
-            sceneInterface = new SceneInterface();
-            sceneInterface.CreateDefaultManagers(RenderingSystemType.Forward, CollisionSystemType.Physics, true);
-
-            // Create the frame buffers used for rendering (sized to the backbuffer) and
-            // assign them to the ResourceManager so we don't have to worry about cleanup.
-            frameBuffers = new FrameBuffers(DetailPreference.High, DetailPreference.Medium);
-            sceneInterface.ResourceManager.AssignOwnership(frameBuffers);
-
-            // Post console messages letting the user know how to open the SunBurn Editor.
-            sceneInterface.ShowConsole = true;
-            SystemConsole.AddMessage("Welcome to the SunBurn Engine.", 4);
-            SystemConsole.AddMessage("Use an Xbox controller or the W, A, S, D keys to navigate the scene.", 8);
-            SystemConsole.AddMessage("Press F11 to open the SunBurn Editor.", 12);
+            // Frame rate is 30 fps by default for Windows Phone.
+            TargetElapsedTime = TimeSpan.FromTicks(333333);
 
             // Create the screen factory and add it to the Services
             screenFactory = new ScreenFactory();
@@ -122,9 +81,50 @@ namespace DialoguePrototype
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
-            AddInitialScreens();
-
             Instance = this;
+
+#if WINDOWS_PHONE
+            graphics.IsFullScreen = true;
+
+            // Choose whether you want a landscape or portait game by using one of the two helper functions.
+            InitializeLandscapeGraphics();
+            // InitializePortraitGraphics();
+#else
+            graphics.IsFullScreen = false;
+#endif
+
+#if WINDOWS_PHONE
+            // Hook events on the PhoneApplicationService so we're notified of the application's life cycle
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Launching +=
+                new EventHandler<Microsoft.Phone.Shell.LaunchingEventArgs>(GameLaunching);
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Activated +=
+                new EventHandler<Microsoft.Phone.Shell.ActivatedEventArgs>(GameActivated);
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Deactivated +=
+                new EventHandler<Microsoft.Phone.Shell.DeactivatedEventArgs>(GameDeactivated);
+#else
+            // On Windows and Xbox we just add the initial screens
+            AddInitialScreens();
+#endif
+
+            // AudioManager.Initialize(this);
+
+
+            // Required for lighting system.
+            screenManager.splashScreenGameComponent = new SplashScreenGameComponent(this);
+            Components.Add(screenManager.splashScreenGameComponent);
+        }
+
+        private void AddInitialScreens()
+        {
+            // Activate the first screens.
+            screenManager.AddScreen(new BackgroundScreen(), null);
+
+            // We have different menus for Windows Phone to take advantage of the touch interface
+#if WINDOWS_PHONE
+            screenManager.AddScreen(new PhoneMainMenuScreen(), null);
+#else
+            screenManager.AddScreen(new MainMenuScreen(), null);
+#endif
         }
 
         /// <summary>
@@ -139,62 +139,50 @@ namespace DialoguePrototype
 
             base.Initialize();
         }
+        #endregion
 
+#if WINDOWS_PHONE
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// Helper method to the initialize the game to be a portrait game.
         /// </summary>
-        protected override void LoadContent()
+        private void InitializePortraitGraphics()
         {
-            // Load the content repository, which stores all assets imported via the editor.
-            // This must be loaded before any other assets.
-            contentRepository = Content.Load<ContentRepository>("Content");
-
-            // Add objects and lights to the ObjectManager and LightManager. They accept
-            // objects and lights in several forms:
-            //
-            //   -As scenes containing both dynamic (movable) and static objects and lights.
-            //
-            //   -As SceneObjects and lights, which can be dynamic or static, and
-            //    (in the case of objects) are created from XNA Models or custom vertex / index buffers.
-            //
-            //   -As XNA Models, which can only be static.
-            //
-
-            // Load the scene and add it to the managers.
-            Scene scene = Content.Load<Scene>("Scenes/Scene");
-
-            sceneInterface.Submit(scene);
-
-            // Load the scene environment settings.
-            environment = Content.Load<SceneEnvironment>("Environment/Environment");
-
-            // TODO: use this.Content to load your game content here
-        }
-
-
-        private void AddInitialScreens()
-        {
-            // Activate the first screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
+            graphics.PreferredBackBufferWidth = 480;
+            graphics.PreferredBackBufferHeight = 800;
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
+        /// Helper method to initialize the game to be a landscape game.
         /// </summary>
-        protected override void UnloadContent()
+        private void InitializeLandscapeGraphics()
         {
-            // TODO: Unload any non ContentManager content here
-
-            // Cleanup any used resources.
-            sceneInterface.Unload();
-            sunBurnCoreSystem.Unload();
-
-            environment = null;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 480;
         }
 
+        void GameLaunching(object sender, Microsoft.Phone.Shell.LaunchingEventArgs e)
+        {
+            AddInitialScreens();
+        }
+
+        void GameActivated(object sender, Microsoft.Phone.Shell.ActivatedEventArgs e)
+        {
+            // Try to deserialize the screen manager
+            if (!screenManager.Activate(e.IsApplicationInstancePreserved))
+            {
+                // If the screen manager fails to deserialize, add the initial screens
+                AddInitialScreens();
+            }
+        }
+
+        void GameDeactivated(object sender, Microsoft.Phone.Shell.DeactivatedEventArgs e)
+        {
+            // Serialize the screen manager when the game deactivated
+            screenManager.Deactivate();
+        }
+#endif
+
+        #region Update Methods
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -202,28 +190,13 @@ namespace DialoguePrototype
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Enables game input / control when not editing the scene (the editor provides its own control).
-            if (!sceneInterface.Editor.EditorAttached)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    this.Exit();
-
-                // Calculate the view.
-                view = ProcessCameraInput(gameTime);
-            }
-
-            // Calculate the projection.
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70.0f),
-                GraphicsDevice.Viewport.AspectRatio, 0.1f, environment.VisibleDistance);
-
-            // Update all contained managers.
-            sceneInterface.Update(gameTime);
-
             // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
+        #endregion
 
+        #region Draw Methods
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -237,187 +210,8 @@ namespace DialoguePrototype
                 return;
             }
 
-
-            // Render the scene.
-            sceneState.BeginFrameRendering(view, projection, gameTime, environment, frameBuffers, true);
-            sceneInterface.BeginFrameRendering(sceneState);
-
-            // Add custom rendering that should occur before the scene is rendered.
-
-            sceneInterface.RenderManager.Render();
-
-            // Add custom rendering that should occur after the scene is rendered.
-
-            sceneInterface.EndFrameRendering();
-            sceneState.EndFrameRendering();
-
             base.Draw(gameTime);
         }
-
-
-        #region Controller code
-
-        // Scene/camera supporting members.
-        bool firstMouseSample = true;
-        Vector3 viewPosition = new Vector3(86.5f, 11.2f, 57.0f);
-        Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
-        Matrix view = Matrix.Identity;
-        Matrix projection = Matrix.Identity;
-
-#if WINDOWS_PHONE
-        /// <summary>
-        /// Handles controller input.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public Matrix ProcessCameraInput(GameTime gameTime)
-        {
-            if (IsActive)
-            {
-                TouchCollection touches = TouchPanel.GetState();
-                Vector3 move = new Vector3();
-
-                Viewport viewport = GraphicsDevice.Viewport;
-                int hotspotheight = viewport.Height / 5;
-                int hotspotbottom = viewport.Height - hotspotheight;
-
-                for (int t = 0; t < touches.Count; t++)
-                {
-                    TouchLocation loc = touches[t];
-
-                    if (loc.State != TouchLocationState.Moved)
-                        continue;
-
-                    if (loc.Position.Y > hotspotheight && loc.Position.Y < hotspotbottom)
-                    {
-                        TouchLocation lastloc;
-
-                        if (loc.TryGetPreviousLocation(out lastloc))
-                        {
-                            viewRotation.X += (loc.Position.X - lastloc.Position.X) * -0.01f;
-                            viewRotation.Y -= (loc.Position.Y - lastloc.Position.Y) * -0.01f;
-                        }
-                    }
-                    else
-                    {
-                        if (loc.Position.Y > hotspotbottom)
-                            move.Z -= 1.0f;
-                        else
-                            move.Z += 1.0f;
-                    }
-                }
-
-                float timescale = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float rotatescale = 3.0f * timescale;
-                float movescale = timescale * moveScale;
-
-                Quaternion rot = Quaternion.CreateFromYawPitchRoll(viewRotation.X, viewRotation.Y, viewRotation.Z);
-
-                viewPosition += Vector3.Transform(new Vector3(movescale, 0, movescale) * move, rot);
-            }
-
-            // Convert the camera rotation and movement into a view transform.
-            Matrix rotation = Matrix.CreateFromYawPitchRoll(viewRotation.X, viewRotation.Y, viewRotation.Z);
-            Vector3 target = viewPosition + Vector3.Transform(Vector3.Backward, rotation);
-            return Matrix.CreateLookAt(viewPosition, target, Vector3.Up);
-        }
-#else
-        /// <summary>
-        /// Handles controller input.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public Matrix ProcessCameraInput(GameTime gameTime)
-        {
-            if (IsActive)
-            {
-                GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
-                KeyboardState keyboard = Keyboard.GetState();
-                MouseState mouse = Mouse.GetState();
-
-                float timescale = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float rotatescale = 3.0f * timescale;
-                float movescale = timescale * moveScale;
-
-                // Get the right trigger, which affects speed.
-                if (gamepad.IsConnected)
-                {
-                    rotatescale *= (1.0f - gamepad.Triggers.Right * 0.5f);
-                    movescale *= (1.0f - gamepad.Triggers.Right * 0.5f);
-                }
-                else if (mouse.RightButton == ButtonState.Pressed)
-                    movescale *= 0.25f;
-
-                // If the gamepad is connected use its input instead of the mouse and keyboard.
-                if (gamepad.IsConnected)
-                    viewRotation -= new Vector3(gamepad.ThumbSticks.Right.X * rotatescale, gamepad.ThumbSticks.Right.Y * rotatescale, 0.0f);
-                else
-                {
-                    GraphicsDevice device = GraphicsDevice;
-                    int halfx = device.Viewport.Width / 2;
-                    int halfy = device.Viewport.Height / 2;
-
-                    if (!firstMouseSample)
-                    {
-                        // Convert the amount the mouse was moved into camera rotation.
-                        viewRotation.X += MathHelper.ToRadians((float)(halfx - mouse.X) * rotatescale * 1.5f);
-                        viewRotation.Y -= MathHelper.ToRadians((float)(halfy - mouse.Y) * rotatescale * 1.5f);
-                    }
-                    else
-                        firstMouseSample = false;
-
-                    Mouse.SetPosition(halfx, halfy);
-                }
-
-                if (viewRotation.Y > MathHelper.PiOver2 - 0.01f)
-                    viewRotation.Y = MathHelper.PiOver2 - 0.01f;
-                else if (viewRotation.Y < -MathHelper.PiOver2 + 0.01f)
-                    viewRotation.Y = -MathHelper.PiOver2 + 0.01f;
-
-                Quaternion rot = Quaternion.CreateFromYawPitchRoll(viewRotation.X, viewRotation.Y, viewRotation.Z);
-
-                // Now apply the camera movement based on either the gamepad or keyboard input.
-                if (gamepad.IsConnected)
-                {
-                    viewPosition += Vector3.Transform(new Vector3(movescale, 0, movescale) * new Vector3(
-                        -gamepad.ThumbSticks.Left.X, 0,
-                        gamepad.ThumbSticks.Left.Y), rot);
-                }
-                else
-                {
-                    Vector3 move = new Vector3();
-                    if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-                        move.Z += 1.0f;
-                    if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-                        move.Z -= 1.0f;
-                    if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
-                        move.X += 1.0f;
-                    if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
-                        move.X -= 1.0f;
-                    viewPosition += Vector3.Transform(new Vector3(movescale, 0, movescale) * move, rot);
-                }
-            }
-
-            // mouse visibility...
-            if (!IsActive || GamePad.GetState(PlayerIndex.One).IsConnected)
-                IsMouseVisible = true;
-            else
-                IsMouseVisible = false;
-
-            // Convert the camera rotation and movement into a view transform.
-            return GetViewMatrix();
-        }
-#endif
-
-        /// <summary>
-        /// Convert the camera rotation and movement into a view transform.
-        /// </summary>
-        /// <returns></returns>
-        private Matrix GetViewMatrix()
-        {
-            Matrix rotation = Matrix.CreateFromYawPitchRoll(viewRotation.X, viewRotation.Y, viewRotation.Z);
-            Vector3 target = viewPosition + Vector3.Transform(Vector3.Backward, rotation);
-            return Matrix.CreateLookAt(viewPosition, target, Vector3.Up);
-        }
-
         #endregion
 
         #region Main entry point

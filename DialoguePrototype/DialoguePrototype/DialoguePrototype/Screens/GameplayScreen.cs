@@ -95,10 +95,10 @@ namespace DialoguePrototype
                 // Load the scene and add it to the managers.
                 Scene scene = content.Load<Scene>("Scenes/Scene");
 
-                ScreenManager.sceneInterface.Submit(scene);
+                //ScreenManager.sceneInterface.Submit(scene);
                 
                 // Load the scene environment settings.
-                ScreenManager.environment = content.Load<SceneEnvironment>("Environment/Environment");
+                //ScreenManager.environment = content.Load<SceneEnvironment>("Environment/Environment");
 
                 // TODO: use this.Content to load your game content here
 
@@ -111,9 +111,27 @@ namespace DialoguePrototype
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
+
+                const string message = "Are you sure you want this to be a sentence?";
+
+                MessageBoxScreen openingPrompt = new MessageBoxScreen(message, false, true);
+
+                openingPrompt.Accepted += AdvanceDialogueBox;
+
+                ScreenManager.AddScreen(openingPrompt, null);
             }
         }
 
+        void AdvanceDialogueBox(object sender, PlayerIndexEventArgs e)
+        {
+            const string message = "I think it was supposed to be a question...";
+
+            MessageBoxScreen nextDialogueBox = new MessageBoxScreen(message, false, true);
+
+            nextDialogueBox.Accepted += AdvanceDialogueBox;
+
+            ScreenManager.AddScreen(nextDialogueBox, e.PlayerIndex);
+        }
 
         public override void Deactivate()
         {
@@ -163,9 +181,9 @@ namespace DialoguePrototype
                 // it by inserting something more interesting in this space :-)
             }
 
-            view = Matrix.CreateLookAt(Vector3.One * 50, Vector3.Zero, Vector3.Up);
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(90.0f),
-                    StarterGame.Instance.graphics.GraphicsDevice.Viewport.AspectRatio, 0.1f, ScreenManager.environment.VisibleDistance);
+            //view = Matrix.CreateLookAt(Vector3.One * 50, Vector3.Zero, Vector3.Up);
+            //projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(90.0f),
+            //        StarterGame.Instance.graphics.GraphicsDevice.Viewport.AspectRatio, 0.1f, ScreenManager.environment.VisibleDistance);
 
             // Update all contained managers.
             ScreenManager.sceneInterface.Update(gameTime);
