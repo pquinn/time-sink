@@ -51,24 +51,29 @@ namespace MechanicsTest
         // The SunBurn lighting system.
         SunBurnCoreSystem sunBurnCoreSystem;
         FrameBuffers frameBuffers;
-        SpriteManager spriteManager;
+        public SpriteManager SpriteManager;
         SplashScreenGameComponent splashScreenGameComponent;
 
         // Scene related members.
         SceneState sceneState;
-        SceneInterface sceneInterface;
+        public SceneInterface SceneInterface;
         ContentRepository contentRepository;
         SceneEnvironment environment;
 
         // Default XNA members.
         GraphicsDeviceManager graphics;
 
-        SpriteContainer playerSprites;
-        float playerRotation = 0.0f;
-        Vector2 playerPosition = new Vector2();
-
         // Controller related.
         const float moveScale = 100.0f;
+
+        // Components
+        MechanicsTest.Physics.PhysicsManager physicsManager = new MechanicsTest.Physics.PhysicsManager();
+        UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
+
+        public UserControlledCharacter Character
+        {
+            get { return character; }
+        }
 
         public StarterGame()
         {
@@ -96,19 +101,21 @@ namespace MechanicsTest
             // This design allows managers to be plugged-in like modular components and for managers
             // to easily be added, removed, or replaced with custom implementations.
             //
-            sceneInterface = new SceneInterface();
-            sceneInterface.CreateDefaultManagers(RenderingSystemType.Forward, CollisionSystemType.Physics, true);
+            SceneInterface = new SceneInterface();
+            SceneInterface.CreateDefaultManagers(RenderingSystemType.Forward, CollisionSystemType.Physics, true);
 
-            spriteManager = new SpriteManager(sceneInterface);
-            sceneInterface.AddManager(spriteManager);
+            SpriteManager = new SpriteManager(SceneInterface);
+            SceneInterface.AddManager(SpriteManager);
 
             // Create the frame buffers used for rendering (sized to the backbuffer) and
             // assign them to the ResourceManager so we don't have to worry about cleanup.
             frameBuffers = new FrameBuffers(DetailPreference.High, DetailPreference.Medium);
-            sceneInterface.ResourceManager.AssignOwnership(frameBuffers);
+            SceneInterface.ResourceManager.AssignOwnership(frameBuffers);
+
+            physicsManager.RegisterPhysicsBody(Character);
 
             // Post console messages letting the user know how to open the SunBurn Editor.
-            sceneInterface.ShowConsole = true;
+            SceneInterface.ShowConsole = true;
             SystemConsole.AddMessage("Welcome to the SunBurn Engine.", 4);
             SystemConsole.AddMessage("Use an Xbox controller or the W, A, S, D keys to navigate the scene.", 8);
             SystemConsole.AddMessage("Press F11 to open the SunBurn Editor.", 12);
@@ -138,12 +145,6 @@ namespace MechanicsTest
             // Load the content repository, which stores all assets imported via the editor.
             // This must be loaded before any other assets.
             contentRepository = Content.Load<ContentRepository>("Content");
-
-            playerTexture = Content.Load<BaseRenderableEffect>("Materials/Dude");
-
-            // First create and submit the empty player container.
-            playerSprites = spriteManager.CreateSpriteContainer();
-            sceneInterface.ObjectManager.Submit(playerSprites);
             
             // Add objects and lights to the ObjectManager and LightManager. They accept
             // objects and lights in several forms:
@@ -159,12 +160,13 @@ namespace MechanicsTest
             // Load the scene and add it to the managers.
             Scene scene = Content.Load<Scene>("Scenes/Scene");
 
-            sceneInterface.Submit(scene);
+            SceneInterface.Submit(scene);
 
             // Load the scene environment settings.
             environment = Content.Load<SceneEnvironment>("Environment/Environment");
 
             // TODO: use this.Content to load your game content here
+            character.Load(this);
         }
 
         /// <summary>
@@ -176,7 +178,7 @@ namespace MechanicsTest
             // TODO: Unload any non ContentManager content here
 
             // Cleanup any used resources.
-            sceneInterface.Unload();
+            SceneInterface.Unload();
             sunBurnCoreSystem.Unload();
 
             environment = null;
@@ -190,7 +192,7 @@ namespace MechanicsTest
         protected override void Update(GameTime gameTime)
         {
             // Enables game input / control when not editing the scene (the editor provides its own control).
-            if (!sceneInterface.Editor.EditorAttached)
+            if (!SceneInterface.Editor.EditorAttached)
             {
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                     this.Exit();
@@ -206,9 +208,10 @@ namespace MechanicsTest
             GraphicsDevice.Viewport.AspectRatio, 0.1f, environment.VisibleDistance);
 
             // Update all contained managers.
-            sceneInterface.Update(gameTime);
+            SceneInterface.Update(gameTime);
 
             // TODO: Add your update logic here
+            physicsManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -220,57 +223,7 @@ namespace MechanicsTest
         /// <param name="gametime"></param>
         private void HandleInput(GameTime gametime)
         {
-            // Get the gamepad state.
-            GamePadState gamepadstate = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
-
-            // Get the time scale since the last update call.
-            float timeframe = (float)gametime.ElapsedGameTime.TotalSeconds;
-            float amount = 0.0f;
-            Vector2 movedirection = new Vector2();
-
-            if (gamepadstate.IsConnected)
-            {
-                // Get the controller direction.
-                movedirection.X = -gamepadstate.ThumbSticks.Left.X;
-                movedirection.Y = gamepadstate.ThumbSticks.Left.Y;
-
-                // Get the controller magnitude.
-                amount = movedirection.Length();
-            }
-            else
-            {
-                // No gamepad, so grab the keyboard state.
-                KeyboardState keyboard = Keyboard.GetState();
-
-                // Get the keyboard direction.
-                if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-                    movedirection.Y += 1.0f;
-                if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-                    movedirection.Y -= 1.0f;
-                if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
-                    movedirection.X += 1.0f;
-                if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
-                    movedirection.X -= 1.0f;
-
-                if (movedirection != Vector2.Zero)
-                {
-                    // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-                    movedirection.Normalize();
-                    amount = 1.0f;
-                }
-            }
-
-
-
-            // Increment animation unless idle.
-            if (amount != 0.0f)
-            {
-                // Rotate the player towards the controller direction.
-                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
-
-                // Move player based on the controller direction and time scale.
-                playerPosition += movedirection * timeframe;
-            }
+            character.HandleKeyboardInput(gametime);
         }
 
         /// <summary>
@@ -286,24 +239,19 @@ namespace MechanicsTest
                 return;
             }
 
-            playerSprites.Begin();
-
-            playerSprites.Add(playerTexture, Vector2.One * 0.5f, playerPosition, 0, 0);
-
-            playerSprites.End();
-
+            character.Draw(gameTime);
 
             // Render the scene.
             sceneState.BeginFrameRendering(new Vector2(), viewWidth, GraphicsDevice.Viewport.AspectRatio, gameTime, environment, frameBuffers, true);
-            sceneInterface.BeginFrameRendering(sceneState);
+            SceneInterface.BeginFrameRendering(sceneState);
 
             // Add custom rendering that should occur before the scene is rendered.
 
-            sceneInterface.RenderManager.Render();
+            SceneInterface.RenderManager.Render();
 
             // Add custom rendering that should occur after the scene is rendered.
 
-            sceneInterface.EndFrameRendering();
+            SceneInterface.EndFrameRendering();
             sceneState.EndFrameRendering();
 
             base.Draw(gameTime);
@@ -319,7 +267,6 @@ namespace MechanicsTest
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
         private SpriteBatch spriteBatch;
-        private BaseRenderableEffect playerTexture;
 
 #if WINDOWS_PHONE
         /// <summary>

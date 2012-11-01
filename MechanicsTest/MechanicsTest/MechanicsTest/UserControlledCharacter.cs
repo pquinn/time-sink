@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SynapseGaming.LightingSystem.Rendering;
+using Microsoft.Xna.Framework;
+using SynapseGaming.LightingSystem.Effects;
+using MechanicsTest.Physics;
+using MechanicsTest.Controller;
+using Microsoft.Xna.Framework.Input;
+
+namespace MechanicsTest
+{
+    public class UserControlledCharacter : IPhysicsEnabledBody, IKeyboardControllable
+    {
+        const float PLAYER_MASS = 100f;
+
+        SpriteContainer playerSprites;
+        float playerRotation = 0.0f;
+        private BaseRenderableEffect playerTexture;
+        private GravityPhysics physics;
+        private bool gravityToggleGuard = true;
+
+        public UserControlledCharacter(Vector2 position)
+        {
+            physics = new GravityPhysics(position, PLAYER_MASS);
+        }
+
+        public void Load(StarterGame game)
+        {
+            playerTexture = game.Content.Load<BaseRenderableEffect>("Materials/Dude");
+
+            // First create and submit the empty player container.
+            playerSprites = game.SpriteManager.CreateSpriteContainer();
+            game.SceneInterface.ObjectManager.Submit(playerSprites);
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            playerSprites.Begin();
+
+            playerSprites.Add(playerTexture, Vector2.One * 0.5f, physics.Position, 0, 0);
+
+            playerSprites.End();
+        }
+
+        public void Update(GameTime gameTime, StarterGame gameWorld)
+        {
+
+        }
+
+        public IPhysicsParticle PhysicsController { get { return physics; } }
+
+        public void HandleKeyboardInput(GameTime gameTime)
+        {
+            // Get the gamepad state.
+            var gamepadstate = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+
+            // Get the time scale since the last update call.
+            var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var amount = 0.0f;
+            var movedirection = new Vector2();
+
+            // Grab the keyboard state.
+            var keyboard = Keyboard.GetState();
+
+            // Get the keyboard direction.
+            if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
+                movedirection.Y += 1.0f;
+            if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
+                movedirection.Y -= 1.0f;
+            if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+                movedirection.X += 1.0f;
+            if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+                movedirection.X -= 1.0f;
+            if (keyboard.IsKeyDown(Keys.Space))
+            {
+                if (gravityToggleGuard)
+                {
+                    physics.GravityEnabled = !physics.GravityEnabled;
+                    if (!physics.GravityEnabled)
+                        physics.Velocity = Vector2.Zero;
+                    gravityToggleGuard = false;
+                }
+            }
+            else
+            {
+                gravityToggleGuard = true;
+            }
+
+            if (movedirection != Vector2.Zero)
+            {
+                // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
+                movedirection.Normalize();
+                amount = 1.0f;
+            }
+            
+            // Increment animation unless idle.
+            if (amount != 0.0f)
+            {
+                // Rotate the player towards the controller direction.
+                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
+
+                // Move player based on the controller direction and time scale.
+                physics.Position += movedirection * timeframe;
+            }
+        }
+    }
+}
