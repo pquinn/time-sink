@@ -82,7 +82,7 @@ namespace DialoguePrototype
 
                 gameFont = content.Load<SpriteFont>("fonts/gamefont");
 
-                ScreenManager.TraceEnabled = true;
+                //ScreenManager.TraceEnabled = true;
 
                 // Load the content repository, which stores all assets imported via the editor.
                 // This must be loaded before any other assets.
