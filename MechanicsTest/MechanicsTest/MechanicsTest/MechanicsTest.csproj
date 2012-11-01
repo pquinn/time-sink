@@ -93,8 +93,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collisions\Collisions.cs" />
+    <Compile Include="Controller\ControlManager.cs" />
+    <Compile Include="Physics\Physics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="UserControlledCharacter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
