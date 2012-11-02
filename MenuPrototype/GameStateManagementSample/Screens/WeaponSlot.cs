@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GameStateManagementSample
 {
-    class WeaponSlot
+    class WeaponSlot : IHudElement
     {
         #region Fields
         /**************************************
@@ -65,17 +65,11 @@ namespace GameStateManagementSample
 
         public virtual void Update(MenuScreen screen, GameTime gameTime)
         {
-            // there is no such thing as a selected item on Windows Phone, so we always
-            // force isSelected to be false
-
-            // When the menu selection changes, entries gradually fade between
-            // their selected and deselected appearance, rather than instantly
-            // popping to the new state.
-            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
+            // Not needed for now
         }
 
 
-        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Draw(GameScreen screen, bool isSelected, GameTime gameTime)
         {
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
@@ -101,6 +95,11 @@ namespace GameStateManagementSample
             spriteBatch.Draw(item.Icon, outline, Color.White);
         }
 
+        public virtual bool IsSlot()
+        {
+            return true;
+        }
+
         public virtual int GetHeight()
         {
             return outline.Height;
@@ -109,6 +108,15 @@ namespace GameStateManagementSample
         public virtual int GetWidth()
         {
             return outline.Width;
+        }
+
+        public virtual bool IsPrimary()
+        {
+            return Item.IsPrimary;
+        }
+        public virtual bool IsSecondary()
+        {
+            return Item.IsSecondary;
         }
     }
 }

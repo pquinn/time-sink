@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GameStateManagement;
+using System.Collections.Generic;
 #endregion
 
 namespace GameStateManagementSample
@@ -34,11 +35,20 @@ namespace GameStateManagementSample
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
 
+
+        List<IHudElement> hudElements = new List<IHudElement>();
+
         Random random = new Random();
 
         float pauseAlpha;
 
         InputAction pauseAction;
+
+        public List<IHudElement> HudElements
+        {
+            get { return hudElements; }
+            set { hudElements = value; }
+        }
 
         #endregion
 
@@ -48,10 +58,25 @@ namespace GameStateManagementSample
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(List<IHudElement> target)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            foreach (IHudElement x in target)
+            {
+                if (x.IsSlot())
+                {
+                    if (((WeaponSlot)x).IsPrimary())
+                    {
+                        hudElements.Add(x);
+                    }
+                    if (((WeaponSlot)x).IsSecondary())
+                    {
+                        hudElements.Add(x);
+                    }
+                }
+            }
 
             pauseAction = new InputAction(
                 new Buttons[] { Buttons.Start, Buttons.Back },
@@ -247,6 +272,16 @@ namespace GameStateManagementSample
 
             spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
                                    enemyPosition, Color.DarkRed);
+
+            // Draw each weaponSlot in turn.
+            for (int i = 0; i < hudElements.Count; i++)
+            {
+                IHudElement weaponSlot = hudElements[i];
+
+               // bool isSelected = IsActive && (i == selectedEntry);
+
+                weaponSlot.Draw(this, false, gameTime);
+            }
 
             spriteBatch.End();
 

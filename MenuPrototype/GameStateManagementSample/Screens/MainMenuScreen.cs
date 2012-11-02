@@ -11,6 +11,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 #endregion
 
 namespace GameStateManagementSample
@@ -38,7 +39,7 @@ namespace GameStateManagementSample
         /// Constructor fills in the menu contents.
         /// </summary>
         public MainMenuScreen()
-            : base("Main Menu")
+            : base("Menu Prototype")
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
@@ -109,7 +110,7 @@ namespace GameStateManagementSample
         {
             WeaponSlot slot = new WeaponSlot(item, outline);
 
-            WeaponSlots.Add(slot);
+            HudElements.Add(slot);
 
             currentSlots++;
         }
@@ -125,7 +126,7 @@ namespace GameStateManagementSample
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen());
+                               new GameplayScreen(HudElements));
         }
 
 

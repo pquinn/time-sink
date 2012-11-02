@@ -30,6 +30,7 @@ namespace GameStateManagementSample
 
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         List<WeaponSlot> weaponSlots = new List<WeaponSlot>();
+        List<IHudElement> hudElements = new List<IHudElement>();
         int selectedEntry = 0;
         string menuTitle;
 
@@ -58,6 +59,11 @@ namespace GameStateManagementSample
         protected IList<WeaponSlot> WeaponSlots
         {
             get { return weaponSlots; }
+        }
+
+        protected List<IHudElement> HudElements
+        {
+            get { return hudElements; }
         }
 
         protected Texture2D Blank
@@ -217,13 +223,13 @@ namespace GameStateManagementSample
 
             Point posn = new Point(ScreenManager.FrameWidth / 9, 0);
             float transitionOffset2 = (float)Math.Pow(TransitionPosition, 2);
-            for (int i = 0; i < weaponSlots.Count; i++)
+            for (int i = 0; i < hudElements.Count; i++)
             {
-                WeaponSlot weaponSlot = WeaponSlots[i];
+                IHudElement weaponSlot = HudElements[i];
 
                 if (ScreenState == ScreenState.TransitionOn)
                     posn.Y -= (int)(transitionOffset * 50);
-                else if (!weaponSlot.Item.IsPrimary && !weaponSlot.Item.IsSecondary) 
+                else if (!((WeaponSlot)weaponSlot).Item.IsPrimary && !((WeaponSlot)weaponSlot).Item.IsSecondary) 
                 {
                     posn.Y -= (int)(transitionOffset * 512);
                 }
@@ -233,9 +239,9 @@ namespace GameStateManagementSample
                 else
                     posn.Y -= (int)transitionOffset2 * 512;
                 */
-                weaponSlot.Position = posn;
+                ((WeaponSlot)weaponSlot).Position = posn;
 
-                posn.X += weaponSlot.GetWidth();
+                posn.X += ((WeaponSlot)weaponSlot).GetWidth();
 
             }
         }
@@ -256,9 +262,9 @@ namespace GameStateManagementSample
 
                 menuEntries[i].Update(this, isSelected, gameTime);
             }
-            for (int i = 0; i < weaponSlots.Count; i++)
+            for (int i = 0; i < hudElements.Count; i++)
             {
-                weaponSlots[i].Update(this, gameTime);
+                hudElements[i].Update(this, gameTime);
             }
         }
 
@@ -287,10 +293,10 @@ namespace GameStateManagementSample
                 menuEntry.Draw(this, isSelected, gameTime);
             }
 
-            // Draw each menu entry in turn.
-            for (int i = 0; i < weaponSlots.Count; i++)
+            // Draw each weaponSlot in turn.
+            for (int i = 0; i < hudElements.Count; i++)
             {
-                WeaponSlot weaponSlot = weaponSlots[i];
+                IHudElement weaponSlot = hudElements[i];
 
                 bool isSelected = IsActive && (i == selectedEntry);
 
@@ -303,7 +309,7 @@ namespace GameStateManagementSample
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 100);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;

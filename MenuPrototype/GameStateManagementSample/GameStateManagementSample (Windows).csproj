@@ -68,6 +68,8 @@
     <Compile Include="Game.cs" />
     <Compile Include="Items\EmptyItem.cs" />
     <Compile Include="Items\Grenade.cs" />
+    <Compile Include="Items\IHudElement.cs" />
+    <Compile Include="Items\ShieldBar.cs" />
     <Compile Include="Items\SlotItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
