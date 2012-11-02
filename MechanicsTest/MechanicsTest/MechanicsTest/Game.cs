@@ -45,8 +45,7 @@ namespace MechanicsTest
     /// </summary>
     public class StarterGame : Microsoft.Xna.Framework.Game
     {
-        const float viewWidth = 2.0f;
-        const int worldSize = 10;
+        const float viewWidth = 2f;
 
         // The SunBurn lighting system.
         SunBurnCoreSystem sunBurnCoreSystem;
@@ -70,7 +69,7 @@ namespace MechanicsTest
         MechanicsTest.Physics.PhysicsManager physicsManager = new MechanicsTest.Physics.PhysicsManager();
         MechanicsTest.Collisions.CollisionManager collisionManager = new MechanicsTest.Collisions.CollisionManager();
         UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
-        WorldGeometry world = new WorldGeometry(new Rectangle(0, 800, 2000, 10));
+        WorldGeometry world;
 
         public UserControlledCharacter Character
         {
@@ -115,7 +114,6 @@ namespace MechanicsTest
 
             physicsManager.RegisterPhysicsBody(Character);
             collisionManager.RegisterCollisionBody(Character);
-            collisionManager.RegisterCollisionBody(world);
 
             // Post console messages letting the user know how to open the SunBurn Editor.
             SceneInterface.ShowConsole = true;
@@ -145,6 +143,15 @@ namespace MechanicsTest
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            world = new WorldGeometry(
+                new Rectangle(
+                    0,
+                    0,
+                    GraphicsDevice.Viewport.Width, 
+                    1));
+
+            collisionManager.RegisterCollisionBody(world);
+
             // Load the content repository, which stores all assets imported via the editor.
             // This must be loaded before any other assets.
             contentRepository = Content.Load<ContentRepository>("Content");
@@ -170,6 +177,8 @@ namespace MechanicsTest
 
             // TODO: use this.Content to load your game content here
             character.Load(this);
+
+            world.Load(this);
         }
 
         /// <summary>
@@ -247,7 +256,7 @@ namespace MechanicsTest
             world.Draw(gameTime);
 
             // Render the scene.
-            sceneState.BeginFrameRendering(new Vector2(), viewWidth, GraphicsDevice.Viewport.AspectRatio, gameTime, environment, frameBuffers, true);
+            sceneState.BeginFrameRendering(Vector2.Zero, viewWidth, GraphicsDevice.Viewport.AspectRatio, gameTime, environment, frameBuffers, true);
             SceneInterface.BeginFrameRendering(sceneState);
 
             // Add custom rendering that should occur before the scene is rendered.

@@ -42,11 +42,5 @@ namespace MechanicsTest.Collisions
                 i++;
             }
         }
-
-        [OnCollidedWith.Overload]
-        public static void OnCollidedWith(ICollideable a, ICollideable b)
-        {
-            //Do nothing
-        }
     }
 }

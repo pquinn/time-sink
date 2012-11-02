@@ -62,7 +62,12 @@ namespace MechanicsTest
         {
             playerSprites.Begin();
 
-            playerSprites.Add(playerTexture, Vector2.One * 0.5f, physics.Position, 0, 0);
+            playerSprites.Add(
+                playerTexture, 
+                Vector2.One * 0.32f, 
+                physics.Position, 
+                0, 
+                0);
 
             playerSprites.End();
         }
@@ -81,7 +86,7 @@ namespace MechanicsTest
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 0.0f;
+            var amount = 1f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -115,7 +120,6 @@ namespace MechanicsTest
             {
                 // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
                 movedirection.Normalize();
-                amount = 1.0f;
             }
             
             // Increment animation unless idle.
@@ -125,7 +129,7 @@ namespace MechanicsTest
                 playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
                 // Move player based on the controller direction and time scale.
-                physics.Position += movedirection * timeframe;
+                physics.Position += movedirection * timeframe * amount;
             }
         }
 

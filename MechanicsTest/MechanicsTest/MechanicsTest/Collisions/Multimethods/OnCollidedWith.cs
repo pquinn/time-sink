@@ -29,7 +29,7 @@ namespace MechanicsTest.Collisions
             var __actual = new Entry(object1, object2);
             int __index = DoGetNextMethod(__actual, 0);
             if (__index == -1)
-                throw new MissingMethodException(string.Format("Invoke failed to find an overload for OnCollidedWith({0}).", __actual));
+                return;//throw new MissingMethodException(string.Format("Invoke failed to find an overload for OnCollidedWith({0}).", __actual));
 
             ms_nextIndex = DoGetNextMethod(__actual, __index + 1);
             if (ms_nextIndex > 0)
@@ -49,7 +49,7 @@ namespace MechanicsTest.Collisions
 
             int __index = ms_nextIndex;
             if (__index == -1)
-                throw new MissingMethodException(string.Format("NextMethod failed to find an overload for OnCollidedWith({0}).", __actual));
+                return;// throw new MissingMethodException(string.Format("NextMethod failed to find an overload for OnCollidedWith({0}).", __actual));
 
             ms_nextIndex = DoGetNextMethod(__actual, __index + 1);
             if (ms_nextIndex > 0)
