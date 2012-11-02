@@ -34,22 +34,3 @@ namespace MechanicsTest
         }
     }
 }
-
-//class Bullet
-
-[OnCollidedWith.Overload]
-public void OnCollidedWith(ICollideable c)
-{
-    if (!(c is Bullet))
-    {
-        this.MarkDeleted();
-    }
-}
-
-
-//class Player
-[OnCollidedWith.Overload]
-public void OnCollidedWith(Bullet b)
-{
-    this.hp -= b.damage;
-}

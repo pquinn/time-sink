@@ -38,7 +38,7 @@ namespace MechanicsTest.Collisions
                     {
                         OnCollidedWith.Invoke(body, other);
                         OnCollidedWith.Invoke(other, body);
-                    }  
+                    }
                 }
             }
         }
