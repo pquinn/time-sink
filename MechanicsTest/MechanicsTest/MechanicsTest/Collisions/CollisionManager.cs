@@ -28,10 +28,9 @@ namespace MechanicsTest.Collisions
 
         public void Update(GameTime gt)
         {
-            for (int i = 0; i < collideables.Count; i++)
+            int i = 1;
+            foreach (var body in collideables)
             {
-                var body = collideables[i];
-
                 foreach (var other in collideables.Skip(i))
                 {
                     if (Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry))
@@ -40,6 +39,7 @@ namespace MechanicsTest.Collisions
                         OnCollidedWith.Invoke(other, body);
                     }
                 }
+                i++;
             }
         }
 
