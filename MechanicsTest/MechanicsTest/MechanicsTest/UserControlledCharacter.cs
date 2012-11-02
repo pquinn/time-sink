@@ -26,17 +26,26 @@ namespace MechanicsTest
         private GravityPhysics physics;
         private bool gravityToggleGuard = true;
 
-        private CollisionRectangle collisionGeometry;
+        //private CollisionRectangle collisionGeometry;
         public ICollisionGeometry CollisionGeometry
         {
-            get { return collisionGeometry; }
+            get 
+            { 
+                return new CollisionRectangle(
+                    new Rectangle(
+                        physics.Position.X,
+                        physics.Position.Y,
+                        128, 128
+                    )
+                );
+            }
         }
 
         public UserControlledCharacter(Vector2 position)
         {
             physics = new GravityPhysics(position, PLAYER_MASS)
             {
-                GravityEnabled = true
+                GravityEnabled = false
             };
         }
 

@@ -28,17 +28,17 @@ namespace MechanicsTest.Collisions
 
         public void Update(GameTime gt)
         {
-            foreach (var body in bodies)
+            for (int i = 0; i < collideables.Count; i++)
             {
-                foreach (var other in bodies)
+                var body = collideables[i];
+
+                foreach (var other in collideables.Skip(i))
                 {
-                    if (body != other)
+                    if (Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry))
                     {
-                        if (Collided.Invoke(body, other))
-                        {
-                            OnCollidedWith.Invoke(body, other)
-                        }
-                    }
+                        OnCollidedWith.Invoke(body, other);
+                        OnCollidedWith.Invoke(other, body);
+                    }  
                 }
             }
         }
