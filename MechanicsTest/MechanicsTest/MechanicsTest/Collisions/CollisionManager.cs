@@ -35,8 +35,8 @@ namespace MechanicsTest.Collisions
                 {
                     if (Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry))
                     {
-                        OnCollidedWith.Invoke(body, other);
-                        OnCollidedWith.Invoke(other, body);
+                        Collisions.OnCollidedWith.Invoke(body, other);
+                        Collisions.OnCollidedWith.Invoke(other, body);
                     }
                 }
                 i++;
