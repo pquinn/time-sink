@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SynapseGaming.LightingSystem.Rendering;
+
 using Microsoft.Xna.Framework;
-using SynapseGaming.LightingSystem.Effects;
-using MechanicsTest.Physics;
-using MechanicsTest.Controller;
 using Microsoft.Xna.Framework.Input;
+
+using SynapseGaming.LightingSystem.Effects;
+using SynapseGaming.LightingSystem.Rendering;
+
+using MechanicsTest.Collisions;
+using MechanicsTest.Controller;
+using MechanicsTest.Physics;
 
 namespace MechanicsTest
 {
-    public class UserControlledCharacter : IPhysicsEnabledBody, IKeyboardControllable
+    public class UserControlledCharacter 
+        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable
     {
         const float PLAYER_MASS = 100f;
 
@@ -21,9 +26,18 @@ namespace MechanicsTest
         private GravityPhysics physics;
         private bool gravityToggleGuard = true;
 
+        private CollisionRectangle collisionGeometry;
+        public ICollisionGeometry CollisionGeometry
+        {
+            get { return collisionGeometry; }
+        }
+
         public UserControlledCharacter(Vector2 position)
         {
-            physics = new GravityPhysics(position, PLAYER_MASS);
+            physics = new GravityPhysics(position, PLAYER_MASS)
+            {
+                GravityEnabled = true
+            };
         }
 
         public void Load(StarterGame game)
@@ -104,6 +118,12 @@ namespace MechanicsTest
                 // Move player based on the controller direction and time scale.
                 physics.Position += movedirection * timeframe;
             }
+        }
+
+        public bool GravityEnabled
+        {
+            get { return physics.GravityEnabled; }
+            set { physics.GravityEnabled = value; }
         }
     }
 }
