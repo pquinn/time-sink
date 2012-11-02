@@ -33,8 +33,8 @@ namespace MechanicsTest
             { 
                 return new CollisionRectangle(
                     new Rectangle(
-                        physics.Position.X,
-                        physics.Position.Y,
+                        (int)physics.Position.X,
+                        (int)physics.Position.Y,
                         128, 128
                     )
                 );
