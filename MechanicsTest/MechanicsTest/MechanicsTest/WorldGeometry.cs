@@ -22,6 +22,11 @@ namespace MechanicsTest
             collisionGeometry.Geometry.Add(new CollisionRectangle(r));
         }
 
+        public void Draw(GameTime gameTime)
+        {
+            
+        }
+
         [OnCollidedWith.Overload]
         public void OnCollidedWith(UserControlledCharacter character)
         {

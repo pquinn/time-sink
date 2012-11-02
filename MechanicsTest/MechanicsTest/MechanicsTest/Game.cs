@@ -68,7 +68,9 @@ namespace MechanicsTest
 
         // Components
         MechanicsTest.Physics.PhysicsManager physicsManager = new MechanicsTest.Physics.PhysicsManager();
+        MechanicsTest.Collisions.CollisionManager collisionManager = new MechanicsTest.Collisions.CollisionManager();
         UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
+        WorldGeometry world = new WorldGeometry(new Rectangle(0, 800, 2000, 10));
 
         public UserControlledCharacter Character
         {
@@ -83,7 +85,6 @@ namespace MechanicsTest
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
-
 
             // Required for lighting system.
             splashScreenGameComponent = new SplashScreenGameComponent(this);
@@ -113,6 +114,8 @@ namespace MechanicsTest
             SceneInterface.ResourceManager.AssignOwnership(frameBuffers);
 
             physicsManager.RegisterPhysicsBody(Character);
+            collisionManager.RegisterCollisionBody(Character);
+            collisionManager.RegisterCollisionBody(world);
 
             // Post console messages letting the user know how to open the SunBurn Editor.
             SceneInterface.ShowConsole = true;
@@ -212,6 +215,7 @@ namespace MechanicsTest
 
             // TODO: Add your update logic here
             physicsManager.Update(gameTime);
+            collisionManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -240,6 +244,7 @@ namespace MechanicsTest
             }
 
             character.Draw(gameTime);
+            world.Draw(gameTime);
 
             // Render the scene.
             sceneState.BeginFrameRendering(new Vector2(), viewWidth, GraphicsDevice.Viewport.AspectRatio, gameTime, environment, frameBuffers, true);
