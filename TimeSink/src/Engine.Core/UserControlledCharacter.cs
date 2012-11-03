@@ -12,6 +12,8 @@ using SynapseGaming.LightingSystem.Rendering;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
+using Microsoft.Xna.Framework.Content;
+using SynapseGaming.LightingSystem.Core;
 
 namespace TimeSink.Engine.Core
 {
@@ -49,13 +51,13 @@ namespace TimeSink.Engine.Core
             };
         }
 
-        public void Load(StarterGame game)
+        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
         {
-            playerTexture = game.Content.Load<BaseRenderableEffect>("Materials/Dude");
+            playerTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
 
             // First create and submit the empty player container.
-            playerSprites = game.SpriteManager.CreateSpriteContainer();
-            game.SceneInterface.ObjectManager.Submit(playerSprites);
+            playerSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(playerSprites);
         }
 
         public void Draw(GameTime gameTime)
@@ -72,7 +74,7 @@ namespace TimeSink.Engine.Core
             playerSprites.End();
         }
 
-        public void Update(GameTime gameTime, StarterGame gameWorld)
+        public void Update(GameTime gameTime)
         {
 
         }

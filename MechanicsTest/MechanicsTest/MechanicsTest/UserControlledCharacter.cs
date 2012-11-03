@@ -12,6 +12,8 @@ using SynapseGaming.LightingSystem.Rendering;
 using MechanicsTest.Collisions;
 using MechanicsTest.Controller;
 using MechanicsTest.Physics;
+using SynapseGaming.LightingSystem.Core;
+using Microsoft.Xna.Framework.Content;
 
 namespace MechanicsTest
 {
@@ -49,13 +51,13 @@ namespace MechanicsTest
             };
         }
 
-        public void Load(StarterGame game)
+        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
         {
-            playerTexture = game.Content.Load<BaseRenderableEffect>("Materials/Dude");
+            playerTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
 
             // First create and submit the empty player container.
-            playerSprites = game.SpriteManager.CreateSpriteContainer();
-            game.SceneInterface.ObjectManager.Submit(playerSprites);
+            playerSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(playerSprites);
         }
 
         public void Draw(GameTime gameTime)

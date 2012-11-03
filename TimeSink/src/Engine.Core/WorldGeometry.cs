@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Collisions;
 using SynapseGaming.LightingSystem.Effects;
 using SynapseGaming.LightingSystem.Rendering;
+using Microsoft.Xna.Framework.Content;
+using SynapseGaming.LightingSystem.Core;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -26,13 +28,13 @@ namespace TimeSink.Engine.Core.Collisions
             collisionGeometry.Geometry.Add(new CollisionRectangle(r));
         }
 
-        public void Load(StarterGame game)
+        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
         {
-            geoTexture = game.Content.Load<BaseRenderableEffect>("Materials/Dude");
+            geoTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
 
             // First create and submit the empty player container.
-            geoSprites = game.SpriteManager.CreateSpriteContainer();
-            game.SceneInterface.ObjectManager.Submit(geoSprites);
+            geoSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(geoSprites);
         }
 
         public void Draw(GameTime gameTime)

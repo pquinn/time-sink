@@ -27,7 +27,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 
 // Include the necessary SunBurn namespaces.
 using SynapseGaming.LightingSystem.Core;
@@ -35,15 +34,17 @@ using SynapseGaming.LightingSystem.Collision;
 using SynapseGaming.LightingSystem.Editor;
 using SynapseGaming.LightingSystem.Rendering;
 using SynapseGaming.LightingSystem.Effects;
+using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core;
 #endregion
 
 
-namespace MechanicsTest
+namespace TimeSink.Engine.Game
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class StarterGame : Microsoft.Xna.Framework.Game
+    public class TimeSinkGame : Microsoft.Xna.Framework.Game
     {
         const float viewWidth = 2f;
 
@@ -66,8 +67,8 @@ namespace MechanicsTest
         const float moveScale = 100.0f;
 
         // Components
-        MechanicsTest.Physics.PhysicsManager physicsManager = new MechanicsTest.Physics.PhysicsManager();
-        MechanicsTest.Collisions.CollisionManager collisionManager = new MechanicsTest.Collisions.CollisionManager();
+        TimeSink.Engine.Core.Physics.PhysicsManager physicsManager = new TimeSink.Engine.Core.Physics.PhysicsManager();
+        CollisionManager collisionManager = new CollisionManager();
         UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
         WorldGeometry world;
 
@@ -76,7 +77,7 @@ namespace MechanicsTest
             get { return character; }
         }
 
-        public StarterGame()
+        public TimeSinkGame()
         {
             // Default XNA setup.
             graphics = new GraphicsDeviceManager(this);
@@ -147,7 +148,7 @@ namespace MechanicsTest
                 new Rectangle(
                     0,
                     0,
-                    GraphicsDevice.Viewport.Width, 
+                    GraphicsDevice.Viewport.Width,
                     1));
 
             collisionManager.RegisterCollisionBody(world);
@@ -155,7 +156,7 @@ namespace MechanicsTest
             // Load the content repository, which stores all assets imported via the editor.
             // This must be loaded before any other assets.
             contentRepository = Content.Load<ContentRepository>("Content");
-            
+
             // Add objects and lights to the ObjectManager and LightManager. They accept
             // objects and lights in several forms:
             //
@@ -453,7 +454,7 @@ namespace MechanicsTest
                 System.Windows.Forms.Application.EnableVisualStyles();
 #endif
 
-                using (StarterGame game = new StarterGame())
+                using (TimeSinkGame game = new TimeSinkGame())
                     game.Run();
             }
         }
