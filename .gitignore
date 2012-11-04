@@ -2,11 +2,12 @@
 *.suo
 bin/
 obj/
+!lib/
+!lib/*.dll
 *.chachefile
 *.Debug.cachefile
 *.ccgame
 *.dll
 *.user
 *.sublime-project
-
 *.sublime-workspace

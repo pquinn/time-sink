@@ -20,13 +20,13 @@ namespace TimeSink.Editor.GUI
     /// </summary>
     public partial class Editor : UserControl
     {
-        Renderer m_game;
+        Game m_game;
    
         public Editor()
         {
             InitializeComponent();
 
-            m_game = new Renderer(xnaControl.Handle);
+            m_game = new Game(xnaControl.Handle);
         }
     }
 }

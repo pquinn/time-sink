@@ -4,24 +4,28 @@ using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Engine.Core
 {
     public class StaticMesh : ICollideable
     {
-        Point position;
-
-        public StaticMesh(Point position)
+        public StaticMesh(Vector2 position)
         {
-            this.position = position;
+            this.Position = position;
         }
+
+        public Vector2 Position { get; set; }
 
         public ICollisionGeometry CollisionGeometry
         {
             get
             {
                 return new CollisionRectangle(
-                  new Rectangle(position.X, position.Y, 128, 128));
+                  new Rectangle(
+                      (int)Position.X, 
+                      (int)Position.Y, 
+                      128, 128));
             }
         }
     }
