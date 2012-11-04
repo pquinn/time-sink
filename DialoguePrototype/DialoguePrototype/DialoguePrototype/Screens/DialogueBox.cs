@@ -16,6 +16,7 @@ namespace DialoguePrototype
         public DialogueBox(String id)
             : base(null, false, true)
         {
+            this.scale = 0.75f;
             this.dialogueEntry = FindDialogue(id);
             this.message = FindDialogue(id).ToString();
             this.responseRequired = dialogueEntry.responseRequired;
@@ -25,6 +26,7 @@ namespace DialoguePrototype
         public DialogueBox(Guid id)
             : base(null, false, true)
         {
+            this.scale = 0.75f;
             this.dialogueEntry = FindDialogue(id.ToString());
             this.message = FindDialogue(id.ToString()).ToString();
             this.responseRequired = dialogueEntry.responseRequired;
@@ -33,9 +35,11 @@ namespace DialoguePrototype
 
         public DialogueBox(DialogueEntry entry) : base(null, false, true)
         {
+            this.scale = 0.75f;
             this.dialogueEntry = entry;
             this.message = entry.ToString();
             this.responseRequired = entry.responseRequired;
+            IsPopup = false;
         }
 
         public DialogueEntry FindDialogue(String id)
