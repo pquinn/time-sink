@@ -26,12 +26,6 @@ namespace GameStateManagementSample
 
         ContentManager content;
 
-        Texture2D blank;
-        Texture2D grenade;
-        Texture2D empty;
-        Texture2D outline;
-        Texture2D shield;
-
         const int MAX_WEAPON_SLOTS = 10;
 
         int currentSlots = 0;
@@ -77,43 +71,10 @@ namespace GameStateManagementSample
             if (!instancePreserved)
             {
                 content = ScreenManager.Game.Content;
-                blank = content.Load<Texture2D>("blank");
-                grenade = content.Load<Texture2D>("grenade1");
-                empty = content.Load<Texture2D>("Empty");
-                outline = content.Load<Texture2D>("Slot Outline-01");
-                shield = content.Load<Texture2D>("shield");
-
-                CreateMenuItems();
             }
         }
 
-        public void CreateMenuItems()
-        {
-            SlotItem grenadeItem = new Grenade(grenade);
-            SlotItem grenadeItemBackup = new Grenade(grenade);
-            SlotItem grenadeItemBackup2 = new Grenade(grenade);
-            SlotItem blankItem = new Grenade(empty);
-
-            grenadeItem.IsPrimary = true;
-            grenadeItemBackup.IsSecondary = true;
-
-            AddWeaponSlot(grenadeItem);
-            AddWeaponSlot(grenadeItemBackup);
-            AddWeaponSlot(grenadeItemBackup2);
-            for (int i = currentSlots; i <= MAX_WEAPON_SLOTS; i++)
-            {
-                AddWeaponSlot(grenadeItemBackup2);
-            }
-        }
-
-        public void AddWeaponSlot(SlotItem item)
-        {
-            WeaponSlot slot = new WeaponSlot(item, outline);
-
-            HudElements.Add(slot);
-
-            currentSlots++;
-        }
+       
         #endregion
 
         #region Handle Input
@@ -126,7 +87,7 @@ namespace GameStateManagementSample
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(HudElements));
+                               new GameplayScreen());
         }
 
 

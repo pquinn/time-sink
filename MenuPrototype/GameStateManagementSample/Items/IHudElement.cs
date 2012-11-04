@@ -18,6 +18,9 @@ namespace GameStateManagementSample
         //Is this a game slot?
          bool IsSlot();
 
+        //Draw this always during gameplay
+         bool GameplayDraw();
+
 
     }
 }

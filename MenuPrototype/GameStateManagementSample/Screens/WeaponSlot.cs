@@ -118,5 +118,16 @@ namespace GameStateManagementSample
         {
             return Item.IsSecondary;
         }
+        public virtual bool GameplayDraw()
+        {
+            if (IsPrimary() || IsSecondary())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
