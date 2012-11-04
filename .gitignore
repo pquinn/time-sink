@@ -7,3 +7,6 @@ obj/
 *.ccgame
 *.dll
 *.user
+*.sublime-project
+
+*.sublime-workspace

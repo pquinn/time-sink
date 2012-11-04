@@ -145,9 +145,9 @@
       <Name>Content</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
-    <ProjectReference Include="..\GameStateManagement\GameStateManagement %28Windows%29.csproj">
+    <ProjectReference Include="..\GameStateManagement\MenuPrototype.csproj">
       <Project>{0A551D79-F37E-4529-9CA0-3FD2E9EA715E}</Project>
-      <Name>GameStateManagement %28Windows%29</Name>
+      <Name>MenuPrototype</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

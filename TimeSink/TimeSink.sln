@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{940724
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Core", "src\Engine.Core\Engine.Core.csproj", "{8D3B71D1-B287-437C-85AD-5019BC9AE233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Game", "Engine.Game\Engine.Game\Engine.Game.csproj", "{882F9EEA-2DF7-4C81-AE72-897E91CF5CD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Game", "src\Engine.Game\Engine.Game\Engine.Game.csproj", "{882F9EEA-2DF7-4C81-AE72-897E91CF5CD0}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Engine.GameContent", "Engine.Game\Engine.GameContent\Engine.GameContent.contentproj", "{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.GameContent", "src\Engine.Game\Engine.GameContent\Engine.GameContent.contentproj", "{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

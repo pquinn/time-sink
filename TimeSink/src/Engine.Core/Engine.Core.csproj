@@ -118,6 +118,7 @@
     <Compile Include="Physics\PhysicsManager.cs" />
     <Compile Include="Physics\PhysicsConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticMesh.cs" />
     <Compile Include="UserControlledCharacter.cs" />
     <Compile Include="WorldGeometry.cs" />
   </ItemGroup>

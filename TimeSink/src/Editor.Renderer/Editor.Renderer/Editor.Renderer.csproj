@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Renderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -88,6 +88,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Engine.Core\Engine.Core.csproj">
+      <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
+      <Name>Engine.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RendererContent\RendererContent.contentproj">
       <Name>RendererContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
