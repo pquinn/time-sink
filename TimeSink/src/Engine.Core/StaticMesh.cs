@@ -20,7 +20,7 @@ namespace TimeSink.Engine.Core
         {
             get
             {
-                return new CollisionRectangle(
+                return new AACollisionRectangle(
                   new Rectangle(position.X, position.Y, 128, 128));
             }
         }

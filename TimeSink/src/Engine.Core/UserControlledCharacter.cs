@@ -28,12 +28,12 @@ namespace TimeSink.Engine.Core
         private GravityPhysics physics;
         private bool gravityToggleGuard = true;
 
-        //private CollisionRectangle collisionGeometry;
+        //private AACollisionRectangle collisionGeometry;
         public ICollisionGeometry CollisionGeometry
         {
             get 
             { 
-                return new CollisionRectangle(
+                return new AACollisionRectangle(
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
