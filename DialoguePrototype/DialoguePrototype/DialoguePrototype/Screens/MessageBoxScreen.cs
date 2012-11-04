@@ -31,7 +31,7 @@ namespace DialoguePrototype
 
         InputAction menuSelect;
         InputAction menuCancel;
-
+        protected float scale { get; set; }
         #endregion
 
         #region Events
@@ -49,7 +49,9 @@ namespace DialoguePrototype
         /// </summary>
         public MessageBoxScreen()
             : this(null, true, true)
-        { }
+        {
+            this.scale = 1.0f;
+        }
 
         /// <summary>
         /// Constructor automatically includes the standard "A=ok, B=cancel"
@@ -57,7 +59,9 @@ namespace DialoguePrototype
         /// </summary>
         public MessageBoxScreen(String message)
             : this(message, true, true)
-        { }
+        {
+            this.scale = 1.0f;
+        }
 
 
         /// <summary>
@@ -66,6 +70,8 @@ namespace DialoguePrototype
         /// </summary>
         public MessageBoxScreen(String message, bool includeUsageText, bool includePromptAdvance)
         {
+
+            this.scale = 1.0f;
             const String promptAdvance = "\n{Enter}...";
             const String usageText = "\nA button, Space, Enter = ok" +
                                      "\nB button, Esc = cancel"; 
@@ -165,8 +171,9 @@ namespace DialoguePrototype
             // Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(message);
+            Vector2 textSize = font.MeasureString(message) * scale;
             Vector2 textPosition = (viewportSize - textSize) / 2;
+            Vector2 origin = new Vector2(0, 0);
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -186,7 +193,9 @@ namespace DialoguePrototype
             spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
 
             // Draw the message box text.
-            spriteBatch.DrawString(font, message, textPosition, color);
+            // not sure why this can't be null
+            SpriteEffects spriteEffects = new SpriteEffects();
+            spriteBatch.DrawString(font, message, textPosition, color, 0.0f, origin, this.scale, spriteEffects, 0.0f);
 
             spriteBatch.End();
         }

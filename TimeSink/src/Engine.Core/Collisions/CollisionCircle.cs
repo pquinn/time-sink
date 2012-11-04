@@ -21,7 +21,7 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [Collided.Overload]
-        public bool Collided(CollisionRectangle r)
+        public bool Collided(AACollisionRectangle r)
         {
             return r.Collided(this);
         }

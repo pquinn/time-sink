@@ -102,7 +102,7 @@
     <Compile Include="Collisions\Circle.cs" />
     <Compile Include="Collisions\CollisionCircle.cs" />
     <Compile Include="Collisions\CollisionInfo.cs" />
-    <Compile Include="Collisions\CollisionRectangle.cs" />
+    <Compile Include="Collisions\AACollisionRectangle.cs" />
     <Compile Include="Collisions\CollisionSet.cs" />
     <Compile Include="Collisions\ContainsPointExtensions.cs" />
     <Compile Include="Collisions\ICollideable.cs" />

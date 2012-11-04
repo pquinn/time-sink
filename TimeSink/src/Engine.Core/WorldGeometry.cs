@@ -25,7 +25,7 @@ namespace TimeSink.Engine.Core.Collisions
 
         public WorldGeometry(Rectangle r)
         {
-            collisionGeometry.Geometry.Add(new CollisionRectangle(r));
+            collisionGeometry.Geometry.Add(new AACollisionRectangle(r));
         }
 
         public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
@@ -43,9 +43,9 @@ namespace TimeSink.Engine.Core.Collisions
 
             foreach (var geo in collisionGeometry.Geometry)
             {
-                if (geo is CollisionRectangle)
+                if (geo is AACollisionRectangle)
                 {
-                    var rect = geo as CollisionRectangle;
+                    var rect = geo as AACollisionRectangle;
                     geoSprites.Add(
                         geoTexture,
                         new Vector2(2f, .32f),

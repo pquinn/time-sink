@@ -6,17 +6,17 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public class CollisionRectangle : ICollisionGeometry
+    public class AACollisionRectangle : ICollisionGeometry
     {
         public Rectangle Rect;
 
-        public CollisionRectangle(Rectangle r)
+        public AACollisionRectangle(Rectangle r)
         {
             Rect = r;
         }
 
         [Collided.Overload]
-        public bool Collided(CollisionRectangle r)
+        public bool Collided(AACollisionRectangle r)
         {
             return Rect.Intersects(r.Rect);
         }
