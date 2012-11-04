@@ -48,7 +48,7 @@ namespace DialoguePrototype
         /// usage text prompt.
         /// </summary>
         public MessageBoxScreen()
-            : this(null, true, false)
+            : this(null, true, true)
         { }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace DialoguePrototype
         /// usage text prompt.
         /// </summary>
         public MessageBoxScreen(String message)
-            : this(message, true, false)
+            : this(message, true, true)
         { }
 
 

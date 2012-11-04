@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Windows.Forms;
+using System.IO;
+using System.Reflection;
 
 namespace DB
 {
@@ -15,7 +17,10 @@ namespace DB
         /// </summary>
         public SQLiteDatabase()
         {
-            dbConnection = "Data Source=DialoguePrototypeTestDB.s3db";
+            // this seems like it might be extremely slow. not really sure.
+            string execPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+            string fileName = Path.Combine(execPath, "DialoguePrototypeTestDB.s3db").Substring(6);
+            dbConnection = String.Format("Data Source={0}; Version=3", fileName);
         }
 
         /// <summary>
@@ -56,6 +61,7 @@ namespace DB
                 cnn.Open();
                 Console.WriteLine("database: " + cnn.Database.ToString());
                 Console.WriteLine("on query: " + sql);
+                Console.WriteLine("schema: " + cnn.GetSchema().TableName.ToString());
                 SQLiteCommand mycommand = new SQLiteCommand(cnn);
                 mycommand.CommandText = sql;
                 SQLiteDataReader reader = mycommand.ExecuteReader();
