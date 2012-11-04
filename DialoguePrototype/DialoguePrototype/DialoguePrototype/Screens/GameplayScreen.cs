@@ -121,23 +121,6 @@ namespace DialoguePrototype
             }
         }
 
-        private void InitializeDialogueBox()
-        {
-            const string message = "Are you sure you want this to be a sentence?";
-            MessageBoxScreen openingPrompt = new MessageBoxScreen(message, false, true);
-            openingPrompt.Accepted += AdvanceDialogueBox;
-            ScreenManager.AddScreen(openingPrompt, null);
-        }
-
-
-        private void AdvanceDialogueBox(object sender, PlayerIndexEventArgs e)
-        {
-            const string message = "I think it was supposed to be a question...";
-            MessageBoxScreen nextDialogueBox = new MessageBoxScreen(message, false, true);
-            nextDialogueBox.Accepted += AdvanceDialogueBox;
-            ScreenManager.AddScreen(nextDialogueBox, e.PlayerIndex);
-        }
-
         public override void Deactivate()
         {
             ScreenManager.sceneInterface.Unload();
@@ -224,7 +207,7 @@ namespace DialoguePrototype
             }
             else if (startAction.Evaluate(input, ControllingPlayer, out player))
             {
-                InitializeDialogueBox();
+                ScreenManager.AddScreen(DialogueBox.InitializeDialogueBox(), null);
             }
         }
 
