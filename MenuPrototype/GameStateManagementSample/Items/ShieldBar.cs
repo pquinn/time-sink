@@ -42,5 +42,10 @@ namespace GameStateManagementSample
         {
             return false;
         }
+
+        public virtual bool GameplayDraw()
+        {
+            return true;
+        }
     }
 }

@@ -31,6 +31,16 @@ namespace GameStateManagementSample
 
         ContentManager content;
         SpriteFont gameFont;
+        
+        Texture2D blank;
+        Texture2D grenade;
+        Texture2D empty;
+        Texture2D outline;
+        Texture2D shield;
+
+        public const int MAX_WEAPON_SLOTS = 10;
+
+        public int currentSlots = 0;
 
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
@@ -58,12 +68,12 @@ namespace GameStateManagementSample
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameplayScreen(List<IHudElement> target)
+        public GameplayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            foreach (IHudElement x in target)
+     /*       foreach (IHudElement x in target)
             {
                 if (x.IsSlot())
                 {
@@ -77,16 +87,18 @@ namespace GameStateManagementSample
                     }
                 }
             }
-
+            */
             pauseAction = new InputAction(
                 new Buttons[] { Buttons.Start, Buttons.Back },
                 new Keys[] { Keys.Escape },
                 true);
         }
 
-
         /// <summary>
-        /// Load graphics content for the game.
+        /// Loads graphics content for this screen. This uses the shared ContentManager
+        /// provided by the Game class, so the content will remain loaded forever.
+        /// Whenever a subsequent MessageBoxScreen tries to load this same content,
+        /// it will just get back another reference to the already loaded data.
         /// </summary>
         public override void Activate(bool instancePreserved)
         {
@@ -97,25 +109,51 @@ namespace GameStateManagementSample
 
                 gameFont = content.Load<SpriteFont>("gamefont");
 
-                // A real game would probably have more content than this sample, so
-                // it would take longer to load. We simulate that by delaying for a
-                // while, giving you a chance to admire the beautiful loading screen.
-                Thread.Sleep(1000);
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
-            }
+                content = ScreenManager.Game.Content;
+                blank = content.Load<Texture2D>("blank");
+                grenade = content.Load<Texture2D>("grenade1");
+                empty = content.Load<Texture2D>("Empty");
+                outline = content.Load<Texture2D>("Slot Outline-01");
+                shield = content.Load<Texture2D>("shield");
 
-#if WINDOWS_PHONE
-            if (Microsoft.Phone.Shell.PhoneApplicationService.Current.State.ContainsKey("PlayerPosition"))
-            {
-                playerPosition = (Vector2)Microsoft.Phone.Shell.PhoneApplicationService.Current.State["PlayerPosition"];
-                enemyPosition = (Vector2)Microsoft.Phone.Shell.PhoneApplicationService.Current.State["EnemyPosition"];
+                CreateMenuItems();
             }
-#endif
         }
+
+        public void AddWeaponSlot(SlotItem item)
+        {
+            WeaponSlot slot = new WeaponSlot(item, outline);
+
+            HudElements.Add(slot);
+
+            currentSlots++;
+        }
+
+        public void CreateMenuItems()
+        {
+            SlotItem grenadeItem = new Grenade(grenade);
+            SlotItem grenadeItemBackup = new Grenade(grenade);
+            SlotItem grenadeItemBackup2 = new Grenade(grenade);
+            SlotItem blankItem = new Grenade(empty);
+
+            grenadeItem.IsPrimary = true;
+            grenadeItemBackup.IsSecondary = true;
+
+            AddWeaponSlot(grenadeItem);
+            AddWeaponSlot(grenadeItemBackup);
+            AddWeaponSlot(grenadeItemBackup2);
+            for (int i = currentSlots; i <= MAX_WEAPON_SLOTS; i++)
+            {
+                AddWeaponSlot(grenadeItemBackup2);
+            }
+        }
+
+
 
 
         public override void Deactivate()
@@ -156,6 +194,11 @@ namespace GameStateManagementSample
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
+            // Make the menu slide into place during transitions, using a
+            // power curve to make things look more interesting (this makes
+            // the movement slow down as it nears the end).
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -181,6 +224,29 @@ namespace GameStateManagementSample
 
                 // TODO: this game isn't very fun! You could probably improve
                 // it by inserting something more interesting in this space :-)
+            }
+            Point posn = new Point(ScreenManager.FrameWidth / 9, 0);
+            float transitionOffset2 = (float)Math.Pow(TransitionPosition, 2);
+            for (int i = 0; i < hudElements.Count; i++)
+            {
+                IHudElement weaponSlot = HudElements[i];
+
+                if (ScreenState == ScreenState.TransitionOn)
+                    posn.Y -= (int)(transitionOffset * 50);
+                else if (!((WeaponSlot)weaponSlot).Item.IsPrimary && !((WeaponSlot)weaponSlot).Item.IsSecondary)
+                {
+                    posn.Y -= (int)(transitionOffset * 512);
+                }
+                /*  if (ScreenState == ScreenState.TransitionOn)
+                      posn.Y += (int)transitionOffset2 * 256;
+
+                  else
+                      posn.Y -= (int)transitionOffset2 * 512;
+                  */
+                ((WeaponSlot)weaponSlot).Position = posn;
+
+                posn.X += ((WeaponSlot)weaponSlot).GetWidth();
+
             }
         }
 
@@ -213,7 +279,7 @@ namespace GameStateManagementSample
 #if WINDOWS_PHONE
                 ScreenManager.AddScreen(new PhonePauseScreen(), ControllingPlayer);
 #else
-                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+                ScreenManager.AddScreen(new PauseMenuScreen(hudElements), ControllingPlayer);
 #endif
             }
             else
@@ -276,11 +342,13 @@ namespace GameStateManagementSample
             // Draw each weaponSlot in turn.
             for (int i = 0; i < hudElements.Count; i++)
             {
-                IHudElement weaponSlot = hudElements[i];
+                IHudElement hudElement = hudElements[i];
 
                // bool isSelected = IsActive && (i == selectedEntry);
-
-                weaponSlot.Draw(this, false, gameTime);
+                if (hudElement.GameplayDraw())
+                {
+                    hudElement.Draw(this, false, gameTime);
+                }
             }
 
             spriteBatch.End();

@@ -34,6 +34,12 @@ namespace GameStateManagementSample
         int selectedEntry = 0;
         string menuTitle;
 
+
+
+        public const int MAX_WEAPON_SLOTS = 10;
+
+        public int currentSlots = 0;
+
         InputAction menuUp;
         InputAction menuDown;
         InputAction menuSelect;
@@ -64,6 +70,7 @@ namespace GameStateManagementSample
         protected List<IHudElement> HudElements
         {
             get { return hudElements; }
+            set { hudElements = value; }
         }
 
         protected Texture2D Blank
@@ -226,8 +233,11 @@ namespace GameStateManagementSample
             for (int i = 0; i < hudElements.Count; i++)
             {
                 IHudElement weaponSlot = HudElements[i];
+                if (weaponSlot.GameplayDraw())
+                {
+                }
 
-                if (ScreenState == ScreenState.TransitionOn)
+                else if (ScreenState == ScreenState.TransitionOn)
                     posn.Y -= (int)(transitionOffset * 50);
                 else if (!((WeaponSlot)weaponSlot).Item.IsPrimary && !((WeaponSlot)weaponSlot).Item.IsSecondary) 
                 {

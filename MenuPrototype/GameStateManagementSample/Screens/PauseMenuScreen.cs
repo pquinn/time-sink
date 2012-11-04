@@ -9,6 +9,9 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 #endregion
 
 namespace GameStateManagementSample
@@ -21,11 +24,15 @@ namespace GameStateManagementSample
     {
         #region Initialization
 
+        ContentManager content;
+
+
+
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PauseMenuScreen()
+        public PauseMenuScreen(List<IHudElement> target)
             : base("Paused")
         {
             // Create our menu entries.
@@ -39,8 +46,9 @@ namespace GameStateManagementSample
             // Add entries to the menu.
             MenuEntries.Add(resumeGameMenuEntry);
             MenuEntries.Add(quitGameMenuEntry);
-        }
 
+            HudElements = target;
+        }
 
         #endregion
 
