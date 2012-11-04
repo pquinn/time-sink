@@ -18,13 +18,15 @@ namespace SoundAPI
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
-            SoundEffect soundEngine;
-            SoundEffectInstance soundEngineInstance;
-            SoundEffect musicLoop;
-            SoundObject obj;
-            KeyboardState oldState;
-            bool isPlaying = false;
+        SoundEffect soundEngine;
+        SoundEffect logon;
+        SoundEffect dtd;
+        SoundEffectInstance soundEngineInstance;
+        SoundEffect musicLoop;
+        SoundObject obj;
+        List<SoundObject> soundList = new List<SoundObject>();            
+        KeyboardState oldState;
+        bool isPlaying = false;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -52,12 +54,17 @@ namespace SoundAPI
         {
 
             soundEngine = Content.Load<SoundEffect>("Dixie");
+            logon = Content.Load<SoundEffect>("Windows Logon");
+            dtd = Content.Load<SoundEffect>("DtD");
             musicLoop = Content.Load<SoundEffect>("ts");
             soundEngineInstance = musicLoop.CreateInstance();
             soundEngineInstance.IsLooped = true;
 
 
             obj = new SoundObject(soundEngine, Vector2.Zero);
+            soundList.Add(obj);
+            soundList.Add(new SoundObject(logon, Vector2.One));
+            soundList.Add(new SoundObject(dtd, Vector2.Zero));
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -91,11 +98,32 @@ namespace SoundAPI
                     obj.PanRight();
                 }
             }
+            if (newState.IsKeyDown(Keys.NumPad1))
+            {
+                if (!oldState.IsKeyDown(Keys.NumPad1))
+                {
+                    soundList[0].PlaySound(Vector2.Zero);
+                }
+            }
+            if (newState.IsKeyDown(Keys.NumPad2))
+            {
+                if (!oldState.IsKeyDown(Keys.NumPad2))
+                {
+                    soundList[1].PlaySound(Vector2.Zero);
+                }
+            }
+            if (newState.IsKeyDown(Keys.NumPad3))
+            {
+                if (!oldState.IsKeyDown(Keys.NumPad3))
+                {
+                    soundList[2].PlaySound(Vector2.Zero);
+                }
+            }
             if (newState.IsKeyDown(Keys.Space))
             {
                 if (!oldState.IsKeyDown(Keys.Space))
                 {
-                    if (isPlaying == false)
+                    if (obj.Dynamic.State.Equals(SoundState.Stopped))
                     {
                         obj.PlaySound(Vector2.Zero);
                         isPlaying = true;
