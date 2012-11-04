@@ -35,10 +35,11 @@ using SynapseGaming.LightingSystem.Collision;
 using SynapseGaming.LightingSystem.Editor;
 using SynapseGaming.LightingSystem.Rendering;
 using SynapseGaming.LightingSystem.Effects;
+using TimeSink.Engine.Core.Collisions;
 #endregion
 
 
-namespace MechanicsTest
+namespace TimeSink.Engine.Core
 {
     /// <summary>
     /// This is the main type for your game
@@ -66,8 +67,8 @@ namespace MechanicsTest
         const float moveScale = 100.0f;
 
         // Components
-        MechanicsTest.Physics.PhysicsManager physicsManager = new MechanicsTest.Physics.PhysicsManager();
-        MechanicsTest.Collisions.CollisionManager collisionManager = new MechanicsTest.Collisions.CollisionManager();
+        TimeSink.Engine.Core.Physics.PhysicsManager physicsManager = new TimeSink.Engine.Core.Physics.PhysicsManager();
+        CollisionManager collisionManager = new CollisionManager();
         UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
         WorldGeometry world;
 
@@ -176,9 +177,9 @@ namespace MechanicsTest
             environment = Content.Load<SceneEnvironment>("Environment/Environment");
 
             // TODO: use this.Content to load your game content here
-            character.Load(Content, SpriteManager, SceneInterface);
+            character.Load(this);
 
-            world.Load(Content, SpriteManager, SceneInterface);
+            world.Load(this);
         }
 
         /// <summary>

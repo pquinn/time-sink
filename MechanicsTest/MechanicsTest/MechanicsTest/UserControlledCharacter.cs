@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SynapseGaming.LightingSystem.Rendering;
+
 using Microsoft.Xna.Framework;
-using SynapseGaming.LightingSystem.Effects;
-using MechanicsTest.Physics;
-using MechanicsTest.Controller;
 using Microsoft.Xna.Framework.Input;
+
+using SynapseGaming.LightingSystem.Effects;
+using SynapseGaming.LightingSystem.Rendering;
+
+using MechanicsTest.Collisions;
+using MechanicsTest.Controller;
+using MechanicsTest.Physics;
+using SynapseGaming.LightingSystem.Core;
+using Microsoft.Xna.Framework.Content;
 
 namespace MechanicsTest
 {
-    public class UserControlledCharacter : IPhysicsEnabledBody, IKeyboardControllable
+    public class UserControlledCharacter 
+        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable
     {
         const float PLAYER_MASS = 100f;
 
@@ -21,25 +28,48 @@ namespace MechanicsTest
         private GravityPhysics physics;
         private bool gravityToggleGuard = true;
 
-        public UserControlledCharacter(Vector2 position)
+        //private CollisionRectangle collisionGeometry;
+        public ICollisionGeometry CollisionGeometry
         {
-            physics = new GravityPhysics(position, PLAYER_MASS);
+            get 
+            { 
+                return new CollisionRectangle(
+                    new Rectangle(
+                        (int)physics.Position.X,
+                        (int)physics.Position.Y,
+                        128, 128
+                    )
+                );
+            }
         }
 
-        public void Load(StarterGame game)
+        public UserControlledCharacter(Vector2 position)
         {
-            playerTexture = game.Content.Load<BaseRenderableEffect>("Materials/Dude");
+            physics = new GravityPhysics(position, PLAYER_MASS)
+            {
+                GravityEnabled = false
+            };
+        }
+
+        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
+        {
+            playerTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
 
             // First create and submit the empty player container.
-            playerSprites = game.SpriteManager.CreateSpriteContainer();
-            game.SceneInterface.ObjectManager.Submit(playerSprites);
+            playerSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(playerSprites);
         }
 
         public void Draw(GameTime gameTime)
         {
             playerSprites.Begin();
 
-            playerSprites.Add(playerTexture, Vector2.One * 0.5f, physics.Position, 0, 0);
+            playerSprites.Add(
+                playerTexture, 
+                Vector2.One * 0.32f, 
+                physics.Position, 
+                0, 
+                0);
 
             playerSprites.End();
         }
@@ -58,7 +88,7 @@ namespace MechanicsTest
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 0.0f;
+            var amount = 1f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -92,7 +122,6 @@ namespace MechanicsTest
             {
                 // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
                 movedirection.Normalize();
-                amount = 1.0f;
             }
             
             // Increment animation unless idle.
@@ -102,8 +131,14 @@ namespace MechanicsTest
                 playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
                 // Move player based on the controller direction and time scale.
-                physics.Position += movedirection * timeframe;
+                physics.Position += movedirection * timeframe * amount;
             }
+        }
+
+        public bool GravityEnabled
+        {
+            get { return physics.GravityEnabled; }
+            set { physics.GravityEnabled = value; }
         }
     }
 }

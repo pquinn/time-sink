@@ -1,0 +1,58 @@
+﻿<Window x:Class="TimeSink.Editor.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Core="clr-namespace:TimeSink.Editor.GUI"
+        Title="MainWindow" Width="1024" Height="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="Auto" HorizontalAlignment="Stretch" Margin="0" Name="menu1" VerticalAlignment="Top" Width="Auto"
+              IsMainMenu="True" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="New..." />
+                <MenuItem Header="Open..." />
+                <MenuItem Header="Save..." />
+                <MenuItem Header="Save As..." />
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="..." />
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1" Height="Auto" Name="tabControl1" Width="Auto" Padding="0">
+            <TabItem Header="Editor" Name="tabItem1">
+                <Core:Editor>                    
+                </Core:Editor>
+            </TabItem>
+            <TabItem Header="Entities" Name="tabItem2">
+                <Core:Entities>
+                </Core:Entities>
+            </TabItem>
+            <TabItem Header="Physics" Name="tabItem3">
+                <Core:Physics>
+                </Core:Physics>
+            </TabItem>
+            <TabItem Header="Collisions" Name="tabItem4">
+                <Core:Collisions>
+                </Core:Collisions>
+            </TabItem>
+            <TabItem Header="Triggers" Name="tabItem5">
+                <Core:Triggers>
+                </Core:Triggers>
+            </TabItem>
+            <TabItem Header="Sounds" Name="tabItem6">
+                <Core:Sounds>
+                </Core:Sounds>
+            </TabItem>
+            <TabItem Header="Dialogue" Name="tabItem7">
+                <Core:Dialogue>
+                </Core:Dialogue>
+            </TabItem>
+            <TabItem Header="Level" Name="tabItem8">
+                <Core:Level>
+                </Core:Level>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
