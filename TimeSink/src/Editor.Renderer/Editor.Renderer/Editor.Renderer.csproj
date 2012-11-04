@@ -73,8 +73,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net" />
-    <Reference Include="XNAControl">
-      <HintPath>..\..\lib\XNA WPF Control v1.0.0\Debug\XNAControl.dll</HintPath>
+    <Reference Include="XNAControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\XNAControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
