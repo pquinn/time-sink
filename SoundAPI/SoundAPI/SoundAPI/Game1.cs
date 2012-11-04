@@ -23,6 +23,7 @@ namespace SoundAPI
             SoundEffectInstance soundEngineInstance;
             SoundEffect musicLoop;
             SoundObject obj;
+            KeyboardState oldState;
             bool isPlaying = false;
         public Game1()
         {
@@ -39,7 +40,7 @@ namespace SoundAPI
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            oldState = Keyboard.GetState();
             base.Initialize();
         }
 
@@ -50,7 +51,7 @@ namespace SoundAPI
         protected override void LoadContent()
         {
 
-            soundEngine = Content.Load<SoundEffect>("DtD");
+            soundEngine = Content.Load<SoundEffect>("Dixie");
             musicLoop = Content.Load<SoundEffect>("ts");
             soundEngineInstance = musicLoop.CreateInstance();
             soundEngineInstance.IsLooped = true;
@@ -64,11 +65,6 @@ namespace SoundAPI
             // TODO: use this.Content to load your game content here
         }
 
-        private void ProcessKeyboard()
-        {
-               
-        }
-
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -76,6 +72,56 @@ namespace SoundAPI
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+        }
+
+        protected void UpdateKeyboard()
+        {
+            KeyboardState newState = Keyboard.GetState();
+            if (newState.IsKeyDown(Keys.Left))
+            {
+                if (isPlaying == true && obj.IsModular)
+                {
+                    obj.PanLeft();
+                }
+            }
+            if (newState.IsKeyDown(Keys.Right))
+            {
+                if (isPlaying == true && obj.IsModular)
+                {
+                    obj.PanRight();
+                }
+            }
+            if (newState.IsKeyDown(Keys.Space))
+            {
+                if (!oldState.IsKeyDown(Keys.Space))
+                {
+                    if (isPlaying == false)
+                    {
+                        obj.PlaySound(Vector2.Zero);
+                        isPlaying = true;
+                    }
+                    else
+                    {
+                        obj.TogglePauseSound();
+                    }
+                }
+                else if (oldState.IsKeyDown(Keys.Space))
+                {
+
+                }
+            }
+            if (newState.IsKeyDown(Keys.L))
+            {
+                if (!oldState.IsKeyDown(Keys.Space))
+                {
+                    obj.Dynamic.IsLooped = !obj.Dynamic.IsLooped;
+                }
+                else if (oldState.IsKeyDown(Keys.Space))
+                {
+
+                }
+            }
+            oldState = newState;
         }
 
         /// <summary>
@@ -93,31 +139,8 @@ namespace SoundAPI
 
             time += gameTime.ElapsedGameTime;
 
-            if (isPlaying == false)
-            {
-               // this.soundEngineInstance.Play();
-                this.obj.PlaySound(new Vector2(1,7));
-                isPlaying = true;
-            }
+            UpdateKeyboard();
 
-            KeyboardState keybState = Keyboard.GetState();
-            if (keybState.IsKeyDown(Keys.Left))
-            {
-                if (isPlaying == true && obj.IsModular)
-                {
-                    obj.PanLeft();
-                }
-            }
-            if (keybState.IsKeyDown(Keys.Right))
-            {
-                if (isPlaying == true && obj.IsModular)
-                {
-                    obj.PanRight();
-                    Console.Write("+1");
-                }
-            }
-               
-            
 
             // TODO: Add your update logic here
 

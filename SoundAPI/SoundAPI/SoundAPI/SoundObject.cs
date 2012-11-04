@@ -19,9 +19,6 @@ namespace SoundAPI
         //Does this sound change based off distance?
          bool isModular;
 
-        //Is our sound playing
-         bool isPlaying;
-
          SoundEffectInstance dynamic;
 
 
@@ -34,6 +31,7 @@ namespace SoundAPI
         {
             this.sound = target;
             this.isModular = false;
+            this.dynamic = sound.CreateInstance();
         }
 
         //Modular Constructor
@@ -46,6 +44,7 @@ namespace SoundAPI
         }
 
         //Accessors
+
         public Vector2 Position
         {
             get { return position; }
@@ -72,6 +71,7 @@ namespace SoundAPI
 
         #region Methods
 
+        //Update the sound object based off a given position
         public void Update(Vector2 targetPos)
         {
             float distance = Math.Abs(position.X - targetPos.X);
@@ -91,6 +91,7 @@ namespace SoundAPI
             }
         }
 
+        //Play the sound for a modular SoundObject
         public void PlaySound(Vector2 targetPos)
         {
             if (isModular)
@@ -98,13 +99,32 @@ namespace SoundAPI
                 Update(targetPos);
                 dynamic.Play();
             }
+
             else
             {
-                sound.Play();
+                dynamic.Volume = 1.0f;
+                dynamic.Pan = 0;
+                dynamic.Play();
             }
          
         }
 
+        public void StopSound()
+        {
+            dynamic.Stop();
+        }
+
+        public void TogglePauseSound()
+        {
+            if (dynamic.State.Equals(SoundState.Playing))
+            {
+                dynamic.Pause();
+            }
+            else if (dynamic.State.Equals(SoundState.Paused))
+            {
+                dynamic.Resume();
+            }
+        }
         public void PanLeft()
         {
             if (dynamic.Pan <= -0.9f)

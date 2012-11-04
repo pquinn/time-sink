@@ -84,7 +84,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WindowsGame2Content\SoundApiContent.contentproj">
+    <ProjectReference Include="..\SoundAPIContent\SoundApiContent.contentproj">
       <Name>SoundApiContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
       <Project>{B0B1871C-8474-41E6-89E9-D5055C15A294}</Project>
