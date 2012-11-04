@@ -30,12 +30,12 @@ using Microsoft.Xna.Framework.Input;
 
 // Include the necessary SunBurn namespaces.
 using SynapseGaming.LightingSystem.Core;
+using SynapseGaming.LightingSystem.Collision;
 using SynapseGaming.LightingSystem.Editor;
 using SynapseGaming.LightingSystem.Rendering;
 using SynapseGaming.LightingSystem.Effects;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
-using SynapseGaming.LightingSystem.Collision.Legacy;
 #endregion
 
 
@@ -68,7 +68,7 @@ namespace TimeSink.Engine.Game
 
         // Components
         TimeSink.Engine.Core.Physics.PhysicsManager physicsManager = new TimeSink.Engine.Core.Physics.PhysicsManager();
-        TimeSink.Engine.Core.Collisions.CollisionManager collisionManager = new TimeSink.Engine.Core.Collisions.CollisionManager();
+        CollisionManager collisionManager = new CollisionManager();
         UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
         WorldGeometry world;
 
