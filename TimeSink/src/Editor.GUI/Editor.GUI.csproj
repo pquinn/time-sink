@@ -53,7 +53,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="XNAControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\XNA WPF Control v1.0.0\Debug\XNAControl.dll</HintPath>
+      <HintPath>..\..\lib\XNAControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
