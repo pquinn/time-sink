@@ -123,8 +123,7 @@ namespace DialoguePrototype
 
         private void InitializeDialogueBox()
         {
-            const string message = "Are you sure you want this to be a sentence?";
-            MessageBoxScreen openingPrompt = new MessageBoxScreen(message, false, true);
+            DialogueBox openingPrompt = new DialogueBox("1234567890");
             openingPrompt.Accepted += AdvanceDialogueBox;
             ScreenManager.AddScreen(openingPrompt, null);
         }

@@ -298,10 +298,12 @@ namespace GameStateManagement
 
         #region Public Methods
 
-
+        /// <summary>
+        /// Adds a new screen to the screen manager.
+        /// </summary>
         public void AddScreen(GameScreen screen)
         {
-            AddScreen(screen, new PlayerIndex());
+            AddScreen(screen, null);
         }
 
         /// <summary>

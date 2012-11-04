@@ -26,7 +26,7 @@ namespace DialoguePrototype
     {
         #region Fields
 
-        string message;
+        protected String message { get; set; }
         Texture2D gradientTexture;
 
         InputAction menuSelect;
@@ -43,12 +43,19 @@ namespace DialoguePrototype
 
         #region Initialization
 
+        /// <summary>
+        /// Constructor automatically includes the standard "A=ok, B=cancel"
+        /// usage text prompt.
+        /// </summary>
+        public MessageBoxScreen()
+            : this(null, true, false)
+        { }
 
         /// <summary>
         /// Constructor automatically includes the standard "A=ok, B=cancel"
         /// usage text prompt.
         /// </summary>
-        public MessageBoxScreen(string message)
+        public MessageBoxScreen(String message)
             : this(message, true, false)
         { }
 
@@ -57,10 +64,10 @@ namespace DialoguePrototype
         /// Constructor lets the caller specify whether to include the standard
         /// "A=ok, B=cancel" usage text prompt.
         /// </summary>
-        public MessageBoxScreen(string message, bool includeUsageText, bool includePromptAdvance)
+        public MessageBoxScreen(String message, bool includeUsageText, bool includePromptAdvance)
         {
-            const string promptAdvance = "\n{Enter}...";
-            const string usageText = "\nA button, Space, Enter = ok" +
+            const String promptAdvance = "\n{Enter}...";
+            const String usageText = "\nA button, Space, Enter = ok" +
                                      "\nB button, Esc = cancel"; 
             
             if (includeUsageText)

@@ -36,6 +36,7 @@ using SynapseGaming.LightingSystem.Editor;
 using SynapseGaming.LightingSystem.Rendering;
 
 using GameStateManagement;
+using DB;
 #endregion
 
 
@@ -54,6 +55,8 @@ namespace DialoguePrototype
         // Screen Manager
         ScreenManager screenManager;
         ScreenFactory screenFactory;
+
+        public SQLiteDatabase database;
 
         #endregion
 
@@ -80,6 +83,8 @@ namespace DialoguePrototype
             //Create a new instance of the Screen Manager
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
+
+            database = new SQLiteDatabase(); 
 
             Instance = this;
 
