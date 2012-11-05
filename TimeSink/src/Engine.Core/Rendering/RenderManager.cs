@@ -22,6 +22,14 @@ namespace TimeSink.Engine.Core.Rendering
             return renderables.Add(renderable);
         }
 
+        public bool RegisterRenderable(IEnumerable<IRenderable> renderablesToRegister)
+        {
+            bool hasFailure = false;
+            renderablesToRegister.ForEach(x => hasFailure &= renderables.Add(x));
+
+            return hasFailure;
+        }
+
         public bool UnregisterRenderable(IRenderable renderable)
         {
             return renderables.Remove(renderable);
@@ -29,10 +37,14 @@ namespace TimeSink.Engine.Core.Rendering
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
+
             foreach (var renderable in renderables)
             {
                 renderable.Rendering.Draw(spriteBatch, cache);
             }
+
+            spriteBatch.End();
         }
     }
 }

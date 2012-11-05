@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Editor.Game
 {
@@ -21,8 +22,9 @@ namespace TimeSink.Editor.Game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        RenderManager renderManager;
+
         List<StaticMesh> staticMeshes;
-        Texture2D groundTile;
 
         InMemoryResourceCache<Texture2D> textureCache;
 
@@ -49,6 +51,10 @@ namespace TimeSink.Editor.Game
                 new StaticMesh(new Vector2(294, 20)),
                 new StaticMesh(new Vector2(566, 20))
             };
+
+            //set up managers
+            renderManager = new RenderManager(textureCache);
+            renderManager.RegisterRenderable(staticMeshes);
         }
 
         /// <summary>
@@ -61,10 +67,10 @@ namespace TimeSink.Editor.Game
             textureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
 
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             textureCache.LoadResource("Textures/Ground_Tile1");
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);            
 
             // TODO: use this.Content to load your game content here
         }
@@ -102,16 +108,7 @@ namespace TimeSink.Editor.Game
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-
-            spriteBatch.Begin();
-
-            foreach (var staticMesh in staticMeshes)
-            {
-                spriteBatch.Draw(textureCache.GetResource("Textures/Ground_Tile1"), staticMesh.Position, Color.White);
-            }
-
-            spriteBatch.End();
+            renderManager.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
