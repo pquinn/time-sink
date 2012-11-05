@@ -112,6 +112,7 @@ namespace TimeSink.Engine.Core
             var keyboard = Keyboard.GetState();
             var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
+
             #region Gamepad Handling
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
                 movedirection.X -= 1.0f;
@@ -121,8 +122,17 @@ namespace TimeSink.Engine.Core
                 movedirection.X += gamepad.ThumbSticks.Left.X;
             if (gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                //Insert Jump Logic Here
-                jumpSound.Play();
+                if (jumpToggleGuard && touchingGround)
+                {
+                    jumpSound.Play();
+                    physics.Velocity -= new Vector2(0, 500);
+                    jumpToggleGuard = false;
+                    GravityEnabled = true;
+                }
+            }
+            else if (touchingGround)
+            {
+                jumpToggleGuard = true;
             }
             #endregion
 
@@ -140,6 +150,7 @@ namespace TimeSink.Engine.Core
             {
                 if (jumpToggleGuard && touchingGround)
                 {
+                    jumpSound.Play();
                     physics.Velocity -= new Vector2(0, 500);
                     jumpToggleGuard = false;
                     GravityEnabled = true;
