@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TimeSink.Editor.Renderer;
+using TimeSink.Editor.Game;
 
 namespace TimeSink.Editor.GUI
 {
@@ -20,13 +20,13 @@ namespace TimeSink.Editor.GUI
     /// </summary>
     public partial class Editor : UserControl
     {
-        Game m_game;
+        Game1 m_game;
    
         public Editor()
         {
             InitializeComponent();
 
-            m_game = new Game(xnaControl.Handle);
+            m_game = new Game1(xnaControl.Handle);
         }
     }
 }

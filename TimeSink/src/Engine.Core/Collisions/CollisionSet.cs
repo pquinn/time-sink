@@ -6,7 +6,7 @@ using TimeSink.Engine.Core.Collisions;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public struct CollisionSet : ICollisionGeometry
+    public class CollisionSet : ICollisionGeometry
     {
         private HashSet<ICollisionGeometry> _geom = new HashSet<ICollisionGeometry>();
         public HashSet<ICollisionGeometry> Geometry

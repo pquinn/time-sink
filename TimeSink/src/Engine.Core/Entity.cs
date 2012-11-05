@@ -15,5 +15,17 @@ namespace TimeSink.Engine.Core
         : ICollideable, IPhysicsEnabledBody, IKeyboardControllable
     {
         public virtual void Update(GameTime time, Game world) { }
+
+        public abstract ICollisionGeometry CollisionGeometry
+        {
+            get;
+        }
+
+        public abstract IPhysicsParticle PhysicsController
+        {
+            get;
+        }
+
+        public abstract void HandleKeyboardInput(GameTime gameTime);
     }
 }

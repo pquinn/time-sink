@@ -107,8 +107,9 @@
       <Name>Engine.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine.GameContent\Engine.GameContent.contentproj">
-      <Name>Engine.GameContent</Name>
+      <Name>Engine.GameContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{7F172F56-86D9-4D59-8813-88EE13BA4468}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

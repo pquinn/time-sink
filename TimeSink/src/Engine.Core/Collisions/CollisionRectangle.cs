@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public struct CollisionRectangle : ICollisionGeometry
+    public class CollisionRectangle : ICollisionGeometry
     {
         public Vector2 TopLeft     { get; protected set; }
         public Vector2 BottomLeft  { get; protected set; }

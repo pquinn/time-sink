@@ -29,7 +29,7 @@ namespace TimeSink.Engine.Core.Collisions
 			var __actual = new Entry(obj1, obj2, info);
 
 			var __index = 0;
-			while (__index = DoGetNextMethod(__actual, __index) != -1)
+			while ((__index = DoGetNextMethod(__actual, __index)) != -1)
 				ms_candidates[__index].Method(obj1, obj2, info);
 		}
 		
