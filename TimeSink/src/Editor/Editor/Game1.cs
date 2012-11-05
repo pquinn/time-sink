@@ -19,7 +19,6 @@ namespace TimeSink.Editor.Game
     /// </summary>
     public class Game1 : XNAControl.XNAControlGame
     {
-        GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         RenderManager renderManager;

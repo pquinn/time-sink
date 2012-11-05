@@ -1,40 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
-//using SynapseGaming.LightingSystem.Effects;
-//using SynapseGaming.LightingSystem.Rendering;
 
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
+
 using Microsoft.Xna.Framework.Content;
 //using SynapseGaming.LightingSystem.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Caching;
+using System.Collections.Generic;
 
 namespace TimeSink.Engine.Core
 {
     public class UserControlledCharacter 
-        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable
+        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable, IRenderable
     {
         const float PLAYER_MASS = 100f;
 
-      //  SpriteContainer playerSprites;
         float playerRotation = 0.0f;
+
         //private BaseRenderableEffect playerTexture;
-        private Texture2D playerTexture;
+       // private Texture2D playerTexture;
         private SpriteBatch playerSprites;
         private GravityPhysics physics;
         private SoundEffect jumpSound;
+        private Stack<Tuple<string, Vector2>> spriteStack;
+        public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
 
-        //private AACollisionRectangle collisionGeometry;
         public ICollisionGeometry CollisionGeometry
         {
             get 
@@ -43,7 +45,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        128, 129
+                        71, 200
                     )
                 );
             }
@@ -57,22 +59,33 @@ namespace TimeSink.Engine.Core
             };
         }
 
-        public void Load(ContentManager content /*, SpriteManager manager, SceneInterface scene*/)
+        public void Load(ContentManager content)
         {
-            playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
+            SpriteTextureCache = new InMemoryResourceCache<Texture2D>(
+                new ContentManagerProvider<Texture2D>(content));
+            spriteStack = new Stack<Tuple<string, Vector2>>();
+
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Hair/Hair_Neutral");
+
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Hands/Hand_Neutral", new Vector2(37, 80)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Arm_Neutral", new Vector2(23, 20)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
+            spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
+            
+            
+            //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
-            // First create and submit the empty player container.
-           /* playerSprites = manager.CreateSpriteContainer();
-            scene.ObjectManager.Submit(playerSprites);*/
-          
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            playerSprites = spriteBatch;
-
-            playerSprites.Begin();
+            spriteBatch.Begin();
 
         /*    playerSprites.Add(
                 playerTexture, 
@@ -80,9 +93,10 @@ namespace TimeSink.Engine.Core
                 physics.Position, 
                 0, 
                 0);*/
-            playerSprites.Draw(playerTexture, physics.Position, Color.White);
+         //   playerSprites.Draw(playerTexture, physics.Position, Color.White);
 
-            playerSprites.End();
+
+            spriteBatch.End();
         }
 
         public void Update_Pre(GameTime gameTime)
@@ -112,43 +126,25 @@ namespace TimeSink.Engine.Core
             var keyboard = Keyboard.GetState();
             var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
-
-            #region Gamepad Handling
+            #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
                 movedirection.X -= 1.0f;
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
                 movedirection.X += 1.0f;
             if (gamepad.ThumbSticks.Left.X != 0)
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-            if (gamepad.Buttons.A.Equals(ButtonState.Pressed))
-            {
-                if (jumpToggleGuard && touchingGround)
-                {
-                    jumpSound.Play();
-                    physics.Velocity -= new Vector2(0, 500);
-                    jumpToggleGuard = false;
-                    GravityEnabled = true;
-                }
-            }
-            else if (touchingGround)
-            {
-                jumpToggleGuard = true;
-            }
-            #endregion
-
-            #region Keyboard Handling
-            // Get the keyboard direction.
-            //if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-            //    movedirection.Y -= 1.0f;
-            //if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-            //    movedirection.Y += 1.0f;
+            
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
                 movedirection.X -= 1.0f;
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
                 movedirection.X += 1.0f;
+            #endregion
+
+            #region Jumping
             if (keyboard.IsKeyDown(Keys.Space) 
                 || keyboard.IsKeyDown(Keys.W) 
-                || keyboard.IsKeyDown(Keys.Up))
+                || keyboard.IsKeyDown(Keys.Up)
+                || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
                 if (jumpToggleGuard && touchingGround)
                 {
@@ -190,25 +186,18 @@ namespace TimeSink.Engine.Core
         [OnCollidedWith.Overload]
         public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
         {
-            //GravityEnabled = false;
-            //PhysicsController.Velocity = Vector2.Zero;
-
-            //Handle whether collision should disable gravity
+            // Handle whether collision should disable gravity
             if (info.MinimumTranslationVector.Y > 0)
             {
                 touchingGround = true;
                 GravityEnabled = false;
                 physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
             }
+        }
 
-            //Let's think about the proper way to do gravity
-            //Each frame, we check for collision with the ground
-            //   ... this is fairly simple, since OnCollidedWith should be called each
-            //       tick that the player is touching the ground
-            //How do we detect if that hasn't been called?
-            //A: Set a flag in OnCollidedWith, check if that flag is enabled in Update
-            //   ... this requires that Update gets called after collision handling
-            //   ... expose Update_PreCollision / PostCollision???
+        public IRendering Rendering
+        {
+            get {return  new StackableRendering(spriteStack, this.physics.Position); }
         }
     }
 }
