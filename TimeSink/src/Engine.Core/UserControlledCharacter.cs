@@ -24,17 +24,13 @@ namespace TimeSink.Engine.Core
     {
         const float PLAYER_MASS = 100f;
 
-      //  SpriteContainer playerSprites;
         float playerRotation = 0.0f;
-        //private BaseRenderableEffect playerTexture;
         private Texture2D playerTexture;
-        private SpriteBatch playerSprites;
         private GravityPhysics physics;
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
 
-        //private AACollisionRectangle collisionGeometry;
         public ICollisionGeometry CollisionGeometry
         {
             get 
@@ -57,32 +53,19 @@ namespace TimeSink.Engine.Core
             };
         }
 
-        public void Load(ContentManager content /*, SpriteManager manager, SceneInterface scene*/)
+        public void Load(ContentManager content)
         {
             playerTexture = content.Load<Texture2D>("Textures/giroux");
-
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
-            // First create and submit the empty player container.
-           /* playerSprites = manager.CreateSpriteContainer();
-            scene.ObjectManager.Submit(playerSprites);*/
-          
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            playerSprites = spriteBatch;
+            spriteBatch.Begin();
 
-            playerSprites.Begin();
+            spriteBatch.Draw(playerTexture, physics.Position, Color.White);
 
-        /*    playerSprites.Add(
-                playerTexture, 
-                Vector2.One * 0.32f, 
-                physics.Position, 
-                0, 
-                0);*/
-            playerSprites.Draw(playerTexture, physics.Position, Color.White);
-
-            playerSprites.End();
+            spriteBatch.End();
         }
 
         public void Update_Pre(GameTime gameTime)
@@ -112,43 +95,25 @@ namespace TimeSink.Engine.Core
             var keyboard = Keyboard.GetState();
             var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
-
-            #region Gamepad Handling
+            #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
                 movedirection.X -= 1.0f;
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
                 movedirection.X += 1.0f;
             if (gamepad.ThumbSticks.Left.X != 0)
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-            if (gamepad.Buttons.A.Equals(ButtonState.Pressed))
-            {
-                if (jumpToggleGuard && touchingGround)
-                {
-                    jumpSound.Play();
-                    physics.Velocity -= new Vector2(0, 500);
-                    jumpToggleGuard = false;
-                    GravityEnabled = true;
-                }
-            }
-            else if (touchingGround)
-            {
-                jumpToggleGuard = true;
-            }
-            #endregion
-
-            #region Keyboard Handling
-            // Get the keyboard direction.
-            //if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
-            //    movedirection.Y -= 1.0f;
-            //if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
-            //    movedirection.Y += 1.0f;
+            
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
                 movedirection.X -= 1.0f;
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
                 movedirection.X += 1.0f;
+            #endregion
+
+            #region Jumping
             if (keyboard.IsKeyDown(Keys.Space) 
                 || keyboard.IsKeyDown(Keys.W) 
-                || keyboard.IsKeyDown(Keys.Up))
+                || keyboard.IsKeyDown(Keys.Up)
+                || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
                 if (jumpToggleGuard && touchingGround)
                 {
@@ -190,25 +155,13 @@ namespace TimeSink.Engine.Core
         [OnCollidedWith.Overload]
         public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
         {
-            //GravityEnabled = false;
-            //PhysicsController.Velocity = Vector2.Zero;
-
-            //Handle whether collision should disable gravity
+            // Handle whether collision should disable gravity
             if (info.MinimumTranslationVector.Y > 0)
             {
                 touchingGround = true;
                 GravityEnabled = false;
                 physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
             }
-
-            //Let's think about the proper way to do gravity
-            //Each frame, we check for collision with the ground
-            //   ... this is fairly simple, since OnCollidedWith should be called each
-            //       tick that the player is touching the ground
-            //How do we detect if that hasn't been called?
-            //A: Set a flag in OnCollidedWith, check if that flag is enabled in Update
-            //   ... this requires that Update gets called after collision handling
-            //   ... expose Update_PreCollision / PostCollision???
         }
     }
 }
