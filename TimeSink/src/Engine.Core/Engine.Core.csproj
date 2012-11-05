@@ -124,6 +124,7 @@
     <Compile Include="Physics\PhysicsConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\BasicRendering.cs" />
+    <Compile Include="Rendering\StackableRendering.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
     <Compile Include="Rendering\RenderManager.cs" />

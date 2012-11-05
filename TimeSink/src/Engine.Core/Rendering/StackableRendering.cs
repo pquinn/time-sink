@@ -24,7 +24,7 @@ namespace TimeSink.Engine.Core.Rendering
             foreach (var textureKey in textureKeysAndRelativePositions)
             {
                 spriteBatch.Draw(
-                    cache.GetResource("Textures/Ground_Tile1"), 
+                    cache.GetResource(textureKey.Item1), 
                     parentPosition + textureKey.Item2,
                     Color.White);
             }
