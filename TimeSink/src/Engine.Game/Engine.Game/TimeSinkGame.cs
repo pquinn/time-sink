@@ -32,6 +32,7 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Sound;
+using TimeSink.Engine.Core.Rendering;
 #endregion
 
 
@@ -58,6 +59,8 @@ namespace TimeSink.Engine.Game
         WorldGeometry world;
         SoundObject backgroundTrack;
         SoundEffect backHolder;
+
+        RenderManager renderManager;
 
         public UserControlledCharacter Character
         {
@@ -93,6 +96,9 @@ namespace TimeSink.Engine.Game
             OnCollidedWith.DoAutoRegister();
 
             base.Initialize();
+
+            renderManager = new RenderManager(character.SpriteTextureCache);
+            renderManager.RegisterRenderable(character);
         }
 
         /// <summary>
@@ -102,6 +108,8 @@ namespace TimeSink.Engine.Game
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
 
             world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
                 0,
@@ -200,7 +208,7 @@ namespace TimeSink.Engine.Game
                 base.Draw(gameTime);
                 return;
             }*/
-
+            renderManager.Draw(this.spriteBatch);
             character.Draw(gameTime, spriteBatch);
             world.Draw(gameTime, spriteBatch);
 

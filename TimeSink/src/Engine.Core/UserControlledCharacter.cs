@@ -16,21 +16,25 @@ using Microsoft.Xna.Framework.Content;
 //using SynapseGaming.LightingSystem.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core
 {
     public class UserControlledCharacter 
-        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable
+        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable, IRenderable
     {
         const float PLAYER_MASS = 100f;
 
       //  SpriteContainer playerSprites;
         float playerRotation = 0.0f;
         //private BaseRenderableEffect playerTexture;
-        private Texture2D playerTexture;
+       // private Texture2D playerTexture;
         private SpriteBatch playerSprites;
         private GravityPhysics physics;
         private SoundEffect jumpSound;
+        private Stack<Tuple<string, Vector2>> spriteStack;
+        public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
 
@@ -43,7 +47,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        128, 129
+                        71, 200
                     )
                 );
             }
@@ -59,7 +63,24 @@ namespace TimeSink.Engine.Core
 
         public void Load(ContentManager content /*, SpriteManager manager, SceneInterface scene*/)
         {
-            playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
+            SpriteTextureCache = new InMemoryResourceCache<Texture2D>(
+                new ContentManagerProvider<Texture2D>(content));
+            spriteStack = new Stack<Tuple<string, Vector2>>();
+
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Hair/Hair_Neutral");
+
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Hands/Hand_Neutral", new Vector2(37, 80)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Arm_Neutral", new Vector2(23, 20)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
+            spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
+            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
+            
+            
+            //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
             // First create and submit the empty player container.
@@ -80,7 +101,7 @@ namespace TimeSink.Engine.Core
                 physics.Position, 
                 0, 
                 0);*/
-            playerSprites.Draw(playerTexture, physics.Position, Color.White);
+         //   playerSprites.Draw(playerTexture, physics.Position, Color.White);
 
             playerSprites.End();
         }
@@ -209,6 +230,11 @@ namespace TimeSink.Engine.Core
             //A: Set a flag in OnCollidedWith, check if that flag is enabled in Update
             //   ... this requires that Update gets called after collision handling
             //   ... expose Update_PreCollision / PostCollision???
+        }
+
+        public IRendering Rendering
+        {
+            get {return  new StackableRendering(spriteStack, this.physics.Position); }
         }
     }
 }
