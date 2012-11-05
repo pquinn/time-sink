@@ -25,7 +25,7 @@ namespace TimeSink.Engine.Core.Rendering
 
         public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
         {
-            spriteBatch.Draw(cache.GetResource("Textures/Ground_Tile1"), position, Color.White);
+            spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
         }
     }
 }

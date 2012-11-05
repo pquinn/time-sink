@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
-//using SynapseGaming.LightingSystem.Effects;
-//using SynapseGaming.LightingSystem.Rendering;
 
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
-using Microsoft.Xna.Framework.Content;
-//using SynapseGaming.LightingSystem.Core;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Engine.Core
 {
@@ -55,7 +48,7 @@ namespace TimeSink.Engine.Core
 
         public void Load(ContentManager content)
         {
-            playerTexture = content.Load<Texture2D>("Textures/giroux");
+            playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
         }
 
