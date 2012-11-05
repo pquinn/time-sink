@@ -40,6 +40,9 @@ namespace TimeSink.Editor.Game
 
             base.Initialize();
 
+            // setup caches
+            
+
             staticMeshes = new List<StaticMesh>()
             {
                 new StaticMesh(new Vector2(20, 20)),
