@@ -6,7 +6,7 @@ using TimeSink.Engine.Core.Collisions;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public class CollisionSet : ICollisionGeometry
+    public struct CollisionSet : ICollisionGeometry
     {
         private HashSet<ICollisionGeometry> _geom = new HashSet<ICollisionGeometry>();
         public HashSet<ICollisionGeometry> Geometry
@@ -15,9 +15,16 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [Collided.Overload]
-        public bool Collided(ICollisionGeometry cg)
+        public CollisionInfo Collided(ICollisionGeometry cg)
         {
-            return _geom.Any(x => Collisions.Collided.Invoke(x, cg));
+            CollisionInfo result;
+            foreach (var g in _geom)
+            {
+                result = Collisions.Collided.Invoke(g, cg);
+                if (result.Intersect)
+                    return result;
+            }
+            return CollisionInfo.NoCollision;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace TimeSink.Engine.Core.Collisions
 {
     public static class ContainsPointExtensions
     {
-        public static bool ContainsPoint(this Circle c, Point p)
+        public static bool ContainsPoint(this Circle c, Vector2 p)
         {
             return p.X <= c.Center.X + c.Radius
                 && p.X >= c.Center.X - c.Radius
@@ -16,7 +16,7 @@ namespace TimeSink.Engine.Core.Collisions
                 && p.Y >= c.Center.Y - c.Radius;
         }
 
-        public static bool ContainsPoint(this Rectangle r, Point p)
+        public static bool ContainsPoint(this Rectangle r, Vector2 p)
         {
             return p.X <= r.Right && p.X >= r.Left
                 && p.Y <= r.Bottom && p.Y >= r.Top;
