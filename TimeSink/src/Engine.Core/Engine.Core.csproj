@@ -79,8 +79,6 @@
     <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
-    <Reference Include="SynapseGaming-SunBurn-Indie, Version=2.0.18.7, Culture=neutral, PublicKeyToken=eb76e51de43fcd70" />
-    <Reference Include="SynapseGaming-SunBurn-Physics-Indie, Version=2.0.18.7, Culture=neutral, PublicKeyToken=eb76e51de43fcd70" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>

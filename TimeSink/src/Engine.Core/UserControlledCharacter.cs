@@ -6,14 +6,15 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using SynapseGaming.LightingSystem.Effects;
-using SynapseGaming.LightingSystem.Rendering;
+//using SynapseGaming.LightingSystem.Effects;
+//using SynapseGaming.LightingSystem.Rendering;
 
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using Microsoft.Xna.Framework.Content;
-using SynapseGaming.LightingSystem.Core;
+//using SynapseGaming.LightingSystem.Core;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Engine.Core
 {
@@ -22,9 +23,11 @@ namespace TimeSink.Engine.Core
     {
         const float PLAYER_MASS = 100f;
 
-        SpriteContainer playerSprites;
+      //  SpriteContainer playerSprites;
         float playerRotation = 0.0f;
-        private BaseRenderableEffect playerTexture;
+        //private BaseRenderableEffect playerTexture;
+        private Texture2D playerTexture;
+        private SpriteBatch playerSprites;
         private GravityPhysics physics;
         private bool gravityToggleGuard = true;
 
@@ -51,25 +54,30 @@ namespace TimeSink.Engine.Core
             };
         }
 
-        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
+        public void Load(ContentManager content /*, SpriteManager manager, SceneInterface scene*/)
         {
-            playerTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
+            playerTexture = content.Load<Texture2D>("Textures/giroux");
+
 
             // First create and submit the empty player container.
-            playerSprites = manager.CreateSpriteContainer();
-            scene.ObjectManager.Submit(playerSprites);
+           /* playerSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(playerSprites);*/
+          
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            playerSprites = spriteBatch;
+
             playerSprites.Begin();
 
-            playerSprites.Add(
+        /*    playerSprites.Add(
                 playerTexture, 
                 Vector2.One * 0.32f, 
                 physics.Position, 
                 0, 
-                0);
+                0);*/
+            playerSprites.Draw(playerTexture, physics.Position, Color.White);
 
             playerSprites.End();
         }
@@ -88,7 +96,7 @@ namespace TimeSink.Engine.Core
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 1f;
+            var amount = 300f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
