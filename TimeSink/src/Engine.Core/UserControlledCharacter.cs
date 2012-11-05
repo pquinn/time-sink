@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Physics;
 using Microsoft.Xna.Framework.Content;
 //using SynapseGaming.LightingSystem.Core;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Engine.Core
 {
@@ -29,6 +30,7 @@ namespace TimeSink.Engine.Core
         private Texture2D playerTexture;
         private SpriteBatch playerSprites;
         private GravityPhysics physics;
+        private SoundEffect jumpSound;
         private bool gravityToggleGuard = true;
 
         //private AACollisionRectangle collisionGeometry;
@@ -58,7 +60,7 @@ namespace TimeSink.Engine.Core
         {
             playerTexture = content.Load<Texture2D>("Textures/giroux");
 
-
+            jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
             // First create and submit the empty player container.
            /* playerSprites = manager.CreateSpriteContainer();
             scene.ObjectManager.Submit(playerSprites);*/
@@ -101,7 +103,23 @@ namespace TimeSink.Engine.Core
 
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
+            var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
+            #region Gamepad Handling
+            if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
+                movedirection.X -= 1.0f;
+            if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
+                movedirection.X += 1.0f;
+            if (gamepad.ThumbSticks.Left.X != 0)
+                movedirection.X += gamepad.ThumbSticks.Left.X;
+            if (gamepad.Buttons.A.Equals(ButtonState.Pressed))
+            {
+                //Insert Jump Logic Here
+                jumpSound.Play();
+            }
+            #endregion
+
+            #region Keyboard Handling
             // Get the keyboard direction.
             if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
                 movedirection.Y += 1.0f;
@@ -121,11 +139,12 @@ namespace TimeSink.Engine.Core
                     gravityToggleGuard = false;
                 }
             }
+
             else
             {
                 gravityToggleGuard = true;
             }
-
+            #endregion
             if (movedirection != Vector2.Zero)
             {
                 // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
