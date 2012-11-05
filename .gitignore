@@ -11,5 +11,5 @@ obj/
 *.user
 *.sublime-project
 *.sublime-workspace
-
-TimeSink/.DS_Store
+*.DS_Store
+*.cachefile

@@ -27,6 +27,7 @@ namespace TimeSink.Editor.Game
         List<StaticMesh> staticMeshes;
 
         InMemoryResourceCache<Texture2D> textureCache;
+        InMemoryResourceCache<SoundEffect> soundCache;
 
         public Game1(IntPtr handle)
             :base(handle, "Content")
@@ -66,8 +67,14 @@ namespace TimeSink.Editor.Game
             // setup caches            
             textureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
+            soundCache = new InMemoryResourceCache<SoundEffect>(
+                new ContentManagerProvider<SoundEffect>(Content));
+
 
             textureCache.LoadResource("Textures/Ground_Tile1");
+            soundCache.LoadResource("Audio/Sounds/Hop");
+            soundCache.LoadResource("Audio/Music/Four");
+            
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);            

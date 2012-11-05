@@ -133,12 +133,6 @@
     <Compile Include="WorldGeometry.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MechanicsTestContent\MechanicsTestContent.contentproj">
-      <Name>MechanicsTestContent</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="AI\" />
     <Folder Include="Entities\" />
   </ItemGroup>

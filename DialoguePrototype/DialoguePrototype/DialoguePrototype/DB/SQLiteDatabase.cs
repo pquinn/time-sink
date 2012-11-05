@@ -59,9 +59,6 @@ namespace DB
             {
                 SQLiteConnection cnn = new SQLiteConnection(dbConnection);
                 cnn.Open();
-                Console.WriteLine("database: " + cnn.Database.ToString());
-                Console.WriteLine("on query: " + sql);
-                Console.WriteLine("schema: " + cnn.GetSchema().TableName.ToString());
                 SQLiteCommand mycommand = new SQLiteCommand(cnn);
                 mycommand.CommandText = sql;
                 SQLiteDataReader reader = mycommand.ExecuteReader();
