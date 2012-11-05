@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Editor.Game
 {
@@ -22,6 +23,8 @@ namespace TimeSink.Editor.Game
 
         List<StaticMesh> staticMeshes;
         Texture2D groundTile;
+
+        InMemoryResourceCache<Texture2D> textureCache;
 
         public Game1(IntPtr handle)
             :base(handle, "Content")
@@ -40,9 +43,6 @@ namespace TimeSink.Editor.Game
 
             base.Initialize();
 
-            // setup caches
-            
-
             staticMeshes = new List<StaticMesh>()
             {
                 new StaticMesh(new Vector2(20, 20)),
@@ -57,10 +57,14 @@ namespace TimeSink.Editor.Game
         /// </summary>
         protected override void LoadContent()
         {
+            // setup caches            
+            textureCache = new InMemoryResourceCache<Texture2D>(
+                new ContentManagerProvider<Texture2D>(Content));
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            groundTile = Content.Load<Texture2D>("Textures/Ground_Tile1");
+            textureCache.LoadResource("Textures/Ground_Tile1");
 
             // TODO: use this.Content to load your game content here
         }
@@ -104,7 +108,7 @@ namespace TimeSink.Editor.Game
 
             foreach (var staticMesh in staticMeshes)
             {
-                spriteBatch.Draw(groundTile, staticMesh.Position, Color.White);
+                spriteBatch.Draw(textureCache.GetResource("Textures/Ground_Tile1"), staticMesh.Position, Color.White);
             }
 
             spriteBatch.End();

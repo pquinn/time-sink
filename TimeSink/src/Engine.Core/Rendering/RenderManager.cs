@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core.Rendering
 {
     public class RenderManager
     {
         HashSet<IRenderable> renderables = new HashSet<IRenderable>();
+        IResourceCache<Texture2D> cache;
+
+        public RenderManager(IResourceCache<Texture2D> cache)
+        {
+            this.cache = cache;
+        }
 
         public bool RegisterRenderable(IRenderable renderable)
         {
@@ -24,7 +31,7 @@ namespace TimeSink.Engine.Core.Rendering
         {
             foreach (var renderable in renderables)
             {
-                renderable.Rendering.Draw(spriteBatch);
+                renderable.Rendering.Draw(spriteBatch, cache);
             }
         }
     }

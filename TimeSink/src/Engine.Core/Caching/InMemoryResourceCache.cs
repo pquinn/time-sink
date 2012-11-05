@@ -10,7 +10,7 @@ namespace TimeSink.Engine.Core.Caching
         private IResourceProvider<T> provider;
         private Dictionary<string, T> cache;
 
-        internal InMemoryResourceCache(IResourceProvider<T> provider)
+        public InMemoryResourceCache(IResourceProvider<T> provider)
         {
             this.provider = provider;
             cache = new Dictionary<string, T>();
@@ -26,8 +26,7 @@ namespace TimeSink.Engine.Core.Caching
             {
                 if (FetchIfCacheMiss)
                 {
-                    resource = provider.GetResource(key);
-                    cache.Add(key, resource);
+                    resource = LoadResource(key);
                 }
                 else
                 {
@@ -47,11 +46,7 @@ namespace TimeSink.Engine.Core.Caching
             {
                 if (FetchIfCacheMiss)
                 {
-                    var missed = provider.GetResources().ToList();
-                    foreach (var resource in missed)
-                    {
-                        cache.Add(resource.Item1, resource.Item2);
-                    }
+                    return LoadResources();                    
                 }
                 else
                 {
@@ -98,6 +93,37 @@ namespace TimeSink.Engine.Core.Caching
                         string.Format("The following keys, '{0}' could not be found in the cache " +
                             "and it is not configured to fetch from the provider after a miss.", string.Join(", ", missed)));
                 }
+            }
+
+            return resources;
+        }
+
+        public virtual T LoadResource(string key)
+        {
+            var resource = provider.GetResource(key);
+            cache.Add(key, resource);
+
+            return resource;
+        }
+
+        public virtual IEnumerable<T> LoadResources()
+        {
+            var resources = provider.GetResources().ToList();
+            foreach (var resource in resources)
+            {
+                cache.Add(resource.Item1, resource.Item2);
+            }
+
+            return resources.Select(x => x.Item2);
+        }
+
+        public virtual IEnumerable<T> LoadResources(IEnumerable<string> keys)
+        {
+            var keysArray = keys.ToArray();
+            var resources = provider.GetResources(keys).ToList();
+            for (int i = 0; i < keysArray.Length; i++)
+            {
+                cache.Add(keysArray[i], resources[i]);
             }
 
             return resources;
