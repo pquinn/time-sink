@@ -74,7 +74,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net" />
     <Reference Include="XNAControl">
-      <HintPath>..\..\..\..\TimeSink\Editor\lib\XNA WPF Control v1.0.0\Debug\XNAControl.dll</HintPath>
+      <HintPath>..\..\..\lib\XNAControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,6 @@ namespace TimeSink.Engine.Core.Physics
 {
     public static class PhysicsConstants
     {
-        public static Vector2 Gravity = new Vector2(0, -10);
+        public static Vector2 Gravity = new Vector2(0, 1000);
     }
 }
