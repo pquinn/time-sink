@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SoundAPI
+namespace TimeSink.Engine.Core.Sound
 {
-    class SoundObject
+    public class SoundObject
     {
         #region Fields
         //Location of the object
@@ -95,19 +95,16 @@ namespace SoundAPI
         //Play the sound for a modular SoundObject
         public void PlaySound(Vector2 targetPos)
         {
-            if (isModular)
-            {
-                Update(targetPos);
-                dynamic.Play();
-            }
+            Update(targetPos);
+            dynamic.Play();
+        }
 
-            else
-            {
-                dynamic.Volume = 1.0f;
-                dynamic.Pan = 0;
-                dynamic.Play();
-            }
-         
+        //Play the sound for a normal SoundObject
+        public void PlaySound()
+        {
+            dynamic.Volume = 1.0f;
+            dynamic.Pan = 0;
+            dynamic.Play();
         }
 
         //Stop the sound playing

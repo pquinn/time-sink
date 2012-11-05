@@ -37,11 +37,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Audio\Music\" />
-    <Folder Include="Audio\Sounds\" />
     <Folder Include="Environment\" />
     <Folder Include="Materials\" />
     <Folder Include="Scenes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\Hop.wav">
+      <Name>Hop</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Music\Four.WAV">
+      <Name>Four</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

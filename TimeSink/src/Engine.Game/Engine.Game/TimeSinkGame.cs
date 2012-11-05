@@ -31,6 +31,7 @@ using Microsoft.Xna.Framework.Input;
 // Include the necessary SunBurn namespaces.
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Sound;
 #endregion
 
 
@@ -55,6 +56,8 @@ namespace TimeSink.Engine.Game
 
         UserControlledCharacter character;
         WorldGeometry world;
+        SoundObject backgroundTrack;
+        SoundEffect backHolder;
 
         public UserControlledCharacter Character
         {
@@ -106,6 +109,11 @@ namespace TimeSink.Engine.Game
                     0,
                     GraphicsDevice.Viewport.Width,
                     1));
+
+            backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
+            backgroundTrack = new SoundObject(backHolder);
+            backgroundTrack.Dynamic.IsLooped = true;
+            backgroundTrack.PlaySound();
 
             collisionManager.RegisterCollisionBody(world);
 
