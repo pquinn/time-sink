@@ -23,15 +23,18 @@ namespace TimeSink.Engine.Core.Collisions
 
         public void Update(GameTime gt)
         {
+            CollisionInfo result;
+
             int i = 1;
             foreach (var body in collideables)
             {
                 foreach (var other in collideables.Skip(i))
                 {
-                    if (Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry))
+                    result = Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry);
+                    if (result.Intersect)
                     {
-                        Collisions.OnCollidedWith.Invoke(body, other);
-                        Collisions.OnCollidedWith.Invoke(other, body);
+                        Collisions.OnCollidedWith.Invoke(body, other, result);
+                        Collisions.OnCollidedWith.Invoke(other, body, result);
                     }
                 }
                 i++;

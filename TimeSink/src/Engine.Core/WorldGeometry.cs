@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -44,7 +45,8 @@ namespace TimeSink.Engine.Core.Collisions
             {
                 if (geo is AACollisionRectangle)
                 {
-                    var rect = geo as AACollisionRectangle;
+
+                    var rect = (AACollisionRectangle)geo;
                  /*   geoSprites.Add(
                         geoTexture,
                         new Vector2(2f, .32f),
@@ -58,10 +60,9 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(UserControlledCharacter character)
+        public void OnCollidedWith(IPhysicsEnabledBody body, CollisionInfo info)
         {
-            character.GravityEnabled = false;
-            character.PhysicsController.Velocity = Vector2.Zero;
+            body.PhysicsController.Position += info.MinimumTranslationVector;
         }
     }
 }

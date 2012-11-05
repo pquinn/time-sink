@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public class CollisionCircle : ICollisionGeometry
+    public struct CollisionCircle : ICollisionGeometry
     {
         public Circle Circ;
 
@@ -15,19 +16,48 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [Collided.Overload]
-        public bool Collided(CollisionCircle c)
+        public CollisionInfo Collided(CollisionCircle c)
         {
-            return c.Circ.Intersects(Circ);
+            return new CollisionInfo()
+            {
+                Intersect = c.Circ.Intersects(Circ)
+            };
         }
 
         [Collided.Overload]
-        public bool Collided(AACollisionRectangle r)
+        public CollisionInfo Collided(AACollisionRectangle r)
         {
             return r.Collided(this);
         }
 
         [Collided.Overload]
-        public bool Collided(CollisionSet s)
+        public CollisionInfo Collided(CollisionRectangle r)
+        {
+            var BA = r.BottomLeft - r.TopLeft;
+            BA.Normalize();
+            var BAp = new Vector2(-BA.Y, BA.X);
+            var CB = r.BottomRight - r.BottomLeft;
+            CB.Normalize();
+            var CBp = new Vector2(-CB.Y, CB.X);
+            var DC = r.TopRight - r.BottomRight;
+            DC.Normalize();
+            var DCp = new Vector2(-DC.Y, DC.X);
+            var AD = r.TopLeft - r.TopRight;
+            AD.Normalize();
+            var ADp = new Vector2(-AD.Y, AD.X);
+
+            var rect = new CollisionRectangle(
+                Circ.Center + Circ.Radius * (ADp + AD),
+                Circ.Center + Circ.Radius * (BAp + BA),
+                Circ.Center + Circ.Radius * (CBp + CB),
+                Circ.Center + Circ.Radius * (DCp + DC)
+            );
+
+            return r.Collided(rect);
+        }
+
+        [Collided.Overload]
+        public CollisionInfo Collided(CollisionSet s)
         {
             return s.Collided(this);
         }

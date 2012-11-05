@@ -155,9 +155,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Editor.Renderer\Editor.Renderer\Editor.Renderer.csproj">
-      <Project>{A9DBF543-853A-46A9-83A8-E67FB7FC1D4C}</Project>
-      <Name>Editor.Renderer</Name>
+    <ProjectReference Include="..\Editor\Editor\Editor.csproj">
+      <Project>{E7F2B40C-B691-4555-8742-AB3834AB1013}</Project>
+      <Name>Editor %28Editor\Editor%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

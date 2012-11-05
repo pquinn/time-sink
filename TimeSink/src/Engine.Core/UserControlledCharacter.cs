@@ -148,5 +148,12 @@ namespace TimeSink.Engine.Core
             get { return physics.GravityEnabled; }
             set { physics.GravityEnabled = value; }
         }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        {
+            GravityEnabled = false;
+            PhysicsController.Velocity = Vector2.Zero;
+        }
     }
 }

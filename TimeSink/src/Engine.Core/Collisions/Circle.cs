@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace TimeSink.Engine.Core.Collisions
+namespace Microsoft.Xna.Framework
 {
     public struct Circle
     {
-        public int Radius;
-        public Point Center;
+        public float Radius;
+        public Vector2 Center;
 
-        public Circle(int x, int y, int r)
+        public Circle(float x, float y, float r)
         {
             Radius = r;
-            Center = new Point(x, y);
+            Center = new Vector2(x, y);
         }
 
         public bool Intersects(Circle other)
