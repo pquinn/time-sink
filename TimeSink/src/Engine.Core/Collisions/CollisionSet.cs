@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +18,33 @@ namespace TimeSink.Engine.Core.Collisions
         [Collided.Overload]
         public CollisionInfo Collided(ICollisionGeometry cg)
         {
+            bool intersected = false;
+            float movex = 0, movey = 0;
+            float magx = 0, magy = 0;
             CollisionInfo result;
             foreach (var g in _geom)
             {
                 result = Collisions.Collided.Invoke(g, cg);
                 if (result.Intersect)
-                    return result;
+                {
+                    intersected = true;
+                    if (Math.Abs(result.MinimumTranslationVector.X) > magx)
+                    {
+                        movex = result.MinimumTranslationVector.X;
+                        magx = Math.Abs(movex);
+                    }
+                    if (Math.Abs(result.MinimumTranslationVector.Y) > magy)
+                    {
+                        movey = result.MinimumTranslationVector.Y;
+                        magy = Math.Abs(movey);
+                    }
+                }
             }
-            return CollisionInfo.NoCollision;
+            return new CollisionInfo()
+            {
+                Intersect = intersected,
+                MinimumTranslationVector = new Vector2(movex, movey)
+            };
         }
     }
 }

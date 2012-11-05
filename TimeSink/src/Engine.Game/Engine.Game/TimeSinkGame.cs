@@ -71,12 +71,10 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
+            world = new WorldGeometry();
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
-
-
-
 
             physicsManager.RegisterPhysicsBody(Character);
             collisionManager.RegisterCollisionBody(Character);
@@ -103,12 +101,16 @@ namespace TimeSink.Engine.Game
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            world = new WorldGeometry(
-                new Rectangle(
-                    0,
-                    0,
-                    GraphicsDevice.Viewport.Width,
-                    1));
+            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
+                0,
+                GraphicsDevice.Viewport.Height,
+                GraphicsDevice.Viewport.Width,
+                10
+            )));
+
+            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
+                300, 400, 100, 50
+            )));
 
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
@@ -120,7 +122,6 @@ namespace TimeSink.Engine.Game
             character.Load(Content);
             world.Load(Content);
 
-            
             // Add objects and lights to the ObjectManager and LightManager. They accept
             // objects and lights in several forms:
             //
@@ -164,10 +165,13 @@ namespace TimeSink.Engine.Game
                 HandleInput(gameTime);
             }
 
+            character.Update_Pre(gameTime);
 
             // TODO: Add your update logic here
             physicsManager.Update(gameTime);
             collisionManager.Update(gameTime);
+
+            character.Update_Post(gameTime);
 
             base.Update(gameTime);
         }

@@ -22,10 +22,12 @@ namespace TimeSink.Engine.Core.Collisions
             get { return collisionGeometry; }
         }
 
-        public WorldGeometry(Rectangle r)
+        public HashSet<ICollisionGeometry> CollisionSet
         {
-            collisionGeometry.Geometry.Add(new AACollisionRectangle(r));
+            get { return collisionGeometry.Geometry; }
         }
+
+        public WorldGeometry() { }
 
         public void Load(ContentManager content /*SpriteManager manager, SceneInterface scene*/)
         {
@@ -43,16 +45,25 @@ namespace TimeSink.Engine.Core.Collisions
 
             foreach (var geo in collisionGeometry.Geometry)
             {
-                if (geo is AACollisionRectangle)
+                if (geo is CollisionRectangle)
                 {
 
-                    var rect = (AACollisionRectangle)geo;
+                    var rect = (CollisionRectangle)geo;
                  /*   geoSprites.Add(
                         geoTexture,
                         new Vector2(2f, .32f),
                         new Vector2(rect.Rect.Left, rect.Rect.Top),
                         0);*/
-                    spriteBatch.Draw(geoTexture, rect.Rect, Color.White);
+                    spriteBatch.Draw(
+                        geoTexture,
+                        new Rectangle(
+                            (int)rect.TopLeft.X, 
+                            (int)rect.TopLeft.Y,
+                            (int)(rect.TopRight.X - rect.TopLeft.X), 
+                            (int)(rect.BottomLeft.Y - rect.TopLeft.Y)
+                        ), 
+                        Color.White
+                    );
                 }
             }
 
@@ -64,8 +75,8 @@ namespace TimeSink.Engine.Core.Collisions
         {
             if (body is IPhysicsEnabledBody)
             {
-                (body as IPhysicsEnabledBody).PhysicsController.Position
-                    += info.MinimumTranslationVector;
+                var phys = (body as IPhysicsEnabledBody).PhysicsController;
+                phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
             }
         }
     }
