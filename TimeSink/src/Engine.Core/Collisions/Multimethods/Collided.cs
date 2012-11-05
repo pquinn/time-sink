@@ -7,7 +7,7 @@ using System.Reflection;
 namespace TimeSink.Engine.Core.Collisions
 {
 	// Dynamically dispatches to the best Collided overload.
-	internal static class Collided
+	public static class Collided
 	{
 		// Used to identify overloads. The overload method name may be anything
 		// but the signature should match Invoke except that both the return and
