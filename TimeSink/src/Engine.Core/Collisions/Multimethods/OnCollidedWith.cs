@@ -7,7 +7,7 @@ using System.Reflection;
 namespace TimeSink.Engine.Core.Collisions
 {
 	// Dynamically dispatches to the best OnCollidedWith overload.
-	internal static class OnCollidedWith
+	public static class OnCollidedWith
 	{
 		// Used to identify overloads. The overload method name may be anything
 		// but the signature should match Invoke except that both the return and
@@ -262,7 +262,7 @@ namespace TimeSink.Engine.Core.Collisions
 				return 0;
 		}
 		
-		private static void DoAutoRegister()
+		public static void DoAutoRegister()
 		{
 			ms_candidates = new List<Entry>();		// we want to set this even if no overloads are found
 			
