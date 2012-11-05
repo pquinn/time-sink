@@ -89,6 +89,8 @@ namespace TimeSink.Engine.Game
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Collided.DoAutoRegister();
+            OnCollidedWith.DoAutoRegister();
 
             base.Initialize();
         }

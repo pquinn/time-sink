@@ -43,7 +43,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        128, 128
+                        128, 129
                     )
                 );
             }
@@ -136,7 +136,9 @@ namespace TimeSink.Engine.Core
                 movedirection.X -= 1.0f;
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
                 movedirection.X += 1.0f;
-            if (keyboard.IsKeyDown(Keys.Space))
+            if (keyboard.IsKeyDown(Keys.Space) 
+                || keyboard.IsKeyDown(Keys.W) 
+                || keyboard.IsKeyDown(Keys.Up))
             {
                 if (jumpToggleGuard && touchingGround)
                 {
