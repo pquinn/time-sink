@@ -59,7 +59,7 @@ namespace TimeSink.Engine.Core
 
         public void Load(ContentManager content /*, SpriteManager manager, SceneInterface scene*/)
         {
-            playerTexture = content.Load<Texture2D>("Textures/giroux");
+            playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
             // First create and submit the empty player container.
