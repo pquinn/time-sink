@@ -128,7 +128,7 @@ class PromptObject():
         
     def to_insert(self):
         # "The sum of 1 + 2 is {0}".format(1+2)
-        sql = "INSERT INTO Prompt VALUES({0}, \"{1}\", {2}, {3}, {4}, {5});".format(
+        sql = "INSERT INTO Prompt VALUES(\"{0}\", \"{1}\", {2}, {3}, {4}, {5});".format(
             self.the_id,
             self.speaker,
             "null" if self.entry == "null" else "\"{0}\"".format(self.entry),
@@ -145,7 +145,7 @@ class ResponseObject():
         self.next_entry = next_entry
         
     def to_insert(self):
-        sql = "INSERT INTO Response VALUES({0}, \"{1}\", {2});".format(
+        sql = "INSERT INTO Response VALUES(\"{0}\", \"{1}\", \"{2}\");".format(
             self.the_id,
             self.entry,
             self.next_entry
@@ -159,7 +159,7 @@ class ResponseMapObject():
         self.to_id = to_id
         
     def to_insert(self):
-        sql = "INSERT INTO Response VALUES({0}, {1}, {2});".format(
+        sql = "INSERT INTO Response VALUES(\"{0}\", \"{1}\", \"{2}\");".format(
             self.the_id,
             self.from_id,
             self.to_id
