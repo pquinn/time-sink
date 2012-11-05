@@ -39,15 +39,15 @@ class DataGenerator:
 
     sounds = [
         "null",
-        "sound.wav"
+        "sound.wav",
         "sound.mp3"
     ]
     
     quests = [
         "null",
-        "quest1.xml"
-        "quest2.xml"
-        "quest3.xml"
+        "quest1.xml",
+        "quest2.xml",
+        "quest3.xml",
         "quest4.xml"
     ]
     
@@ -128,12 +128,13 @@ class PromptObject():
         
     def to_insert(self):
         # "The sum of 1 + 2 is {0}".format(1+2)
-        sql = "INSERT INTO Prompt VALUES(\"{0}\", \"{1}\", {2}, {3}, {4}, {5});".format(
+        sql = "INSERT INTO Prompt VALUES(\"{0}\", \"{1}\", {2}, {3}, {4}, {5}, {6});".format(
             self.the_id,
             self.speaker,
             "null" if self.entry == "null" else "\"{0}\"".format(self.entry),
             "null" if self.animation == "null" else "\"{0}\"".format(self.animation),
             "null" if self.sound == "null" else "\"{0}\"".format(self.sound),
+            "null" if self.quest == "null" else "\"{0}\"".format(self.quest),
             self.response_required
             )
         return sql
