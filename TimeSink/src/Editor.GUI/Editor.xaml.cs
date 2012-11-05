@@ -31,7 +31,10 @@ namespace TimeSink.Editor.GUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //foreach (var m_game.TextureCache
+            foreach (var texture in m_game.TextureCache)
+            {
+                texture.
+            }
         }
     }
 }
