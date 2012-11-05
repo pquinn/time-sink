@@ -104,6 +104,9 @@ class DataGenerator:
             
     def to_sql_file(self, output_file_path):
         with open(output_file_path, 'w') as file:
+            file.write("{}\n".format("DELETE FROM Prompt;"))
+            file.write("{}\n".format("DELETE FROM Response;"))
+            file.write("{}\n".format("DELETE FROM Response_Map;"))
             for prompt in self.prompt_objects:
                 file.write("{}\n".format(prompt.to_insert()))
                 
@@ -160,7 +163,7 @@ class ResponseMapObject():
         self.to_id = to_id
         
     def to_insert(self):
-        sql = "INSERT INTO Response VALUES(\"{0}\", \"{1}\", \"{2}\");".format(
+        sql = "INSERT INTO Response_Map VALUES(\"{0}\", \"{1}\", \"{2}\");".format(
             self.the_id,
             self.from_id,
             self.to_id
