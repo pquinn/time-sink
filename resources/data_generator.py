@@ -52,8 +52,8 @@ class DataGenerator:
     ]
     
     bools = [
-        "true",
-        "false"
+        "1",
+        "0"
     ]
     
     def generate_data(self, threshold):
@@ -89,7 +89,7 @@ class DataGenerator:
             self.response_objects.append(response_object)
             
         for prompt_object in self.prompt_objects:
-            if prompt_object.response_required:
+            if prompt_object.response_required == "1":
                 num_responses = randint(1, 3)
                 for index in range(num_responses):
                     the_id = uuid.uuid1()
