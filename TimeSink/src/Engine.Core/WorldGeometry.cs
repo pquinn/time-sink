@@ -60,9 +60,13 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(IPhysicsEnabledBody body, CollisionInfo info)
+        public void OnCollidedWith(ICollideable body, CollisionInfo info)
         {
-            body.PhysicsController.Position += info.MinimumTranslationVector;
+            if (body is IPhysicsEnabledBody)
+            {
+                (body as IPhysicsEnabledBody).PhysicsController.Position
+                    += info.MinimumTranslationVector;
+            }
         }
     }
 }
