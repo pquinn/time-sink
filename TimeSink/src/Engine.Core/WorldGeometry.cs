@@ -6,10 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 using TimeSink.Engine.Core.Collisions;
-using SynapseGaming.LightingSystem.Effects;
-using SynapseGaming.LightingSystem.Rendering;
 using Microsoft.Xna.Framework.Content;
-using SynapseGaming.LightingSystem.Core;
+using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Engine.Core.Collisions
@@ -17,8 +15,8 @@ namespace TimeSink.Engine.Core.Collisions
     public class WorldGeometry : ICollideable
     {
         private CollisionSet collisionGeometry = new CollisionSet();
-        private BaseRenderableEffect geoTexture;
-        private SpriteContainer geoSprites;
+        private Texture2D geoTexture;
+        private SpriteBatch geoSprites;
         public ICollisionGeometry CollisionGeometry
         {
             get { return collisionGeometry; }
@@ -29,29 +27,32 @@ namespace TimeSink.Engine.Core.Collisions
             collisionGeometry.Geometry.Add(new AACollisionRectangle(r));
         }
 
-        public void Load(ContentManager content, SpriteManager manager, SceneInterface scene)
+        public void Load(ContentManager content /*SpriteManager manager, SceneInterface scene*/)
         {
-            geoTexture = content.Load<BaseRenderableEffect>("Materials/Dude");
+            geoTexture = content.Load<Texture2D>("Textures/giroux");
 
             // First create and submit the empty player container.
-            geoSprites = manager.CreateSpriteContainer();
-            scene.ObjectManager.Submit(geoSprites);
+          /*  geoSprites = manager.CreateSpriteContainer();
+            scene.ObjectManager.Submit(geoSprites);*/
         }
 
-        public void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            geoSprites = spriteBatch;
             geoSprites.Begin();
 
             foreach (var geo in collisionGeometry.Geometry)
             {
                 if (geo is AACollisionRectangle)
                 {
+
                     var rect = (AACollisionRectangle)geo;
-                    geoSprites.Add(
+                 /*   geoSprites.Add(
                         geoTexture,
                         new Vector2(2f, .32f),
                         new Vector2(rect.Rect.Left, rect.Rect.Top),
-                        0);
+                        0);*/
+                    spriteBatch.Draw(geoTexture, rect.Rect, Color.White);
                 }
             }
 
@@ -59,9 +60,13 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(IPhysicsEnabledBody body, CollisionInfo info)
+        public void OnCollidedWith(ICollideable body, CollisionInfo info)
         {
-            body.PhysicsController.Position += info.MinimumTranslationVector;
+            if (body is IPhysicsEnabledBody)
+            {
+                (body as IPhysicsEnabledBody).PhysicsController.Position
+                    += info.MinimumTranslationVector;
+            }
         }
     }
 }

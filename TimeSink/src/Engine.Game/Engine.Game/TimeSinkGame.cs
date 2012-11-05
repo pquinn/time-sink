@@ -29,13 +29,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 // Include the necessary SunBurn namespaces.
-using SynapseGaming.LightingSystem.Core;
-using SynapseGaming.LightingSystem.Editor;
-using SynapseGaming.LightingSystem.Rendering;
-using SynapseGaming.LightingSystem.Effects;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
-using SynapseGaming.LightingSystem.Collision.Legacy;
 #endregion
 
 
@@ -48,18 +43,6 @@ namespace TimeSink.Engine.Game
     {
         const float viewWidth = 2f;
 
-        // The SunBurn lighting system.
-        SunBurnCoreSystem sunBurnCoreSystem;
-        FrameBuffers frameBuffers;
-        public SpriteManager SpriteManager;
-        SplashScreenGameComponent splashScreenGameComponent;
-
-        // Scene related members.
-        SceneState sceneState;
-        public SceneInterface SceneInterface;
-        ContentRepository contentRepository;
-        SceneEnvironment environment;
-
         // Default XNA members.
         GraphicsDeviceManager graphics;
 
@@ -69,7 +52,8 @@ namespace TimeSink.Engine.Game
         // Components
         TimeSink.Engine.Core.Physics.PhysicsManager physicsManager = new TimeSink.Engine.Core.Physics.PhysicsManager();
         TimeSink.Engine.Core.Collisions.CollisionManager collisionManager = new TimeSink.Engine.Core.Collisions.CollisionManager();
-        UserControlledCharacter character = new UserControlledCharacter(Vector2.Zero);
+
+        UserControlledCharacter character;
         WorldGeometry world;
 
         public UserControlledCharacter Character
@@ -83,44 +67,16 @@ namespace TimeSink.Engine.Game
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            character = new UserControlledCharacter(Vector2.Zero);
+
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
-            // Required for lighting system.
-            splashScreenGameComponent = new SplashScreenGameComponent(this);
-            Components.Add(splashScreenGameComponent);
 
-            // Create the lighting system.
-            sunBurnCoreSystem = new SunBurnCoreSystem(Services, Content);
-            sceneState = new SceneState();
 
-            // Create the scene interface. Acts as a service provider containing all scene managers
-            // and returning them by type (including custom managers). Also acts as a component
-            // container where calls to manager methods on the SceneInterface (such as BeginFrameRendering,
-            // Unload, ...) are automatically called on all contained managers.
-            //
-            // This design allows managers to be plugged-in like modular components and for managers
-            // to easily be added, removed, or replaced with custom implementations.
-            //
-            SceneInterface = new SceneInterface();
-            SceneInterface.CreateDefaultManagers(RenderingSystemType.Forward, CollisionSystemType.Physics, true);
-
-            SpriteManager = new SpriteManager(SceneInterface);
-            SceneInterface.AddManager(SpriteManager);
-
-            // Create the frame buffers used for rendering (sized to the backbuffer) and
-            // assign them to the ResourceManager so we don't have to worry about cleanup.
-            frameBuffers = new FrameBuffers(DetailPreference.High, DetailPreference.Medium);
-            SceneInterface.ResourceManager.AssignOwnership(frameBuffers);
 
             physicsManager.RegisterPhysicsBody(Character);
             collisionManager.RegisterCollisionBody(Character);
-
-            // Post console messages letting the user know how to open the SunBurn Editor.
-            SceneInterface.ShowConsole = true;
-            SystemConsole.AddMessage("Welcome to the SunBurn Engine.", 4);
-            SystemConsole.AddMessage("Use an Xbox controller or the W, A, S, D keys to navigate the scene.", 8);
-            SystemConsole.AddMessage("Press F11 to open the SunBurn Editor.", 12);
         }
 
         /// <summary>
@@ -153,10 +109,10 @@ namespace TimeSink.Engine.Game
 
             collisionManager.RegisterCollisionBody(world);
 
-            // Load the content repository, which stores all assets imported via the editor.
-            // This must be loaded before any other assets.
-            contentRepository = Content.Load<ContentRepository>("Content");
+            character.Load(Content);
+            world.Load(Content);
 
+            
             // Add objects and lights to the ObjectManager and LightManager. They accept
             // objects and lights in several forms:
             //
@@ -168,18 +124,7 @@ namespace TimeSink.Engine.Game
             //   -As XNA Models, which can only be static.
             //
 
-            // Load the scene and add it to the managers.
-            Scene scene = Content.Load<Scene>("Scenes/Scene");
-
-            SceneInterface.Submit(scene);
-
-            // Load the scene environment settings.
-            environment = Content.Load<SceneEnvironment>("Environment/Environment");
-
-            // TODO: use this.Content to load your game content here
-            character.Load(Content, SpriteManager, SceneInterface);
-
-            world.Load(Content, SpriteManager, SceneInterface);
+            
         }
 
         /// <summary>
@@ -190,11 +135,6 @@ namespace TimeSink.Engine.Game
         {
             // TODO: Unload any non ContentManager content here
 
-            // Cleanup any used resources.
-            SceneInterface.Unload();
-            sunBurnCoreSystem.Unload();
-
-            environment = null;
         }
 
         /// <summary>
@@ -205,7 +145,7 @@ namespace TimeSink.Engine.Game
         protected override void Update(GameTime gameTime)
         {
             // Enables game input / control when not editing the scene (the editor provides its own control).
-            if (!SceneInterface.Editor.EditorAttached)
+            if (true)
             {
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                     this.Exit();
@@ -216,12 +156,6 @@ namespace TimeSink.Engine.Game
                 HandleInput(gameTime);
             }
 
-            // Calculate the projection.
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70.0f),
-            GraphicsDevice.Viewport.AspectRatio, 0.1f, environment.VisibleDistance);
-
-            // Update all contained managers.
-            SceneInterface.Update(gameTime);
 
             // TODO: Add your update logic here
             physicsManager.Update(gameTime);
@@ -247,27 +181,15 @@ namespace TimeSink.Engine.Game
         protected override void Draw(GameTime gameTime)
         {
             // Check to see if the splash screen is finished.
-            if (!SplashScreenGameComponent.DisplayComplete)
+          /*  if (!SplashScreenGameComponent.DisplayComplete)
             {
                 base.Draw(gameTime);
                 return;
-            }
+            }*/
 
-            character.Draw(gameTime);
-            world.Draw(gameTime);
+            character.Draw(gameTime, spriteBatch);
+            world.Draw(gameTime, spriteBatch);
 
-            // Render the scene.
-            sceneState.BeginFrameRendering(Vector2.Zero, viewWidth, GraphicsDevice.Viewport.AspectRatio, gameTime, environment, frameBuffers, true);
-            SceneInterface.BeginFrameRendering(sceneState);
-
-            // Add custom rendering that should occur before the scene is rendered.
-
-            SceneInterface.RenderManager.Render();
-
-            // Add custom rendering that should occur after the scene is rendered.
-
-            SceneInterface.EndFrameRendering();
-            sceneState.EndFrameRendering();
 
             base.Draw(gameTime);
         }
@@ -281,7 +203,7 @@ namespace TimeSink.Engine.Game
         Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
-        private SpriteBatch spriteBatch;
+        public SpriteBatch spriteBatch;
 
 #if WINDOWS_PHONE
         /// <summary>
@@ -461,6 +383,6 @@ namespace TimeSink.Engine.Game
 #endif
         #endregion
 
-        public SpriteContainer staticSceneSprites { get; set; }
+      //  public SpriteContainer staticSceneSprites { get; set; }
     }
 }

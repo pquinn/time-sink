@@ -30,14 +30,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Materials\Dude.mat">
-      <Name>Dude</Name>
-    </Compile>
-    <Compile Include="Scenes\Scene.scene">
-      <Name>Scene</Name>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\giroux.png">
       <Name>giroux</Name>
       <Importer>TextureImporter</Importer>
@@ -45,13 +37,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Environment\Environment.env">
-      <Name>Environment</Name>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Audio\Music\" />
     <Folder Include="Audio\Sounds\" />
+    <Folder Include="Environment\" />
+    <Folder Include="Materials\" />
+    <Folder Include="Scenes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
