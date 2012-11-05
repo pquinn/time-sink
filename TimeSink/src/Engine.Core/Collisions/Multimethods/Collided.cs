@@ -253,7 +253,7 @@ namespace TimeSink.Engine.Core.Collisions
 				return 0;
 		}
 		
-		private static void DoAutoRegister()
+		public static void DoAutoRegister()
 		{
 			ms_candidates = new List<Entry>();		// we want to set this even if no overloads are found
 			
