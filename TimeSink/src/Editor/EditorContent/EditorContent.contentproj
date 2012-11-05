@@ -43,6 +43,7 @@
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Audio\Sounds\Hop.wav">
       <Name>Hop</Name>

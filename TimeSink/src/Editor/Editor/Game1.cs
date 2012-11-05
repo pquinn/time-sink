@@ -24,15 +24,16 @@ namespace TimeSink.Editor.Game
 
         RenderManager renderManager;
 
-        List<StaticMesh> staticMeshes;
-
-        InMemoryResourceCache<Texture2D> textureCache;
-        InMemoryResourceCache<SoundEffect> soundCache;
+        List<StaticMesh> staticMeshes;              
 
         public Game1(IntPtr handle)
             :base(handle, "Content")
         {
         }
+
+        public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
+
+        public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -54,7 +55,7 @@ namespace TimeSink.Editor.Game
             };
 
             //set up managers
-            renderManager = new RenderManager(textureCache);
+            renderManager = new RenderManager(TextureCache);
             renderManager.RegisterRenderable(staticMeshes);
         }
 
@@ -65,15 +66,15 @@ namespace TimeSink.Editor.Game
         protected override void LoadContent()
         {
             // setup caches            
-            textureCache = new InMemoryResourceCache<Texture2D>(
+            TextureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
-            soundCache = new InMemoryResourceCache<SoundEffect>(
+            SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
 
 
-            textureCache.LoadResource("Textures/Ground_Tile1");
-            soundCache.LoadResource("Audio/Sounds/Hop");
-            soundCache.LoadResource("Audio/Music/Four");
+            TextureCache.LoadResource("Textures/Ground_Tile1");
+            SoundCache.LoadResource("Audio/Sounds/Hop");
+            SoundCache.LoadResource("Audio/Music/Four");
             
 
             // Create a new SpriteBatch, which can be used to draw textures.
