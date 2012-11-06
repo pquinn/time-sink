@@ -8,11 +8,12 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Engine.Core
 {
     public abstract class Entity
-        : ICollideable, IPhysicsEnabledBody, IKeyboardControllable
+        : ICollideable, IPhysicsEnabledBody, IRenderable, IKeyboardControllable
     {
         public virtual void Update(GameTime time, Game world) { }
 
@@ -22,6 +23,11 @@ namespace TimeSink.Engine.Core
         }
 
         public abstract IPhysicsParticle PhysicsController
+        {
+            get;
+        }
+
+        public abstract IRendering Rendering
         {
             get;
         }

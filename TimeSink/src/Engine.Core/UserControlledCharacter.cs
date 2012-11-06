@@ -10,10 +10,7 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 
-using Microsoft.Xna.Framework.Content;
 //using SynapseGaming.LightingSystem.Core;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Caching;
 using System.Collections.Generic;
@@ -28,7 +25,7 @@ namespace TimeSink.Engine.Core
         float playerRotation = 0.0f;
 
         //private BaseRenderableEffect playerTexture;
-       // private Texture2D playerTexture;
+        private string playerTexture;
         private SpriteBatch playerSprites;
         private GravityPhysics physics;
         private SoundEffect jumpSound;
@@ -36,6 +33,19 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
+        private Rectangle sourceRect;
+        float timer = 0f;
+        float interval = 200f;
+        int currentFrame = 0;
+        int spriteWidth = 115;
+        int spriteHeight = 250;
+
+
+        public Rectangle SourceRect
+        {
+            get { return sourceRect; }
+            set { sourceRect = value; }
+        }
 
         public ICollisionGeometry CollisionGeometry
         {
@@ -45,7 +55,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        71, 200
+                        115, 240
                     )
                 );
             }
@@ -65,7 +75,10 @@ namespace TimeSink.Engine.Core
                 new ContentManagerProvider<Texture2D>(content));
             spriteStack = new Stack<Tuple<string, Vector2>>();
 
-            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
+            SpriteTextureCache.LoadResource("Textures/Sprites/WalkingSheet");
+
+            playerTexture = "Textures/Sprites/WalkingSheet";
+         /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
             SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
             SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
             SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
@@ -76,7 +89,7 @@ namespace TimeSink.Engine.Core
             spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
             spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
             spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
-            
+            */
             
             //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
@@ -114,6 +127,7 @@ namespace TimeSink.Engine.Core
 
         public void HandleKeyboardInput(GameTime gameTime)
         {
+            sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
             // Get the gamepad state.
             var gamepadstate = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
@@ -133,11 +147,17 @@ namespace TimeSink.Engine.Core
                 movedirection.X += 1.0f;
             if (gamepad.ThumbSticks.Left.X != 0)
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-            
+
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+            {
                 movedirection.X -= 1.0f;
+                AnimateRight(gameTime);
+            }
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+            {
                 movedirection.X += 1.0f;
+                AnimateRight(gameTime);
+            }
             #endregion
 
             #region Jumping
@@ -177,6 +197,23 @@ namespace TimeSink.Engine.Core
             }
         }
 
+        protected void AnimateRight(GameTime gameTime)
+        {
+            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timer > interval)
+            {
+                currentFrame++;
+
+                if (currentFrame > 7)
+                {
+                    currentFrame = 0;
+                }
+                timer = 0f;
+            }
+
+        }
+
         public bool GravityEnabled
         {
             get { return physics.GravityEnabled; }
@@ -197,7 +234,7 @@ namespace TimeSink.Engine.Core
 
         public IRendering Rendering
         {
-            get {return  new StackableRendering(spriteStack, this.physics.Position); }
+            get {return  new BasicRendering(playerTexture, this.physics.Position); }
         }
     }
 }

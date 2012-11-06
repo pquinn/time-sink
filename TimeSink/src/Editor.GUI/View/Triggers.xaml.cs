@@ -11,30 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TimeSink.Editor.Game;
 
-namespace TimeSink.Editor.GUI
+namespace TimeSink.Editor.GUI.Views
 {
     /// <summary>
-    /// Interaction logic for Editor.xaml
+    /// Interaction logic for Triggers.xaml
     /// </summary>
-    public partial class Editor : UserControl
+    public partial class Triggers : UserControl
     {
-        Game1 m_game;
-   
-        public Editor()
+        public Triggers()
         {
             InitializeComponent();
-
-            m_game = new Game1(xnaControl.Handle);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            foreach (var texture in m_game.TextureCache)
-            {
-                texture.
-            }
         }
     }
 }

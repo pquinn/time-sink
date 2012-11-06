@@ -39,10 +39,13 @@ namespace TimeSink.Engine.Core.Caching
             return resource;
         }
 
-        public virtual IEnumerable<T> GetResources()
+        public virtual IEnumerable<Tuple<string,T>> GetResources()
         {
-            List<T> resources = cache.Values.ToList();
-            if (resources.Count == 0)
+            List<KeyValuePair<string, T>> resources = cache.ToList();
+            if (resources.Count != 0)
+            {
+                return resources.Select(x => new Tuple<string, T>(x.Key, x.Value));
+            }
             {
                 if (FetchIfCacheMiss)
                 {
@@ -55,8 +58,6 @@ namespace TimeSink.Engine.Core.Caching
                         " not configured to fetch from the provider if missed.");
                 }
             }
-
-            return resources;
         }
 
         public virtual IEnumerable<T> GetResources(IEnumerable<string> keys)
@@ -106,7 +107,7 @@ namespace TimeSink.Engine.Core.Caching
             return resource;
         }
 
-        public virtual IEnumerable<T> LoadResources()
+        public virtual IEnumerable<Tuple<string, T>> LoadResources()
         {
             var resources = provider.GetResources().ToList();
             foreach (var resource in resources)
@@ -114,7 +115,7 @@ namespace TimeSink.Engine.Core.Caching
                 cache.Add(resource.Item1, resource.Item2);
             }
 
-            return resources.Select(x => x.Item2);
+            return resources;
         }
 
         public virtual IEnumerable<T> LoadResources(IEnumerable<string> keys)

@@ -14,8 +14,8 @@ namespace TimeSink.Engine.Core.Rendering
     /// </summary>
     public class BasicRendering : IRendering
     {
-        string textureKey;
-        Vector2 position;
+        protected string textureKey;
+        protected Vector2 position;
 
         public BasicRendering(string textureKey, Vector2 position)
         {
@@ -23,9 +23,15 @@ namespace TimeSink.Engine.Core.Rendering
             this.position = position;
         }
 
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
         {
             spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
         }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        {
+            spriteBatch.Draw(cache.GetResource(textureKey), position, sourceRect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+        }
+
     }
 }

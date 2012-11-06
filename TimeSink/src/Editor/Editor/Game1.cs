@@ -11,6 +11,10 @@ using Microsoft.Xna.Framework.Media;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Editor.Game
 {
@@ -23,10 +27,17 @@ namespace TimeSink.Editor.Game
 
         RenderManager renderManager;
 
-        List<StaticMesh> staticMeshes;              
+        Level level;
 
-        public Game1(IntPtr handle)
-            :base(handle, "Content")
+        Camera camera;
+        const int cameraTolerance = 10;
+        const int cameraMoveSpeed = 5;
+
+        StateMachine<Level> stateMachine;
+        State<Level> initState;
+
+        public Game1(IntPtr handle, int width, int height)
+            : base(handle, "Content", width, height)
         {
         }
 
@@ -46,16 +57,24 @@ namespace TimeSink.Editor.Game
 
             base.Initialize();
 
-            staticMeshes = new List<StaticMesh>()
-            {
-                new StaticMesh(new Vector2(20, 20)),
-                new StaticMesh(new Vector2(294, 20)),
-                new StaticMesh(new Vector2(566, 20))
-            };
+            camera = new Camera();
 
             //set up managers
             renderManager = new RenderManager(TextureCache);
-            renderManager.RegisterRenderable(staticMeshes);
+
+            // create default level
+            level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
+            level.RegisterStaticMeshes(new List<StaticMesh>()
+                {
+                    new StaticMesh(new Vector2(20, 20)),
+                    new StaticMesh(new Vector2(294, 20)),
+                    new StaticMesh(new Vector2(566, 20))
+                });
+
+            // set up state machine
+            initState = new DefaultEditorState();
+            stateMachine = new StateMachine<Level>(initState, level);
+            initState.StateMachine = stateMachine;
         }
 
         /// <summary>
@@ -74,10 +93,10 @@ namespace TimeSink.Editor.Game
             TextureCache.LoadResource("Textures/Ground_Tile1");
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
-            
+
 
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);            
+            spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
@@ -103,6 +122,19 @@ namespace TimeSink.Editor.Game
                 this.Exit();
 
             // TODO: Add your update logic here
+            InputManager.Instance.Update();
+
+            Point mouse_loc = new Point(InputManager.Instance.CurrentMouseState.X, InputManager.Instance.CurrentMouseState.Y);
+            if (mouse_loc.X < cameraTolerance && mouse_loc.X > 0)
+                camera.PanCamera(-Vector2.UnitX * cameraMoveSpeed);
+            if (mouse_loc.X > Constants.SCREEN_X - cameraTolerance && mouse_loc.X < Constants.SCREEN_X)
+                camera.PanCamera(Vector2.UnitX * cameraMoveSpeed);
+            if (mouse_loc.Y < cameraTolerance && mouse_loc.Y > 0)
+                camera.PanCamera(-Vector2.UnitY * cameraMoveSpeed);
+            if (mouse_loc.Y > Constants.SCREEN_Y - cameraTolerance && mouse_loc.Y < Constants.SCREEN_Y)
+                camera.PanCamera(Vector2.UnitY * cameraMoveSpeed);
+
+            stateMachine.Update();
 
             base.Update(gameTime);
         }
@@ -115,9 +147,16 @@ namespace TimeSink.Editor.Game
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            renderManager.Draw(spriteBatch);
+            stateMachine.Draw(spriteBatch, camera);
 
             base.Draw(gameTime);
+        }
+
+        public void StaticMeshSelected(string textureKey)
+        {
+            stateMachine.ChangeState(
+                new StaticMeshPlacementEditorState(textureKey),
+                true, true);
         }
     }
 }
