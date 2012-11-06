@@ -28,6 +28,12 @@ namespace DialoguePrototype
         /// A boolean representing whether or not the prompt needs a response.
         /// </summary>
         bool responseRequired { get; set; }
+        
+        /// <summary>
+        /// The text representing how the User should proceed, should there be no
+        /// responses
+        /// </summary>
+        const string usageText = "\n{enter}...";
 
         #endregion
 
@@ -68,12 +74,33 @@ namespace DialoguePrototype
 
         #endregion
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">the GUID of this prompt in the database.</param>
+        /// <param name="speaker">a String representing the name of the speaker</param>
+        /// <param name="body">a String representing the body of this prompt</param>
+        /// <param name="responseRequired">whether or not the prompt has responses</param>
         public NPCPrompt(Guid id, String speaker, String body, Boolean responseRequired)
         {
             this.id = id;
             this.speaker = speaker;
             this.body = body;
             this.responseRequired = responseRequired;
+        }
+
+        public override string ToString()
+        {
+            return this.speaker + ":\n" + this.body;
+        }
+
+        /// <summary>
+        /// Appends the usage text to the body. 
+        /// Used for prompts that don't have any responses.
+        /// </summary>
+        internal void IncludeUsageText()
+        {
+            this.body = this.body + usageText;
         }
     }
 }

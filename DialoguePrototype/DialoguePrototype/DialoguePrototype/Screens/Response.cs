@@ -44,10 +44,20 @@ namespace DialoguePrototype
         /// </summary>
         Vector2 position;
 
+        /// <summary>
+        /// The text that will be appended to this response if it's selected.
+        /// </summary>
+        const string usageText = " {enter}";
+
+        /// <summary>
+        /// The text that will be displayed if the user has this entry currently selected.
+        /// </summary>
+        string selectedText;
+
         #endregion
 
-        #region Properties
 
+        #region Properties
 
         /// <summary>
         /// Gets or sets the text of this menu entry.
@@ -58,6 +68,14 @@ namespace DialoguePrototype
             set { text = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the selected version of the text of this response.
+        /// </summary>
+        public String SelectedText
+        {
+            get { return selectedText; }
+            set { selectedText = value; }
+        }
 
         /// <summary>
         /// Gets or sets the position at which to draw this menu entry.
@@ -78,14 +96,13 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Events
 
-
         /// <summary>
-        /// Event raised when the menu entry is selected.
+        /// Event raised when this response is selected.
         /// </summary>
         public event EventHandler<ResponseEventArgs> Selected;
-
 
         /// <summary>
         /// Method for raising the Selected event.
@@ -96,11 +113,10 @@ namespace DialoguePrototype
                 Selected(this, new ResponseEventArgs(nextEntry));
         }
 
-
         #endregion
 
-        #region Initialization
 
+        #region Initialization
 
         /// <summary>
         /// Constructs a new menu entry with the specified text.
@@ -109,16 +125,17 @@ namespace DialoguePrototype
         {
             this.text = text;
             this.nextEntry = nextEntry;
+            this.selectedText = text + usageText;
         }
 
 
         #endregion
 
+
         #region Update and Draw
 
-
         /// <summary>
-        /// Updates the menu entry.
+        /// Updates this Response.
         /// </summary>
         public virtual void Update(DialogueScreen screen, bool isSelected, GameTime gameTime)
         {
@@ -135,13 +152,14 @@ namespace DialoguePrototype
 
 
         /// <summary>
-        /// Draws the menu entry. This can be overridden to customize the appearance.
+        /// Draws this Response. This can be overridden to customize the appearance.
         /// </summary>
         public virtual void Draw(DialogueScreen screen, bool isSelected, GameTime gameTime)
         {
 
             // Draw the selected entry in yellow, otherwise white.
             Color color = isSelected ? Color.Yellow : Color.White;
+            String displayText = isSelected ? selectedText : text;
 
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;
@@ -160,13 +178,13 @@ namespace DialoguePrototype
 
             Vector2 origin = new Vector2(0, font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, text, position, color, 0,
+            spriteBatch.DrawString(font, displayText, position, color, 0,
                                    origin, scale, SpriteEffects.None, 0);
         }
 
 
         /// <summary>
-        /// Queries how much space this menu entry requires.
+        /// Queries how much space this response requires.
         /// </summary>
         public virtual int GetHeight(DialogueScreen screen)
         {
@@ -175,7 +193,7 @@ namespace DialoguePrototype
 
 
         /// <summary>
-        /// Queries how wide the entry is, used for centering on the screen.
+        /// Queries how wide the response is, used for centering on the screen.
         /// </summary>
         public virtual int GetWidth(DialogueScreen screen)
         {
