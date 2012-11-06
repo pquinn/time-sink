@@ -33,12 +33,14 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
+        private bool jumpStarted = false;
         private Rectangle sourceRect;
         float timer = 0f;
-        float interval = 200f;
+        float interval = 150f;
+        float jumpInterval = 100f;
         int currentFrame = 0;
-        int spriteWidth = 115;
-        int spriteHeight = 250;
+        int spriteWidth = 130;
+        int spriteHeight = 242;
 
 
         public Rectangle SourceRect
@@ -55,7 +57,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        115, 240
+                        100, 242
                     )
                 );
             }
@@ -75,9 +77,9 @@ namespace TimeSink.Engine.Core
                 new ContentManagerProvider<Texture2D>(content));
             spriteStack = new Stack<Tuple<string, Vector2>>();
 
-            SpriteTextureCache.LoadResource("Textures/Sprites/WalkingSheet");
+            SpriteTextureCache.LoadResource("Textures/Sprites/SpriteSheet");
 
-            playerTexture = "Textures/Sprites/WalkingSheet";
+            playerTexture = "Textures/Sprites/SpriteSheet";
          /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
             SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
             SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
@@ -151,11 +153,13 @@ namespace TimeSink.Engine.Core
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
             {
                 movedirection.X -= 1.0f;
+                if(touchingGround)
                 AnimateRight(gameTime);
             }
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
             {
                 movedirection.X += 1.0f;
+                if (touchingGround)
                 AnimateRight(gameTime);
             }
             #endregion
@@ -168,6 +172,9 @@ namespace TimeSink.Engine.Core
             {
                 if (jumpToggleGuard && touchingGround)
                 {
+                    jumpStarted = true;
+                    currentFrame = 10;
+                    AnimateJump(gameTime);
                     jumpSound.Play();
                     physics.Velocity -= new Vector2(0, 500);
                     jumpToggleGuard = false;
@@ -178,6 +185,11 @@ namespace TimeSink.Engine.Core
             {
                 jumpToggleGuard = true;
             }
+            else if (jumpStarted)
+            {
+                AnimateJump(gameTime);
+            }
+
             #endregion
 
             if (movedirection != Vector2.Zero)
@@ -205,13 +217,28 @@ namespace TimeSink.Engine.Core
             {
                 currentFrame++;
 
-                if (currentFrame > 7)
+                if (currentFrame > 8)
                 {
                     currentFrame = 0;
                 }
                 timer = 0f;
             }
 
+        }
+        protected void AnimateJump(GameTime gameTime)
+        {
+                timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (timer > jumpInterval)
+                {
+                    currentFrame++;
+
+                    if (currentFrame > 12)
+                    {
+                        currentFrame = 12;
+                    }
+                    timer = 0f;
+                }
         }
 
         public bool GravityEnabled
@@ -226,6 +253,10 @@ namespace TimeSink.Engine.Core
             // Handle whether collision should disable gravity
             if (info.MinimumTranslationVector.Y > 0)
             {
+                if (jumpToggleGuard == false)
+                {
+                    currentFrame = 13;
+                }
                 touchingGround = true;
                 GravityEnabled = false;
                 physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
