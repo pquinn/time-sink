@@ -10,12 +10,13 @@ namespace TimeSink.Engine.Core.Rendering
     public class RenderManager
     {
         HashSet<IRenderable> renderables = new HashSet<IRenderable>();
-        IResourceCache<Texture2D> cache;
 
         public RenderManager(IResourceCache<Texture2D> cache)
         {
-            this.cache = cache;
+            TextureCache = cache;
         }
+
+        public IResourceCache<Texture2D> TextureCache { get; set; }
 
         public bool RegisterRenderable(IRenderable renderable)
         {
@@ -41,7 +42,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             foreach (var renderable in renderables)
             {
-                renderable.Rendering.Draw(spriteBatch, cache);
+                renderable.Rendering.Draw(spriteBatch, TextureCache);
             }
 
             spriteBatch.End();

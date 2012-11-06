@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Rendering;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.States
 {
@@ -113,7 +116,6 @@ namespace TimeSink.Engine.Core.States
             if (StateQueue.Any())
             {
                 var stateLink = StateQueue.Dequeue();
-                stateLink.State.InvokingMetaData = stateLink.InvokingCell;
                 PreQueueState = CurState;
                 ChangeState(stateLink.State, true, exit);
             }
@@ -144,6 +146,5 @@ namespace TimeSink.Engine.Core.States
     public class StateLink<T>
     {
         public State<T> State { get; set; }
-        public Point InvokingCell { get; set; }
     }
 }

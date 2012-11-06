@@ -23,7 +23,7 @@ namespace TimeSink.Engine.Core.Rendering
             this.position = position;
         }
 
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
         {
             spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
         }

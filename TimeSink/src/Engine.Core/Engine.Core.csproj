@@ -118,6 +118,7 @@
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
+    <Compile Include="Input\InputManager.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Physics\GravityPhysics.cs" />
     <Compile Include="Physics\IPhysicsEnabledBody.cs" />
@@ -127,14 +128,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\BasicRendering.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Rendering\DrawExtensions.cs" />
     <Compile Include="Rendering\StackableRendering.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
     <Compile Include="Rendering\RenderManager.cs" />
+    <Compile Include="Rendering\WireFrameRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\DefaultEditorState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
+    <Compile Include="States\StaticMeshPlacementEditorState.cs" />
     <Compile Include="StaticMesh.cs" />
     <Compile Include="UserControlledCharacter.cs" />
     <Compile Include="VectorExtensions.cs" />

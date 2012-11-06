@@ -9,7 +9,7 @@ using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Engine.Core
 {
-    public class StaticMesh : ICollideable, IRenderable
+    public class StaticMesh : Entity
     {
         const string texture = "Textures/Ground_Tile1";
         public StaticMesh(Vector2 position)
@@ -19,7 +19,7 @@ namespace TimeSink.Engine.Core
 
         public Vector2 Position { get; set; }
 
-        public ICollisionGeometry CollisionGeometry
+        public override ICollisionGeometry CollisionGeometry
         {
             get
             {
@@ -28,12 +28,21 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public IRendering Rendering
+        public override IRendering Rendering
         {
             get 
             {
                 return new BasicRendering(texture, Position);
             }
+        }
+
+        public override IPhysicsParticle PhysicsController
+        {
+            get { return null; }
+        }
+
+        public override void HandleKeyboardInput(GameTime gameTime)
+        {
         }
     }
 }

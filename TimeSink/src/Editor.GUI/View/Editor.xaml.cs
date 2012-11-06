@@ -23,12 +23,17 @@ namespace TimeSink.Editor.GUI.Views
     public partial class Editor : UserControl
     {
         Game1 m_game;
-   
+        bool meshButtonPressed;
+
         public Editor()
         {
             InitializeComponent();
+            this.Loaded += new RoutedEventHandler(Editor_Loaded);
+        }
 
-            m_game = new Game1(xnaControl.Handle);
+        void Editor_Loaded(object sender, RoutedEventArgs e)
+        {
+            m_game = new Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
         }
 
         public IEnumerable<string> Textures { get; set; }
@@ -37,15 +42,27 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var selectorWindow = new StaticMeshSelector(m_game.TextureCache);
-
-            selectorWindow.ShowDialog();
-
-            var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
-            if ((bool)selectorWindow.DialogResult)
+            if (!meshButtonPressed)
             {
-                
+                var selectorWindow = new StaticMeshSelector(m_game.TextureCache);
+
+                selectorWindow.ShowDialog();
+
+                var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
+                if ((bool)selectorWindow.DialogResult)
+                {
+                    m_game.StaticMeshSelected(selectorWindow.SelectedTexture);
+                }
             }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void ClearButtons()
+        {
+            meshButtonPressed = false;
         }
     }
 }

@@ -33,6 +33,7 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Sound;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Input;
 #endregion
 
 
@@ -212,6 +213,16 @@ namespace TimeSink.Engine.Game
             character.Draw(gameTime, spriteBatch);
             world.Draw(gameTime, spriteBatch);
 
+            InputManager.Instance.Update();
+            var texture = Content.Load<Texture2D>("Textures/giroux");
+            spriteBatch.Begin();
+            spriteBatch.Draw(
+                texture, 
+                new Vector2(
+                    InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
+                    InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
+                new Color(255, 255, 255, 80));
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -327,7 +338,7 @@ namespace TimeSink.Engine.Game
                     else
                         firstMouseSample = false;
 
-                    Mouse.SetPosition(halfx, halfy);
+                    //Mouse.SetPosition(halfx, halfy);
                 }
 
                 if (viewRotation.Y > MathHelper.PiOver2 - 0.01f)
