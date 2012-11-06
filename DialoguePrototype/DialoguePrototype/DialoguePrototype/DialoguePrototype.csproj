@@ -112,7 +112,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\DialogueEntry.cs" />
+    <Compile Include="Screens\ResponseEventArgs.cs" />
+    <Compile Include="Screens\NPCPrompt.cs" />
     <Compile Include="DB\SQLiteDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game.cs" />
@@ -123,7 +124,7 @@
     <Compile Include="ScreenManager\IScreenFactory.cs" />
     <Compile Include="ScreenManager\ScreenManager.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
-    <Compile Include="Screens\DialogueBox.cs" />
+    <Compile Include="Screens\DialogueScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
+    <Compile Include="Screens\Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
