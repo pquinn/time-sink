@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Rendering
 {
@@ -44,6 +45,16 @@ namespace TimeSink.Engine.Core.Rendering
                 renderable.Rendering.Draw(spriteBatch, cache);
             }
 
+            spriteBatch.End();
+        }
+        public void Draw(SpriteBatch spriteBatch, Rectangle sourceRect)
+        {
+            spriteBatch.Begin();
+
+            foreach (var renderable in renderables)
+            {
+                renderable.Rendering.Draw(spriteBatch, cache, sourceRect);
+            }
             spriteBatch.End();
         }
     }
