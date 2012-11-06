@@ -144,11 +144,23 @@ namespace TimeSink.Engine.Core
 
             #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
+            {
                 movedirection.X -= 1.0f;
+                if (touchingGround)
+                    AnimateRight(gameTime);
+            }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
+            {
                 movedirection.X += 1.0f;
+                if (touchingGround)
+                    AnimateRight(gameTime);
+            }
             if (gamepad.ThumbSticks.Left.X != 0)
+            {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
+                if(touchingGround)
+                AnimateRight(gameTime);
+            }
 
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
             {
