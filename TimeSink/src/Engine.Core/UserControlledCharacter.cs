@@ -58,7 +58,7 @@ namespace TimeSink.Engine.Core
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        115, 250
+                        115, 240
                     )
                 );
             }
