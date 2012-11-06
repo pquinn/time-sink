@@ -17,7 +17,7 @@
     <XnaCrossPlatformGroupID>80062647-ac55-4753-8b5e-87a7eddc7520</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <Thumbnail>HambagLtdLogo2.png</Thumbnail>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +97,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="HambagLtdLogo2.png" />
     <None Include="readme.htm" />
   </ItemGroup>
   <ItemGroup>
