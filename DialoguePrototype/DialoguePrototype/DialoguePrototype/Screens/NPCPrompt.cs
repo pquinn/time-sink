@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DialoguePrototype
 {
-    public class NPCPrompt
+    class NPCPrompt
     {
         #region Fields
 
@@ -23,6 +23,22 @@ namespace DialoguePrototype
         /// The text representing the body of the prompt.
         /// </summary>
         string body { get; set; }
+
+
+        /// <summary>
+        /// The path of the animation that's associated with this prompt.
+        /// </summary>
+        AnimationAction animationPath { get; set; }
+
+        /// <summary>
+        /// The path of the sound that's associated with this prompt.
+        /// </summary>
+        SoundAction soundPath { get; set; }
+
+        /// <summary>
+        /// The path of the quest that's associated with this prompt.
+        /// </summary>
+        QuestAction questPath { get; set; }
 
         /// <summary>
         /// A boolean representing whether or not the prompt needs a response.
@@ -80,12 +96,18 @@ namespace DialoguePrototype
         /// <param name="id">the GUID of this prompt in the database.</param>
         /// <param name="speaker">a String representing the name of the speaker</param>
         /// <param name="body">a String representing the body of this prompt</param>
+        /// <param name="animationPath">a String representing the path of the animation for this prompt</param>
+        /// <param name="sountPath">a String representing the path of the sound for this prompt</param>
+        /// <param name="questPath">a String representing the path of the quest for this prompt</param>
         /// <param name="responseRequired">whether or not the prompt has responses</param>
-        public NPCPrompt(Guid id, String speaker, String body, Boolean responseRequired)
+        public NPCPrompt(Guid id, String speaker, String body, String animationPath, String soundPath, String questPath, Boolean responseRequired)
         {
             this.id = id;
             this.speaker = speaker;
             this.body = body;
+            this.animationPath = animationPath;
+            this.soundPath = soundPath;
+            this.questPath = questPath;
             this.responseRequired = responseRequired;
         }
 

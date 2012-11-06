@@ -182,6 +182,7 @@ namespace DialoguePrototype
             {
                 DataTable entry;
                 String query = "select speaker \"speaker\", entry \"entry\", ";
+                query += "animation \"animation\", sound \"sound\", quest \"quest\", ";
                 query += "response_required \"response\" ";
                 query += "from Prompt where id = \"" + id.ToString() + "\";";
                 entry = StarterGame.Instance.database.GetDataTable(query);
@@ -189,8 +190,11 @@ namespace DialoguePrototype
                 DataRow result = entry.Rows[0];
                 String speaker = (String)result["speaker"];
                 String body = (String)result["entry"];
+                String animation = (String)result["animation"];
+                String sound = (String)result["sound"];
+                String quest = (String)result["quest"];
                 Boolean responseRequired = (Boolean)result["response"];
-                NPCPrompt prompt = new NPCPrompt(id, speaker, body, responseRequired);
+                NPCPrompt prompt = new NPCPrompt(id, speaker, body, animation, sound, quest, responseRequired);
                 return prompt;
 
             }
@@ -199,7 +203,7 @@ namespace DialoguePrototype
                 String error = "The following error has occurred:\n";
                 error += e.Message.ToString() + "\n";
                 Console.WriteLine(error);
-                return new NPCPrompt(id, "error", error, false);
+                return new NPCPrompt(id, "error", error, null, null, null, false);
             }
         }
 
