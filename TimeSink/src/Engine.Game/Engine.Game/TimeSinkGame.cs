@@ -209,7 +209,7 @@ namespace TimeSink.Engine.Game
                 base.Draw(gameTime);
                 return;
             }*/
-            renderManager.Draw(this.spriteBatch);
+            renderManager.Draw(this.spriteBatch, character.SourceRect);
             character.Draw(gameTime, spriteBatch);
             world.Draw(gameTime, spriteBatch);
 

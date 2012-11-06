@@ -29,5 +29,11 @@ namespace TimeSink.Engine.Core.Rendering
                     Color.White);
             }
         }
+
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

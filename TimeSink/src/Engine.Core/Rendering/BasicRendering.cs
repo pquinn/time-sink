@@ -27,5 +27,11 @@ namespace TimeSink.Engine.Core.Rendering
         {
             spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
         }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        {
+            spriteBatch.Draw(cache.GetResource(textureKey), position, sourceRect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+        }
+
     }
 }
