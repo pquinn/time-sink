@@ -14,8 +14,8 @@ namespace TimeSink.Engine.Core.Rendering
     /// </summary>
     public class BasicRendering : IRendering
     {
-        string textureKey;
-        Vector2 position;
+        protected string textureKey;
+        protected Vector2 position;
 
         public BasicRendering(string textureKey, Vector2 position)
         {

@@ -10,6 +10,11 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public class WireFrameRendering : BasicRendering
     {
+        public WireFrameRendering(string textureKey, Vector2 position)
+            : base(textureKey, position)
+        {
+        }
+
         public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
         {
             base.Draw(spriteBatch, cache);
