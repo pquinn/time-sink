@@ -30,6 +30,7 @@ namespace TimeSink.Engine.Core
         private GravityPhysics physics;
         private SoundEffect jumpSound;
         private Stack<Tuple<string, Vector2>> spriteStack;
+        private CollisionSet colSet;
         public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
         private bool touchingGround = false;
@@ -51,15 +52,30 @@ namespace TimeSink.Engine.Core
 
         public ICollisionGeometry CollisionGeometry
         {
-            get
+            get 
             {
+
+                colSet = new CollisionSet();
+                colSet.Geometry.Add(new CollisionRectangle(
+                    new Rectangle(
+                        (int)physics.Position.X,
+                        (int)physics.Position.Y,
+                        75, 110)));
+                colSet.Geometry.Add(new CollisionRectangle(
+                    new Rectangle(
+                        (int)physics.Position.X + 50,
+                        (int)physics.Position.Y + 111,
+                        50, 132)));
+                return colSet;
+               /*
                 return new CollisionRectangle(
+>>>>>>> 36fc79d1b3a745efd0f9bd8b8c2b59839b90db23
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
                         100, 242
                     )
-                );
+                );*/
             }
         }
 
@@ -69,6 +85,7 @@ namespace TimeSink.Engine.Core
             {
                 GravityEnabled = true
             };
+                                           
         }
 
         public void Load(ContentManager content)
