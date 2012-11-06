@@ -14,7 +14,7 @@ namespace TimeSink.Engine.Core.Rendering
 
         void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect);
 
-        void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache);
+        void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color);
 
         bool Contains(Vector2 point, IResourceCache<Texture2D> cache);
     }

@@ -13,10 +13,12 @@ namespace TimeSink.Engine.Core.States
     public class SelectionEditorState : DefaultEditorState
     {
         List<StaticMesh> selectedMeshes;
+        int drillIndex;
 
         public SelectionEditorState()
         {
             selectedMeshes = new List<StaticMesh>();
+            drillIndex = 0;
         }
 
         public override void Enter(Level level)
@@ -27,6 +29,8 @@ namespace TimeSink.Engine.Core.States
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
+                selectedMeshes = new List<StaticMesh>();
+                drillIndex = 0;
                 foreach (var mesh in level.GetStaticMeshes())
                 {
                     if (mesh.Rendering.Contains(
@@ -38,6 +42,26 @@ namespace TimeSink.Engine.Core.States
                         selectedMeshes.Add(mesh);
                     }
                 }
+            }
+            else if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
+            {
+                drillIndex = (drillIndex + 1) % selectedMeshes.Count;
+            }
+            else if (InputManager.Instance.Pressed(Keys.Down) && selectedMeshes.Count > 0)
+            {
+                selectedMeshes[drillIndex].Position += new Vector2(0, 2);
+            }
+            else if (InputManager.Instance.Pressed(Keys.Up) && selectedMeshes.Count > 0)
+            {
+                selectedMeshes[drillIndex].Position += new Vector2(0, -2);
+            }
+            else if (InputManager.Instance.Pressed(Keys.Right) && selectedMeshes.Count > 0)
+            {
+                selectedMeshes[drillIndex].Position += new Vector2(2, 0);
+            }
+            else if (InputManager.Instance.Pressed(Keys.Left) && selectedMeshes.Count > 0)
+            {
+                selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
             }
         }
 
@@ -51,10 +75,22 @@ namespace TimeSink.Engine.Core.States
 
             spriteBatch.Begin();
 
-            if (selectedMeshes.Count > 0)
-            {
-                var mesh = selectedMeshes[0];
-                mesh.Rendering.DrawSelected(spriteBatch, level.RenderManager.TextureCache);
+                for (int i = 0; i < selectedMeshes.Count; i++)
+                {
+                    if (i == drillIndex)
+                    {
+                        selectedMeshes[i].Rendering.DrawSelected(
+                            spriteBatch,
+                            level.RenderManager.TextureCache,
+                            Color.LightGreen);
+                    }
+                    else
+                    {
+                        selectedMeshes[i].Rendering.DrawSelected(
+                            spriteBatch,
+                            level.RenderManager.TextureCache,
+                            Color.LightYellow);
+                    }         
             }
 
             spriteBatch.End();

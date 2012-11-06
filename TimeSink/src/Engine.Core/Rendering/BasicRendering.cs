@@ -33,7 +33,7 @@ namespace TimeSink.Engine.Core.Rendering
             spriteBatch.Draw(cache.GetResource(textureKey), position, sourceRect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
         }
 
-        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color)
         {
                 var texture = cache.GetResource(textureKey);
                 var blank = cache.GetResource("blank");
@@ -43,14 +43,14 @@ namespace TimeSink.Engine.Core.Rendering
                 var botRight = new Vector2(right, bot);
                 spriteBatch.DrawRect(
                     blank,
-                    topLeft, botRight, 5, Color.Green);
+                    topLeft, botRight, 5, color);
         }
 
         public bool Contains(Vector2 point, IResourceCache<Texture2D> cache)
         {
             var texture = cache.GetResource(textureKey);
-            var bot = position.X + texture.Width;
-            var right = position.Y + texture.Height;
+            var right = position.X + texture.Width;
+            var bot = position.Y + texture.Height;
 
             return (point.X > position.X) && (point.X < right) &&
                    (point.Y > position.Y) && (point.Y < bot);

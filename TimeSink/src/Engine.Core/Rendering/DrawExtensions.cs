@@ -27,18 +27,19 @@ namespace TimeSink.Engine.Core.Rendering
             spriteBatch.DrawLine(
                 texture, 
                 topLeft, topRight, 
-                2, color);
+                thinkness, color);
             spriteBatch.DrawLine(
                 texture,
-                topLeft, botLeft, 
-                2, color);
+                topLeft, botLeft,
+                thinkness, color);
             spriteBatch.DrawLine(
                 texture,
                 botLeft, botRight,
-                2, color);
+                thinkness, color);
             spriteBatch.DrawLine(
                 texture,
-                topRight, botRight, 2, color);
+                topRight, botRight,
+                thinkness, color);
         }
 
         public static void DrawRect(this SpriteBatch spriteBatch, Texture2D texture, Rectangle rect, int thinkness, Color color)

@@ -35,13 +35,13 @@ namespace TimeSink.Engine.Core.Rendering
             throw new NotImplementedException();
         }
 
-        public void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color)
         {
             var blank = cache.GetResource("blank");
 
             var rect = GetFullRectangle(cache);
 
-            spriteBatch.DrawRect(blank, rect, 2, Color.Black);
+            spriteBatch.DrawRect(blank, rect, 5, color);
         }
 
         public virtual bool Contains(Vector2 point, IResourceCache<Texture2D> cache)

@@ -66,9 +66,13 @@ namespace TimeSink.Editor.Game
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
             level.RegisterStaticMeshes(new List<StaticMesh>()
                 {
-                    new StaticMesh(new Vector2(20, 20)),
-                    new StaticMesh(new Vector2(294, 20)),
-                    new StaticMesh(new Vector2(566, 20))
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300)),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300)),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300)),
+                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286)),
                 });
 
             // set up state machine
@@ -89,8 +93,15 @@ namespace TimeSink.Editor.Game
             SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
 
-
-            TextureCache.LoadResource("Textures/Ground_Tile1");
+            TextureCache.LoadResources(
+                new List<string> 
+                {
+                    "Textures/Ground_Tile1",
+                    "Textures/Top_Tile01",
+                    "Textures/Top_Tile02",
+                    "Textures/Top_Tile03",
+                    "Textures/Side_Tile01"
+                });
             var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             blank.SetData(new[] { Color.White });
             TextureCache.AddResource("blank", blank);

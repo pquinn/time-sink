@@ -213,17 +213,6 @@ namespace TimeSink.Engine.Game
             character.Draw(gameTime, spriteBatch);
             world.Draw(gameTime, spriteBatch);
 
-            InputManager.Instance.Update();
-            var texture = Content.Load<Texture2D>("Textures/giroux");
-            spriteBatch.Begin();
-            spriteBatch.Draw(
-                texture, 
-                new Vector2(
-                    InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
-                    InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
-                new Color(255, 255, 255, 80));
-            spriteBatch.End();
-
             base.Draw(gameTime);
         }
 

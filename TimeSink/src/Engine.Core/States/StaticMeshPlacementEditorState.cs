@@ -31,6 +31,7 @@ namespace TimeSink.Engine.Core.States
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 var mesh = new StaticMesh(
+                    textureKey,
                     new Vector2(
                         Input.InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
                         Input.InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)));
