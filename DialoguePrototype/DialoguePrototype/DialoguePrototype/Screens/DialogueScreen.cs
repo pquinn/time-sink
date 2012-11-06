@@ -15,6 +15,9 @@ namespace DialoguePrototype
     {
         #region Fields
 
+        const int hPad = 32;
+        const int vPad = 16;
+
         float scale;
         int selectedEntry = 0;
         Texture2D gradientTexture;
@@ -25,6 +28,7 @@ namespace DialoguePrototype
         InputAction upAction;
         InputAction downAction;
         InputAction selectAction;
+        InputAction pauseAction;
 
         #endregion
 
@@ -51,17 +55,6 @@ namespace DialoguePrototype
 
         #region Initialization
 
-        /*
-        public DialogueScreen(String id)
-            : base(null, false, true)
-        {
-            this.scale = 0.75f;
-            this.prompt = FindPrompt(id);
-            this.message = FindPrompt(id).ToString();
-            IsPopup = false;
-        }
-         * */
-
         public DialogueScreen(Guid id)
             : base()
         {
@@ -77,7 +70,7 @@ namespace DialoguePrototype
             upAction = new InputAction(
                 new Buttons[] { Buttons.DPadUp, Buttons.LeftThumbstickUp },
                 new Keys[] { Keys.Up },
-            true);
+                true);
 
             downAction = new InputAction(
                 new Buttons[] { Buttons.DPadDown, Buttons.LeftThumbstickDown },
@@ -87,6 +80,11 @@ namespace DialoguePrototype
             selectAction = new InputAction(
                 new Buttons[] { Buttons.A, Buttons.Start },
                 new Keys[] { Keys.Enter, Keys.Space },
+                true);
+
+            pauseAction = new InputAction(
+                new Buttons[] { Buttons.Start, Buttons.Back },
+                new Keys[] { Keys.Escape },
                 true);
         }
 
@@ -168,7 +166,6 @@ namespace DialoguePrototype
                 DataTable entry;
                 String query = "select toID \"to\" ";
                 query += "from Response_Map where fromID = \"" + id.ToString() + "\";";
-                Console.WriteLine("query: " + query);
                 entry = StarterGame.Instance.database.GetDataTable(query);
                 foreach (DataRow r in entry.Rows)
                 {
@@ -227,7 +224,12 @@ namespace DialoguePrototype
                     selectedEntry = 0;
             }
 
-            if (selectAction.Evaluate(input, ControllingPlayer, out playerIndex))
+            PlayerIndex player;
+            if (pauseAction.Evaluate(input, ControllingPlayer, out player))
+            {
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
+            else if (selectAction.Evaluate(input, ControllingPlayer, out player))
             {
                 if (responses.Count != 0)
                 {
@@ -290,15 +292,15 @@ namespace DialoguePrototype
         /// Allows the screen the chance to position the menu entries. By default
         /// all menu entries are lined up in a vertical list, centered on the screen.
         /// </summary>
-        protected virtual void UpdateResponseLocations()
+        protected virtual void UpdateResponseLocations(float startY)
         {
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            //float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 175f);
+            Vector2 position = new Vector2(0f, startY);
 
             // update each menu entry's location in turn
             for (int i = 0; i < responses.Count; i++)
@@ -306,12 +308,7 @@ namespace DialoguePrototype
                 Response response = responses[i];
 
                 // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - response.GetWidth(this) / 2;
-
-                if (ScreenState == ScreenState.TransitionOn)
-                    position.X -= transitionOffset * 256;
-                else
-                    position.X += transitionOffset * 512;
+                position.X = hPad;
 
                 // set the entry's position
                 response.Position = position;
@@ -327,13 +324,43 @@ namespace DialoguePrototype
         public override void Draw(GameTime gameTime)
         {
             // make sure our entries are in the right place before we draw them
-            UpdateResponseLocations();
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
             spriteBatch.Begin();
+
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 origin = new Vector2(0, 0);
+            float titleScale = 1.0f;
+
+            //  + " This is extra text for padding shit. Let's see what happens!",
+            String tempPrompt = WrapText(font,
+                        prompt.Speaker + ":\n" + prompt.Body + " This is extra text for padding shit. Let's see what happens!",
+                        viewportSize.X - (hPad * 3));
+
+            Vector2 titleSize = font.MeasureString(tempPrompt) * titleScale;
+
+            // Draw the menu title in the top left corner of the screen
+            Vector2 titlePosition = new Vector2(hPad + titleSize.X / 2, vPad + titleSize.Y / 2);
+            Vector2 titleOrigin = titleSize / 2;
+            Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
+
+            Color color = Color.White * TransitionAlpha;
+
+            //draw the rectangle the length of the screen starting at the origin
+            Rectangle backgroundRectangle = new Rectangle(0, 0,
+                                  (int)viewportSize.X,
+                                  (int)titleSize.Y + vPad * 2);
+
+            spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
+
+            spriteBatch.DrawString(font, tempPrompt, titlePosition, titleColor, 0,
+                                   titleOrigin, titleScale, SpriteEffects.None, 0.0f);
+
+            UpdateResponseLocations(titleSize.Y + vPad * 4);
 
             // Draw each menu entry in turn.
             for (int i = 0; i < responses.Count; i++)
@@ -345,43 +372,33 @@ namespace DialoguePrototype
                 response.Draw(this, isSelected, gameTime);
             }
 
-            const int hPad = 32;
-            const int vPad = 16;
-
-            String tempBody = prompt.Speaker + ":\n" + prompt.Body;
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(tempBody) * scale;
-            Vector2 textPosition = (viewportSize - textSize) / 2;
-            Vector2 origin = new Vector2(0, 0);
-
-            Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
-                                              (int)textPosition.Y - vPad,
-                                              (int)textSize.X + hPad * 2,
-                                              (int)textSize.Y + vPad * 2);
-            
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
-            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
-
-            // Draw the menu title centered on the screen
-            // vv this needs to be made into something less STUPID
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
-            Vector2 titleOrigin = font.MeasureString(tempBody) / 2;
-            Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            float titleScale = 1.25f;
-
-            Color color = Color.White * TransitionAlpha;
-
-            titlePosition.Y -= transitionOffset * 100;
-
-            //spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
-
-            spriteBatch.DrawString(font, tempBody, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0.0f);
-
             spriteBatch.End();
+        }
+
+        private String WrapText(SpriteFont spriteFont, string text, float maxLineWidth)
+        {
+            String[] words = text.Split(' ');
+            StringBuilder sb = new StringBuilder();
+            float lineWidth = 0f;
+            float spaceWidth = spriteFont.MeasureString(" ").X;
+
+            foreach (string word in words)
+            {
+                Vector2 size = spriteFont.MeasureString(word);
+
+                if (lineWidth + size.X < maxLineWidth)
+                {
+                    sb.Append(word + " ");
+                    lineWidth += size.X + spaceWidth;
+                }
+                else
+                {
+                    sb.Append("\n" + word + " ");
+                    lineWidth = size.X + spaceWidth;
+                }
+            }
+
+            return sb.ToString();
         }
 
         #endregion
