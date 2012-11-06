@@ -24,6 +24,7 @@ namespace TimeSink.Editor.GUI.Views
     {
         Game1 m_game;
         bool meshButtonPressed;
+        bool selectionButtonPressed;
 
         public Editor()
         {
@@ -40,7 +41,7 @@ namespace TimeSink.Editor.GUI.Views
 
         public IEnumerable<string> SelectedTexture { get; set; }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Static_Click(object sender, RoutedEventArgs e)
         {
             if (!meshButtonPressed)
             {
@@ -60,9 +61,22 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
+        private void Selection_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+                m_game.SelectionSelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
         private void ClearButtons()
         {
             meshButtonPressed = false;
+            selectionButtonPressed = false;
         }
     }
 }

@@ -30,10 +30,62 @@ namespace TimeSink.Engine.Core.Rendering
             }
         }
 
-
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
         {
             throw new NotImplementedException();
+        }
+
+        public void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        {
+            var blank = cache.GetResource("blank");
+
+            var rect = GetFullRectangle(cache);
+
+            spriteBatch.DrawRect(blank, rect, 2, Color.Black);
+        }
+
+        public virtual bool Contains(Vector2 point, IResourceCache<Texture2D> cache)
+        {
+            return textureKeysAndRelativePositions.Any(
+                pair => 
+                    {
+                        var texture = cache.GetResource(pair.Item1);
+                        var relativeLeft = parentPosition.X + pair.Item2.X;
+                        var relativeRight = relativeLeft + texture.Width;
+                        var relativeTop = parentPosition.Y - pair.Item2.Y;
+                        var relativeBot = relativeTop - texture.Height; 
+   
+                        return (point.X > relativeLeft) && (point.X < relativeRight) &&
+                               (point.Y > relativeTop) && (point.Y < relativeBot);
+                    });
+        }
+
+        private Rectangle GetFullRectangle(IResourceCache<Texture2D> cache)
+        {
+            var top = Single.PositiveInfinity;
+            var left = Single.PositiveInfinity;
+            var right = 0f;
+            var bot = 0f;
+
+            foreach (var pair in textureKeysAndRelativePositions)
+            {
+                var texture = cache.GetResource(pair.Item1);
+                var relativeLeft = parentPosition.X + pair.Item2.X;
+                var relativeRight = relativeLeft + texture.Width;
+                var relativeTop = parentPosition.Y - pair.Item2.Y;
+                var relativeBot = relativeTop - texture.Height;
+
+                left = Math.Min(left, relativeLeft);
+                right = Math.Max(right, relativeRight);
+                bot = Math.Max(bot, relativeBot);
+                top = Math.Min(top, relativeTop);
+            }
+
+            return new Rectangle(
+                (int)left, 
+                (int)right, 
+                (int)(right - left), 
+                (int)(bot - top));
         }
     }
 }

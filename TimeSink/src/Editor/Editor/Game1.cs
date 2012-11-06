@@ -91,6 +91,9 @@ namespace TimeSink.Editor.Game
 
 
             TextureCache.LoadResource("Textures/Ground_Tile1");
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            TextureCache.AddResource("blank", blank);
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
 
@@ -156,6 +159,13 @@ namespace TimeSink.Editor.Game
         {
             stateMachine.ChangeState(
                 new StaticMeshPlacementEditorState(textureKey),
+                true, true);
+        }
+
+        public void SelectionSelected()
+        {
+            stateMachine.ChangeState(
+                new SelectionEditorState(),
                 true, true);
         }
     }

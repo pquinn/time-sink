@@ -12,10 +12,11 @@ namespace TimeSink.Engine.Core.States
 {
     public class SelectionEditorState : DefaultEditorState
     {
-        Texture2D texture;
+        List<StaticMesh> selectedMeshes;
 
         public SelectionEditorState()
         {
+            selectedMeshes = new List<StaticMesh>();
         }
 
         public override void Enter(Level level)
@@ -26,6 +27,17 @@ namespace TimeSink.Engine.Core.States
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
+                foreach (var mesh in level.GetStaticMeshes())
+                {
+                    if (mesh.Rendering.Contains(
+                        new Vector2(
+                            InputManager.Instance.CurrentMouseState.X,
+                            InputManager.Instance.CurrentMouseState.Y),
+                        level.RenderManager.TextureCache))
+                    {
+                        selectedMeshes.Add(mesh);
+                    }
+                }
             }
         }
 
@@ -33,9 +45,19 @@ namespace TimeSink.Engine.Core.States
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level l)
+        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
         {
-            base.Draw(spriteBatch, camera, l);
+            base.Draw(spriteBatch, camera, level);
+
+            spriteBatch.Begin();
+
+            if (selectedMeshes.Count > 0)
+            {
+                var mesh = selectedMeshes[0];
+                mesh.Rendering.DrawSelected(spriteBatch, level.RenderManager.TextureCache);
+            }
+
+            spriteBatch.End();
         }
     }
 }
