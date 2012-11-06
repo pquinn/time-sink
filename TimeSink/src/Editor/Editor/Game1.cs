@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Editor.Game
 {
@@ -23,7 +24,14 @@ namespace TimeSink.Editor.Game
 
         RenderManager renderManager;
 
-        List<StaticMesh> staticMeshes;              
+        Level level;
+
+        Camera camera;
+        const int cameraTolerance = 10;
+        const int cameraMoveSpeed = 5;
+
+        StateMachine<Level> stateMachine;
+        State<Level> initState;
 
         public Game1(IntPtr handle)
             :base(handle, "Content")
@@ -46,16 +54,25 @@ namespace TimeSink.Editor.Game
 
             base.Initialize();
 
-            staticMeshes = new List<StaticMesh>()
+            camera = new Camera();
+
+            // create default level
+            level = new Level();            
+            level.StaticMeshes = new List<StaticMesh>()
             {
                 new StaticMesh(new Vector2(20, 20)),
                 new StaticMesh(new Vector2(294, 20)),
                 new StaticMesh(new Vector2(566, 20))
             };
 
+            // set up state machine
+            initState = new DefaultEditorState();
+            stateMachine = new StateMachine<Level>(initState, level);
+            initState.StateMachine = stateMachine;
+
             //set up managers
             renderManager = new RenderManager(TextureCache);
-            renderManager.RegisterRenderable(staticMeshes);
+            renderManager.RegisterRenderable(level.StaticMeshes);
         }
 
         /// <summary>
@@ -103,6 +120,17 @@ namespace TimeSink.Editor.Game
                 this.Exit();
 
             // TODO: Add your update logic here
+            Input.Instance.Update();
+
+            Point mouse_loc = new Point(Input.Instance.CurrentMouseState.X, Input.Instance.CurrentMouseState.Y);
+            if (mouse_loc.X < cameraTolerance && mouse_loc.X > 0)
+                camera.PanCamera(-Vector2.UnitX * cameraMoveSpeed);
+            if (mouse_loc.X > Constants.SCREEN_X - cameraTolerance && mouse_loc.X < Constants.SCREEN_X)
+                camera.PanCamera(Vector2.UnitX * cameraMoveSpeed);
+            if (mouse_loc.Y < cameraTolerance && mouse_loc.Y > 0)
+                camera.PanCamera(-Vector2.UnitY * cameraMoveSpeed);
+            if (mouse_loc.Y > Constants.SCREEN_Y - cameraTolerance && mouse_loc.Y < Constants.SCREEN_Y)
+                camera.PanCamera(Vector2.UnitY * cameraMoveSpeed);  
 
             base.Update(gameTime);
         }
@@ -114,6 +142,8 @@ namespace TimeSink.Editor.Game
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            stateMachine.Draw(spriteBatch, camera);
 
             renderManager.Draw(spriteBatch);
 

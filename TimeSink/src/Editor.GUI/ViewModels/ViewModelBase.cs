@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace DemoApp.ViewModel
+namespace TimeSink.Editor.GUI.ViewModels
 {
     /// <summary>
     /// Base class for all ViewModel classes in the application.

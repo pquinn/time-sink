@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TimeSink.Editor.Game;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Editor.GUI.ViewModels;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -36,9 +37,15 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SelectedTexture = null;
-            Textures = m_game.TextureCache.GetResources().Select(x => x.Item1);
-            meshSelector.Visibility = Visibility.Visible;
+            var selectorWindow = new StaticMeshSelector(m_game.TextureCache);
+
+            selectorWindow.ShowDialog();
+
+            var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
+            if ((bool)selectorWindow.DialogResult)
+            {
+                
+            }
         }
     }
 }

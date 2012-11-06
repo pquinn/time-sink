@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DemoApp.ViewModel;
 using System.Windows.Input;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
@@ -15,51 +14,100 @@ namespace TimeSink.Editor.GUI.ViewModels
 
         RelayCommand _closeCommand;
         InMemoryResourceCache<Texture2D> cache;
+        List<string> textureKeys;
+        int selectedTextureKey = -1;
+        
+        RelayCommand _saveCommand;
+        Action<string, bool> invokeCancel;
 
         #endregion // Fields
 
         #region Constructor
 
-        public StaticMeshSelectorViewModel(InMemoryResourceCache<Texture2D> cache)
+        public StaticMeshSelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
         {
             this.cache = cache; 
+            this.textureKeys = cache.GetResources().Select(x => x.Item1).ToList();
+            this.invokeCancel = invokeCancel;
+        }
+
+        public List<string> TextureKeys
+        {
+            get { return textureKeys; }
+            set
+            {
+                if (value != textureKeys)
+                {
+                    textureKeys = value;
+                    base.OnPropertyChanged("TextureKeys");
+                }
+            }
+        }
+
+        public int SelectedTextureKey
+        {
+            get { return selectedTextureKey; }
+            set
+            {
+                if (value != selectedTextureKey)
+                {
+                    selectedTextureKey = value;
+                    SaveCommand.CanExecute(null);
+                    base.OnPropertyChanged("SelectedTextureKey");
+                }
+            }
         }
 
         #endregion // Constructor
 
-        #region CloseCommand
+        #region Commands
 
         /// <summary>
-        /// Returns the command that, when invoked, attempts
-        /// to remove this workspace from the user interface.
+        /// Returns a command that saves the customer.
+        /// </summary>
+        public ICommand SaveCommand
+        {
+            get
+            {
+                if (_saveCommand == null)
+                {
+                    _saveCommand = new RelayCommand(
+                        param => this.Close(true),
+                        param => this.CanSave
+                        );
+                }
+                return _saveCommand;
+            }
+        }
+
+        /// <summary>
+        /// Returns a command that saves the customer.
         /// </summary>
         public ICommand CloseCommand
         {
             get
             {
                 if (_closeCommand == null)
-                    _closeCommand = new RelayCommand(param => this.OnRequestClose());
-
+                {
+                    _closeCommand = new RelayCommand(
+                        param => this.Close(false));
+                }
                 return _closeCommand;
             }
         }
 
-        #endregion // CloseCommand
-
-        #region RequestClose [event]
-
-        /// <summary>
-        /// Raised when this workspace should be removed from the UI.
-        /// </summary>
-        public event EventHandler RequestClose;
-
-        void OnRequestClose()
+        private void Close(bool ok)
         {
-            EventHandler handler = this.RequestClose;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            invokeCancel(
+                SelectedTextureKey < 0 ? null : TextureKeys[SelectedTextureKey], 
+                ok);
         }
 
-        #endregion
+        bool CanSave
+        {
+            get { return SelectedTextureKey >= 0; }
+        }
+
+        #endregion // Presentation Properties
     }
 }

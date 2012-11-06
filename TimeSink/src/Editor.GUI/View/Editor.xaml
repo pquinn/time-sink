@@ -45,6 +45,5 @@
         </Border>
         <xna:UserControl1 Grid.Column="1" x:Name="xnaControl">            
         </xna:UserControl1>
-        <views:StaticMeshSelector x:Name="meshSelector" DataContext="{Binding Textures}" Visibility="Collapsed" />
     </Grid>
 </UserControl>

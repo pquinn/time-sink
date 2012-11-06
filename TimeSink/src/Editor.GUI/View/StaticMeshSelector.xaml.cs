@@ -20,28 +20,20 @@ namespace TimeSink.Editor.GUI.Views
     /// <summary>
     /// Interaction logic for StaticMeshSelector.xaml
     /// </summary>
-    public partial class StaticMeshSelector : UserControl
+    public partial class StaticMeshSelector : Window
     {
-        InMemoryResourceCache<Texture2D> cache;
-
-        public StaticMeshSelector()
+        public StaticMeshSelector(InMemoryResourceCache<Texture2D> cache)
         {
             InitializeComponent();
-            DataContext = new StaticMeshSelectorViewModel(cache);
+            DataContext = new StaticMeshSelectorViewModel(
+                cache,
+                (string s, bool b) =>
+                {
+                    this.SelectedTexture = s;
+                    this.DialogResult = b;
+                });
         }
 
-        public InMemoryResourceCache<Texture2D> Cache
-        {
-            get
-            {
-                return cache;
-            }
-
-            set
-            {
-                DataContext = value;
-                cache = value;
-            }
-        }
+        public string SelectedTexture { get; set; }
     }
 }
