@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace TimeSink.Engine.Core
 {
-    public class UserControlledCharacter 
+    public class UserControlledCharacter
         : IPhysicsEnabledBody, IKeyboardControllable, ICollideable, IRenderable
     {
         const float PLAYER_MASS = 100f;
@@ -51,8 +51,8 @@ namespace TimeSink.Engine.Core
 
         public ICollisionGeometry CollisionGeometry
         {
-            get 
-            { 
+            get
+            {
                 return new CollisionRectangle(
                     new Rectangle(
                         (int)physics.Position.X,
@@ -80,19 +80,19 @@ namespace TimeSink.Engine.Core
             SpriteTextureCache.LoadResource("Textures/Sprites/SpriteSheet");
 
             playerTexture = "Textures/Sprites/SpriteSheet";
-         /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
-            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
-            SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
-            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
-            SpriteTextureCache.LoadResource("Textures/Sprites/Head/Hair/Hair_Neutral");
+            /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
+               SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
+               SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
+               SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
+               SpriteTextureCache.LoadResource("Textures/Sprites/Head/Hair/Hair_Neutral");
 
-            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Hands/Hand_Neutral", new Vector2(37, 80)));
-            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Arm_Neutral", new Vector2(23, 20)));
-            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
-            spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
-            spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
-            */
-            
+               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Hands/Hand_Neutral", new Vector2(37, 80)));
+               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Arm_Neutral", new Vector2(23, 20)));
+               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
+               spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
+               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
+               */
+
             //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
             jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
@@ -102,13 +102,13 @@ namespace TimeSink.Engine.Core
         {
             spriteBatch.Begin();
 
-        /*    playerSprites.Add(
-                playerTexture, 
-                Vector2.One * 0.32f, 
-                physics.Position, 
-                0, 
-                0);*/
-         //   playerSprites.Draw(playerTexture, physics.Position, Color.White);
+            /*    playerSprites.Add(
+                    playerTexture, 
+                    Vector2.One * 0.32f, 
+                    physics.Position, 
+                    0, 
+                    0);*/
+            //   playerSprites.Draw(playerTexture, physics.Position, Color.White);
 
 
             spriteBatch.End();
@@ -144,29 +144,41 @@ namespace TimeSink.Engine.Core
 
             #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
+            {
                 movedirection.X -= 1.0f;
+                if (touchingGround)
+                    AnimateRight(gameTime);
+            }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
+            {
                 movedirection.X += 1.0f;
+                if (touchingGround)
+                    AnimateRight(gameTime);
+            }
             if (gamepad.ThumbSticks.Left.X != 0)
+            {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
+                if (touchingGround)
+                    AnimateRight(gameTime);
+            }
 
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
             {
                 movedirection.X -= 1.0f;
-                if(touchingGround)
-                AnimateRight(gameTime);
+                if (touchingGround)
+                    AnimateRight(gameTime);
             }
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
             {
                 movedirection.X += 1.0f;
                 if (touchingGround)
-                AnimateRight(gameTime);
+                    AnimateRight(gameTime);
             }
             #endregion
 
             #region Jumping
-            if (keyboard.IsKeyDown(Keys.Space) 
-                || keyboard.IsKeyDown(Keys.W) 
+            if (keyboard.IsKeyDown(Keys.Space)
+                || keyboard.IsKeyDown(Keys.W)
                 || keyboard.IsKeyDown(Keys.Up)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
@@ -197,7 +209,7 @@ namespace TimeSink.Engine.Core
                 // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
                 movedirection.Normalize();
             }
-            
+
             // Increment animation unless idle.
             if (amount != 0.0f)
             {
@@ -225,20 +237,21 @@ namespace TimeSink.Engine.Core
             }
 
         }
+
         protected void AnimateJump(GameTime gameTime)
         {
-                timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (timer > jumpInterval)
+            if (timer > jumpInterval)
+            {
+                currentFrame++;
+
+                if (currentFrame > 12)
                 {
-                    currentFrame++;
-
-                    if (currentFrame > 12)
-                    {
-                        currentFrame = 12;
-                    }
-                    timer = 0f;
+                    currentFrame = 12;
                 }
+                timer = 0f;
+            }
         }
 
         public bool GravityEnabled
@@ -265,7 +278,7 @@ namespace TimeSink.Engine.Core
 
         public IRendering Rendering
         {
-            get {return  new BasicRendering(playerTexture, this.physics.Position); }
+            get { return new BasicRendering(playerTexture, this.physics.Position); }
         }
     }
 }
