@@ -6,6 +6,8 @@ using System.Data;
 using GameStateManagement;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace DialoguePrototype
 {
@@ -15,6 +17,7 @@ namespace DialoguePrototype
 
         float scale;
         int selectedEntry = 0;
+        Texture2D gradientTexture;
 
         NPCPrompt prompt;
         List<Response> responses;
@@ -22,6 +25,12 @@ namespace DialoguePrototype
         InputAction upAction;
         InputAction downAction;
         InputAction selectAction;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<PlayerIndexEventArgs> Finished;
 
         #endregion
 
@@ -91,7 +100,24 @@ namespace DialoguePrototype
             return openingPrompt;
         }
 
+        /// <summary>
+        /// Loads graphics content for this screen. This uses the shared ContentManager
+        /// provided by the Game class, so the content will remain loaded forever.
+        /// Whenever a subsequent MessageBoxScreen tries to load this same content,
+        /// it will just get back another reference to the already loaded data.
+        /// </summary>
+        public override void Activate(bool instancePreserved)
+        {
+            if (!instancePreserved)
+            {
+                ContentManager content = ScreenManager.Game.Content;
+                gradientTexture = content.Load<Texture2D>("textures/gradient");
+            }
+        }
+
         #endregion
+
+        #region Database Interactions
 
         private NPCPrompt FindPrompt(Guid id)
         {
@@ -125,7 +151,7 @@ namespace DialoguePrototype
             DataTable entry;
             String query = "select entry \"entry\", ";
             query += "next_entry \"next_entry\" ";
-            query += "from Response_Map where fromID = \"" + id.ToString() + "\";";
+            query += "from Response where ID = \"" + id.ToString() + "\";";
             entry = StarterGame.Instance.database.GetDataTable(query);
             // again, there should only be one result
             DataRow result = entry.Rows[0];
@@ -141,7 +167,8 @@ namespace DialoguePrototype
             {
                 DataTable entry;
                 String query = "select toID \"to\" ";
-                query += "from Response_Map where fromID = \"" + id + "\";";
+                query += "from Response_Map where fromID = \"" + id.ToString() + "\";";
+                Console.WriteLine("query: " + query);
                 entry = StarterGame.Instance.database.GetDataTable(query);
                 foreach (DataRow r in entry.Rows)
                 {
@@ -164,6 +191,8 @@ namespace DialoguePrototype
 
             return responses;
         }
+
+        #endregion
 
         #region Handle Input
 
@@ -200,7 +229,19 @@ namespace DialoguePrototype
 
             if (selectAction.Evaluate(input, ControllingPlayer, out playerIndex))
             {
-                OnSelectEntry(selectedEntry);
+                if (responses.Count != 0)
+                {
+                    OnSelectEntry(selectedEntry);
+                }
+                else
+                {
+                    if (Finished != null)
+                    {
+                        Finished(this, new PlayerIndexEventArgs(playerIndex));
+                    }
+
+                    ExitScreen();
+                }
             }
         }
 
@@ -222,6 +263,125 @@ namespace DialoguePrototype
             // InitializeDialogueBox on e.NextEntry
             ExitScreen();
             ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(e.NextEntry), null);
+        }
+
+        #endregion
+
+        #region Update and Draw
+
+        /// <summary>
+        /// Updates the menu.
+        /// </summary>
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                                       bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            // Update each nested MenuEntry object.
+            for (int i = 0; i < responses.Count; i++)
+            {
+                bool isSelected = IsActive && (i == selectedEntry);
+
+                responses[i].Update(this, isSelected, gameTime);
+            }
+        }
+
+        /// <summary>
+        /// Allows the screen the chance to position the menu entries. By default
+        /// all menu entries are lined up in a vertical list, centered on the screen.
+        /// </summary>
+        protected virtual void UpdateResponseLocations()
+        {
+            // Make the menu slide into place during transitions, using a
+            // power curve to make things look more interesting (this makes
+            // the movement slow down as it nears the end).
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
+            // start at Y = 175; each X value is generated per entry
+            Vector2 position = new Vector2(0f, 175f);
+
+            // update each menu entry's location in turn
+            for (int i = 0; i < responses.Count; i++)
+            {
+                Response response = responses[i];
+
+                // each entry is to be centered horizontally
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - response.GetWidth(this) / 2;
+
+                if (ScreenState == ScreenState.TransitionOn)
+                    position.X -= transitionOffset * 256;
+                else
+                    position.X += transitionOffset * 512;
+
+                // set the entry's position
+                response.Position = position;
+
+                // move down for the next entry the size of this entry
+                position.Y += response.GetHeight(this);
+            }
+        }
+
+        /// <summary>
+        /// Draws the menu.
+        /// </summary>
+        public override void Draw(GameTime gameTime)
+        {
+            // make sure our entries are in the right place before we draw them
+            UpdateResponseLocations();
+
+            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            SpriteFont font = ScreenManager.Font;
+
+            spriteBatch.Begin();
+
+            // Draw each menu entry in turn.
+            for (int i = 0; i < responses.Count; i++)
+            {
+                Response response = responses[i];
+
+                bool isSelected = IsActive && (i == selectedEntry);
+
+                response.Draw(this, isSelected, gameTime);
+            }
+
+            const int hPad = 32;
+            const int vPad = 16;
+
+            String tempBody = prompt.Speaker + ":\n" + prompt.Body;
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
+            Vector2 textSize = font.MeasureString(tempBody) * scale;
+            Vector2 textPosition = (viewportSize - textSize) / 2;
+            Vector2 origin = new Vector2(0, 0);
+
+            Rectangle backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
+                                              (int)textPosition.Y - vPad,
+                                              (int)textSize.X + hPad * 2,
+                                              (int)textSize.Y + vPad * 2);
+            
+            // Make the menu slide into place during transitions, using a
+            // power curve to make things look more interesting (this makes
+            // the movement slow down as it nears the end).
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
+            // Draw the menu title centered on the screen
+            // vv this needs to be made into something less STUPID
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titleOrigin = font.MeasureString(tempBody) / 2;
+            Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            float titleScale = 1.25f;
+
+            Color color = Color.White * TransitionAlpha;
+
+            titlePosition.Y -= transitionOffset * 100;
+
+            //spriteBatch.Draw(gradientTexture, backgroundRectangle, color);
+
+            spriteBatch.DrawString(font, tempBody, titlePosition, titleColor, 0,
+                                   titleOrigin, titleScale, SpriteEffects.None, 0.0f);
+
+            spriteBatch.End();
         }
 
         #endregion

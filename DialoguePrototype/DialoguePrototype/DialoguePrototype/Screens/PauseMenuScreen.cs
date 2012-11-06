@@ -50,7 +50,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Event handler for when the Quit Game menu entry is selected.
         /// </summary>
-        void QuitGameMenuEntrySelected(object sender, ResponseEventArgs e)
+        void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             const string message = "Are you sure you want to quit this game?";
 
@@ -67,7 +67,7 @@ namespace DialoguePrototype
         /// you want to quit" message box. This uses the loading screen to
         /// transition from the game back to the main menu screen.
         /// </summary>
-        void ConfirmQuitMessageBoxAccepted(object sender, ResponseEventArgs e)
+        void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                            new MainMenuScreen());
