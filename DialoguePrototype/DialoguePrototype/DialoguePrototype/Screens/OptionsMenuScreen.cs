@@ -100,7 +100,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Event handler for when the Ungulate menu entry is selected.
         /// </summary>
-        void UngulateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void UngulateMenuEntrySelected(object sender, ResponseEventArgs e)
         {
             currentUngulate++;
 
@@ -114,7 +114,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Event handler for when the Language menu entry is selected.
         /// </summary>
-        void LanguageMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void LanguageMenuEntrySelected(object sender, ResponseEventArgs e)
         {
             currentLanguage = (currentLanguage + 1) % languages.Length;
 
@@ -125,7 +125,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Event handler for when the Frobnicate menu entry is selected.
         /// </summary>
-        void FrobnicateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void FrobnicateMenuEntrySelected(object sender, ResponseEventArgs e)
         {
             frobnicate = !frobnicate;
 
@@ -136,7 +136,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Event handler for when the Elf menu entry is selected.
         /// </summary>
-        void ElfMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void ElfMenuEntrySelected(object sender, ResponseEventArgs e)
         {
             elf++;
 

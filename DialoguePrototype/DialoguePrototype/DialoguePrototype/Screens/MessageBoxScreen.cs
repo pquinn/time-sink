@@ -194,7 +194,7 @@ namespace DialoguePrototype
 
             // Draw the message box text.
             // not sure why this can't be null
-            SpriteEffects spriteEffects = new SpriteEffects();
+            SpriteEffects spriteEffects = SpriteEffects.None;
             spriteBatch.DrawString(font, message, textPosition, color, 0.0f, origin, this.scale, spriteEffects, 0.0f);
 
             spriteBatch.End();

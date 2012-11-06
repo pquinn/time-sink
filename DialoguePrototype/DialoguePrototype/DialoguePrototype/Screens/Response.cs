@@ -1,9 +1,6 @@
-#region File Description
+﻿#region File Description
 //-----------------------------------------------------------------------------
-// MenuEntry.cs
-//
-// XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
+// Response.cs
 //-----------------------------------------------------------------------------
 #endregion
 
@@ -17,12 +14,9 @@ using GameStateManagement;
 namespace DialoguePrototype
 {
     /// <summary>
-    /// Helper class represents a single entry in a MenuScreen. By default this
-    /// just draws the entry text string, but it can be customized to display menu
-    /// entries in different ways. This also provides an event that will be raised
-    /// when the menu entry is selected.
+    /// Holds the data for a player response in the Dialogue engine
     /// </summary>
-    class MenuEntry
+    class Response
     {
         #region Fields
 
@@ -30,6 +24,11 @@ namespace DialoguePrototype
         /// The text rendered for this entry.
         /// </summary>
         string text;
+
+        /// <summary>
+        /// The GUID of the entry that this response leads to
+        /// </summary>
+        Guid nextEntry;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -53,7 +52,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Gets or sets the text of this menu entry.
         /// </summary>
-        public string Text
+        public String Text
         {
             get { return text; }
             set { text = value; }
@@ -69,6 +68,13 @@ namespace DialoguePrototype
             set { position = value; }
         }
 
+        /// <summary>
+        /// Gets the GUID of the following NPC prompt.
+        /// </summary>
+        public Guid NextEntry
+        {
+            get { return nextEntry; }
+        }
 
         #endregion
 
@@ -78,16 +84,16 @@ namespace DialoguePrototype
         /// <summary>
         /// Event raised when the menu entry is selected.
         /// </summary>
-        public event EventHandler<PlayerIndexEventArgs> Selected;
+        public event EventHandler<ResponseEventArgs> Selected;
 
 
         /// <summary>
         /// Method for raising the Selected event.
         /// </summary>
-        protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
+        protected internal virtual void OnSelectEntry()
         {
             if (Selected != null)
-                Selected(this, new PlayerIndexEventArgs(playerIndex));
+                Selected(this, new ResponseEventArgs(nextEntry));
         }
 
 
@@ -99,9 +105,10 @@ namespace DialoguePrototype
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public Response(string text, Guid nextEntry)
         {
             this.text = text;
+            this.nextEntry = nextEntry;
         }
 
 
@@ -113,7 +120,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
-        public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Update(DialogueScreen screen, bool isSelected, GameTime gameTime)
         {
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
@@ -130,7 +137,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Draw(DialogueScreen screen, bool isSelected, GameTime gameTime)
         {
 
             // Draw the selected entry in yellow, otherwise white.
@@ -138,7 +145,7 @@ namespace DialoguePrototype
 
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;
-            
+
             float pulsate = (float)Math.Sin(time * 6) + 1;
 
             float scale = 1 + pulsate * 0.05f * selectionFade;
@@ -161,7 +168,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Queries how much space this menu entry requires.
         /// </summary>
-        public virtual int GetHeight(MenuScreen screen)
+        public virtual int GetHeight(DialogueScreen screen)
         {
             return screen.ScreenManager.Font.LineSpacing;
         }
@@ -170,7 +177,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Queries how wide the entry is, used for centering on the screen.
         /// </summary>
-        public virtual int GetWidth(MenuScreen screen)
+        public virtual int GetWidth(DialogueScreen screen)
         {
             return (int)screen.ScreenManager.Font.MeasureString(Text).X;
         }

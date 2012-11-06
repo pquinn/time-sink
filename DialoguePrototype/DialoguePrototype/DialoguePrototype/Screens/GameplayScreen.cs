@@ -207,7 +207,7 @@ namespace DialoguePrototype
             }
             else if (startAction.Evaluate(input, ControllingPlayer, out player))
             {
-                ScreenManager.AddScreen(DialogueBox.InitializeDialogueBox(), null);
+                ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(), null);
             }
         }
 
