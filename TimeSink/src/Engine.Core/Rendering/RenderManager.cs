@@ -54,7 +54,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             foreach (var renderable in renderables)
             {
-                renderable.Rendering.Draw(spriteBatch, cache, sourceRect);
+                renderable.Rendering.Draw(spriteBatch, TextureCache, sourceRect);
             }
             spriteBatch.End();
         }
