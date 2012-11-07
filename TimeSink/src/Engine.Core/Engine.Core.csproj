@@ -116,6 +116,7 @@
     <Compile Include="Collisions\Multimethods\OnCollidedWith.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DotNetExtensions.cs" />
+    <Compile Include="EngineGame.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />

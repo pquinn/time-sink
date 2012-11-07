@@ -10,8 +10,6 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public interface IRendering
     {
-        void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache);
-
-        void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect);
+        void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset);
     }
 }

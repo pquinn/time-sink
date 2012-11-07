@@ -17,21 +17,19 @@ using System.Collections.Generic;
 
 namespace TimeSink.Engine.Core
 {
-    public class UserControlledCharacter
-        : IPhysicsEnabledBody, IKeyboardControllable, ICollideable, IRenderable
+    public class UserControlledCharacter : Entity
     {
         const float PLAYER_MASS = 100f;
 
         float playerRotation = 0.0f;
 
-        //private BaseRenderableEffect playerTexture;
-        private string playerTexture;
-        private SpriteBatch playerSprites;
+        const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
+        const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
+
         private GravityPhysics physics;
         private SoundEffect jumpSound;
-        private Stack<Tuple<string, Vector2>> spriteStack;
-        public InMemoryResourceCache<Texture2D> SpriteTextureCache { get; private set; }
         private bool jumpToggleGuard = true;
+        private bool __touchingGroundFlag = false;
         private bool touchingGround = false;
         private bool jumpStarted = false;
         private Rectangle sourceRect;
@@ -42,14 +40,7 @@ namespace TimeSink.Engine.Core
         int spriteWidth = 130;
         int spriteHeight = 242;
 
-
-        public Rectangle SourceRect
-        {
-            get { return sourceRect; }
-            set { sourceRect = value; }
-        }
-
-        public ICollisionGeometry CollisionGeometry
+        public override ICollisionGeometry CollisionGeometry
         {
             get
             {
@@ -71,15 +62,10 @@ namespace TimeSink.Engine.Core
             };
         }
 
-        public void Load(ContentManager content)
+        public override void Load(EngineGame game)
         {
-            SpriteTextureCache = new InMemoryResourceCache<Texture2D>(
-                new ContentManagerProvider<Texture2D>(content));
-            spriteStack = new Stack<Tuple<string, Vector2>>();
-
-            SpriteTextureCache.LoadResource("Textures/Sprites/SpriteSheet");
-
-            playerTexture = "Textures/Sprites/SpriteSheet";
+            game.TextureCache.LoadResource(PLAYER_TEXTURE_NAME);
+            
             /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
@@ -95,39 +81,20 @@ namespace TimeSink.Engine.Core
 
             //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
 
-            jumpSound = content.Load<SoundEffect>("Audio/Sounds/Hop");
+            jumpSound = game.SoundCache.LoadResource(JUMP_SOUND_NAME);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Update(GameTime gameTime, EngineGame game)
         {
-            spriteBatch.Begin();
-
-            /*    playerSprites.Add(
-                    playerTexture, 
-                    Vector2.One * 0.32f, 
-                    physics.Position, 
-                    0, 
-                    0);*/
-            //   playerSprites.Draw(playerTexture, physics.Position, Color.White);
-
-
-            spriteBatch.End();
-        }
-
-        public void Update_Pre(GameTime gameTime)
-        {
-            touchingGround = false;
-        }
-
-        public void Update_Post(GameTime gameTime)
-        {
-            if (!touchingGround)
+            if (!__touchingGroundFlag)
                 GravityEnabled = true;
+            touchingGround = __touchingGroundFlag;
+            __touchingGroundFlag = false;
         }
 
-        public IPhysicsParticle PhysicsController { get { return physics; } }
+        public override IPhysicsParticle PhysicsController { get { return physics; } }
 
-        public void HandleKeyboardInput(GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime)
         {
             sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
             // Get the gamepad state.
@@ -146,32 +113,32 @@ namespace TimeSink.Engine.Core
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
                 movedirection.X -= 1.0f;
-                if (touchingGround)
+                if (__touchingGroundFlag)
                     AnimateRight(gameTime);
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
                 movedirection.X += 1.0f;
-                if (touchingGround)
+                if (__touchingGroundFlag)
                     AnimateRight(gameTime);
             }
             if (gamepad.ThumbSticks.Left.X != 0)
             {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-                if (touchingGround)
+                if (__touchingGroundFlag)
                     AnimateRight(gameTime);
             }
 
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
             {
                 movedirection.X -= 1.0f;
-                if (touchingGround)
+                if (__touchingGroundFlag)
                     AnimateRight(gameTime);
             }
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
             {
                 movedirection.X += 1.0f;
-                if (touchingGround)
+                if (__touchingGroundFlag)
                     AnimateRight(gameTime);
             }
             #endregion
@@ -237,7 +204,6 @@ namespace TimeSink.Engine.Core
             }
 
         }
-
         protected void AnimateJump(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -266,19 +232,19 @@ namespace TimeSink.Engine.Core
             // Handle whether collision should disable gravity
             if (info.MinimumTranslationVector.Y > 0)
             {
-                if (jumpToggleGuard == false)
+                if (!jumpToggleGuard)
                 {
                     currentFrame = 13;
                 }
-                touchingGround = true;
+                __touchingGroundFlag = true;
                 GravityEnabled = false;
                 physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
             }
         }
 
-        public IRendering Rendering
+        public override IRendering Rendering
         {
-            get { return new BasicRendering(playerTexture, this.physics.Position); }
+            get { return new BasicRendering(PLAYER_TEXTURE_NAME, physics.Position, sourceRect); }
         }
     }
 }

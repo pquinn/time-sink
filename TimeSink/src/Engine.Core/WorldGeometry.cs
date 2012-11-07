@@ -9,15 +9,18 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public class WorldGeometry : ICollideable
+    public class WorldGeometry : Entity
     {
+        const string WORLD_TEXTURE_NAME = "Textures/giroux";
+
         private CollisionSet collisionGeometry = new CollisionSet();
         private Texture2D geoTexture;
         private SpriteBatch geoSprites;
-        public ICollisionGeometry CollisionGeometry
+        public override ICollisionGeometry CollisionGeometry
         {
             get { return collisionGeometry; }
         }
@@ -29,45 +32,13 @@ namespace TimeSink.Engine.Core.Collisions
 
         public WorldGeometry() { }
 
-        public void Load(ContentManager content /*SpriteManager manager, SceneInterface scene*/)
+        public override void Load(EngineGame game)
         {
-            geoTexture = content.Load<Texture2D>("Textures/giroux");
+            game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
 
             // First create and submit the empty player container.
           /*  geoSprites = manager.CreateSpriteContainer();
             scene.ObjectManager.Submit(geoSprites);*/
-        }
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            geoSprites = spriteBatch;
-            geoSprites.Begin();
-
-            foreach (var geo in collisionGeometry.Geometry)
-            {
-                if (geo is CollisionRectangle)
-                {
-
-                    var rect = (CollisionRectangle)geo;
-                 /*   geoSprites.Add(
-                        geoTexture,
-                        new Vector2(2f, .32f),
-                        new Vector2(rect.Rect.Left, rect.Rect.Top),
-                        0);*/
-                    spriteBatch.Draw(
-                        geoTexture,
-                        new Rectangle(
-                            (int)rect.TopLeft.X, 
-                            (int)rect.TopLeft.Y,
-                            (int)(rect.TopRight.X - rect.TopLeft.X), 
-                            (int)(rect.BottomLeft.Y - rect.TopLeft.Y)
-                        ), 
-                        Color.White
-                    );
-                }
-            }
-
-            geoSprites.End();
         }
 
         [OnCollidedWith.Overload]
@@ -78,6 +49,66 @@ namespace TimeSink.Engine.Core.Collisions
                 var phys = (body as IPhysicsEnabledBody).PhysicsController;
                 phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
             }
+        }
+
+        public override IRendering Rendering
+        {
+            get 
+            {
+                var renderStack = new Stack<IRendering>();
+
+                foreach (var geo in collisionGeometry.Geometry)
+                {
+                    if (geo is CollisionRectangle)
+                    {
+                        var rect = (CollisionRectangle)geo;
+
+                        renderStack.Push(new RectangleRendering(
+                            WORLD_TEXTURE_NAME,
+                            new Rectangle(
+                                (int)rect.TopLeft.X, 
+                                (int)rect.TopLeft.Y,
+                                (int)(rect.TopRight.X - rect.TopLeft.X), 
+                                (int)(rect.BottomLeft.Y - rect.TopLeft.Y)
+                            )
+                        ));
+                    }
+                }
+
+                return new StackableRendering(
+                    renderStack
+                ); 
+            }
+        }
+
+        private class RectangleRendering : BasicRendering
+        {
+            Rectangle destinationRect;
+
+            public RectangleRendering(string key, Rectangle dest) 
+                : base(key)
+            {
+                destinationRect = dest;
+            }
+
+            public override void Draw(SpriteBatch spriteBatch, Caching.IResourceCache<Texture2D> cache, Vector2 positionOffset)
+            {
+                spriteBatch.Draw(
+                    cache.GetResource(textureKey),
+                    destinationRect,
+                    Color.White
+                );
+            }
+        }
+
+        public override IPhysicsParticle PhysicsController
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override void HandleKeyboardInput(GameTime gameTime)
+        {
+            throw new NotImplementedException();
         }
     }
 }

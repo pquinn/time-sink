@@ -16,22 +16,31 @@ namespace TimeSink.Engine.Core.Rendering
     {
         protected string textureKey;
         protected Vector2 position;
+        protected Rectangle? srcRectangle;
+
+        public BasicRendering(string textureKey)
+            : this(textureKey, Vector2.Zero)
+        { }
 
         public BasicRendering(string textureKey, Vector2 position)
+            : this(textureKey, position, null)
+        { }
+
+        public BasicRendering(string textureKey, Vector2 position, Rectangle? srcRect)
         {
             this.textureKey = textureKey;
             this.position = position;
+            this.srcRectangle = srcRect;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
-            spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
+            spriteBatch.Draw(
+                cache.GetResource(textureKey),
+                positionOffset + position,
+                srcRectangle,
+                Color.White
+            );
         }
-
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
-        {
-            spriteBatch.Draw(cache.GetResource(textureKey), position, sourceRect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
-        }
-
     }
 }
