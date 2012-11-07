@@ -112,6 +112,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Screens\AnimationAction.cs" />
+    <Compile Include="Screens\IDialogueAction.cs" />
+    <Compile Include="Screens\QuestAction.cs" />
     <Compile Include="Screens\ResponseEventArgs.cs" />
     <Compile Include="Screens\NPCPrompt.cs" />
     <Compile Include="DB\SQLiteDatabase.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="Screens\Response.cs" />
+    <Compile Include="Screens\SoundAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

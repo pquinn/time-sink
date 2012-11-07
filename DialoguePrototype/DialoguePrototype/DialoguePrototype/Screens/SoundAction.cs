@@ -5,10 +5,25 @@ using System.Text;
 
 namespace DialoguePrototype
 {
-    class SoundAction : IDialogueAction
+    public class SoundAction : IDialogueAction
     {
-        public SoundAction()
+        bool executed { get; set; }
+        string path { get; set; }
+
+        public SoundAction(String path)
         {
+            this.executed = false;
+            this.path = path;
+        }
+
+        public void ExecuteAction()
+        {
+            if (path == null) return;
+
+            if (!executed)
+            {
+                Console.WriteLine("Played sound!: " + path);
+            }
         }
     }
 }

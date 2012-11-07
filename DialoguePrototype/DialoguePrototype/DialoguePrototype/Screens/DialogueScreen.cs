@@ -148,6 +148,11 @@ namespace DialoguePrototype
             {
                 openingPrompt.Prompt.IncludeUsageText();
             }
+
+            foreach (IDialogueAction action in openingPrompt.Prompt.PromptActions)
+            {
+                action.ExecuteAction();
+            }
             return openingPrompt;
         }
 
@@ -178,6 +183,7 @@ namespace DialoguePrototype
         /// <returns>The <see cref="NPCPrompt"/>NPCPrompt</see></returns>
         private NPCPrompt FindPrompt(Guid id)
         {
+            List<IDialogueAction> promptActions = new List<IDialogueAction>();
             try
             {
                 DataTable entry;
@@ -190,11 +196,24 @@ namespace DialoguePrototype
                 DataRow result = entry.Rows[0];
                 String speaker = (String)result["speaker"];
                 String body = (String)result["entry"];
-                String animation = (String)result["animation"];
-                String sound = (String)result["sound"];
-                String quest = (String)result["quest"];
+
+                if (!DBNull.Value.Equals(result["animation"]))
+                {
+                    promptActions.Add(new AnimationAction((String)result["animation"]));
+                }
+
+                if (!DBNull.Value.Equals(result["sound"]))
+                {
+                    promptActions.Add(new SoundAction((String)result["sound"]));
+                }
+
+                if (!DBNull.Value.Equals(result["quest"]))
+                {
+                    promptActions.Add(new QuestAction((String)result["quest"]));
+                }
+
                 Boolean responseRequired = (Boolean)result["response"];
-                NPCPrompt prompt = new NPCPrompt(id, speaker, body, animation, sound, quest, responseRequired);
+                NPCPrompt prompt = new NPCPrompt(id, speaker, body, promptActions, responseRequired);
                 return prompt;
 
             }
@@ -203,7 +222,7 @@ namespace DialoguePrototype
                 String error = "The following error has occurred:\n";
                 error += e.Message.ToString() + "\n";
                 Console.WriteLine(error);
-                return new NPCPrompt(id, "error", error, null, null, null, false);
+                return new NPCPrompt(id, "error", error, promptActions, false);
             }
         }
 

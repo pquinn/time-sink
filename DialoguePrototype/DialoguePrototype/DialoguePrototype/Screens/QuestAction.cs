@@ -5,10 +5,26 @@ using System.Text;
 
 namespace DialoguePrototype
 {
-    class QuestAction : IDialogueAction
+    public class QuestAction : IDialogueAction
     {
-        public QuestAction()
+
+        bool executed { get; set; }
+        string path { get; set; }
+
+        public QuestAction(String path)
         {
+            this.executed = false;
+            this.path = path;
+        }
+
+        public void ExecuteAction()
+        {
+            if (path == null) return;
+
+            if (!executed)
+            {
+                Console.WriteLine("Added Quest!: " + path);
+            }
         }
     }
 }

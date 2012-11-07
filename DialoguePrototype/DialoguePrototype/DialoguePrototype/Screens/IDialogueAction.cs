@@ -7,6 +7,9 @@ namespace DialoguePrototype
 {
     interface IDialogueAction
     {
-        public void ExecuteAction();
+        /// <summary>
+        /// Repsonsible for handling the action.
+        /// </summary>
+        void ExecuteAction();
     }
 }
