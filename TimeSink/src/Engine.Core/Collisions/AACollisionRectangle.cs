@@ -6,23 +6,37 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Collisions
 {
-    public struct AACollisionRectangle : ICollisionGeometry
+    public class AACollisionRectangle : APolygon
     {
         public Rectangle Rect;
+
+        public override IList<Vector2> Vertices
+        {
+            get 
+            {
+                return new List<Vector2>()
+                {
+                    new Vector2(Rect.Left, Rect.Top),
+                    new Vector2(Rect.Left, Rect.Bottom),
+                    new Vector2(Rect.Right, Rect.Bottom),
+                    new Vector2(Rect.Right, Rect.Top)
+                };
+            }
+        }
 
         public AACollisionRectangle(Rectangle r)
         {
             Rect = r;
         }
 
-        [Collided.Overload]
-        public CollisionInfo Collided(AACollisionRectangle r)
-        {
-            return new CollisionInfo()
-            {
-                Intersect = Rect.Intersects(r.Rect)
-            };
-        }
+        //[Collided.Overload]
+        //public CollisionInfo Collided(AACollisionRectangle r)
+        //{
+        //    return new CollisionInfo()
+        //    {
+        //        Intersect = Rect.Intersects(r.Rect)
+        //    };
+        //}
 
         [Collided.Overload]
         public CollisionInfo Collided(CollisionCircle c)
@@ -48,12 +62,6 @@ namespace TimeSink.Engine.Core.Collisions
         public CollisionInfo Collided(CollisionSet s)
         {
             return s.Collided(this);
-        }
-
-        [Collided.Overload]
-        public CollisionInfo Collided(CollisionRectangle r)
-        {
-            return r.Collided(new CollisionRectangle(this.Rect));
         }
     }
 }

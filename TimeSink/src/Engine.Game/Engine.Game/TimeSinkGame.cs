@@ -117,7 +117,7 @@ namespace TimeSink.Engine.Game
                 10
             )));
 
-            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
+            world.CollisionSet.Add(new AACollisionRectangle(new Rectangle(
                 300, 400, 100, 50
             )));
 

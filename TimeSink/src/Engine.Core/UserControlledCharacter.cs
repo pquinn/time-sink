@@ -58,7 +58,7 @@ namespace TimeSink.Engine.Core
                 //        (int)physics.Position.Y + 111,
                 //        50, 132)));
                 //return colSet;
-                return new CollisionRectangle(new Rectangle(
+                return new AACollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
                     100, 242

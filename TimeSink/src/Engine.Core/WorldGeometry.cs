@@ -61,9 +61,11 @@ namespace TimeSink.Engine.Core.Collisions
                 {
                     if (geo is CollisionRectangle)
                     {
-                        var rect = (CollisionRectangle)geo;
-
-                        renderStack.Push(MakeCollisionRendering(rect));
+                        renderStack.Push(MakeCollisionRendering(geo as CollisionRectangle));
+                    }
+                    else if (geo is AACollisionRectangle)
+                    {
+                        renderStack.Push(MakeCollisionRendering(geo as AACollisionRectangle));
                     }
                 }
 
@@ -85,6 +87,19 @@ namespace TimeSink.Engine.Core.Collisions
                 new Vector2(
                     (r.TopRight.X - r.TopLeft.X) / geoTexture.Width,
                     (r.BottomLeft.Y - r.TopLeft.Y) / geoTexture.Height
+                )
+            );
+        }
+
+        private BasicRendering MakeCollisionRendering(AACollisionRectangle r)
+        {
+            return new BasicRendering(
+                WORLD_TEXTURE_NAME,
+                new Vector2(r.Rect.Left, r.Rect.Top),
+                0,
+                new Vector2(
+                    (float)(r.Rect.Right - r.Rect.Left) / geoTexture.Width,
+                    (float)(r.Rect.Bottom - r.Rect.Top) / geoTexture.Height
                 )
             );
         }

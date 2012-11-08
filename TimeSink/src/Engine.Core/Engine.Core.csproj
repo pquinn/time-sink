@@ -107,6 +107,7 @@
     <Compile Include="Collisions\CollisionRectangle.cs" />
     <Compile Include="Collisions\CollisionInfo.cs" />
     <Compile Include="Collisions\CollisionSet.cs" />
+    <Compile Include="Collisions\CollisionTriangle.cs" />
     <Compile Include="Collisions\ContainsPointExtensions.cs" />
     <Compile Include="Collisions\ICollideable.cs" />
     <Compile Include="Collisions\ICollisionGeometry.cs" />
@@ -114,6 +115,9 @@
     <Compile Include="Collisions\CollisionGeometry.cs" />
     <Compile Include="Collisions\CollisionManager.cs" />
     <Compile Include="Collisions\Multimethods\OnCollidedWith.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\IPolygon.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\PolygonCollision.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\SeparatingAxisTheorem.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="EditorProperties.cs" />
