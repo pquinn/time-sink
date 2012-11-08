@@ -105,23 +105,40 @@ namespace TimeSink.Engine.Core.States
 
                 for (int i = 0; i < selectedMeshes.Count; i++)
                 {
+                    var accRef = new Rendering.BoundingBox(
+                        Single.PositiveInfinity, Single.NegativeInfinity,
+                        Single.NegativeInfinity, Single.PositiveInfinity);
                     if (i == drillIndex)
                     {
-                        selectedMeshes[i].Rendering.DrawSelected(
-                            spriteBatch,
+                        selectedMeshes[i].Rendering.GetBoundingBox(
                             level.RenderManager.TextureCache,
-                            Color.LightGreen);
+                            ref accRef,
+                            new Vector2(0, 0));
+
+                        DrawBoundingBox(spriteBatch, camera, Color.LightGreen, accRef);
                     }
                     else
                     {
-                        selectedMeshes[i].Rendering.DrawSelected(
-                            spriteBatch,
+                        selectedMeshes[i].Rendering.GetBoundingBox(
                             level.RenderManager.TextureCache,
-                            Color.LightYellow);
+                            ref accRef,
+                            new Vector2(0, 0));
+
+                        DrawBoundingBox(spriteBatch, camera, Color.LightYellow, accRef);
                     }         
             }
 
             spriteBatch.End();
+        }
+
+        private void DrawBoundingBox(SpriteBatch spriteBatch, Camera camera, Color color, Rendering.BoundingBox bounds)
+        {
+            var blank = StateMachine.Owner.RenderManager.TextureCache.GetResource("blank");
+            spriteBatch.DrawRect(
+                blank,
+                new Vector2(bounds.Min_X, bounds.Min_Y),
+                new Vector2(bounds.Max_X, bounds.Max_Y),
+                5, color);
         }
 
         private List<StaticMesh> GetSelections(Level level)
@@ -130,8 +147,9 @@ namespace TimeSink.Engine.Core.States
             foreach (var mesh in level.GetStaticMeshes())
             {
                 if (mesh.Rendering.Contains(
-                    GetMousePosition(),
-                    level.RenderManager.TextureCache))
+                        GetMousePosition(),
+                        level.RenderManager.TextureCache,
+                        new Vector2(0, 0)))
                 {
                     selected.Add(mesh);
                 }

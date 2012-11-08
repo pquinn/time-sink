@@ -34,6 +34,8 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Sound;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Caching;
 #endregion
 
 
@@ -42,7 +44,7 @@ namespace TimeSink.Engine.Game
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class TimeSinkGame : Microsoft.Xna.Framework.Game
+    public class TimeSinkGame : EngineGame
     {
         const float viewWidth = 2f;
 
@@ -51,10 +53,6 @@ namespace TimeSink.Engine.Game
 
         // Controller related.
         const float moveScale = 100.0f;
-
-        // Components
-        TimeSink.Engine.Core.Physics.PhysicsManager physicsManager = new TimeSink.Engine.Core.Physics.PhysicsManager();
-        TimeSink.Engine.Core.Collisions.CollisionManager collisionManager = new TimeSink.Engine.Core.Collisions.CollisionManager();
 
         UserControlledCharacter character;
         WorldGeometry world;
@@ -69,6 +67,7 @@ namespace TimeSink.Engine.Game
         }
 
         public TimeSinkGame()
+            : base()
         {
             // Default XNA setup.
             graphics = new GraphicsDeviceManager(this);
@@ -80,8 +79,8 @@ namespace TimeSink.Engine.Game
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
-            physicsManager.RegisterPhysicsBody(Character);
-            collisionManager.RegisterCollisionBody(Character);
+            Entities.Add(character);
+            Entities.Add(world);
         }
 
         /// <summary>
@@ -92,14 +91,15 @@ namespace TimeSink.Engine.Game
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            Collided.DoAutoRegister();
-            OnCollidedWith.DoAutoRegister();
-
             base.Initialize();
 
-            renderManager = new RenderManager(character.SpriteTextureCache);
-            renderManager.RegisterRenderable(character);
+            CollisionManager.RegisterCollisionBody(world);
+            CollisionManager.RegisterCollisionBody(character);
+
+            PhysicsManager.RegisterPhysicsBody(character);
+
+            RenderManager.RegisterRenderable(character);
+            RenderManager.RegisterRenderable(world);
         }
 
         /// <summary>
@@ -108,9 +108,7 @@ namespace TimeSink.Engine.Game
         /// </summary>
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
+            base.LoadContent();
 
             world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
                 0,
@@ -123,28 +121,17 @@ namespace TimeSink.Engine.Game
                 300, 400, 100, 50
             )));
 
+            world.CollisionSet.Add(new CollisionRectangle(
+                new Vector2(500, 300),
+                new Vector2(520, 360),
+                new Vector2(620, 340),
+                new Vector2(600, 280)
+            ));
+
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
             backgroundTrack.PlaySound();
-
-            collisionManager.RegisterCollisionBody(world);
-
-            character.Load(Content);
-            world.Load(Content);
-
-            // Add objects and lights to the ObjectManager and LightManager. They accept
-            // objects and lights in several forms:
-            //
-            //   -As scenes containing both dynamic (movable) and static objects and lights.
-            //
-            //   -As SceneObjects and lights, which can be dynamic or static, and
-            //    (in the case of objects) are created from XNA Models or custom vertex / index buffers.
-            //
-            //   -As XNA Models, which can only be static.
-            //
-
-            
         }
 
         /// <summary>
@@ -164,25 +151,13 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Enables game input / control when not editing the scene (the editor provides its own control).
-            if (true)
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                this.Exit();
 
-                // Calculate the view.
-                view = ProcessCameraInput(gameTime);
+            // Calculate the view.
+            view = ProcessCameraInput(gameTime);
 
-                HandleInput(gameTime);
-            }
-
-            character.Update_Pre(gameTime);
-
-            // TODO: Add your update logic here
-            physicsManager.Update(gameTime);
-            collisionManager.Update(gameTime);
-
-            character.Update_Post(gameTime);
+            HandleInput(gameTime);
 
             base.Update(gameTime);
         }
@@ -203,16 +178,6 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Check to see if the splash screen is finished.
-          /*  if (!SplashScreenGameComponent.DisplayComplete)
-            {
-                base.Draw(gameTime);
-                return;
-            }*/
-            renderManager.Draw(this.spriteBatch, character.SourceRect);
-            character.Draw(gameTime, spriteBatch);
-            world.Draw(gameTime, spriteBatch);
-
             base.Draw(gameTime);
         }
 
@@ -405,6 +370,6 @@ namespace TimeSink.Engine.Game
 #endif
         #endregion
 
-      //  public SpriteContainer staticSceneSprites { get; set; }
+        //  public SpriteContainer staticSceneSprites { get; set; }
     }
 }

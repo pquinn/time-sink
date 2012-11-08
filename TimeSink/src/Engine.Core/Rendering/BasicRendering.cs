@@ -16,44 +16,63 @@ namespace TimeSink.Engine.Core.Rendering
     {
         protected string textureKey;
         protected Vector2 position;
+        protected Rectangle? srcRectangle;
+
+        public BasicRendering(string textureKey)
+            : this(textureKey, Vector2.Zero)
+        { }
 
         public BasicRendering(string textureKey, Vector2 position)
+            : this(textureKey, position, null)
+        { }
+
+        public BasicRendering(string textureKey, Vector2 position, Rectangle? srcRect)
         {
             this.textureKey = textureKey;
             this.position = position;
+            this.srcRectangle = srcRect;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
-            spriteBatch.Draw(cache.GetResource(textureKey), position, Color.White);
+            spriteBatch.Draw(
+                cache.GetResource(textureKey),
+                positionOffset + position,
+                srcRectangle,
+                Color.White
+            );
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color, BoundingBox acc)
         {
-            spriteBatch.Draw(cache.GetResource(textureKey), position, sourceRect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+                
         }
 
-        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color)
-        {
-                var texture = cache.GetResource(textureKey);
-                var blank = cache.GetResource("blank");
-                var right = position.X + texture.Width;
-                var bot = position.Y + texture.Height;
-                var topLeft = new Vector2(position.X, position.Y);
-                var botRight = new Vector2(right, bot);
-                spriteBatch.DrawRect(
-                    blank,
-                    topLeft, botRight, 5, color);
-        }
-
-        public bool Contains(Vector2 point, IResourceCache<Texture2D> cache)
+        public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
             var texture = cache.GetResource(textureKey);
-            var right = position.X + texture.Width;
-            var bot = position.Y + texture.Height;
+            var left = position.X + positionOffset.X;
+            var right = left + texture.Width;
+            var top = position.Y + positionOffset.Y;
+            var bot = top + texture.Height;
 
-            return (point.X > position.X) && (point.X < right) &&
-                   (point.Y > position.Y) && (point.Y < bot);
+            return (point.X > left) && (point.X < right) &&
+                   (point.Y > top) && (point.Y < bot);
+        }
+
+        public void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset)
+        {
+            var texture = cache.GetResource(textureKey);
+            var relativeLeft = positionOffset.X + position.X;
+            var relativeRight = relativeLeft + texture.Width;
+            var relativeTop = position.Y - positionOffset.Y;
+            var relativeBot = relativeTop + texture.Height;
+
+            acc = new BoundingBox(
+                Math.Min(acc.Min_X, relativeLeft),
+                Math.Max(acc.Max_X, relativeRight),
+                Math.Max(acc.Min_Y, relativeBot),
+                Math.Min(acc.Max_Y, relativeTop));
         }
     }
 }

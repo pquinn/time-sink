@@ -15,7 +15,7 @@ namespace TimeSink.Engine.Core
     public abstract class Entity
         : ICollideable, IPhysicsEnabledBody, IRenderable, IKeyboardControllable
     {
-        public virtual void Update(GameTime time, Game world) { }
+        public virtual void Update(GameTime time, EngineGame world) { }
 
         public abstract ICollisionGeometry CollisionGeometry
         {
@@ -33,5 +33,7 @@ namespace TimeSink.Engine.Core
         }
 
         public abstract void HandleKeyboardInput(GameTime gameTime);
+
+        public abstract void Load(EngineGame engineGame);
     }
 }

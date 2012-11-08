@@ -10,82 +10,63 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public class StackableRendering : IRendering
     {
-        Stack<Tuple<string, Vector2>> textureKeysAndRelativePositions;
+        Stack<IRendering> renderStack;
         Vector2 parentPosition;
 
-        public StackableRendering(Stack<Tuple<string, Vector2>> textureKeysAndRelativePositions, Vector2 parentPosition)
+        public StackableRendering(Stack<IRendering> renderingStack)
+            : this(renderingStack, Vector2.Zero)
+        { }
+
+        public StackableRendering(Stack<IRendering> renderingStack, Vector2 parentPosition)
         {
-            this.textureKeysAndRelativePositions = textureKeysAndRelativePositions;
+            this.renderStack = renderingStack;
             this.parentPosition = parentPosition;
         }
 
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache)
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
-            foreach (var textureKey in textureKeysAndRelativePositions)
+            foreach (var rendering in renderStack)
             {
-                spriteBatch.Draw(
-                    cache.GetResource(textureKey.Item1), 
-                    parentPosition + textureKey.Item2,
-                    Color.White);
+                rendering.Draw(spriteBatch, cache, positionOffset + parentPosition);
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Rectangle sourceRect)
+        //public void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color, BoundingBox acc)
+        //{
+        //    var blank = cache.GetResource("blank");
+
+        //    var rect = GetFullRectangle(cache);
+
+        //    spriteBatch.DrawRect(blank, rect, 5, color);
+        //}
+
+        public virtual bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
-            throw new NotImplementedException();
-        }
-
-        public void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color)
-        {
-            var blank = cache.GetResource("blank");
-
-            var rect = GetFullRectangle(cache);
-
-            spriteBatch.DrawRect(blank, rect, 5, color);
-        }
-
-        public virtual bool Contains(Vector2 point, IResourceCache<Texture2D> cache)
-        {
-            return textureKeysAndRelativePositions.Any(
-                pair => 
-                    {
-                        var texture = cache.GetResource(pair.Item1);
-                        var relativeLeft = parentPosition.X + pair.Item2.X;
-                        var relativeRight = relativeLeft + texture.Width;
-                        var relativeTop = parentPosition.Y - pair.Item2.Y;
-                        var relativeBot = relativeTop - texture.Height; 
+            return renderStack.Any(x => x.Contains(point, cache, positionOffset));
+            //return textureKeysAndRelativePositions.Any(
+            //    pair => 
+            //        {
+            //            var texture = cache.GetResource(pair.Item1);
+            //            var relativeLeft = parentPosition.X + pair.Item2.X;
+            //            var relativeRight = relativeLeft + texture.Width;
+            //            var relativeTop = parentPosition.Y - pair.Item2.Y;
+            //            var relativeBot = relativeTop - texture.Height; 
    
-                        return (point.X > relativeLeft) && (point.X < relativeRight) &&
-                               (point.Y > relativeTop) && (point.Y < relativeBot);
-                    });
+            //            return (point.X > relativeLeft) && (point.X < relativeRight) &&
+            //                   (point.Y > relativeTop) && (point.Y < relativeBot);
+            //        });
         }
 
-        private Rectangle GetFullRectangle(IResourceCache<Texture2D> cache)
+        public void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset)
         {
-            var top = Single.PositiveInfinity;
-            var left = Single.PositiveInfinity;
-            var right = 0f;
-            var bot = 0f;
+            var newAcc = new BoundingBox(
+                      Single.PositiveInfinity, Single.PositiveInfinity,
+                      0f, 0f);
 
-            foreach (var pair in textureKeysAndRelativePositions)
+            foreach (var rendering in renderStack)
             {
-                var texture = cache.GetResource(pair.Item1);
-                var relativeLeft = parentPosition.X + pair.Item2.X;
-                var relativeRight = relativeLeft + texture.Width;
-                var relativeTop = parentPosition.Y - pair.Item2.Y;
-                var relativeBot = relativeTop - texture.Height;
-
-                left = Math.Min(left, relativeLeft);
-                right = Math.Max(right, relativeRight);
-                bot = Math.Max(bot, relativeBot);
-                top = Math.Min(top, relativeTop);
+                rendering.GetBoundingBox(cache, ref newAcc, positionOffset + parentPosition);
             }
-
-            return new Rectangle(
-                (int)left, 
-                (int)right, 
-                (int)(right - left), 
-                (int)(bot - top));
         }
     }
 }

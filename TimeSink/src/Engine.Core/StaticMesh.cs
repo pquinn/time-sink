@@ -45,5 +45,10 @@ namespace TimeSink.Engine.Core
         public override void HandleKeyboardInput(GameTime gameTime)
         {
         }
+
+        public override void Load(EngineGame engineGame)
+        {
+            engineGame.TextureCache.LoadResource(texture);
+        }
     }
 }
