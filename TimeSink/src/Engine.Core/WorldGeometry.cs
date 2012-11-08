@@ -34,7 +34,7 @@ namespace TimeSink.Engine.Core.Collisions
 
         public override void Load(EngineGame game)
         {
-            game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
+            geoTexture = game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
 
             // First create and submit the empty player container.
           /*  geoSprites = manager.CreateSpriteContainer();
@@ -63,15 +63,7 @@ namespace TimeSink.Engine.Core.Collisions
                     {
                         var rect = (CollisionRectangle)geo;
 
-                        renderStack.Push(new RectangleRendering(
-                            WORLD_TEXTURE_NAME,
-                            new Rectangle(
-                                (int)rect.TopLeft.X, 
-                                (int)rect.TopLeft.Y,
-                                (int)(rect.TopRight.X - rect.TopLeft.X), 
-                                (int)(rect.BottomLeft.Y - rect.TopLeft.Y)
-                            )
-                        ));
+                        renderStack.Push(MakeCollisionRendering(rect));
                     }
                 }
 
@@ -81,24 +73,20 @@ namespace TimeSink.Engine.Core.Collisions
             }
         }
 
-        private class RectangleRendering : BasicRendering
+        private BasicRendering MakeCollisionRendering(CollisionRectangle r)
         {
-            Rectangle destinationRect;
+            var top = r.TopRight - r.TopLeft;
+            top.Normalize();
 
-            public RectangleRendering(string key, Rectangle dest) 
-                : base(key)
-            {
-                destinationRect = dest;
-            }
-
-            public override void Draw(SpriteBatch spriteBatch, Caching.IResourceCache<Texture2D> cache, Vector2 positionOffset)
-            {
-                spriteBatch.Draw(
-                    cache.GetResource(textureKey),
-                    destinationRect,
-                    Color.White
-                );
-            }
+            return new BasicRendering(
+                WORLD_TEXTURE_NAME,
+                r.TopLeft,
+                (float)-Math.Acos(Vector2.Dot(Vector2.UnitX, top)),
+                new Vector2(
+                    (r.TopRight.X - r.TopLeft.X) / geoTexture.Width,
+                    (r.BottomLeft.Y - r.TopLeft.Y) / geoTexture.Height
+                )
+            );
         }
 
         public override IPhysicsParticle PhysicsController

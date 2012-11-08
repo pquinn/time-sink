@@ -16,7 +16,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(texture, start, null, color,
                        angle, Vector2.Zero, new Vector2(length, thinkness),
-                       SpriteEffects.None, 0);
+                       SpriteEffects.None, 0);    
         }
     }
 }
