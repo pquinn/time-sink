@@ -16,7 +16,8 @@ namespace TimeSink.Engine.Core.States
         int drillIndex;
         bool drag;
         bool emptySelect;
-        Vector2 lastMouse;
+        Vector2 dragPivot;
+        Vector2 selectionPivot;
 
         public SelectionEditorState()
         {
@@ -37,21 +38,24 @@ namespace TimeSink.Engine.Core.States
             {
                 var clicked = GetSelections(level);
                 var sameClick = clicked.Contains(lastSelected);
-                if (clicked.Count == 0)
+                if (clicked.Count == 0) // cancel click
                 {
                     emptySelect = true;
                     selectedMeshes.Clear();
                 }
-                else if (hasSelect && sameClick && !drag && !emptySelect)
+                else if (hasSelect && sameClick && !drag && !emptySelect)  // enter drag
                 {
                     drag = true;
-                    lastMouse = GetMousePosition();
+                    //lastMouse = GetMousePosition();
+                    dragPivot = GetMousePosition();
+                    selectionPivot = selectedMeshes[drillIndex].Position;
                 }
-                else if (hasSelect && drag && !emptySelect)
+                else if (hasSelect && drag && !emptySelect) // dragging
                 {
                     HandleDrag();
+                    //lastMouse = GetMousePosition();
                 }
-                else if (!emptySelect)
+                else if (!emptySelect) // basic selection
                 {
                     selectedMeshes = GetSelections(level);
                     drillIndex = 0;
@@ -164,27 +168,20 @@ namespace TimeSink.Engine.Core.States
         private void HandleDrag()
         {
             var mousePos = GetMousePosition();
-            var offset = mousePos - lastMouse;
-            var newPos = selectedMeshes[drillIndex].Position + offset;
+            var offset = mousePos - dragPivot;
+            var newPos = selectionPivot + offset;
             var offX = 0f;
             var offY = 0f;
 
-            if (EditorProperties.Instance.EnableSnapping)
-            {
+            if (EditorProperties.Instance.EnableSnapping && offset.Length() > 0)
+           {
                 var gridSpace = EditorProperties.Instance.GridLineSpacing;
                 var halfSpace = gridSpace / 2;
                 var leftDist = newPos.X % gridSpace;
                 var upDist = newPos.Y % gridSpace;
-                offX = (leftDist <= halfSpace) ? -leftDist : halfSpace - leftDist;
-                offY = (upDist <= halfSpace) ? -upDist : halfSpace - upDist;
-                newPos = new Vector2(newPos.X - offX, newPos.Y - offY);
-
-                lastMouse = mousePos - new Vector2(offX, offY);
-                InputManager.ForceMousePosition(lastMouse);
-            }
-            else
-            {
-                lastMouse = mousePos;
+                offX = (leftDist <= halfSpace) ? -leftDist : gridSpace - leftDist;
+                offY = (upDist <= halfSpace) ? -upDist : gridSpace - upDist;
+                newPos = new Vector2(newPos.X + offX, newPos.Y + offY);
             }
 
             selectedMeshes[drillIndex].Position = newPos;
