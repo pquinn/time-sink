@@ -11,9 +11,10 @@ namespace TimeSink.Engine.Core
 {
     public class StaticMesh : Entity
     {
-        const string texture = "Textures/Ground_Tile1";
-        public StaticMesh(Vector2 position)
+        string texture;
+        public StaticMesh(string texture, Vector2 position)
         {
+            this.texture = texture;
             this.Position = position;
         }
 

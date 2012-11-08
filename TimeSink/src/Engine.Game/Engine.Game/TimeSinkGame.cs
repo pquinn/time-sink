@@ -66,7 +66,8 @@ namespace TimeSink.Engine.Game
             get { return character; }
         }
 
-        public TimeSinkGame() : base()
+        public TimeSinkGame()
+            : base()
         {
             // Default XNA setup.
             graphics = new GraphicsDeviceManager(this);

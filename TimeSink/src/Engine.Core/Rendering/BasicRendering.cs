@@ -53,5 +53,37 @@ namespace TimeSink.Engine.Core.Rendering
                 0
             );
         }
+
+        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color, BoundingBox acc)
+        {
+                
+        }
+
+        public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)
+        {
+            var texture = cache.GetResource(textureKey);
+            var left = position.X + positionOffset.X;
+            var right = left + texture.Width;
+            var top = position.Y + positionOffset.Y;
+            var bot = top + texture.Height;
+
+            return (point.X > left) && (point.X < right) &&
+                   (point.Y > top) && (point.Y < bot);
+        }
+
+        public void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset)
+        {
+            var texture = cache.GetResource(textureKey);
+            var relativeLeft = positionOffset.X + position.X;
+            var relativeRight = relativeLeft + texture.Width;
+            var relativeTop = position.Y - positionOffset.Y;
+            var relativeBot = relativeTop + texture.Height;
+
+            acc = new BoundingBox(
+                Math.Min(acc.Min_X, relativeLeft),
+                Math.Max(acc.Max_X, relativeRight),
+                Math.Max(acc.Min_Y, relativeBot),
+                Math.Min(acc.Max_Y, relativeTop));
+        }
     }
 }
