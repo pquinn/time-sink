@@ -9,6 +9,6 @@ namespace TimeSink.Engine.Core.Input
 {
     interface IKeyboardControllable
     {
-        void HandleKeyboardInput(GameTime gameTime);
+        void HandleKeyboardInput(GameTime gameTime, EngineGame world);
     }
 }

@@ -118,6 +118,7 @@
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="EditorProperties.cs" />
     <Compile Include="EngineGame.cs" />
+    <Compile Include="Entities\Weapons\Arrow.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />

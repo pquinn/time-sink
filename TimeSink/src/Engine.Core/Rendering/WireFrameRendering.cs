@@ -11,23 +11,25 @@ namespace TimeSink.Engine.Core.Rendering
     public class WireFrameRendering : BasicRendering
     {
         public WireFrameRendering(string textureKey, Vector2 position)
-            : base(textureKey, position)
+            : base(textureKey, position, 0f, Vector2.One)
         { }
 
-        public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset)
+        public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, 
+            Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
         {
-<<<<<<< HEAD
-            base.Draw(spriteBatch, cache);
-=======
-            base.Draw(spriteBatch, cache, positionOffset);
+            base.Draw(spriteBatch, cache, positionOffset, rotationOffset, scaleOffset);
+
+            var topLeft = positionOffset + position;
+
+            var trans = Matrix.CreateScale(new Vector3(scaleOffset + scale, 0))
+                * Matrix.CreateRotationZ(rotationOffset + rotation)
+                * Matrix.CreateTranslation(new Vector3(topLeft, 0));
 
             var textureToHighlight = cache.GetResource(textureKey);
-            var bot = position.X + textureToHighlight.Width;
-            var right = position.Y + textureToHighlight.Height;
-            var topLeft = new Vector2(position.X, position.Y) + positionOffset;
-            var topRight = new Vector2(right, position.Y) + positionOffset;
-            var botLeft = new Vector2(position.X, bot) + positionOffset;
-            var botRight = new Vector2(right, bot) + positionOffset;
+            
+            var topRight = Vector2.Transform(new Vector2(textureToHighlight.Width, 0), trans);
+            var botLeft = Vector2.Transform(new Vector2(0, textureToHighlight.Height), trans);
+            var botRight = Vector2.Transform(new Vector2(textureToHighlight.Width, textureToHighlight.Height), trans);
             spriteBatch.DrawLine(
                 cache.GetResource("blank"),
                 topLeft, topRight, 2, Color.Black);
@@ -40,7 +42,6 @@ namespace TimeSink.Engine.Core.Rendering
             spriteBatch.DrawLine(
                 cache.GetResource("blank"),
                 topLeft, botRight, 2, Color.Black);
->>>>>>> d21c01f52a900f3db5c874a32f3238a62875d517
         } 
     }
 }

@@ -15,9 +15,9 @@ namespace TimeSink.Engine.Core
     public class EngineGame : Microsoft.Xna.Framework.Game
     {
         // Components
-        public PhysicsManager PhysicsManager;
-        public CollisionManager CollisionManager;
-        public RenderManager RenderManager;
+        public PhysicsManager PhysicsManager { get; private set; }
+        public CollisionManager CollisionManager { get; private set; }
+        public RenderManager RenderManager { get; private set; }
 
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }

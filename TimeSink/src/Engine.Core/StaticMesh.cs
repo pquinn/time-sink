@@ -33,7 +33,7 @@ namespace TimeSink.Engine.Core
         {
             get 
             {
-                return new BasicRendering(texture, Position);
+                return new BasicRendering(texture, Position, 0, Vector2.One);
             }
         }
 
@@ -42,7 +42,7 @@ namespace TimeSink.Engine.Core
             get { return null; }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
         }
 

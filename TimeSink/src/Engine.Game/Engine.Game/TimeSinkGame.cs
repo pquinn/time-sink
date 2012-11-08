@@ -157,6 +157,7 @@ namespace TimeSink.Engine.Game
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
 
+            InputManager.Instance.Update();
             HandleInput(gameTime);
 
             base.Update(gameTime);
@@ -169,7 +170,7 @@ namespace TimeSink.Engine.Game
         /// <param name="gametime"></param>
         private void HandleInput(GameTime gametime)
         {
-            character.HandleKeyboardInput(gametime);
+            character.HandleKeyboardInput(gametime, this);
         }
 
         /// <summary>

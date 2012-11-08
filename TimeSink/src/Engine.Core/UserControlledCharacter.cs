@@ -9,11 +9,13 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Entities;
 
 //using SynapseGaming.LightingSystem.Core;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Caching;
 using System.Collections.Generic;
+using TimeSink.Engine.Core.Entities.Weapons;
 
 namespace TimeSink.Engine.Core
 {
@@ -44,18 +46,23 @@ namespace TimeSink.Engine.Core
         {
             get 
             {
-                var colSet = new CollisionSet();
-                colSet.Geometry.Add(new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X,
-                        (int)physics.Position.Y,
-                        75, 110)));
-                colSet.Geometry.Add(new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X + 50,
-                        (int)physics.Position.Y + 111,
-                        50, 132)));
-                return colSet;
+                //var colSet = new CollisionSet();
+                //colSet.Geometry.Add(new CollisionRectangle(
+                //    new Rectangle(
+                //        (int)physics.Position.X,
+                //        (int)physics.Position.Y,
+                //        75, 110)));
+                //colSet.Geometry.Add(new CollisionRectangle(
+                //    new Rectangle(
+                //        (int)physics.Position.X + 50,
+                //        (int)physics.Position.Y + 111,
+                //        50, 132)));
+                //return colSet;
+                return new CollisionRectangle(new Rectangle(
+                    (int)physics.Position.X,
+                    (int)physics.Position.Y,
+                    100, 242
+                ));
             }
         }
 
@@ -100,7 +107,7 @@ namespace TimeSink.Engine.Core
 
         public override IPhysicsParticle PhysicsController { get { return physics; } }
 
-        public override void HandleKeyboardInput(GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
             sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
             // Get the gamepad state.
@@ -146,6 +153,20 @@ namespace TimeSink.Engine.Core
                 movedirection.X += 1.0f;
                 if (__touchingGroundFlag)
                     AnimateRight(gameTime);
+            }
+
+            if (InputManager.Instance.IsNewKey(Keys.F))
+            {
+                Console.WriteLine("pew pew");
+                Arrow arrow = new Arrow(
+                    new Vector2(physics.Position.X + 60,
+                                physics.Position.Y + 80));
+                Vector2 initialVelocity = new Vector2(800, 100);
+                arrow.physics.Velocity += initialVelocity;
+                world.Entities.Add(arrow);
+                world.RenderManager.RegisterRenderable(arrow);
+                world.PhysicsManager.RegisterPhysicsBody(arrow);
+                world.CollisionManager.RegisterCollisionBody(arrow);
             }
             #endregion
 
@@ -250,7 +271,16 @@ namespace TimeSink.Engine.Core
 
         public override IRendering Rendering
         {
-            get { return new BasicRendering(PLAYER_TEXTURE_NAME, physics.Position, sourceRect); }
+            get 
+            { 
+                return new BasicRendering(
+                    PLAYER_TEXTURE_NAME, 
+                    physics.Position, 
+                    0,
+                    Vector2.One,
+                    sourceRect
+                );
+            }
         }
     }
 }

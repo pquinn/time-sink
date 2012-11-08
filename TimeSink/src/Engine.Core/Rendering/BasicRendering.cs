@@ -16,30 +16,41 @@ namespace TimeSink.Engine.Core.Rendering
     {
         protected string textureKey;
         protected Vector2 position;
+        protected float rotation;
+        protected Vector2 scale;
         protected Rectangle? srcRectangle;
+        protected Rectangle? destRectangle;
 
         public BasicRendering(string textureKey)
-            : this(textureKey, Vector2.Zero)
+            : this(textureKey, Vector2.Zero, 0.0f, Vector2.One)
         { }
 
-        public BasicRendering(string textureKey, Vector2 position)
-            : this(textureKey, position, null)
+        public BasicRendering(string textureKey, Vector2 position, float rotation, Vector2 scale)
+            : this(textureKey, position, rotation, scale, null)
         { }
 
-        public BasicRendering(string textureKey, Vector2 position, Rectangle? srcRect)
+        public BasicRendering(string textureKey, Vector2 position, float rotation, Vector2 scale, Rectangle? srcRect)
         {
             this.textureKey = textureKey;
             this.position = position;
+            this.rotation = rotation;
             this.srcRectangle = srcRect;
+            this.scale = scale;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset)
+        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache,
+            Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
         {
             spriteBatch.Draw(
                 cache.GetResource(textureKey),
                 positionOffset + position,
                 srcRectangle,
-                Color.White
+                Color.White,
+                rotationOffset + rotation,
+                Vector2.Zero,
+                scaleOffset * scale,
+                SpriteEffects.None,
+                0
             );
         }
 
