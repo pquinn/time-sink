@@ -33,7 +33,7 @@ namespace TimeSink.Engine.Core
         {
             get 
             {
-                return new BasicRendering(texture, Position);
+                return new BasicRendering(texture, Position, 0, Vector2.One);
             }
         }
 

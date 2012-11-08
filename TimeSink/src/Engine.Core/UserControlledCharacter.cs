@@ -44,18 +44,23 @@ namespace TimeSink.Engine.Core
         {
             get 
             {
-                var colSet = new CollisionSet();
-                colSet.Geometry.Add(new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X,
-                        (int)physics.Position.Y,
-                        75, 110)));
-                colSet.Geometry.Add(new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X + 50,
-                        (int)physics.Position.Y + 111,
-                        50, 132)));
-                return colSet;
+                //var colSet = new CollisionSet();
+                //colSet.Geometry.Add(new CollisionRectangle(
+                //    new Rectangle(
+                //        (int)physics.Position.X,
+                //        (int)physics.Position.Y,
+                //        75, 110)));
+                //colSet.Geometry.Add(new CollisionRectangle(
+                //    new Rectangle(
+                //        (int)physics.Position.X + 50,
+                //        (int)physics.Position.Y + 111,
+                //        50, 132)));
+                //return colSet;
+                return new CollisionRectangle(new Rectangle(
+                    (int)physics.Position.X,
+                    (int)physics.Position.Y,
+                    100, 242
+                ));
             }
         }
 
@@ -250,7 +255,16 @@ namespace TimeSink.Engine.Core
 
         public override IRendering Rendering
         {
-            get { return new BasicRendering(PLAYER_TEXTURE_NAME, physics.Position, sourceRect); }
+            get 
+            { 
+                return new BasicRendering(
+                    PLAYER_TEXTURE_NAME, 
+                    physics.Position, 
+                    0,
+                    Vector2.One,
+                    sourceRect
+                );
+            }
         }
     }
 }

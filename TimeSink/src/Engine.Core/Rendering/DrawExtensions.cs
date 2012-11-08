@@ -16,7 +16,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(texture, start, null, color,
                        angle, Vector2.Zero, new Vector2(length, thinkness),
-                       SpriteEffects.None, 0);
+                       SpriteEffects.None, 0);    
         }
 
         public static void DrawRect(this SpriteBatch spriteBatch, Texture2D texture, Vector2 topLeft, Vector2 botRight, int thinkness, Color color)

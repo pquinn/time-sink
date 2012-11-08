@@ -10,7 +10,8 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public interface IRendering
     {
-        void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 positionOffset);
+        void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, 
+            Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset);
 
         void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset);
 
