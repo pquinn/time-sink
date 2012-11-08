@@ -14,6 +14,9 @@ namespace TimeSink.Engine.Core.States
     {
         List<StaticMesh> selectedMeshes;
         int drillIndex;
+        bool drag;
+        bool emptySelect;
+        Vector2 lastMouse;
 
         public SelectionEditorState()
         {
@@ -27,23 +30,48 @@ namespace TimeSink.Engine.Core.States
 
         public override void Execute(Level level)
         {
-            if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
+            var hasSelect = selectedMeshes.Count > 0;
+            var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
+            if (buttonState == ButtonState.Pressed)
             {
-                selectedMeshes = new List<StaticMesh>();
-                drillIndex = 0;
-                foreach (var mesh in level.GetStaticMeshes())
+                var clicked = GetSelections(level);
+                var sameClick = clicked.Contains(lastSelected);
+                if (clicked.Count == 0)
                 {
-                    if (mesh.Rendering.Contains(
-                        new Vector2(
-                            InputManager.Instance.CurrentMouseState.X,
-                            InputManager.Instance.CurrentMouseState.Y),
-                        level.RenderManager.TextureCache))
-                    {
-                        selectedMeshes.Add(mesh);
-                    }
+                    emptySelect = true;
+                    selectedMeshes.Clear();
+                }
+                else if (hasSelect && sameClick && !drag && !emptySelect)
+                {
+                    drag = true;
+                    lastMouse = GetMousePosition();
+                }
+                else if (hasSelect && drag && !emptySelect)
+                {
+                    var offset = GetMousePosition() - lastMouse;
+
+                    selectedMeshes[drillIndex].Position += offset;
+
+                    lastMouse = GetMousePosition();
+                }
+                else if (!emptySelect)
+                {
+                    selectedMeshes = GetSelections(level);
+                    drillIndex = 0;
                 }
             }
-            else if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
+            else if (buttonState == ButtonState.Released)
+            {
+                if (drag)
+                {
+                    drag = false;
+                }
+
+                emptySelect = false;
+            }
+            
+            if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
             {
                 drillIndex = (drillIndex + 1) % selectedMeshes.Count;
             }
@@ -94,6 +122,29 @@ namespace TimeSink.Engine.Core.States
             }
 
             spriteBatch.End();
+        }
+
+        private List<StaticMesh> GetSelections(Level level)
+        {
+            var selected = new List<StaticMesh>();
+            foreach (var mesh in level.GetStaticMeshes())
+            {
+                if (mesh.Rendering.Contains(
+                    GetMousePosition(),
+                    level.RenderManager.TextureCache))
+                {
+                    selected.Add(mesh);
+                }
+            }
+
+            return selected;
+        }
+
+        private Vector2 GetMousePosition()
+        {
+            return new Vector2(
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y);
         }
     }
 }
