@@ -42,15 +42,20 @@ namespace TimeSink.Engine.Core
 
         public override ICollisionGeometry CollisionGeometry
         {
-            get
+            get 
             {
-                return new CollisionRectangle(
+                var colSet = new CollisionSet();
+                colSet.Geometry.Add(new CollisionRectangle(
                     new Rectangle(
                         (int)physics.Position.X,
                         (int)physics.Position.Y,
-                        100, 242
-                    )
-                );
+                        75, 110)));
+                colSet.Geometry.Add(new CollisionRectangle(
+                    new Rectangle(
+                        (int)physics.Position.X + 50,
+                        (int)physics.Position.Y + 111,
+                        50, 132)));
+                return colSet;
             }
         }
 
@@ -60,6 +65,7 @@ namespace TimeSink.Engine.Core
             {
                 GravityEnabled = true
             };
+                                           
         }
 
         public override void Load(EngineGame game)

@@ -15,16 +15,40 @@ namespace DialoguePrototype
     {
         #region Fields
 
+        /// <summary>
+        /// Horizontal and Vertical padding
+        /// </summary>
         const int hPad = 32;
         const int vPad = 16;
 
+        /// <summary>
+        /// The scale of the text in the prompt.
+        /// </summary>
         float scale;
+
+        /// <summary>
+        /// The index of the selected <see cref="Response"/>Response</see>.
+        /// </summary>
         int selectedEntry = 0;
+
+        /// <summary>
+        /// Texture for the background rectangle of the <see cref="NPCPrompt"/>NPCPrompt</see>.
+        /// </summary>
         Texture2D gradientTexture;
 
+        /// <summary>
+        /// The current <see cref="NPCPrompt"/>NPCPrompt</see> that will be displayed.
+        /// </summary>
         NPCPrompt prompt;
+
+        /// <summary>
+        /// The list of possible player <see cref="Response"/>Responses</see>.
+        /// </summary>
         List<Response> responses;
 
+        /// <summary>
+        /// The actions that are available to the user while this screen is active.
+        /// </summary>
         InputAction upAction;
         InputAction downAction;
         InputAction selectAction;
@@ -32,19 +56,31 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Events
 
+        /// <summary>
+        /// The event representing the end of a dialogue sequence when the NPCPrompt
+        /// has no more responses.
+        /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Finished;
 
         #endregion
 
+
         #region Properties
 
+        /// <summary>
+        /// Gets the <see cref="NPCPrompt"/>NPCPrompt</see> contained in this DialogueScreen.
+        /// </summary>
         public NPCPrompt Prompt
         {
             get { return prompt; }
         }
 
+        /// <summary>
+        /// Gets or Sets the list of possible player <see cref="Response"/>Responses</see>.
+        /// </summary>
         public List<Response> Responses
         {
             get { return responses; }
@@ -53,8 +89,13 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Initialization
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="id">The GUID of the <see cref="NPCPrompt"/>NPCPrompt</see> in the database.</param>
         public DialogueScreen(Guid id)
             : base()
         {
@@ -65,6 +106,9 @@ namespace DialoguePrototype
             InitializeActions();
         }
 
+        /// <summary>
+        /// Adds the appropriate input to the corresponding user actions.
+        /// </summary>
         public void InitializeActions()
         {
             upAction = new InputAction(
@@ -88,6 +132,11 @@ namespace DialoguePrototype
                 true);
         }
 
+        /// <summary>
+        /// Static method for creating a DialogueScreen from the gameplay screen.
+        /// </summary>
+        /// <param name="id">The GUID of the <see cref="NPCPrompt"/>NPCPrompt</see> in the database.</param>
+        /// <returns>A new instance of a DialogueScreen</returns>
         public static DialogueScreen InitializeDialogueBox(Guid id)
         {
             DialogueScreen openingPrompt = new DialogueScreen(id);
@@ -95,13 +144,22 @@ namespace DialoguePrototype
             {
                 openingPrompt.Responses = openingPrompt.FindResponses(id);
             }
+            else
+            {
+                openingPrompt.Prompt.IncludeUsageText();
+            }
+
+            foreach (IDialogueAction action in openingPrompt.Prompt.PromptActions)
+            {
+                action.ExecuteAction();
+            }
             return openingPrompt;
         }
 
         /// <summary>
         /// Loads graphics content for this screen. This uses the shared ContentManager
         /// provided by the Game class, so the content will remain loaded forever.
-        /// Whenever a subsequent MessageBoxScreen tries to load this same content,
+        /// Whenever a subsequent DialogueScreen tries to load this same content,
         /// it will just get back another reference to the already loaded data.
         /// </summary>
         public override void Activate(bool instancePreserved)
@@ -115,14 +173,22 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Database Interactions
 
+        /// <summary>
+        /// Retrieves the appropriate <see cref="NPCPrompt"/>NPCPrompt</see> from the database.
+        /// </summary>
+        /// <param name="id">The GUID of the <see cref="NPCPrompt"/>NPCPrompt</see></param>
+        /// <returns>The <see cref="NPCPrompt"/>NPCPrompt</see></returns>
         private NPCPrompt FindPrompt(Guid id)
         {
+            List<IDialogueAction> promptActions = new List<IDialogueAction>();
             try
             {
                 DataTable entry;
                 String query = "select speaker \"speaker\", entry \"entry\", ";
+                query += "animation \"animation\", sound \"sound\", quest \"quest\", ";
                 query += "response_required \"response\" ";
                 query += "from Prompt where id = \"" + id.ToString() + "\";";
                 entry = StarterGame.Instance.database.GetDataTable(query);
@@ -130,8 +196,24 @@ namespace DialoguePrototype
                 DataRow result = entry.Rows[0];
                 String speaker = (String)result["speaker"];
                 String body = (String)result["entry"];
+
+                if (!DBNull.Value.Equals(result["animation"]))
+                {
+                    promptActions.Add(new AnimationAction((String)result["animation"]));
+                }
+
+                if (!DBNull.Value.Equals(result["sound"]))
+                {
+                    promptActions.Add(new SoundAction((String)result["sound"]));
+                }
+
+                if (!DBNull.Value.Equals(result["quest"]))
+                {
+                    promptActions.Add(new QuestAction((String)result["quest"]));
+                }
+
                 Boolean responseRequired = (Boolean)result["response"];
-                NPCPrompt prompt = new NPCPrompt(id, speaker, body, responseRequired);
+                NPCPrompt prompt = new NPCPrompt(id, speaker, body, promptActions, responseRequired);
                 return prompt;
 
             }
@@ -140,24 +222,45 @@ namespace DialoguePrototype
                 String error = "The following error has occurred:\n";
                 error += e.Message.ToString() + "\n";
                 Console.WriteLine(error);
-                return new NPCPrompt(id, "error", error, false);
+                return new NPCPrompt(id, "error", error, promptActions, false);
             }
         }
 
+        /// <summary>
+        /// Finds the appropriate <see cref="Response"/>Response</see> in the database. 
+        /// </summary>
+        /// <param name="id">the GUID of the <see cref="Response"/>Response</see></param>
+        /// <returns>the <see cref="Response"/>Response</see> object</returns>
         private Response FindResponse(Guid id)
         {
-            DataTable entry;
-            String query = "select entry \"entry\", ";
-            query += "next_entry \"next_entry\" ";
-            query += "from Response where ID = \"" + id.ToString() + "\";";
-            entry = StarterGame.Instance.database.GetDataTable(query);
-            // again, there should only be one result
-            DataRow result = entry.Rows[0];
-            String entryText = (String)result["entry"];
-            Guid nextEntry = new Guid((String)result["next_entry"]);
-            return new Response(entryText, nextEntry);
+            try
+            {
+                DataTable entry;
+                String query = "select entry \"entry\", ";
+                query += "next_entry \"next_entry\" ";
+                query += "from Response where ID = \"" + id.ToString() + "\";";
+                entry = StarterGame.Instance.database.GetDataTable(query);
+                // again, there should only be one result
+                DataRow result = entry.Rows[0];
+                String entryText = (String)result["entry"];
+                Guid nextEntry = new Guid((String)result["next_entry"]);
+                return new Response(entryText, nextEntry);
+            }
+            catch (Exception e)
+            {
+                String error = "The following error has occurred:\n";
+                error += e.Message.ToString() + "\n";
+                Console.WriteLine(error);
+                return new Response("error: " + error, new Guid());
+            }
         }
 
+        /// <summary>
+        /// Finds the <see cref="Response"/>Responses</see> to the <see cref="NPCPrompt"/>Prompt</see>
+        /// based on the mapping in the Response_Map table
+        /// </summary>
+        /// <param name="id">the GUID of the <see cref="NPCPrompt"/>Prompt</see></param>
+        /// <returns>the list of <see cref="Response"/>Responses</see></returns>
         private List<Response> FindResponses(Guid id)
         {
             List<Response> responses = new List<Response>();
@@ -191,11 +294,12 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Handle Input
 
         /// <summary>
         /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
+        /// or pausing the <see cref="DialogueScreen"/>DialogueScreen</see>.
         /// </summary>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
@@ -249,7 +353,7 @@ namespace DialoguePrototype
 
 
         /// <summary>
-        /// Handler for when the user has chosen a menu entry.
+        /// Handler for when the user has chosen a response.
         /// </summary>
         protected virtual void OnSelectEntry(int entryIndex)
         {
@@ -257,7 +361,7 @@ namespace DialoguePrototype
         }
 
         /// <summary>
-        /// Event handler for when the Play Game menu entry is selected.
+        /// Event handler for when a <see cref="Response"/>Response</see> is selected.
         /// </summary>
         void ResponseSelected(object sender, ResponseEventArgs e)
         {
@@ -269,10 +373,11 @@ namespace DialoguePrototype
 
         #endregion
 
+
         #region Update and Draw
 
         /// <summary>
-        /// Updates the menu.
+        /// Updates the screen.
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
@@ -289,8 +394,8 @@ namespace DialoguePrototype
         }
 
         /// <summary>
-        /// Allows the screen the chance to position the menu entries. By default
-        /// all menu entries are lined up in a vertical list, centered on the screen.
+        /// Allows the screen the chance to position the responses. By default
+        /// all repsonses are lined up in a vertical list, on the left side of the screen.
         /// </summary>
         protected virtual void UpdateResponseLocations(float startY)
         {
@@ -319,7 +424,7 @@ namespace DialoguePrototype
         }
 
         /// <summary>
-        /// Draws the menu.
+        /// Draws the screen.
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
@@ -338,7 +443,7 @@ namespace DialoguePrototype
 
             //  + " This is extra text for padding shit. Let's see what happens!",
             String tempPrompt = WrapText(font,
-                        prompt.Speaker + ":\n" + prompt.Body + " This is extra text for padding shit. Let's see what happens!",
+                        prompt.ToString(),
                         viewportSize.X - (hPad * 3));
 
             Vector2 titleSize = font.MeasureString(tempPrompt) * titleScale;
@@ -375,6 +480,14 @@ namespace DialoguePrototype
             spriteBatch.End();
         }
 
+
+        /// <summary>
+        /// Wraps the text based on the line length.
+        /// </summary>
+        /// <param name="spriteFont">the font</param>
+        /// <param name="text">the text to be wrapped</param>
+        /// <param name="maxLineWidth">the max width of the line</param>
+        /// <returns>the text with the line breaks in it</returns>
         private String WrapText(SpriteFont spriteFont, string text, float maxLineWidth)
         {
             String[] words = text.Split(' ');
