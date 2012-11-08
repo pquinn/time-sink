@@ -9,10 +9,12 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Entities.Weapons
 {
-    class Arrow : Entity
+    public class Arrow : Entity
     {
         const float ARROW_MASS = 10f;
-        private GravityPhysics physics;
+        const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
+
+        public GravityPhysics physics { get; private set; }
 
         public Arrow(Vector2 position)
         {
@@ -27,29 +29,50 @@ namespace TimeSink.Engine.Core.Entities.Weapons
             get
             {
                 return new CollisionRectangle(
-                        new Rectangle(0, 0, 25, 25)
+                        new Rectangle((int)physics.Position.X, 
+                                      (int)physics.Position.Y, 
+                                      25, 
+                                      25)
                         );  
             }
         }
 
         public override IPhysicsParticle PhysicsController
         {
-            get { throw new NotImplementedException(); }
+            get { return physics; }
         }
 
         public override IRendering Rendering
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return new BasicRendering(
+                    ARROW_TEXTURE_NAME,
+                    physics.Position,
+                    0,
+                    Vector2.One
+                );
+            }
         }
 
-        public override void HandleKeyboardInput(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            throw new NotImplementedException();
+        }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        {
+            // Handle whether collision should disable gravity
+            if (info.MinimumTranslationVector.Y > 0)
+            {
+                //physics.GravityEnabled = false;
+                //physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
+            }
         }
 
         public override void Load(EngineGame engineGame)
         {
-            throw new NotImplementedException();
+            engineGame.TextureCache.LoadResource(ARROW_TEXTURE_NAME);
         }
     }
 }

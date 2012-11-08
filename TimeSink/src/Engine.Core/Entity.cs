@@ -32,7 +32,7 @@ namespace TimeSink.Engine.Core
             get;
         }
 
-        public abstract void HandleKeyboardInput(GameTime gameTime);
+        public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
 
         public abstract void Load(EngineGame engineGame);
     }

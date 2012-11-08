@@ -94,7 +94,7 @@ namespace TimeSink.Engine.Core.Collisions
             get { throw new NotImplementedException(); }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
             throw new NotImplementedException();
         }
