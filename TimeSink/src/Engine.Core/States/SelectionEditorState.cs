@@ -49,11 +49,7 @@ namespace TimeSink.Engine.Core.States
                 }
                 else if (hasSelect && drag && !emptySelect)
                 {
-                    var offset = GetMousePosition() - lastMouse;
-
-                    selectedMeshes[drillIndex].Position += offset;
-
-                    lastMouse = GetMousePosition();
+                    HandleDrag();
                 }
                 else if (!emptySelect)
                 {
@@ -163,6 +159,35 @@ namespace TimeSink.Engine.Core.States
             return new Vector2(
                     InputManager.Instance.CurrentMouseState.X,
                     InputManager.Instance.CurrentMouseState.Y);
+        }
+
+        private void HandleDrag()
+        {
+            var mousePos = GetMousePosition();
+            var offset = mousePos - lastMouse;
+            var newPos = selectedMeshes[drillIndex].Position + offset;
+            var offX = 0f;
+            var offY = 0f;
+
+            if (EditorProperties.Instance.EnableSnapping)
+            {
+                var gridSpace = EditorProperties.Instance.GridLineSpacing;
+                var halfSpace = gridSpace / 2;
+                var leftDist = newPos.X % gridSpace;
+                var upDist = newPos.Y % gridSpace;
+                offX = (leftDist <= halfSpace) ? -leftDist : halfSpace - leftDist;
+                offY = (upDist <= halfSpace) ? -upDist : halfSpace - upDist;
+                newPos = new Vector2(newPos.X - offX, newPos.Y - offY);
+
+                lastMouse = mousePos - new Vector2(offX, offY);
+                InputManager.ForceMousePosition(lastMouse);
+            }
+            else
+            {
+                lastMouse = mousePos;
+            }
+
+            selectedMeshes[drillIndex].Position = newPos;
         }
     }
 }

@@ -16,7 +16,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 
-namespace TimeSink.Editor.Game
+namespace Editor
 {
     /// <summary>
     /// This is the main type for your game
@@ -56,6 +56,15 @@ namespace TimeSink.Editor.Game
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            EditorProperties.Instance = new EditorProperties()
+            {
+                ShowGridLines = false,
+                GridLineSpacing = 16,
+                EnableSnapping = false,
+                ResolutionX = ResolutionWidth,
+                ResolutionY = ResolutionHeight
+            };
 
             camera = new Camera();
 
@@ -160,6 +169,28 @@ namespace TimeSink.Editor.Game
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+
+            if (EditorProperties.Instance.ShowGridLines)
+            {
+                for (var x = 2; x < ResolutionWidth; x += EditorProperties.Instance.GridLineSpacing)
+                {
+                    spriteBatch.DrawLine(
+                        TextureCache.GetResource("blank"),
+                        new Vector2(x, 0), new Vector2(x, ResolutionHeight),
+                        1, new Color(0, 0, 0, 50));
+                }
+                for (var y = 2; y < ResolutionHeight; y += EditorProperties.Instance.GridLineSpacing)
+                {
+                    spriteBatch.DrawLine(
+                        TextureCache.GetResource("blank"),
+                        new Vector2(0, y), new Vector2(ResolutionWidth, y),
+                        1, new Color(0, 0, 0, 50));
+                }
+            }
+
+            spriteBatch.End();
 
             stateMachine.Draw(spriteBatch, camera);
 

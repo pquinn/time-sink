@@ -43,11 +43,6 @@ namespace TimeSink.Engine.Core.Rendering
             );
         }
 
-        public virtual void DrawSelected(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Color color, BoundingBox acc)
-        {
-                
-        }
-
         public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)
         {
             var texture = cache.GetResource(textureKey);
@@ -56,8 +51,8 @@ namespace TimeSink.Engine.Core.Rendering
             var top = position.Y + positionOffset.Y;
             var bot = top + texture.Height;
 
-            return (point.X > left) && (point.X < right) &&
-                   (point.Y > top) && (point.Y < bot);
+            return (point.X >= left) && (point.X <= right) &&
+                   (point.Y >= top) && (point.Y <= bot);
         }
 
         public void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset)

@@ -17,12 +17,20 @@
                 <MenuItem Header="Save As..." />
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="..." />
+                <MenuItem Header="Show Grid Lines" Click="Show_Grid_Lines_Click" />
+                <MenuItem Header="Grid Line Size" >
+                    <MenuItem Header="2 Pixels" Click="Grid_Line_Size_Click" Tag="2"/>
+                    <MenuItem Header="4 Pixels" Click="Grid_Line_Size_Click" Tag="4"/>
+                    <MenuItem Header="8 Pixels" Click="Grid_Line_Size_Click" Tag="8"/>
+                    <MenuItem Header="16 Pixels" Click="Grid_Line_Size_Click" Tag="16"/>
+                    <MenuItem Header="32 Pixels" Click="Grid_Line_Size_Click" Tag="32"/>
+                </MenuItem>
+                <MenuItem Header="Enable Snapping" Click="Enable_Snapping_Click"/>
             </MenuItem>
         </Menu>
         <TabControl Grid.Row="1" Height="Auto" Name="tabControl1" Width="Auto" Padding="0">
             <TabItem Header="Editor" Name="tabItem1">
-                <Core:Editor>                    
+                <Core:Editor x:Name="editor">                    
                 </Core:Editor>
             </TabItem>
             <TabItem Header="Entities" Name="tabItem2">
