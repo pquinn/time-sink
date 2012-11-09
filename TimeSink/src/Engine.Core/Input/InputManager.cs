@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Engine.Core.Input
 {
@@ -68,6 +69,11 @@ namespace TimeSink.Engine.Core.Input
 
             lastMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
+        }
+
+        internal static void ForceMousePosition(Vector2 point)
+        {
+            Mouse.SetPosition((int) point.X, (int) point.Y);
         }
     }
 }

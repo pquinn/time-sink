@@ -40,5 +40,11 @@ namespace TimeSink.Engine.Core.Collisions
                 i++;
             }
         }
+
+        public void Initialize()
+        {
+            Collided.DoAutoRegister();
+            OnCollidedWith.DoAutoRegister();
+        }
     }
 }

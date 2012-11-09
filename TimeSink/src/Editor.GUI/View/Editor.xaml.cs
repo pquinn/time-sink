@@ -11,9 +11,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TimeSink.Editor.Game;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Editor.GUI.ViewModels;
+using Editor;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -24,6 +25,7 @@ namespace TimeSink.Editor.GUI.Views
     {
         Game1 m_game;
         bool meshButtonPressed;
+        bool selectionButtonPressed;
 
         public Editor()
         {
@@ -31,16 +33,31 @@ namespace TimeSink.Editor.GUI.Views
             this.Loaded += new RoutedEventHandler(Editor_Loaded);
         }
 
+        public IEnumerable<string> Textures { get; set; }
+
+        public IEnumerable<string> SelectedTexture { get; set; }
+
+        public void ToggleGridLines()
+        {
+            EditorProperties.Instance.ShowGridLines = !EditorProperties.Instance.ShowGridLines;
+        }
+
+        public void ToggleSnapping()
+        {
+            EditorProperties.Instance.EnableSnapping = !EditorProperties.Instance.EnableSnapping;
+        }
+
+        public void SetGridLineSize(int size)
+        {
+            EditorProperties.Instance.GridLineSpacing = size;
+        }
+
         void Editor_Loaded(object sender, RoutedEventArgs e)
         {
             m_game = new Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
         }
 
-        public IEnumerable<string> Textures { get; set; }
-
-        public IEnumerable<string> SelectedTexture { get; set; }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Static_Click(object sender, RoutedEventArgs e)
         {
             if (!meshButtonPressed)
             {
@@ -60,9 +77,22 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
+        private void Selection_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+                m_game.SelectionSelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
         private void ClearButtons()
         {
             meshButtonPressed = false;
+            selectionButtonPressed = false;
         }
     }
 }

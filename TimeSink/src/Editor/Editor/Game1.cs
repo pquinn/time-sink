@@ -16,7 +16,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 
-namespace TimeSink.Editor.Game
+namespace Editor
 {
     /// <summary>
     /// This is the main type for your game
@@ -57,6 +57,15 @@ namespace TimeSink.Editor.Game
 
             base.Initialize();
 
+            EditorProperties.Instance = new EditorProperties()
+            {
+                ShowGridLines = false,
+                GridLineSpacing = 16,
+                EnableSnapping = false,
+                ResolutionX = ResolutionWidth,
+                ResolutionY = ResolutionHeight
+            };
+
             camera = new Camera();
 
             //set up managers
@@ -66,9 +75,13 @@ namespace TimeSink.Editor.Game
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
             level.RegisterStaticMeshes(new List<StaticMesh>()
                 {
-                    new StaticMesh(new Vector2(20, 20)),
-                    new StaticMesh(new Vector2(294, 20)),
-                    new StaticMesh(new Vector2(566, 20))
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300)),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300)),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300)),
+                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286)),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286)),
                 });
 
             // set up state machine
@@ -89,8 +102,18 @@ namespace TimeSink.Editor.Game
             SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
 
-
-            TextureCache.LoadResource("Textures/Ground_Tile1");
+            TextureCache.LoadResources(
+                new List<string> 
+                {
+                    "Textures/Ground_Tile1",
+                    "Textures/Top_Tile01",
+                    "Textures/Top_Tile02",
+                    "Textures/Top_Tile03",
+                    "Textures/Side_Tile01"
+                });
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            TextureCache.AddResource("blank", blank);
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
 
@@ -147,6 +170,28 @@ namespace TimeSink.Editor.Game
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin();
+
+            if (EditorProperties.Instance.ShowGridLines)
+            {
+                for (var x = 2; x < ResolutionWidth; x += EditorProperties.Instance.GridLineSpacing)
+                {
+                    spriteBatch.DrawLine(
+                        TextureCache.GetResource("blank"),
+                        new Vector2(x, 0), new Vector2(x, ResolutionHeight),
+                        1, new Color(0, 0, 0, 50));
+                }
+                for (var y = 2; y < ResolutionHeight; y += EditorProperties.Instance.GridLineSpacing)
+                {
+                    spriteBatch.DrawLine(
+                        TextureCache.GetResource("blank"),
+                        new Vector2(0, y), new Vector2(ResolutionWidth, y),
+                        1, new Color(0, 0, 0, 50));
+                }
+            }
+
+            spriteBatch.End();
+
             stateMachine.Draw(spriteBatch, camera);
 
             base.Draw(gameTime);
@@ -156,6 +201,13 @@ namespace TimeSink.Editor.Game
         {
             stateMachine.ChangeState(
                 new StaticMeshPlacementEditorState(textureKey),
+                true, true);
+        }
+
+        public void SelectionSelected()
+        {
+            stateMachine.ChangeState(
+                new SelectionEditorState(),
                 true, true);
         }
     }

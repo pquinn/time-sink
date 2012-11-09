@@ -53,5 +53,10 @@ namespace TimeSink.Engine.Core
         {
             entities.ForEach(RegisterEntity);
         }
+
+        internal IEnumerable<StaticMesh> GetStaticMeshes()
+        {
+            return staticMeshes;
+        }
     }
 }

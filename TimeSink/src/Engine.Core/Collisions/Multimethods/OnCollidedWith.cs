@@ -14,7 +14,7 @@ namespace TimeSink.Engine.Core.Collisions
 		// argument types may be derived versions of the types that appear in Invoke.
 		[Serializable]
 		[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-		internal sealed class OverloadAttribute : Attribute
+		public sealed class OverloadAttribute : Attribute
 		{
 		}
 		
@@ -262,7 +262,7 @@ namespace TimeSink.Engine.Core.Collisions
 				return 0;
 		}
 		
-		public static void DoAutoRegister()
+		internal static void DoAutoRegister()
 		{
 			ms_candidates = new List<Entry>();		// we want to set this even if no overloads are found
 			

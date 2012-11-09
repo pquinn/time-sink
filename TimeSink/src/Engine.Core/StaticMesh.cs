@@ -11,9 +11,10 @@ namespace TimeSink.Engine.Core
 {
     public class StaticMesh : Entity
     {
-        const string texture = "Textures/Ground_Tile1";
-        public StaticMesh(Vector2 position)
+        string texture;
+        public StaticMesh(string texture, Vector2 position)
         {
+            this.texture = texture;
             this.Position = position;
         }
 
@@ -32,7 +33,7 @@ namespace TimeSink.Engine.Core
         {
             get 
             {
-                return new BasicRendering(texture, Position);
+                return new BasicRendering(texture, Position, 0, Vector2.One);
             }
         }
 
@@ -41,8 +42,13 @@ namespace TimeSink.Engine.Core
             get { return null; }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime)
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
+        }
+
+        public override void Load(EngineGame engineGame)
+        {
+            engineGame.TextureCache.LoadResource(texture);
         }
     }
 }

@@ -107,6 +107,7 @@
     <Compile Include="Collisions\CollisionRectangle.cs" />
     <Compile Include="Collisions\CollisionInfo.cs" />
     <Compile Include="Collisions\CollisionSet.cs" />
+    <Compile Include="Collisions\CollisionTriangle.cs" />
     <Compile Include="Collisions\ContainsPointExtensions.cs" />
     <Compile Include="Collisions\ICollideable.cs" />
     <Compile Include="Collisions\ICollisionGeometry.cs" />
@@ -114,8 +115,13 @@
     <Compile Include="Collisions\CollisionGeometry.cs" />
     <Compile Include="Collisions\CollisionManager.cs" />
     <Compile Include="Collisions\Multimethods\OnCollidedWith.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\IPolygon.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\PolygonCollision.cs" />
+    <Compile Include="Collisions\Separating Axis Theorem\SeparatingAxisTheorem.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DotNetExtensions.cs" />
+    <Compile Include="EditorProperties.cs" />
+    <Compile Include="EngineGame.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
@@ -127,22 +133,21 @@
     <Compile Include="Physics\PhysicsConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\BasicRendering.cs" />
+    <Compile Include="Rendering\BoundingBox.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\DrawExtensions.cs" />
     <Compile Include="Rendering\StackableRendering.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
     <Compile Include="Rendering\RenderManager.cs" />
-    <Compile Include="Rendering\WireFrameRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\DefaultEditorState.cs" />
+    <Compile Include="States\SelectionEditorState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
     <Compile Include="States\StaticMeshPlacementEditorState.cs" />
     <Compile Include="StaticMesh.cs" />
-    <Compile Include="UserControlledCharacter.cs" />
     <Compile Include="VectorExtensions.cs" />
-    <Compile Include="WorldGeometry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
