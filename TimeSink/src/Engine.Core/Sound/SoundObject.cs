@@ -123,6 +123,10 @@ namespace TimeSink.Engine.Core.Sound
             {
                 dynamic.Resume();
             }
+            else
+            {
+                PlaySound();
+            }
         }
 
         //Pan the sound to the left speaker

@@ -145,7 +145,7 @@ namespace TimeSink.Engine.Game
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
-            backgroundTrack.PlaySound();
+           // backgroundTrack.PlaySound();
         }
 
         /// <summary>
