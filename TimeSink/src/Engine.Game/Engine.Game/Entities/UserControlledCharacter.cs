@@ -9,6 +9,7 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+
 using TimeSink.Engine.Game.Entities.Weapons;
 
 namespace TimeSink.Engine.Game.Entities
@@ -17,10 +18,11 @@ namespace TimeSink.Engine.Game.Entities
     {
         const float PLAYER_MASS = 100f;
 
-        float playerRotation = 0.0f;
-
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
+        const float MAX_ARROW_HOLD = 1;
+        const float MIN_ARROW_INIT_SPEED = 500;
+        const float MAX_ARROW_INIT_SPEED = 1500;
 
         private GravityPhysics physics;
         private SoundEffect jumpSound;
@@ -29,6 +31,13 @@ namespace TimeSink.Engine.Game.Entities
         private bool touchingGround = false;
         private bool jumpStarted = false;
         private Rectangle sourceRect;
+
+        private float playerRotation = 0.0f;
+        private Vector2 direction = new Vector2(1, 0);
+        private int facing = 1; // 1 for right, -1 for left
+        private double holdTime;
+        private bool inHold;
+
         float timer = 0f;
         float interval = 150f;
         float jumpInterval = 100f;
@@ -38,7 +47,7 @@ namespace TimeSink.Engine.Game.Entities
 
         public override ICollisionGeometry CollisionGeometry
         {
-            get 
+            get
             {
                 //var colSet = new CollisionSet();
                 //colSet.Geometry.Add(new CollisionRectangle(
@@ -66,13 +75,13 @@ namespace TimeSink.Engine.Game.Entities
             {
                 GravityEnabled = true
             };
-                                           
+
         }
 
         public override void Load(EngineGame game)
         {
             game.TextureCache.LoadResource(PLAYER_TEXTURE_NAME);
-            
+
             /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
@@ -136,38 +145,76 @@ namespace TimeSink.Engine.Game.Entities
                     AnimateRight(gameTime);
             }
 
-            if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+            if (keyboard.IsKeyDown(Keys.A))
             {
                 movedirection.X -= 1.0f;
                 if (touchingGround)
                     AnimateRight(gameTime);
             }
-            if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+            if (keyboard.IsKeyDown(Keys.D))
             {
                 movedirection.X += 1.0f;
                 if (touchingGround)
                     AnimateRight(gameTime);
             }
+            #endregion
 
-            if (InputManager.Instance.IsNewKey(Keys.F))
+            #region Direction
+
+            var up = InputManager.Instance.Pressed(Keys.Up);
+            var down = InputManager.Instance.Pressed(Keys.Down);
+            var right = InputManager.Instance.Pressed(Keys.Right);
+            var left = InputManager.Instance.Pressed(Keys.Left);
+
+            if (up && right)
             {
-                Console.WriteLine("pew pew");
-                Arrow arrow = new Arrow(
-                    new Vector2(physics.Position.X + 60,
-                                physics.Position.Y + 80));
-                Vector2 initialVelocity = new Vector2(800, 100);
-                arrow.physics.Velocity += initialVelocity;
-                world.Entities.Add(arrow);
-                world.RenderManager.RegisterRenderable(arrow);
-                world.PhysicsManager.RegisterPhysicsBody(arrow);
-                world.CollisionManager.RegisterCollisionBody(arrow);
+                direction = new Vector2(0.707106769f, -0.707106769f);
+                facing = 1;
             }
+            else if (up && left)
+            {
+                direction = new Vector2(-0.707106769f, -0.707106769f);
+                facing = -1;
+            }
+            else if (down && right)
+            {
+                direction = new Vector2(0.707106769f, 0.707106769f);
+                facing = 1;
+            }
+            else if (down && left)
+            {
+                direction = new Vector2(-0.707106769f, 0.707106769f);
+                facing = -1;
+            }
+            else if (up)
+            {
+                direction = new Vector2(0, -1);
+            }
+            else if (down)
+            {
+                direction = new Vector2(0, 1);
+            }
+            else if (right)
+            {
+                direction = new Vector2(1, 0);
+                facing = 1;
+            }
+            else if (left)
+            {
+                direction = new Vector2(-1, 0);
+                facing = -1;
+            }
+            else
+            {
+                direction = new Vector2(1, 0) * facing;
+            }
+
+
             #endregion
 
             #region Jumping
             if (keyboard.IsKeyDown(Keys.Space)
                 || keyboard.IsKeyDown(Keys.W)
-                || keyboard.IsKeyDown(Keys.Up)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
                 if (jumpToggleGuard && touchingGround)
@@ -188,6 +235,35 @@ namespace TimeSink.Engine.Game.Entities
             else if (jumpStarted)
             {
                 AnimateJump(gameTime);
+            }
+
+            #endregion
+
+            #region Shooting
+
+            if (InputManager.Instance.IsNewKey(Keys.F))
+            {
+                holdTime = gameTime.TotalGameTime.TotalSeconds;
+                inHold = true;
+            }
+            else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
+            {
+                inHold = false;
+                Arrow arrow = new Arrow(
+                    new Vector2(physics.Position.X + 60,
+                                physics.Position.Y + 80));
+                var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
+                // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
+                float speed =
+                    MIN_ARROW_INIT_SPEED + (MAX_ARROW_INIT_SPEED - MIN_ARROW_INIT_SPEED) /
+                                           MAX_ARROW_HOLD * 
+                                           (float)elapsedTime; 
+                Vector2 initialVelocity = speed * direction;
+                arrow.physics.Velocity += initialVelocity;
+                world.Entities.Add(arrow);
+                world.RenderManager.RegisterRenderable(arrow);
+                world.PhysicsManager.RegisterPhysicsBody(arrow);
+                world.CollisionManager.RegisterCollisionBody(arrow);
             }
 
             #endregion
@@ -265,11 +341,11 @@ namespace TimeSink.Engine.Game.Entities
 
         public override IRendering Rendering
         {
-            get 
-            { 
+            get
+            {
                 return new BasicRendering(
-                    PLAYER_TEXTURE_NAME, 
-                    physics.Position, 
+                    PLAYER_TEXTURE_NAME,
+                    physics.Position,
                     0,
                     Vector2.One,
                     sourceRect

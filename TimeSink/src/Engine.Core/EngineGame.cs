@@ -66,6 +66,9 @@ namespace TimeSink.Engine.Core
 
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);
+
+            Entities.RemoveWhere(e => e.Dead);
+
         }
 
         protected override void Draw(GameTime gameTime)

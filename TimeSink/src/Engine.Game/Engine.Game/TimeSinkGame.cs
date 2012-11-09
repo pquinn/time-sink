@@ -37,6 +37,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Game.Entities;
+using Engine.Game.Entities.Enemies;
 #endregion
 
 
@@ -56,6 +57,8 @@ namespace TimeSink.Engine.Game
         const float moveScale = 100.0f;
 
         UserControlledCharacter character;
+
+        Dummy dummy;
         WorldGeometry world;
         SoundObject backgroundTrack;
         SoundEffect backHolder;
@@ -73,12 +76,16 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
+            dummy = new Dummy(new Vector2(600, 350));
+
             world = new WorldGeometry();
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
             Entities.Add(character);
+
+            Entities.Add(dummy);
             Entities.Add(world);
         }
 
@@ -98,6 +105,14 @@ namespace TimeSink.Engine.Game
             PhysicsManager.RegisterPhysicsBody(character);
 
             RenderManager.RegisterRenderable(character);
+
+            CollisionManager.RegisterCollisionBody(dummy);
+
+            PhysicsManager.RegisterPhysicsBody(character);
+            PhysicsManager.RegisterPhysicsBody(dummy);
+
+            RenderManager.RegisterRenderable(character);
+            RenderManager.RegisterRenderable(dummy);
             RenderManager.RegisterRenderable(world);
         }
 

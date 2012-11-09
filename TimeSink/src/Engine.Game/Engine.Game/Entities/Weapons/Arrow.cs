@@ -9,7 +9,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
 {
     public class Arrow : Entity
     {
-        const float ARROW_MASS = 10f;
+        const float ARROW_MASS = 1f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
 
         public GravityPhysics physics { get; private set; }
@@ -58,19 +58,35 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
         {
-            // Handle whether collision should disable gravity
-            if (info.MinimumTranslationVector.Y > 0)
+            Dead = true;
+        }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(Entity entity, CollisionInfo info)
+        {
+            if (!(entity is UserControlledCharacter))
             {
-                //physics.GravityEnabled = false;
-                //physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
+                Dead = true;
             }
         }
 
         public override void Load(EngineGame engineGame)
         {
             engineGame.TextureCache.LoadResource(ARROW_TEXTURE_NAME);
+        }
+
+        public override void Update(GameTime time, EngineGame world)
+        {
+            base.Update(time, world);
+
+            if (Dead)
+            {
+                world.RenderManager.UnregisterRenderable(this);
+                world.CollisionManager.UnregisterCollisionBody(this);
+                world.PhysicsManager.UnregisterPhysicsBody(this);
+            }
         }
     }
 }
