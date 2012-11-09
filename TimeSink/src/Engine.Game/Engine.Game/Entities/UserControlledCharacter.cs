@@ -120,32 +120,32 @@ namespace TimeSink.Engine.Game.Entities
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
                 movedirection.X -= 1.0f;
-                if (__touchingGroundFlag)
+                if (touchingGround)
                     AnimateRight(gameTime);
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
                 movedirection.X += 1.0f;
-                if (__touchingGroundFlag)
+                if (touchingGround)
                     AnimateRight(gameTime);
             }
             if (gamepad.ThumbSticks.Left.X != 0)
             {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-                if (__touchingGroundFlag)
+                if (touchingGround)
                     AnimateRight(gameTime);
             }
 
             if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
             {
                 movedirection.X -= 1.0f;
-                if (__touchingGroundFlag)
+                if (touchingGround)
                     AnimateRight(gameTime);
             }
             if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
             {
                 movedirection.X += 1.0f;
-                if (__touchingGroundFlag)
+                if (touchingGround)
                     AnimateRight(gameTime);
             }
 
