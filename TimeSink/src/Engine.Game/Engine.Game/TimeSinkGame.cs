@@ -184,7 +184,12 @@ namespace TimeSink.Engine.Game
         /// <param name="gametime"></param>
         private void HandleInput(GameTime gametime)
         {
+            if (InputManager.Instance.Pressed(Keys.M))
+            {
+                backgroundTrack.TogglePauseSound();
+            }
             character.HandleKeyboardInput(gametime, this);
+            
         }
 
         /// <summary>
