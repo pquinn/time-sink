@@ -1,23 +1,17 @@
-﻿using System;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using System;
+
+using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
-using TimeSink.Engine.Core.Entities;
-
-//using SynapseGaming.LightingSystem.Core;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Core.Caching;
-using System.Collections.Generic;
-using TimeSink.Engine.Core.Entities.Weapons;
+using TimeSink.Engine.Game.Entities.Weapons;
 
-namespace TimeSink.Engine.Core
+namespace TimeSink.Engine.Game.Entities
 {
     public class UserControlledCharacter : Entity
     {

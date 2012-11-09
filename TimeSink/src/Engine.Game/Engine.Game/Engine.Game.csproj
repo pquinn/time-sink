@@ -91,6 +91,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\UserControlledCharacter.cs" />
+    <Compile Include="Entities\Weapons\Arrow.cs" />
+    <Compile Include="Entities\WorldGeometry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeSinkGame.cs" />
   </ItemGroup>

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Microsoft.Xna.Framework;
-
-using TimeSink.Engine.Core.Collisions;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
+using System;
+using System.Collections.Generic;
+
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 
-namespace TimeSink.Engine.Core.Collisions
+namespace TimeSink.Engine.Game.Entities
 {
     public class WorldGeometry : Entity
     {
@@ -19,7 +17,6 @@ namespace TimeSink.Engine.Core.Collisions
 
         private CollisionSet collisionGeometry = new CollisionSet();
         private Texture2D geoTexture;
-        private SpriteBatch geoSprites;
         public override ICollisionGeometry CollisionGeometry
         {
             get { return collisionGeometry; }

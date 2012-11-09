@@ -36,6 +36,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Game.Entities;
 #endregion
 
 
@@ -58,8 +59,6 @@ namespace TimeSink.Engine.Game
         WorldGeometry world;
         SoundObject backgroundTrack;
         SoundEffect backHolder;
-
-        RenderManager renderManager;
 
         public UserControlledCharacter Character
         {
