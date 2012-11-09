@@ -140,6 +140,7 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
     <Compile Include="Rendering\RenderManager.cs" />
+    <Compile Include="Rendering\TintedRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\DefaultEditorState.cs" />
     <Compile Include="States\SelectionEditorState.cs" />
@@ -151,7 +152,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
-    <Folder Include="Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

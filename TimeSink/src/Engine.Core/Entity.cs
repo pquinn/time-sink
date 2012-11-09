@@ -32,6 +32,8 @@ namespace TimeSink.Engine.Core
             get;
         }
 
+        public bool Dead { get; set; }
+
         public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
 
         public abstract void Load(EngineGame engineGame);

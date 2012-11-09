@@ -16,7 +16,7 @@ namespace TimeSink.Engine.Core.Collisions
             return collideables.Add(coll);
         }
 
-        public bool UnregisterPhysicsBody(ICollideable coll)
+        public bool UnregisterCollisionBody(ICollideable coll)
         {
             return collideables.Remove(coll);
         }

@@ -22,7 +22,6 @@ namespace TimeSink.Engine.Core.Sound
         //Dynamic sound object for modular panning and volume
          SoundEffectInstance dynamic;
 
-
         #endregion
 
         #region Initialization
