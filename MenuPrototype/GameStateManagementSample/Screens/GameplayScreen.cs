@@ -40,7 +40,7 @@ namespace GameStateManagementSample
         Texture2D shield;
         Texture2D trans;
 
-        public const int MAX_WEAPON_SLOTS = 10;
+        public const int MAX_WEAPON_SLOTS = 9;
 
         public int currentSlots = 0;
 
@@ -108,7 +108,7 @@ namespace GameStateManagementSample
                 empty = content.Load<Texture2D>("Empty");
                 outline = content.Load<Texture2D>("Slot Outline-01");
                 shield = content.Load<Texture2D>("shield");
-                trans = content.Load<Texture2D>("trans");
+                trans = content.Load<Texture2D>("hBar");
 
                 CreateMenuItems();
             }
@@ -130,7 +130,7 @@ namespace GameStateManagementSample
             SlotItem grenadeItemBackup2 = new Grenade(grenade);
             SlotItem blankItem = new Grenade(empty);
             MagicBar mBar = new MagicBar(shield);
-            HealthBar hBar = new HealthBar(empty);
+            HealthBar hBar = new HealthBar(trans);
             ShieldBar sBar = new ShieldBar(empty);
             Rectangle hBarTrans = new Rectangle(0, 0, 200, 75);
 
@@ -235,7 +235,7 @@ namespace GameStateManagementSample
                     hudElement.Position = posn;
 
                     if (!hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
-                    posn.X += hudElement.GetWidth();
+                        posn.X += hudElement.GetWidth();
 
                     posn.Y = 0;
 
@@ -341,10 +341,6 @@ namespace GameStateManagementSample
                 {
                     hudElement.Draw(this, false, gameTime);
                 }
-            }
-            foreach (Rectangle x in transparencies)
-            {
-                spriteBatch.Draw(trans, x, null, Color.White, .35f, Vector2.Zero, SpriteEffects.None, 0);
             }
 
             spriteBatch.End();

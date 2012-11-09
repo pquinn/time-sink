@@ -16,11 +16,6 @@ namespace GameStateManagementSample
         #endregion
 
         #region Properties
-        public Point Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
 
         public MagicBar(Texture2D texture)
         {
@@ -39,16 +34,10 @@ namespace GameStateManagementSample
 
 
             outline.Location = position;
-            outline.Width = (graphics.PresentationParameters.BackBufferWidth / 45);
-            outline.Height = (graphics.PresentationParameters.BackBufferWidth / 10);
+            outline.Width = (graphics.Viewport.Width / 45);
+            outline.Height = (graphics.Viewport.Width / 10);
 
             spriteBatch.Draw(icon, outline, Color.White);
-
-        }
-
-        public virtual int GetWidth()
-        {
-            return outline.Width;
         }
     }
 }

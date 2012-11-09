@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>7c3b1948-a64a-4afc-8fba-04cf3810f6a7</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <XapFilename>$(AssemblyName).xap</XapFilename>
@@ -68,7 +68,10 @@
     <Compile Include="Game.cs" />
     <Compile Include="Items\EmptyItem.cs" />
     <Compile Include="Items\Grenade.cs" />
+    <Compile Include="Items\HealthBar.cs" />
+    <Compile Include="Items\HudBar.cs" />
     <Compile Include="Items\IHudElement.cs" />
+    <Compile Include="Items\MagicBar.cs" />
     <Compile Include="Items\ShieldBar.cs" />
     <Compile Include="Items\SlotItem.cs" />
     <Compile Include="Program.cs" />

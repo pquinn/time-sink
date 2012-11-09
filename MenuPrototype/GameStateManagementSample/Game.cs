@@ -36,8 +36,8 @@ namespace GameStateManagementSample
 
             graphics = new GraphicsDeviceManager(this);
             TargetElapsedTime = TimeSpan.FromTicks(333333);
-            graphics.PreferredBackBufferWidth = 1200;
-            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = 1680;
+            graphics.PreferredBackBufferHeight = 1050;
 
 #if WINDOWS_PHONE
             graphics.IsFullScreen = true;
