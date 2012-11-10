@@ -29,8 +29,8 @@ namespace TimeSink.Engine.Game.Entities.Weapons
                 return new CollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
-                    25,
-                    25
+                    64,
+                    32
                 ));
             }
         }

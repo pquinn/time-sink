@@ -14,7 +14,7 @@ using TimeSink.Engine.Game.Entities.Weapons;
 
 namespace TimeSink.Engine.Game.Entities
 {
-    public class UserControlledCharacter : Entity
+    public class UserControlledCharacter : Entity, IHaveHealth
     {
         const float PLAYER_MASS = 100f;
 
@@ -31,6 +31,12 @@ namespace TimeSink.Engine.Game.Entities
         private bool touchingGround = false;
         private bool jumpStarted = false;
         private Rectangle sourceRect;
+        private float health;
+        public float Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
 
         private float playerRotation = 0.0f;
         private Vector2 direction = new Vector2(1, 0);
@@ -44,6 +50,10 @@ namespace TimeSink.Engine.Game.Entities
         int currentFrame = 0;
         int spriteWidth = 130;
         int spriteHeight = 242;
+
+        //temp variables for projectile origins
+        private int xOffset = 60;
+        private int yOffset = 80;
 
         public override ICollisionGeometry CollisionGeometry
         {
@@ -75,7 +85,7 @@ namespace TimeSink.Engine.Game.Entities
             {
                 GravityEnabled = true
             };
-
+            health = 100;
         }
 
         public override void Load(EngineGame game)
@@ -250,8 +260,8 @@ namespace TimeSink.Engine.Game.Entities
             {
                 inHold = false;
                 Arrow arrow = new Arrow(
-                    new Vector2(physics.Position.X + 60,
-                                physics.Position.Y + 80));
+                    new Vector2(physics.Position.X + xOffset,
+                                physics.Position.Y + yOffset));
                 var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
                 // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
                 float speed =
@@ -264,6 +274,20 @@ namespace TimeSink.Engine.Game.Entities
                 world.RenderManager.RegisterRenderable(arrow);
                 world.PhysicsManager.RegisterPhysicsBody(arrow);
                 world.CollisionManager.RegisterCollisionBody(arrow);
+            }
+
+            if (InputManager.Instance.IsNewKey(Keys.G))
+            {
+                Dart dart = new Dart(
+                    new Vector2(physics.Position.X + xOffset,
+                                physics.Position.Y + yOffset));
+                float dartSpeed = 2000f;
+                Vector2 initialVelocity = direction * dartSpeed;
+                dart.physics.Velocity += initialVelocity;
+                world.Entities.Add(dart);
+                world.RenderManager.RegisterRenderable(dart);
+                world.PhysicsManager.RegisterPhysicsBody(dart);
+                world.CollisionManager.RegisterCollisionBody(dart);
             }
 
             #endregion
@@ -351,6 +375,10 @@ namespace TimeSink.Engine.Game.Entities
                     sourceRect
                 );
             }
+        }
+
+        public void RegisterDot(DamageOverTimeEffect dot)
+        {
         }
     }
 }

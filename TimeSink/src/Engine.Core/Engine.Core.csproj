@@ -119,10 +119,12 @@
     <Compile Include="Collisions\Separating Axis Theorem\PolygonCollision.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\SeparatingAxisTheorem.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DamageOverTimeEffect.cs" />
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="EditorProperties.cs" />
     <Compile Include="EngineGame.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="IHaveHealth.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Level.cs" />
