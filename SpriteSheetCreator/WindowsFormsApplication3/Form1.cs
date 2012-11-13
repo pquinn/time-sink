@@ -44,6 +44,13 @@ namespace SpriteSheetCreator
             if (result == DialogResult.OK)
             {
                 selectedFolder = destinationFolder = folderBrowser.SelectedPath;
+                MAX_HEIGHT = 0;
+                MAX_WIDTH = 0;
+
+                foreach (PictureBox pic in previews)
+                {
+                    pic.Image = null;
+                }
                 
                 AnalyzeFiles();
             }
@@ -106,7 +113,6 @@ namespace SpriteSheetCreator
                 sheetCreated = true;
                 gifBmp = bmp;
                 bmp.Save(destinationFolder + "/" + textBox1.Text + ".PNG", System.Drawing.Imaging.ImageFormat.Png);
-               // bmp.Dispose();
                 GenerateTextFile();
             }
         }

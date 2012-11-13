@@ -21,6 +21,12 @@ namespace TimeSink.Engine.Core.Rendering
         protected Rectangle? srcRectangle;
         protected Rectangle? destRectangle;
 
+        public Rectangle? SrcRectangle
+        {
+            get { return srcRectangle; }
+            set { srcRectangle = value; }
+        }
+
         public BasicRendering(string textureKey)
             : this(textureKey, Vector2.Zero, 0.0f, Vector2.One)
         { }

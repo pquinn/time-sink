@@ -1,25 +1,50 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-
 using System;
-
+using System.Collections;
+using System.Collections.Generic;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-
 using TimeSink.Engine.Game.Entities.Weapons;
 
 namespace TimeSink.Engine.Game.Entities
 {
-    public class UserControlledCharacter : Entity, IHaveHealth
+    public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
         const float PLAYER_MASS = 100f;
 
+        enum BodyStates { Neutral, Idle, Walking, Running, Jumping };
+        int currentState;
+
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
+        const string BODY_START_WALK = "Textures/Sprites/StartWalk";
+        const string BODY_START_RUN = "Textures/Sprites/StartRun";
+        const string BODY_WALK = "Textures/Sprites/BodyWalk";
+        const string BODY_RUN = "Textures/Sprites/Running";
+        const string BODY_JUMP = "Textures/Sprites/jump";
+        const string ARM_MOVE = "Textures/Sprites/arm move";
+        const string HAIR_MOVE = "Textures/Sprites/HairMove";
+        const string HAND_CLOSE = "Textures/Sprites/openClose";
+        const string HEAD_STATES = "Textures/Sprites/headStates";
+        const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/IdleBody+Head+Hair";
+
+        Animation bodyWalk = new Animation(8, BODY_WALK, 120, 198, Vector2.Zero);
+        Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
+        Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, Vector2.Zero);
+        Animation bodyStartRun = new Animation(2, BODY_START_RUN, 81, 198, Vector2.Zero);
+        Animation bodyJump = new Animation(8, BODY_JUMP, 136, 159, Vector2.Zero);
+        Animation hairMove = new Animation(2, HAIR_MOVE, 66, 63, Vector2.Zero);
+        Animation armMove = new Animation(2, ARM_MOVE, 51, 85, Vector2.Zero);
+        Animation idle = new Animation(6, IDLE_BODY_HEAD_HAIR, 95, 245, Vector2.Zero);
+
+
+
+
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
@@ -32,10 +57,24 @@ namespace TimeSink.Engine.Game.Entities
         private bool jumpStarted = false;
         private Rectangle sourceRect;
         private float health;
+        private float mana;
+        private float shield;
         public float Health
         {
             get { return health; }
             set { health = value; }
+        }
+
+        public float Shield
+        {
+            get { return shield; }
+            set { shield = value; }
+        }
+
+        public float Mana
+        {
+            get { return mana; }
+            set { mana = value; }
         }
 
         private float playerRotation = 0.0f;
@@ -91,7 +130,15 @@ namespace TimeSink.Engine.Game.Entities
         public override void Load(EngineGame game)
         {
             game.TextureCache.LoadResource(PLAYER_TEXTURE_NAME);
-
+            game.TextureCache.LoadResource(BODY_JUMP);
+            game.TextureCache.LoadResource(BODY_RUN);
+            game.TextureCache.LoadResource(BODY_WALK);
+            game.TextureCache.LoadResource(BODY_START_RUN);
+            game.TextureCache.LoadResource(BODY_START_WALK);
+            game.TextureCache.LoadResource(ARM_MOVE);
+            game.TextureCache.LoadResource(HAIR_MOVE);
+            game.TextureCache.LoadResource(HAND_CLOSE);
+            game.TextureCache.LoadResource(HEAD_STATES);
             /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
@@ -128,7 +175,7 @@ namespace TimeSink.Engine.Game.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 300f;
+            var amount = 150f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -367,6 +414,9 @@ namespace TimeSink.Engine.Game.Entities
         {
             get
             {
+               /* Stack<IRendering> stack = new Stack<IRendering>();
+                stack.
+                return new StackableRendering(*/
                 return new BasicRendering(
                     PLAYER_TEXTURE_NAME,
                     physics.Position,
@@ -380,5 +430,6 @@ namespace TimeSink.Engine.Game.Entities
         public void RegisterDot(DamageOverTimeEffect dot)
         {
         }
+
     }
 }
