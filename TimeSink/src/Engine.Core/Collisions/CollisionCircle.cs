@@ -103,7 +103,7 @@ namespace TimeSink.Engine.Core.Collisions
                 vertices.Add(edge + perp);
             }
 
-            return new Polygon(vertices);
+            return new Polygon(vertices.Skip(vertices.Count-1).Concat(vertices.Take(vertices.Count-1)).ToList());
         }
     }
 }

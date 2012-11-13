@@ -44,7 +44,8 @@ namespace TimeSink.Engine.Game.Entities
             if (body is IPhysicsEnabledBody)
             {
                 var phys = (body as IPhysicsEnabledBody).PhysicsController;
-                phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
+                if (phys != null)
+                    phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
             }
         }
 
@@ -103,12 +104,11 @@ namespace TimeSink.Engine.Game.Entities
 
         public override IPhysicsParticle PhysicsController
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            throw new NotImplementedException();
         }
     }
 }
