@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Enemies\Dummy.cs" />
+    <Compile Include="Entities\Enemies\NormalCentipede.cs" />
     <Compile Include="Entities\IInventoryItem.cs" />
     <Compile Include="Entities\UserControlledCharacter.cs" />
     <Compile Include="Entities\Weapons\Arrow.cs" />

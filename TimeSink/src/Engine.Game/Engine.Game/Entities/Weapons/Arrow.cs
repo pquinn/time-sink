@@ -118,5 +118,10 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             world.CollisionManager.RegisterCollisionBody(arrow);
 
         }
+
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        {
+            Fire(character, world, gameTime, holdTime);
+        }
     }
 }

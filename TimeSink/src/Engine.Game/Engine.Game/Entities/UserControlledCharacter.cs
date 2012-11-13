@@ -12,6 +12,7 @@ using TimeSink.Engine.Core.Rendering;
 
 using TimeSink.Engine.Game.Entities.Weapons;
 using System.Collections.Generic;
+using Engine.Game.Entities;
 
 namespace TimeSink.Engine.Game.Entities
 {
@@ -32,8 +33,8 @@ namespace TimeSink.Engine.Game.Entities
         private Rectangle sourceRect;
         private float health;
 
-        private List<IWeapon> weapons;
-        private int activeWeapon;
+        private List<IInventoryItem> inventory;
+        private int activeItem;
 
         public float Health
         {
@@ -106,10 +107,10 @@ namespace TimeSink.Engine.Game.Entities
             direction = new Vector2(1, 0);
 
             // this seems stupid
-            activeWeapon = 0;
-            weapons = new List<IWeapon>();
-            weapons.Add(new Arrow());
-            weapons.Add(new Dart());
+            activeItem = 0;
+            inventory = new List<IInventoryItem>();
+            inventory.Add(new Arrow());
+            inventory.Add(new Dart());
         }
 
         public override void Load(EngineGame game)
@@ -282,21 +283,19 @@ namespace TimeSink.Engine.Game.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                weapons[activeWeapon].Fire(this, world, gameTime, holdTime);
+                inventory[activeItem].Use(this, world, gameTime, holdTime);
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
             {
-                if (activeWeapon == weapons.Count - 1)
+                if (activeItem == inventory.Count - 1)
                 {
-                    activeWeapon = 0;
+                    activeItem = 0;
                 }
                 else
                 {
-                    activeWeapon++;
+                    activeItem++;
                 }
-
-                Console.WriteLine("Current weapon: " + activeWeapon);
             }
 
             #endregion
