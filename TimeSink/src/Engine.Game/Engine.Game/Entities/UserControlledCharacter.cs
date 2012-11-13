@@ -10,6 +10,8 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Game.Entities.Weapons;
+using System.Collections.Generic;
+using Engine.Game.Entities;
 
 namespace TimeSink.Engine.Game.Entities
 {
@@ -22,16 +24,16 @@ namespace TimeSink.Engine.Game.Entities
 
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
-        const string BODY_START_WALK = "Textures/Sprites/StartWalk";
-        const string BODY_START_RUN = "Textures/Sprites/StartRun";
-        const string BODY_WALK = "Textures/Sprites/BodyWalk";
-        const string BODY_RUN = "Textures/Sprites/Running";
-        const string BODY_JUMP = "Textures/Sprites/jump";
-        const string ARM_MOVE = "Textures/Sprites/arm move";
-        const string HAIR_MOVE = "Textures/Sprites/HairMove";
-        const string HAND_CLOSE = "Textures/Sprites/openClose";
-        const string HEAD_STATES = "Textures/Sprites/headStates";
-        const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/IdleBody+Head+Hair";
+        const string BODY_START_WALK = "Textures/Sprites/SpriteSheets/StartWalk";
+        const string BODY_START_RUN = "Textures/Sprites/SpriteSheets/StartRun";
+        const string BODY_WALK = "Textures/Sprites/SpriteSheets/BodyWalk";
+        const string BODY_RUN = "Textures/Sprites/SpriteSheets/Running";
+        const string BODY_JUMP = "Textures/Sprites/SpriteSheets/jump";
+        const string ARM_MOVE = "Textures/Sprites/SpriteSheets/arm move";
+        const string HAIR_MOVE = "Textures/Sprites/SpriteSheets/HairMove";
+        const string HAND_CLOSE = "Textures/Sprites/SpriteSheets/openClose";
+        const string HEAD_STATES = "Textures/Sprites/SpriteSheets/headStates";
+        const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
 
         Animation bodyWalk = new Animation(8, BODY_WALK, 120, 198, Vector2.Zero);
         Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
@@ -48,6 +50,8 @@ namespace TimeSink.Engine.Game.Entities
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
+        public const int X_OFFSET = 60;
+        public const int Y_OFFSET = 80;
 
         private GravityPhysics physics;
         private SoundEffect jumpSound;
@@ -59,6 +63,10 @@ namespace TimeSink.Engine.Game.Entities
         private float health;
         private float mana;
         private float shield;
+
+        private List<IInventoryItem> inventory;
+        private int activeItem;
+
         public float Health
         {
             get { return health; }
@@ -78,10 +86,28 @@ namespace TimeSink.Engine.Game.Entities
         }
 
         private float playerRotation = 0.0f;
-        private Vector2 direction = new Vector2(1, 0);
         private int facing = 1; // 1 for right, -1 for left
+
+        // not sure if these should be public
+        private Vector2 direction;
+        public Vector2 Direction
+        {
+            get { return direction; }
+            private set { direction = value; }
+        }
         private double holdTime;
+        public double HoldTime
+        {
+            get { return holdTime; }
+            set { holdTime = value; }
+        }
         private bool inHold;
+        public bool InHold
+        {
+            get { return inHold; }
+            set { inHold = value; }
+        }
+
 
         float timer = 0f;
         float interval = 150f;
@@ -89,10 +115,6 @@ namespace TimeSink.Engine.Game.Entities
         int currentFrame = 0;
         int spriteWidth = 130;
         int spriteHeight = 242;
-
-        //temp variables for projectile origins
-        private int xOffset = 60;
-        private int yOffset = 80;
 
         public override ICollisionGeometry CollisionGeometry
         {
@@ -110,7 +132,7 @@ namespace TimeSink.Engine.Game.Entities
                 //        (int)physics.Position.Y + 111,
                 //        50, 132)));
                 //return colSet;
-                return new AACollisionRectangle(new Rectangle(
+                return new CollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
                     100, 242
@@ -125,6 +147,13 @@ namespace TimeSink.Engine.Game.Entities
                 GravityEnabled = true
             };
             health = 100;
+            direction = new Vector2(1, 0);
+
+            // this seems stupid
+            activeItem = 0;
+            inventory = new List<IInventoryItem>();
+            inventory.Add(new Arrow());
+            inventory.Add(new Dart());
         }
 
         public override void Load(EngineGame game)
@@ -305,36 +334,19 @@ namespace TimeSink.Engine.Game.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                inHold = false;
-                Arrow arrow = new Arrow(
-                    new Vector2(physics.Position.X + xOffset,
-                                physics.Position.Y + yOffset));
-                var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
-                // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
-                float speed =
-                    MIN_ARROW_INIT_SPEED + (MAX_ARROW_INIT_SPEED - MIN_ARROW_INIT_SPEED) /
-                                           MAX_ARROW_HOLD * 
-                                           (float)elapsedTime; 
-                Vector2 initialVelocity = speed * direction;
-                arrow.physics.Velocity += initialVelocity;
-                world.Entities.Add(arrow);
-                world.RenderManager.RegisterRenderable(arrow);
-                world.PhysicsManager.RegisterPhysicsBody(arrow);
-                world.CollisionManager.RegisterCollisionBody(arrow);
+                inventory[activeItem].Use(this, world, gameTime, holdTime);
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
             {
-                Dart dart = new Dart(
-                    new Vector2(physics.Position.X + xOffset,
-                                physics.Position.Y + yOffset));
-                float dartSpeed = 2000f;
-                Vector2 initialVelocity = direction * dartSpeed;
-                dart.physics.Velocity += initialVelocity;
-                world.Entities.Add(dart);
-                world.RenderManager.RegisterRenderable(dart);
-                world.PhysicsManager.RegisterPhysicsBody(dart);
-                world.CollisionManager.RegisterCollisionBody(dart);
+                if (activeItem == inventory.Count - 1)
+                {
+                    activeItem = 0;
+                }
+                else
+                {
+                    activeItem++;
+                }
             }
 
             #endregion
