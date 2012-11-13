@@ -11,18 +11,17 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 
 using TimeSink.Engine.Game.Entities.Weapons;
+using System.Collections.Generic;
 
 namespace TimeSink.Engine.Game.Entities
 {
     public class UserControlledCharacter : Entity, IHaveHealth
     {
         const float PLAYER_MASS = 100f;
-
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
-        const float MAX_ARROW_HOLD = 1;
-        const float MIN_ARROW_INIT_SPEED = 500;
-        const float MAX_ARROW_INIT_SPEED = 1500;
+        public const int X_OFFSET = 60;
+        public const int Y_OFFSET = 80;
 
         private GravityPhysics physics;
         private SoundEffect jumpSound;
@@ -32,6 +31,10 @@ namespace TimeSink.Engine.Game.Entities
         private bool jumpStarted = false;
         private Rectangle sourceRect;
         private float health;
+
+        private List<IWeapon> weapons;
+        private int activeWeapon;
+
         public float Health
         {
             get { return health; }
@@ -39,10 +42,28 @@ namespace TimeSink.Engine.Game.Entities
         }
 
         private float playerRotation = 0.0f;
-        private Vector2 direction = new Vector2(1, 0);
         private int facing = 1; // 1 for right, -1 for left
+
+        // not sure if these should be public
+        private Vector2 direction;
+        public Vector2 Direction
+        {
+            get { return direction; }
+            private set { direction = value; }
+        }
         private double holdTime;
+        public double HoldTime
+        {
+            get { return holdTime; }
+            set { holdTime = value; }
+        }
         private bool inHold;
+        public bool InHold
+        {
+            get { return inHold; }
+            set { inHold = value; }
+        }
+
 
         float timer = 0f;
         float interval = 150f;
@@ -50,10 +71,6 @@ namespace TimeSink.Engine.Game.Entities
         int currentFrame = 0;
         int spriteWidth = 130;
         int spriteHeight = 242;
-
-        //temp variables for projectile origins
-        private int xOffset = 60;
-        private int yOffset = 80;
 
         public override ICollisionGeometry CollisionGeometry
         {
@@ -86,6 +103,13 @@ namespace TimeSink.Engine.Game.Entities
                 GravityEnabled = true
             };
             health = 100;
+            direction = new Vector2(1, 0);
+
+            // this seems stupid
+            activeWeapon = 0;
+            weapons = new List<IWeapon>();
+            weapons.Add(new Arrow());
+            weapons.Add(new Dart());
         }
 
         public override void Load(EngineGame game)
@@ -258,36 +282,21 @@ namespace TimeSink.Engine.Game.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                inHold = false;
-                Arrow arrow = new Arrow(
-                    new Vector2(physics.Position.X + xOffset,
-                                physics.Position.Y + yOffset));
-                var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
-                // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
-                float speed =
-                    MIN_ARROW_INIT_SPEED + (MAX_ARROW_INIT_SPEED - MIN_ARROW_INIT_SPEED) /
-                                           MAX_ARROW_HOLD * 
-                                           (float)elapsedTime; 
-                Vector2 initialVelocity = speed * direction;
-                arrow.physics.Velocity += initialVelocity;
-                world.Entities.Add(arrow);
-                world.RenderManager.RegisterRenderable(arrow);
-                world.PhysicsManager.RegisterPhysicsBody(arrow);
-                world.CollisionManager.RegisterCollisionBody(arrow);
+                weapons[activeWeapon].Fire(this, world, gameTime, holdTime);
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
             {
-                Dart dart = new Dart(
-                    new Vector2(physics.Position.X + xOffset,
-                                physics.Position.Y + yOffset));
-                float dartSpeed = 2000f;
-                Vector2 initialVelocity = direction * dartSpeed;
-                dart.physics.Velocity += initialVelocity;
-                world.Entities.Add(dart);
-                world.RenderManager.RegisterRenderable(dart);
-                world.PhysicsManager.RegisterPhysicsBody(dart);
-                world.CollisionManager.RegisterCollisionBody(dart);
+                if (activeWeapon == weapons.Count - 1)
+                {
+                    activeWeapon = 0;
+                }
+                else
+                {
+                    activeWeapon++;
+                }
+
+                Console.WriteLine("Current weapon: " + activeWeapon);
             }
 
             #endregion

@@ -7,17 +7,20 @@ using TimeSink.Engine.Core.Rendering;
 
 using TimeSink.Engine.Game.Entities;
 using System;
- 
+
 
 namespace TimeSink.Engine.Game.Entities.Weapons
 {
-    public class Dart : Entity
+    public class Dart : Entity, IWeapon
     {
         const float DART_MASS = 1f;
+        const float DART_SPEED = 2000f;
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
 
         public GravityPhysics physics { get; private set; }
         public DamageOverTimeEffect dot { get; private set; }
+
+        public Dart() { }
 
         public Dart(Vector2 position)
         {
@@ -75,7 +78,6 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         {
             if (!(entity is UserControlledCharacter))
             {
-                Console.WriteLine("dart is now dead");
                 Dead = true;
             }
         }
@@ -91,11 +93,24 @@ namespace TimeSink.Engine.Game.Entities.Weapons
 
             if (Dead)
             {
-                Console.WriteLine("dart deregistered");
                 world.RenderManager.UnregisterRenderable(this);
                 world.CollisionManager.UnregisterCollisionBody(this);
                 world.PhysicsManager.UnregisterPhysicsBody(this);
             }
+        }
+
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        {
+            character.InHold = false;
+            Dart dart = new Dart(
+                            new Vector2(character.PhysicsController.Position.X + UserControlledCharacter.X_OFFSET,
+                                        character.PhysicsController.Position.Y + UserControlledCharacter.Y_OFFSET));
+            Vector2 initialVelocity = character.Direction * DART_SPEED;
+            dart.physics.Velocity += initialVelocity;
+            world.Entities.Add(dart);
+            world.RenderManager.RegisterRenderable(dart);
+            world.PhysicsManager.RegisterPhysicsBody(dart);
+            world.CollisionManager.RegisterCollisionBody(dart);
         }
     }
 }

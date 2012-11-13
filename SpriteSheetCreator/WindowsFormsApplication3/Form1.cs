@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,14 +19,26 @@ namespace SpriteSheetCreator
         int MAX_WIDTH;
         int MAX_HEIGHT;
         int TOTAL_IMAGES;
+        int currentFrame = 0;
+        bool sheetCreated = false;
+        Bitmap gifBmp;
+        private Timer timer1 = new Timer();
+
         public Form1()
         {
+            
+            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Interval = 150;
+            timer1.Enabled = true;
+            timer1.Start();
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = folderBrowser.ShowDialog();
+            sheetCreated = false;
+            GifBox.Image = null;
 
             locBox.Text = folderBrowser.SelectedPath;
             if (result == DialogResult.OK)
@@ -39,7 +52,6 @@ namespace SpriteSheetCreator
         private void AnalyzeFiles()
         {
             string[] fileEntries = Directory.GetFiles(selectedFolder);
-            this.previews = new PictureBox[fileEntries.Count()];
             this.TOTAL_IMAGES = fileEntries.Count();
             int i = 0;
 
@@ -55,22 +67,15 @@ namespace SpriteSheetCreator
 
                     PictureBox pic = previews[i];
 
-                    if (pic == null)
-                    {
-                        pic = new PictureBox();
-                    }
-                    #region Init
-                    ((System.ComponentModel.ISupportInitialize)(pic)).BeginInit();
+                    pic.Image = null;
+                    pic.Invalidate();
                     pic.Width = 50;
                     pic.Height = 100;
-                    pic.SizeMode = PictureBoxSizeMode.StretchImage;
+                    pic.SizeMode = PictureBoxSizeMode.Zoom;
                     pic.Location = new Point(0 + (pic.Width * i), 50);
                     pic.Visible = true;
-                    this.Controls.Add(pic);
-                    ((System.ComponentModel.ISupportInitialize)(pic)).EndInit();
-                    #endregion
-                    pic.Load(file);
-                    img.Dispose();
+
+                    pic.Image = img;
                     i++;
                 }
                 else
@@ -94,13 +99,26 @@ namespace SpriteSheetCreator
                         Image img = Image.FromFile(file);
                         g.DrawImage(img, ((MAX_WIDTH - img.Width) / 2) + (i * MAX_WIDTH), 0, img.Width, img.Height);
                         g.Dispose();
+                        img.Dispose();
                         i++;
                     }
                 }
+                sheetCreated = true;
+                gifBmp = bmp;
                 bmp.Save(destinationFolder + "/" + textBox1.Text + ".PNG", System.Drawing.Imaging.ImageFormat.Png);
-                bmp.Dispose();
+               // bmp.Dispose();
                 GenerateTextFile();
             }
+        }
+
+        private void AnimateImage()
+        {
+            Bitmap testBmp = new Bitmap(MAX_WIDTH, MAX_HEIGHT);
+            Rectangle frame = new Rectangle(currentFrame * MAX_WIDTH, 0, MAX_WIDTH, MAX_HEIGHT);
+            Graphics g = Graphics.FromImage(testBmp);
+            g.DrawImage(gifBmp, -frame.X, -frame.Y);
+            this.GifBox.Size = new Size(MAX_WIDTH, MAX_HEIGHT);
+            GifBox.Image = testBmp;
         }
 
         private void GenerateTextFile()
@@ -112,6 +130,22 @@ namespace SpriteSheetCreator
             sw.WriteLine("Number of Frames : " + TOTAL_IMAGES);
 
             sw.Dispose();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (sheetCreated)
+            {
+                AnimateImage();
+                if (currentFrame < TOTAL_IMAGES)
+                {
+                    currentFrame++;
+                }
+                else
+                {
+                    currentFrame = 0;
+                }
+            }
         }
     }
 }
