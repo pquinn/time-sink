@@ -71,7 +71,7 @@ namespace TimeSink.Engine.Game.Entities
                 //        (int)physics.Position.Y + 111,
                 //        50, 132)));
                 //return colSet;
-                return new AACollisionRectangle(new Rectangle(
+                return new CollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
                     100, 242

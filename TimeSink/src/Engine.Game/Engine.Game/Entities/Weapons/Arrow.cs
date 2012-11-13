@@ -1,5 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-
+﻿using Engine.Game.Entities;
+using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
@@ -57,16 +57,16 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         {
         }
 
-        [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
-        {
-            Dead = true;
-        }
+        //[OnCollidedWith.Overload]
+        //public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
+        //{
+        //    Dead = true;
+        //}
 
         [OnCollidedWith.Overload]
         public void OnCollidedWith(Entity entity, CollisionInfo info)
         {
-            if (!(entity is UserControlledCharacter))
+            if (!(entity is UserControlledCharacter || entity is Trigger))
             {
                 Dead = true;
             }

@@ -32,7 +32,7 @@ namespace TimeSink.Engine.Core.Collisions
             {
                 List<Vector2> result = new List<Vector2>();
                 foreach (var pair in Vertices.Zip(Vertices.Skip(1).Concat(Vertices.Take(1)), Tuple.Create))
-                    result.Add(pair.Item2 - pair.Item1);
+                    result.Add(pair.Item1 - pair.Item2);
                 return result;
             }
         }
