@@ -45,10 +45,8 @@ namespace TimeSink.Engine.Core.Rendering
             {
                 renderable.Rendering.Draw(
                     spriteBatch, 
-                    TextureCache, 
-                    Vector2.Zero, 
-                    0.0f,
-                    Vector2.One
+                    TextureCache,
+                    Matrix.Identity
                 );
             }
 

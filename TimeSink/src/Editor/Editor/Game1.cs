@@ -75,13 +75,13 @@ namespace Editor
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
             level.RegisterStaticMeshes(new List<StaticMesh>()
                 {
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300)),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300)),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300)),
-                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300)),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286)),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286)),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286)),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One),
+                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One),
                 });
 
             // set up state machine
@@ -208,6 +208,20 @@ namespace Editor
         {
             stateMachine.ChangeState(
                 new SelectionEditorState(),
+                true, true);
+        }
+
+        public void RotationSelected()
+        {
+            stateMachine.ChangeState(
+                new RotationEditorState(),
+                true, true);
+        }
+
+        public void ScalingSelected()
+        {
+            stateMachine.ChangeState(
+                new ScalingEditorState(),
                 true, true);
         }
     }

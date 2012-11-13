@@ -24,8 +24,15 @@ namespace TimeSink.Editor.GUI.Views
     public partial class Editor : UserControl
     {
         Game1 m_game;
-        bool meshButtonPressed;
+
+        bool panButtonPressed;
+        bool zoomButtonPressed;
         bool selectionButtonPressed;
+        bool rotationButtonPressed;
+        bool scalingButtonPressed;
+        bool _ButtonPressed;
+        bool entitiesButtonPressed;
+        bool meshButtonPressed;
 
         public Editor()
         {
@@ -57,6 +64,86 @@ namespace TimeSink.Editor.GUI.Views
             m_game = new Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
         }
 
+        private void Pan_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void Zoom_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void Selection_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+                m_game.SelectionSelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void Rotation_Click(object sender, RoutedEventArgs e)
+        {
+            if (!rotationButtonPressed)
+            {
+                m_game.RotationSelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void Scaling_Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+                m_game.ScalingSelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void _Click(object sender, RoutedEventArgs e)
+        {
+            if (!selectionButtonPressed)
+            {
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
+        private void Entities_Click(object sender, RoutedEventArgs e)
+        {
+            if (!entitiesButtonPressed)
+            {
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
         private void Static_Click(object sender, RoutedEventArgs e)
         {
             if (!meshButtonPressed)
@@ -77,22 +164,18 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
-        private void Selection_Click(object sender, RoutedEventArgs e)
-        {
-            if (!selectionButtonPressed)
-            {
-                m_game.SelectionSelected();
-            }
-            else
-            {
-                ClearButtons();
-            }
-        }
+
 
         private void ClearButtons()
         {
-            meshButtonPressed = false;
+            panButtonPressed = false;
+            zoomButtonPressed = false;
             selectionButtonPressed = false;
+            rotationButtonPressed = false;
+            scalingButtonPressed = false;
+            _ButtonPressed = false;
+            entitiesButtonPressed = false;
+            meshButtonPressed = false;
         }
     }
 }

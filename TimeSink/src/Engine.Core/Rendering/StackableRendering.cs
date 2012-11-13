@@ -58,5 +58,40 @@ namespace TimeSink.Engine.Core.Rendering
                 rendering.GetBoundingBox(cache, ref newAcc, positionOffset + parentPosition);
             }
         }
+
+
+        public Vector2 GetCenter(IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Tuple<Vector2, Vector2> GetEdgeWithinTolerance(Vector2 point, int tolerance, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Tuple<Vector2, Vector2> GetEdgeWithinTolerance(Vector2 point, int tolerance, IResourceCache<Texture2D> cache, Matrix globalTransform, out Vector2 scalingNormal)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
