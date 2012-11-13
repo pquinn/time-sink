@@ -56,7 +56,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
                 return new BasicRendering(
                     ARROW_TEXTURE_NAME,
                     physics.Position,
-                    0,
+                    (float)Math.Atan2(physics.Velocity.Y, physics.Velocity.X),
                     Vector2.One
                 );
             }
@@ -116,7 +116,6 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             world.RenderManager.RegisterRenderable(arrow);
             world.PhysicsManager.RegisterPhysicsBody(arrow);
             world.CollisionManager.RegisterCollisionBody(arrow);
-
         }
     }
 }

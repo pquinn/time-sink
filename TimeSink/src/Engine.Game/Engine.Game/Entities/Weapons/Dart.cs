@@ -57,7 +57,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
                 return new BasicRendering(
                     DART_TEXTURE_NAME,
                     physics.Position,
-                    0,
+                    (float)Math.Atan2(physics.Velocity.Y, physics.Velocity.X),
                     Vector2.One
                 );
             }
