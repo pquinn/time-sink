@@ -7,6 +7,8 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Game.Entities;
+using TimeSink.Engine.Game.Entities.Weapons;
 
 namespace Engine.Game.Entities.Enemies
 {
@@ -27,7 +29,15 @@ namespace Engine.Game.Entities.Enemies
 
         public override ICollisionGeometry CollisionGeometry
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return new CollisionRectangle(
+                    new Rectangle(
+                        (int)physics.Position.X,
+                        (int)physics.Position.Y,
+                        32, 32
+                    ));
+            }
         }
 
         public NormalCentipede(Vector2 position)
@@ -43,12 +53,21 @@ namespace Engine.Game.Entities.Enemies
         private GravityPhysics physics;
         public override IPhysicsParticle PhysicsController
         {
-            get { throw new NotImplementedException(); }
+            get { return physics; }
         }
 
         public override IRendering Rendering
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                var tint = Math.Min(100, 2.55f * health);
+                return new TintedRendering(
+                  CENTIPEDE_TEXTURE,
+                  physics.Position,
+                  0,
+                  Vector2.One,
+                  new Color(255f, tint, tint, 255f));
+            }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -56,14 +75,77 @@ namespace Engine.Game.Entities.Enemies
             throw new NotImplementedException();
         }
 
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        {
+            // Handle whether collision should disable gravity
+            if (info.MinimumTranslationVector.Y > 0)
+            {
+                physics.GravityEnabled = false;
+                physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
+            }
+        }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(Arrow arrow, CollisionInfo info)
+        {
+            health -= 25;
+        }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(Dart dart, CollisionInfo info)
+        {
+            RegisterDot(dart.dot);
+        }
+
+        public override void Update(GameTime time, EngineGame world)
+        {
+            if (health <= 0)
+            {
+                Console.WriteLine("goomba dead");
+                Dead = true;
+            }
+
+            foreach (DamageOverTimeEffect dot in dots)
+            {
+                if (dot.Active)
+                    health -= dot.Tick(time);
+            }
+            RemoveInactiveDots();
+
+
+            if (Dead)
+            {
+                world.RenderManager.UnregisterRenderable(this);
+                world.CollisionManager.UnregisterCollisionBody(this);
+                world.PhysicsManager.UnregisterPhysicsBody(this);
+            }
+        }
+
+        private void RemoveInactiveDots()
+        {
+            // there has to be a better way to do this.........
+            List<DamageOverTimeEffect> newDots = new List<DamageOverTimeEffect>();
+            foreach (DamageOverTimeEffect dot in dots)
+            {
+                if (!dot.Finished)
+                    newDots.Add(dot);
+            }
+            dots = newDots;
+        }
+
         public override void Load(EngineGame engineGame)
         {
-            throw new NotImplementedException();
+            engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
         }
 
         public void RegisterDot(DamageOverTimeEffect dot)
         {
-            throw new NotImplementedException();
+            if (!dot.Active)
+            {
+                dots.Add(dot);
+                dot.Active = true;
+            }
         }
     }
 }

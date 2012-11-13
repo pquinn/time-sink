@@ -98,12 +98,26 @@ namespace Engine.Game.Entities.Enemies
 
         public override void Update(GameTime time, EngineGame world)
         {
+            if (health <= 0)
+            {
+                Console.WriteLine("dummy dead");
+                Dead = true;
+            }
+
             foreach (DamageOverTimeEffect dot in dots)
             {
                 if (dot.Active)
                     health -= dot.Tick(time);
             }
             RemoveInactiveDots();
+
+
+            if (Dead)
+            {
+                world.RenderManager.UnregisterRenderable(this);
+                world.CollisionManager.UnregisterCollisionBody(this);
+                world.PhysicsManager.UnregisterPhysicsBody(this);
+            }
         }
 
         private void RemoveInactiveDots()
