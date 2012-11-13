@@ -60,5 +60,10 @@ namespace Engine.Game.Entities.Enemies
         {
             throw new NotImplementedException();
         }
+
+        public void RegisterDot(DamageOverTimeEffect dot)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
