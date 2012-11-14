@@ -10,7 +10,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Game.Entities.Weapons;
-using System.Collections.Generic;
+
 using Engine.Game.Entities;
 
 namespace TimeSink.Engine.Game.Entities
