@@ -47,17 +47,18 @@ namespace TimeSink.Engine.Core.Rendering
         public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache,
             Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
         {
+            var texture = cache.GetResource(textureKey);
+            var originTexture = srcRectangle ?? new Rectangle(0, 0, texture.Width, texture.Height);
             spriteBatch.Draw(
-                cache.GetResource(textureKey),
+                texture,
                 positionOffset + position,
                 srcRectangle,
                 Color.White,
                 rotationOffset + rotation,
-                Vector2.Zero,
+                new Vector2(originTexture.Width / 2, originTexture.Height / 2),
                 scaleOffset * scale,
                 SpriteEffects.None,
-                0
-            );
+                0);
         }
 
         public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)

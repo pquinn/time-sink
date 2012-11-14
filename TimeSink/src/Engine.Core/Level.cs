@@ -31,7 +31,7 @@ namespace TimeSink.Engine.Core
         public void RegisterStaticMesh(StaticMesh mesh)
         {
             staticMeshes.Add(mesh);
-            CollisionManager.RegisterCollisionBody(mesh);
+            CollisionManager.RegisterCollideable(mesh);
             PhysicsManager.RegisterPhysicsBody(mesh);
             RenderManager.RegisterRenderable(mesh);
         }
@@ -44,7 +44,7 @@ namespace TimeSink.Engine.Core
         public void RegisterEntity(Entity entity)
         {
             entities.Add(entity);
-            CollisionManager.RegisterCollisionBody(entity);
+            CollisionManager.RegisterCollideable(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
             RenderManager.RegisterRenderable(entity);
         }

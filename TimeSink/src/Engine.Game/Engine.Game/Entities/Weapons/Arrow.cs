@@ -7,56 +7,53 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System;
+using FarseerPhysics.Dynamics;
+using System.Collections.Generic;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Engine.Game.Entities.Weapons
 {
     public class Arrow : Entity, IWeapon
     {
-        const float ARROW_MASS = 1f;
+        //const float ARROW_MASS = 1f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
 
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
 
-        public GravityPhysics physics { get; private set; }
+        private Vector2 _initialPosition;
+
+        public Body Physics { get; private set; }
 
         public Arrow() { }
 
         public Arrow(Vector2 position)
         {
-            physics = new GravityPhysics(position, ARROW_MASS)
-            {
-                GravityEnabled = true
-            };
+            _initialPosition = position;
+
+            //physics = new GravityPhysics(position, ARROW_MASS)
+            //{
+            //    GravityEnabled = true
+            //};
         }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return new CollisionRectangle(new Rectangle(
-                    (int)physics.Position.X,
-                    (int)physics.Position.Y,
-                    64,
-                    32
-                ));
+                return Physics.FixtureList;
             }
         }
-
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return physics; }
-        }
-
         public override IRendering Rendering
         {
             get
             {
                 return new BasicRendering(
                     ARROW_TEXTURE_NAME,
-                    physics.Position,
-                    (float)Math.Atan2(physics.Velocity.Y, physics.Velocity.X),
+                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
                     Vector2.One
                 );
             }
@@ -73,7 +70,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         //}
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Entity entity, CollisionInfo info)
+        public void OnCollidedWith(Entity entity, Contact info)
         {
             if (!(entity is UserControlledCharacter || entity is Trigger))
             {
@@ -93,34 +90,49 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             if (Dead)
             {
                 world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollisionBody(this);
-                world.PhysicsManager.UnregisterPhysicsBody(this);
+                world.CollisionManager.UnregisterCollideable(this);
             }
         }
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
-            character.InHold = false;
             Arrow arrow = new Arrow(
-                new Vector2(character.PhysicsController.Position.X + UserControlledCharacter.X_OFFSET,
-                            character.PhysicsController.Position.Y + UserControlledCharacter.Y_OFFSET));
+                new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
+                            character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
+            
+            world.Entities.Add(arrow);
+            world.RenderManager.RegisterRenderable(arrow);
+            world.PhysicsManager.RegisterPhysicsBody(arrow);
+            world.CollisionManager.RegisterCollideable(arrow);
+
+            character.InHold = false;
             var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
             // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
             float speed =
                 MIN_ARROW_INIT_SPEED + (MAX_ARROW_INIT_SPEED - MIN_ARROW_INIT_SPEED) /
                                        MAX_ARROW_HOLD *
                                        (float)elapsedTime;
+
             Vector2 initialVelocity = speed * character.Direction;
-            arrow.physics.Velocity += initialVelocity;
-            world.Entities.Add(arrow);
-            world.RenderManager.RegisterRenderable(arrow);
-            world.PhysicsManager.RegisterPhysicsBody(arrow);
-            world.CollisionManager.RegisterCollisionBody(arrow);
+            arrow.Physics.LinearVelocity += initialVelocity;
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
             Fire(character, world, gameTime, holdTime);
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            Physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(64),
+                PhysicsConstants.PixelsToMeters(32),
+                1,
+                _initialPosition);
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.IsBullet = true;
+            Physics.UserData = this;
         }
     }
 }

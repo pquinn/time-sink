@@ -9,23 +9,14 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core
 {
     public abstract class Entity
-        : ICollideable, IPhysicsEnabledBody, IRenderable, IKeyboardControllable
+        : ICollideable, IRenderable, IKeyboardControllable
     {
         public virtual void Update(GameTime time, EngineGame world) { }
-
-        public abstract ICollisionGeometry CollisionGeometry
-        {
-            get;
-        }
-
-        public abstract IPhysicsParticle PhysicsController
-        {
-            get;
-        }
 
         public abstract IRendering Rendering
         {
@@ -37,5 +28,12 @@ namespace TimeSink.Engine.Core
         public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
 
         public abstract void Load(EngineGame engineGame);
+
+        public abstract void InitializePhysics(World world);
+
+        public abstract List<Fixture> CollisionGeometry
+        {
+            get;
+        }
     }
 }

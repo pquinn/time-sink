@@ -9,6 +9,9 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Game.Entities;
 using TimeSink.Engine.Game.Entities.Weapons;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace Engine.Game.Entities.Enemies
 {
@@ -17,7 +20,10 @@ namespace Engine.Game.Entities.Enemies
         const float DUMMY_MASS = 100f;
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
 
-        private GravityPhysics physics;
+        private Vector2 _initialPosition;
+
+        public Body Physics { get; private set; }
+
         private List<DamageOverTimeEffect> dots;
 
         private float health;
@@ -30,29 +36,16 @@ namespace Engine.Game.Entities.Enemies
         public Dummy(Vector2 position)
         {
             health = 100;
-            physics = new GravityPhysics(position, DUMMY_MASS)
-            {
-                GravityEnabled = false
-            };
+            _initialPosition = position;
             dots = new List<DamageOverTimeEffect>();
         }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X,
-                        (int)physics.Position.Y,
-                        64, 128
-                    ));
+                return Physics.FixtureList;
             }
-        }
-
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return physics; }
         }
 
         public override IRendering Rendering
@@ -62,7 +55,7 @@ namespace Engine.Game.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   DUMMY_TEXTURE,
-                  physics.Position,
+                  PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));//Math.Max(2.55f * health, 155)));
@@ -73,25 +66,25 @@ namespace Engine.Game.Entities.Enemies
         {
         }
 
-        [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
-        {
-            // Handle whether collision should disable gravity
-            if (info.MinimumTranslationVector.Y > 0)
-            {
-                physics.GravityEnabled = false;
-                physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
-            }
-        }
+        //[OnCollidedWith.Overload]
+        //public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        //{
+        //    // Handle whether collision should disable gravity
+        //    if (info.MinimumTranslationVector.Y > 0)
+        //    {
+        //        physics.GravityEnabled = false;
+        //        physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
+        //    }
+        //}
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Arrow arrow, CollisionInfo info)
+        public void OnCollidedWith(Arrow arrow, Contact info)
         {
             health -= 25;
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Dart dart, CollisionInfo info)
+        public void OnCollidedWith(Dart dart, Contact info)
         {
             RegisterDot(dart.dot);
         }
@@ -104,32 +97,23 @@ namespace Engine.Game.Entities.Enemies
                 Dead = true;
             }
 
+            RemoveInactiveDots();
             foreach (DamageOverTimeEffect dot in dots)
             {
                 if (dot.Active)
                     health -= dot.Tick(time);
             }
-            RemoveInactiveDots();
-
 
             if (Dead)
             {
                 world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollisionBody(this);
-                world.PhysicsManager.UnregisterPhysicsBody(this);
+                world.CollisionManager.UnregisterCollideable(this);
             }
         }
 
         private void RemoveInactiveDots()
         {
-            // there has to be a better way to do this.........
-            List<DamageOverTimeEffect> newDots = new List<DamageOverTimeEffect>();
-            foreach (DamageOverTimeEffect dot in dots)
-            {
-                if (!dot.Finished)
-                    newDots.Add(dot);
-            }
-            dots = newDots;
+            dots.RemoveAll(x => x.Finished);
         }
 
         public override void Load(EngineGame engineGame)
@@ -144,6 +128,18 @@ namespace Engine.Game.Entities.Enemies
                 dots.Add(dot);
                 dot.Active = true;
             }
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            Physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(64),
+                PhysicsConstants.PixelsToMeters(128),
+                1,
+                _initialPosition);
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.UserData = this;
         }
     }
 }

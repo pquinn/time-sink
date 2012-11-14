@@ -62,13 +62,11 @@ namespace TimeSink.Engine.Core
             base.Update(gameTime);
 
             PhysicsManager.Update(gameTime);
-            CollisionManager.Update(gameTime);
 
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);
 
             Entities.RemoveWhere(e => e.Dead);
-
         }
 
         protected override void Draw(GameTime gameTime)

@@ -39,6 +39,8 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Game.Entities;
 using Engine.Game.Entities.Enemies;
 using Engine.Game.Entities;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 #endregion
 
 
@@ -81,9 +83,9 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
-            dummy = new Dummy(new Vector2(600, 350));
+            dummy = new Dummy(PhysicsConstants.PixelsToMeters(new Vector2(600, 350)));
             world = new WorldGeometry();
-            normalCentipede = new NormalCentipede(new Vector2(300, 250));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(300, 250)));
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
@@ -105,43 +107,26 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
-            world.CollisionSet.Add(new AACollisionRectangle(new Rectangle(
-                300, 400, 100, 50
-            )));
+            
 
-            var r = new CollisionRectangle(
-                new Vector2(500, 300),
-                new Vector2(520, 360),
-                new Vector2(620, 340),
-                new Vector2(600, 280)
-            );
+            //trigger = new Trigger(new Vector2(500, 300));
 
-            world.CollisionSet.Add(r);
+            //FixtureFactory.AttachCircle(50, 1, trigger.PhysicsBody, trigger);
 
-            var c = r.Center;
-
-            trigger = new Trigger(new AACollisionRectangle(new Rectangle((int)c.X - 50, (int)c.Y - 50, 100, 100)));
-            trigger.Triggered += delegate (ICollideable collided)
-            {
-                if (collided is IPhysicsEnabledBody && !(collided is Dummy))
-                {
-                    var phys = (collided as IPhysicsEnabledBody).PhysicsController;
-                    if (phys != null)
-                        phys.Position = Vector2.Zero;
-                }
-            };
-
-
-
-            CollisionManager.RegisterCollisionBody(world);
-            CollisionManager.RegisterCollisionBody(character);
+            //trigger.Triggered += delegate (ICollideable collided)
+            //{
+            //    if (collided is IPhysicsEnabledBody && !(collided is Dummy))
+            //    {
+            //        var phys = (collided as IPhysicsEnabledBody).PhysicsController;
+            //        if (phys != null)
+            //            phys.Position = Vector2.Zero;
+            //    }
+            //};
 
             PhysicsManager.RegisterPhysicsBody(character);
+            PhysicsManager.RegisterPhysicsBody(world);
 
             RenderManager.RegisterRenderable(character);
-
-            CollisionManager.RegisterCollisionBody(dummy);
-            CollisionManager.RegisterCollisionBody(normalCentipede);
 
             PhysicsManager.RegisterPhysicsBody(character);
             PhysicsManager.RegisterPhysicsBody(dummy);
@@ -152,7 +137,40 @@ namespace TimeSink.Engine.Game
             RenderManager.RegisterRenderable(normalCentipede);
             RenderManager.RegisterRenderable(world);
 
-            CollisionManager.RegisterCollisionBody(trigger);
+            FixtureFactory.AttachRectangle(
+                PhysicsConstants.PixelsToMeters(100), 
+                PhysicsConstants.PixelsToMeters(50),
+                1,
+                PhysicsConstants.PixelsToMeters(new Vector2(300, 400)), 
+                world.PhysicsBody, 
+                world);
+
+            FixtureFactory.AttachPolygon(
+                new FarseerPhysics.Common.Vertices() {
+                    PhysicsConstants.PixelsToMeters(new Vector2(500, 300)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(600, 280)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(620, 340)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(520, 360))
+                },
+                1,
+                world.PhysicsBody,
+                world);
+
+            FixtureFactory.AttachRectangle(
+                PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                PhysicsConstants.PixelsToMeters(10),
+                1,
+                PhysicsConstants.PixelsToMeters(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height)),
+                world.PhysicsBody,
+                world);
+
+
+            CollisionManager.RegisterCollideable(world);
+            CollisionManager.RegisterCollideable(character);
+            CollisionManager.RegisterCollideable(dummy);
+            CollisionManager.RegisterCollideable(normalCentipede);
+
+            //CollisionManager.RegisterCollideable(trigger);
         }
 
         /// <summary>
@@ -162,13 +180,6 @@ namespace TimeSink.Engine.Game
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
-                0,
-                GraphicsDevice.Viewport.Height,
-                GraphicsDevice.Viewport.Width,
-                10
-            )));
 
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);

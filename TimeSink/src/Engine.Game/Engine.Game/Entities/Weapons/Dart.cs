@@ -7,47 +7,44 @@ using TimeSink.Engine.Core.Rendering;
 
 using TimeSink.Engine.Game.Entities;
 using System;
+using FarseerPhysics.Dynamics;
+using System.Collections.Generic;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics.Contacts;
 
 
 namespace TimeSink.Engine.Game.Entities.Weapons
 {
     public class Dart : Entity, IWeapon
     {
-        const float DART_MASS = 1f;
-        const float DART_SPEED = 2000f;
+        //const float DART_MASS = 1f;
+        const float DART_SPEED = 30;
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
 
-        public GravityPhysics physics { get; private set; }
+        private Vector2 _initialPosition;
+
+        public Body Physics { get; private set; }
         public DamageOverTimeEffect dot { get; private set; }
 
         public Dart() { }
 
         public Dart(Vector2 position)
         {
-            physics = new GravityPhysics(position, DART_MASS)
-            {
-                GravityEnabled = true
-            };
+            //Physics = new GravityPhysics(position, DART_MASS)
+            //{
+            //    GravityEnabled = true
+            //};
 
+            _initialPosition = position;
             dot = new DamageOverTimeEffect(4, 100);
         }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return new CollisionRectangle(new Rectangle(
-                    (int)physics.Position.X,
-                    (int)physics.Position.Y,
-                    16,
-                    8
-                ));
+                return Physics.FixtureList;
             }
-        }
-
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return physics; }
         }
 
         public override IRendering Rendering
@@ -56,8 +53,8 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             {
                 return new BasicRendering(
                     DART_TEXTURE_NAME,
-                    physics.Position,
-                    (float)Math.Atan2(physics.Velocity.Y, physics.Velocity.X),
+                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
                     Vector2.One
                 );
             }
@@ -68,13 +65,13 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
+        public void OnCollidedWith(WorldGeometry entity, Contact info)
         {
             Dead = true;
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Entity entity, CollisionInfo info)
+        public void OnCollidedWith(Entity entity, Contact info)
         {
             if (!(entity is UserControlledCharacter))
             {
@@ -94,28 +91,46 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             if (Dead)
             {
                 world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollisionBody(this);
-                world.PhysicsManager.UnregisterPhysicsBody(this);
+                world.CollisionManager.UnregisterCollideable(this);
+            }
+            else
+            {
+                Physics.ApplyForce(new Vector2(0, -.1f));
             }
         }
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
-            character.InHold = false;
             Dart dart = new Dart(
-                            new Vector2(character.PhysicsController.Position.X + UserControlledCharacter.X_OFFSET,
-                                        character.PhysicsController.Position.Y + UserControlledCharacter.Y_OFFSET));
-            Vector2 initialVelocity = character.Direction * DART_SPEED;
-            dart.physics.Velocity += initialVelocity;
+                            new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
+                                        character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
             world.Entities.Add(dart);
             world.RenderManager.RegisterRenderable(dart);
             world.PhysicsManager.RegisterPhysicsBody(dart);
-            world.CollisionManager.RegisterCollisionBody(dart);
+            world.CollisionManager.RegisterCollideable(dart);
+
+            character.InHold = false;
+            Vector2 initialVelocity = character.Direction * DART_SPEED;
+            dart.Physics.LinearVelocity += initialVelocity;
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
             Fire(character, world, gameTime, holdTime);
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            Physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(16),
+                PhysicsConstants.PixelsToMeters(8),
+                1,
+                _initialPosition);
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.IsBullet = true;
+            Physics.IsSensor = true;
+            Physics.UserData = this;
         }
     }
 }

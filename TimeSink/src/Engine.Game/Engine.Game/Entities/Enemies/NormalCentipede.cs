@@ -9,6 +9,9 @@ using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Game.Entities;
 using TimeSink.Engine.Game.Entities.Weapons;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace Engine.Game.Entities.Enemies
 {
@@ -20,6 +23,9 @@ namespace Engine.Game.Entities.Enemies
 
         private List<DamageOverTimeEffect> dots;
 
+
+        private Vector2 _initialPosition;
+
         private float health;
         public float Health
         {
@@ -27,34 +33,22 @@ namespace Engine.Game.Entities.Enemies
             set { health = value; }
         }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X,
-                        (int)physics.Position.Y,
-                        32, 32
-                    ));
+                return Physics.FixtureList;
             }
         }
 
         public NormalCentipede(Vector2 position)
         {
             health = 100;
-            physics = new GravityPhysics(position, CENTIPEDE_MASS)
-            {
-                GravityEnabled = true
-            };
+            _initialPosition = position;
             dots = new List<DamageOverTimeEffect>();
         }
 
-        private GravityPhysics physics;
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return physics; }
-        }
+        public Body Physics { get; private set; }
 
         public override IRendering Rendering
         {
@@ -63,7 +57,7 @@ namespace Engine.Game.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   CENTIPEDE_TEXTURE,
-                  physics.Position,
+                  PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));
@@ -75,25 +69,25 @@ namespace Engine.Game.Entities.Enemies
             throw new NotImplementedException();
         }
 
-        [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
-        {
-            // Handle whether collision should disable gravity
-            if (info.MinimumTranslationVector.Y > 0)
-            {
-                physics.GravityEnabled = false;
-                physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
-            }
-        }
+        //[OnCollidedWith.Overload]
+        //public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        //{
+        //    // Handle whether collision should disable gravity
+        //    if (info.MinimumTranslationVector.Y > 0)
+        //    {
+        //        Physics.GravityEnabled = false;
+        //        Physics.Velocity = new Vector2(Physics.Velocity.X, Math.Min(0, Physics.Velocity.Y));
+        //    }
+        //}
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Arrow arrow, CollisionInfo info)
+        public void OnCollidedWith(Arrow arrow, Contact info)
         {
             health -= 25;
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Dart dart, CollisionInfo info)
+        public void OnCollidedWith(Dart dart, Contact info)
         {
             RegisterDot(dart.dot);
         }
@@ -117,8 +111,7 @@ namespace Engine.Game.Entities.Enemies
             if (Dead)
             {
                 world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollisionBody(this);
-                world.PhysicsManager.UnregisterPhysicsBody(this);
+                world.CollisionManager.UnregisterCollideable(this);
             }
         }
 
@@ -146,6 +139,19 @@ namespace Engine.Game.Entities.Enemies
                 dots.Add(dot);
                 dot.Active = true;
             }
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            Physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(32),
+                PhysicsConstants.PixelsToMeters(32),
+                1,
+                _initialPosition);
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.FixedRotation = true;
+            Physics.UserData = this;
         }
     }
 }

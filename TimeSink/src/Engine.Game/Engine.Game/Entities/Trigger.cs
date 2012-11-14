@@ -8,6 +8,9 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Game.Entities;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Factories;
 
 namespace Engine.Game.Entities
 {
@@ -17,20 +20,17 @@ namespace Engine.Game.Entities
     {
         public event TriggerDelegate Triggered;
 
-        private ICollisionGeometry _geom;
-        public override ICollisionGeometry CollisionGeometry
+        private Vector2 _position;
+
+        private List<Fixture> _geom;
+        public override List<Fixture> CollisionGeometry
         {
             get { return _geom; }
         }
 
-        public Trigger(ICollisionGeometry geom)
+        public Trigger(Vector2 position)
         {
-            _geom = geom;
-        }
-
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return null; }
+            _position = position;
         }
 
         public override IRendering Rendering
@@ -49,10 +49,20 @@ namespace Engine.Game.Entities
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(ICollideable obj, CollisionInfo info)
+        public void OnCollidedWith(ICollideable obj, Contact info)
         {
             if (Triggered != null)
                 Triggered(obj);
         }
+
+        public override void InitializePhysics(World world)
+        {
+            PhysicsBody = BodyFactory.CreateBody(world, _position, this);
+            PhysicsBody.BodyType = BodyType.Static;
+            PhysicsBody.IsSensor = true;
+            _geom = PhysicsBody.FixtureList;
+        }
+
+        public Body PhysicsBody { get; private set; }
     }
 }

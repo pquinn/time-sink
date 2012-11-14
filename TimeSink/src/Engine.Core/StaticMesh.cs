@@ -6,6 +6,8 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 
 namespace TimeSink.Engine.Core
 {
@@ -15,17 +17,28 @@ namespace TimeSink.Engine.Core
         public StaticMesh(string texture, Vector2 position)
         {
             this.texture = texture;
-            this.Position = position;
+            _initialPosition = position;
         }
 
-        public Vector2 Position { get; set; }
-
-        public override ICollisionGeometry CollisionGeometry
+        private Vector2 _initialPosition;
+        public Vector2 Position 
         {
             get
             {
-                return new AACollisionRectangle(
-                  new Rectangle((int)Position.X, (int)Position.Y, 128, 128));
+                return _physics.Position;
+            }
+            set
+            {
+                _physics.Position = value;
+            }
+        }
+
+        private Body _physics;
+        public override List<Fixture> CollisionGeometry
+        {
+            get
+            {
+                return _physics.FixtureList;
             }
         }
 
@@ -37,11 +50,6 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return null; }
-        }
-
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
         }
@@ -49,6 +57,18 @@ namespace TimeSink.Engine.Core
         public override void Load(EngineGame engineGame)
         {
             engineGame.TextureCache.LoadResource(texture);
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            _physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(128),
+                PhysicsConstants.PixelsToMeters(128),
+                1,
+                _initialPosition,
+                this);
+            _physics.BodyType = BodyType.Static;
         }
     }
 }

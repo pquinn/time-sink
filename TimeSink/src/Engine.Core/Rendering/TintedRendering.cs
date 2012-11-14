@@ -21,17 +21,18 @@ namespace TimeSink.Engine.Core.Rendering
         public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, 
             Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
         {
+            var texture = cache.GetResource(textureKey);
+            var originRect = srcRectangle ?? new Rectangle(0, 0, texture.Width, texture.Height);
             spriteBatch.Draw(
                 cache.GetResource(textureKey),
                 positionOffset + position,
                 srcRectangle,
                 tintColor,
                 rotationOffset + rotation,
-                Vector2.Zero,
+                new Vector2(originRect.Width / 2, originRect.Height / 2),
                 scaleOffset * scale,
                 SpriteEffects.None,
-                0
-            );
+                0);
         }
     }
 }
