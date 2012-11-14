@@ -35,7 +35,8 @@ namespace TimeSink.Engine.Core.States
                     new Vector2(
                         Input.InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
                         Input.InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
-                    0, Vector2.One);
+                    0, Vector2.One,
+                    level.RenderManager.TextureCache);
                 level.RegisterStaticMesh(mesh);
 
                 StateMachine.RevertToPreviousState(true);

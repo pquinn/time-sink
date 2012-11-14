@@ -35,6 +35,7 @@ namespace Editor
 
         StateMachine<Level> stateMachine;
         State<Level> initState;
+        private bool showCollisionGeometry;
 
         public Game1(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
@@ -75,13 +76,13 @@ namespace Editor
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
             level.RegisterStaticMeshes(new List<StaticMesh>()
                 {
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One),
-                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One, TextureCache),
+                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One, TextureCache),
                 });
 
             // set up state machine
@@ -157,6 +158,11 @@ namespace Editor
             if (mouse_loc.Y > Constants.SCREEN_Y - cameraTolerance && mouse_loc.Y < Constants.SCREEN_Y)
                 camera.PanCamera(Vector2.UnitY * cameraMoveSpeed);
 
+            if (InputManager.Instance.IsNewKey(Keys.C))
+            {
+                showCollisionGeometry = !showCollisionGeometry;
+            }
+
             stateMachine.Update();
 
             base.Update(gameTime);
@@ -193,6 +199,11 @@ namespace Editor
             spriteBatch.End();
 
             stateMachine.Draw(spriteBatch, camera);
+
+            if (showCollisionGeometry)
+            {
+                level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
+            }
 
             base.Draw(gameTime);
         }
