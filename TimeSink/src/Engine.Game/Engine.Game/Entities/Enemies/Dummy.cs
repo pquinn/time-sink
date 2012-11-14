@@ -12,14 +12,20 @@ using TimeSink.Engine.Game.Entities.Weapons;
 
 namespace Engine.Game.Entities.Enemies
 {
-    public class Dummy : Entity
+    public class Dummy : Entity, IHaveHealth
     {
         const float DUMMY_MASS = 100f;
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
 
         private GravityPhysics physics;
+        private List<DamageOverTimeEffect> dots;
 
-        private int health;
+        private float health;
+        public float Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
 
         public Dummy(Vector2 position)
         {
@@ -28,6 +34,7 @@ namespace Engine.Game.Entities.Enemies
             {
                 GravityEnabled = false
             };
+            dots = new List<DamageOverTimeEffect>();
         }
 
         public override ICollisionGeometry CollisionGeometry
@@ -83,9 +90,60 @@ namespace Engine.Game.Entities.Enemies
             health -= 25;
         }
 
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(Dart dart, CollisionInfo info)
+        {
+            RegisterDot(dart.dot);
+        }
+
+        public override void Update(GameTime time, EngineGame world)
+        {
+            if (health <= 0)
+            {
+                Console.WriteLine("dummy dead");
+                Dead = true;
+            }
+
+            foreach (DamageOverTimeEffect dot in dots)
+            {
+                if (dot.Active)
+                    health -= dot.Tick(time);
+            }
+            RemoveInactiveDots();
+
+
+            if (Dead)
+            {
+                world.RenderManager.UnregisterRenderable(this);
+                world.CollisionManager.UnregisterCollisionBody(this);
+                world.PhysicsManager.UnregisterPhysicsBody(this);
+            }
+        }
+
+        private void RemoveInactiveDots()
+        {
+            // there has to be a better way to do this.........
+            List<DamageOverTimeEffect> newDots = new List<DamageOverTimeEffect>();
+            foreach (DamageOverTimeEffect dot in dots)
+            {
+                if (!dot.Finished)
+                    newDots.Add(dot);
+            }
+            dots = newDots;
+        }
+
         public override void Load(EngineGame engineGame)
         {
             engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
+        }
+
+        public void RegisterDot(DamageOverTimeEffect dot)
+        {
+            if (!dot.Active)
+            {
+                dots.Add(dot);
+                dot.Active = true;
+            }
         }
     }
 }

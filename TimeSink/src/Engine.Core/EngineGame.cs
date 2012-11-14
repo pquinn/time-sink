@@ -53,6 +53,11 @@ namespace TimeSink.Engine.Core
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            TextureCache.LoadResource("Textures/circle");
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            TextureCache.AddResource("blank", blank);
+
             foreach (var entity in Entities)
                 entity.Load(this);
         }

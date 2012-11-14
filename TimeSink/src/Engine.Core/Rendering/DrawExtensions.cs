@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core.Rendering
 {
@@ -57,6 +58,24 @@ namespace TimeSink.Engine.Core.Rendering
             spriteBatch.DrawLine(texture, rect.TopLeft, rect.BotLeft, thickness, color);
             spriteBatch.DrawLine(texture, rect.TopRight, rect.BotRight, thickness, color);
             spriteBatch.DrawLine(texture, rect.BotLeft, rect.BotRight, thickness, color);
+        }
+
+        public static void DrawCircle(this SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 center, Vector2 size, Color color)
+        {
+            var texture = cache.GetResource("circle");
+            var textureSize = new Vector2(texture.Width, texture.Height);
+
+            spriteBatch.Draw(
+                texture,
+                size + center,
+                null,
+                color,
+                0,
+                center,
+                size / textureSize,
+                SpriteEffects.None,
+                0
+            );
         }
     }
 }

@@ -62,34 +62,46 @@ namespace TimeSink.Engine.Core.Rendering
 
         public Vector2 GetCenter(IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
-            throw new NotImplementedException();
+            var relativeTransform =
+                Matrix.CreateScale(new Vector3(parentScale.X, parentScale.Y, 1)) *
+                Matrix.CreateRotationZ(parentRotation) *
+                Matrix.CreateTranslation(parentPosition.X, parentPosition.Y, 0) *
+                globalTransform;
+
+            var centerAcc = Vector2.Zero;
+            renderStack.ForEach(r => centerAcc += r.GetCenter(cache, relativeTransform));
+
+            return centerAcc / renderStack.Count;
         }
 
 
         public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform)
         {
-            throw new NotImplementedException();
+            var relativeTransform =
+                Matrix.CreateScale(new Vector3(parentScale.X, parentScale.Y, 1)) *
+                Matrix.CreateRotationZ(parentRotation) *
+                Matrix.CreateTranslation(parentPosition.X, parentPosition.Y, 0) *
+                transform;
+
+            foreach (var rendering in renderStack)
+            {
+                rendering.Draw(spriteBatch, cache, relativeTransform);
+            }
         }
 
         public bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
-            throw new NotImplementedException();
+            var relativeTransform =
+                Matrix.CreateScale(new Vector3(parentScale.X, parentScale.Y, 1)) *
+                Matrix.CreateRotationZ(parentRotation) *
+                Matrix.CreateTranslation(parentPosition.X, parentPosition.Y, 0) *
+                globalTransform;
+
+            return renderStack.Any(r => r.Contains(point, cache, relativeTransform));
         }
 
 
         public NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(IResourceCache<Texture2D> cache, Matrix globalTransform)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Tuple<Vector2, Vector2> GetEdgeWithinTolerance(Vector2 point, int tolerance, IResourceCache<Texture2D> cache, Matrix globalTransform)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Tuple<Vector2, Vector2> GetEdgeWithinTolerance(Vector2 point, int tolerance, IResourceCache<Texture2D> cache, Matrix globalTransform, out Vector2 scalingNormal)
         {
             throw new NotImplementedException();
         }

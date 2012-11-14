@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -103,7 +106,24 @@ namespace TimeSink.Engine.Core.Collisions
                 vertices.Add(edge + perp);
             }
 
-            return new Polygon(vertices);
+            return new Polygon(vertices.Skip(vertices.Count-1).Concat(vertices.Take(vertices.Count-1)).ToList());
+        }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            Vector3 trans;
+            Quaternion rot;
+            Vector3 scale;
+
+            globalTransform.Decompose(out scale, out rot, out trans);
+
+           spriteBatch.DrawCircle(
+               cache, 
+               Circ.Center + trans.ToVector2(), 
+               new Vector2(
+                   Circ.Radius * scale.X,
+                   Circ.Radius * scale.Y), 
+               Color.Red);
         }
     }
 }

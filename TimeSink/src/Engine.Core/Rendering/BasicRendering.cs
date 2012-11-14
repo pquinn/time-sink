@@ -24,6 +24,12 @@ namespace TimeSink.Engine.Core.Rendering
         protected Rectangle? srcRectangle;
         protected Rectangle? destRectangle;
 
+        public Rectangle? SrcRectangle
+        {
+            get { return srcRectangle; }
+            set { srcRectangle = value; }
+        }
+
         public BasicRendering(string textureKey)
             : this(textureKey, Vector2.Zero, 0.0f, Vector2.One)
         { }
@@ -177,46 +183,6 @@ namespace TimeSink.Engine.Core.Rendering
 
             var debug = Vector2.Transform(center, transform);
             return debug;
-        }
-
-
-        public Tuple<Vector2, Vector2> GetEdgeWithinTolerance(Vector2 point, int tolerance, IResourceCache<Texture2D> cache, Matrix globalTransform, out Vector2 scalingNormal)
-        {
-            var bounds = GetNonAxisAlignedBoundingBox(cache, globalTransform);
-
-            var edges = new List<Tuple<Vector2, Vector2>>()
-            {
-                new Tuple<Vector2, Vector2>(bounds.TopLeft, bounds.TopRight),
-                new Tuple<Vector2, Vector2>(bounds.TopRight, bounds.BotRight),
-                new Tuple<Vector2, Vector2>(bounds.BotRight, bounds.BotLeft),
-                new Tuple<Vector2, Vector2>(bounds.BotLeft, bounds.TopLeft)
-            };
-
-            scalingNormal = Vector2.Zero;
-
-            for (int i = 0; i < edges.Count; i++)
-            {
-                var vect = edges[i].Item2 - edges[i].Item1;
-                var normal = vect.GetSurfaceNormal();
-                var hyp = edges[i].Item1 - point;
-                var distance = Math.Abs(Vector2.Dot(normal, hyp));
-
-                if (distance < tolerance)
-                {                    
-                    if (i == 0)
-                        scalingNormal = new Vector2(0, 1);
-                    else if (i == 1)
-                        scalingNormal = new Vector2(1, 0);
-                    else if (i == 2)
-                        scalingNormal = new Vector2(0, 1);
-                    else if (i == 3)
-                        scalingNormal = new Vector2(1, 0);
-
-                    return edges[i];
-                }
-            }
-
-            return null;
         }
     }
 }
