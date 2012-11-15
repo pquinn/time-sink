@@ -8,9 +8,11 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Entities.Weapons;
+using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Entities.Enemies
 {
+    [EditorEnabled]
     public class Enemy : Entity, IHaveHealth
     {
         const float DUMMY_MASS = 100f;
@@ -36,15 +38,31 @@ namespace TimeSink.Entities.Enemies
             dots = new List<DamageOverTimeEffect>();
         }
 
+        [EditableField("Health")]
         public float Health
         {
             get { return health; }
             set { health = value; }
         }
 
+        [EditableField("Position")]
+        public Vector2 Position
+        {
+            get { return physics.Position; }
+            set { physics.Position = value; }
+        }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
+        }
+
+        public override string EditorPreview
+        {
+            get
+            {
+                return DUMMY_TEXTURE;
+            }
         }
 
         public override ICollisionGeometry CollisionGeometry

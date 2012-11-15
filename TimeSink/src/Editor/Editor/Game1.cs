@@ -32,8 +32,6 @@ namespace Editor
         Level level;
 
         Camera camera;
-        const int cameraTolerance = 10;
-        const int cameraMoveSpeed = 5;
 
         StateMachine<Level> stateMachine;
         State<Level> initState;
@@ -62,6 +60,9 @@ namespace Editor
 
             base.Initialize();
 
+            Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
+            Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
+
             EditorProperties.Instance = new EditorProperties()
             {
                 ShowGridLines = false,
@@ -71,7 +72,7 @@ namespace Editor
                 ResolutionY = ResolutionHeight
             };
 
-            camera = new Camera();
+            camera = Camera.ZeroedCamera;
 
             //set up managers
             renderManager = new RenderManager(TextureCache);
@@ -153,17 +154,7 @@ namespace Editor
                 this.Exit();
 
             // TODO: Add your update logic here
-            InputManager.Instance.Update();
-
-            Point mouse_loc = new Point(InputManager.Instance.CurrentMouseState.X, InputManager.Instance.CurrentMouseState.Y);
-            if (mouse_loc.X < cameraTolerance && mouse_loc.X > 0)
-                camera.PanCamera(-Vector2.UnitX * cameraMoveSpeed);
-            if (mouse_loc.X > Constants.SCREEN_X - cameraTolerance && mouse_loc.X < Constants.SCREEN_X)
-                camera.PanCamera(Vector2.UnitX * cameraMoveSpeed);
-            if (mouse_loc.Y < cameraTolerance && mouse_loc.Y > 0)
-                camera.PanCamera(-Vector2.UnitY * cameraMoveSpeed);
-            if (mouse_loc.Y > Constants.SCREEN_Y - cameraTolerance && mouse_loc.Y < Constants.SCREEN_Y)
-                camera.PanCamera(Vector2.UnitY * cameraMoveSpeed);
+            InputManager.Instance.Update();                     
 
             if (InputManager.Instance.IsNewKey(Keys.C))
             {
@@ -213,6 +204,13 @@ namespace Editor
             }
 
             base.Draw(gameTime);
+        }
+
+        public void PanSelected()
+        {
+            stateMachine.ChangeState(
+                new CameraTranslateState(),
+                true, true);
         }
 
         public void StaticMeshSelected(string textureKey)

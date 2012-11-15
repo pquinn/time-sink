@@ -17,6 +17,7 @@ namespace TimeSink.Engine.Core
     public class EngineGame : Microsoft.Xna.Framework.Game
     {
         // Components
+        public Camera Camera { get; set; }
         public PhysicsManager PhysicsManager { get; private set; }
         public CollisionManager CollisionManager { get; private set; }
         public RenderManager RenderManager { get; private set; }
@@ -35,6 +36,8 @@ namespace TimeSink.Engine.Core
         protected override void Initialize()
         {
             base.Initialize();
+
+            Camera = Camera.ZeroedCamera;
 
             PhysicsManager = new PhysicsManager();
             CollisionManager = new CollisionManager();
@@ -81,7 +84,7 @@ namespace TimeSink.Engine.Core
 
         protected override void Draw(GameTime gameTime)
         {
-            RenderManager.Draw(SpriteBatch);
+            RenderManager.Draw(SpriteBatch, Camera);
 
             base.Draw(gameTime);
         }

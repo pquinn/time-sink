@@ -195,6 +195,11 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
+            //Camera.Position = new Vector3(
+            //    Character.PhysicsController.Position.X,
+            //    Character.PhysicsController.Position.Y,
+            //    0);
+
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
 

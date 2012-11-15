@@ -36,7 +36,7 @@ namespace TimeSink.Entities
         const string HEAD_STATES = "Textures/Sprites/SpriteSheets/headStates";
         const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
         const string BODY_NEUTRAL = "Textures/Sprites/Body/Body_Neutral";
-        const string EDITOR_PREVIEW = null;
+        const string EDITOR_PREVIEW = "Textures/Character";
 
         private static readonly Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
         private static readonly Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);

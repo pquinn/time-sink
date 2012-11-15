@@ -25,7 +25,7 @@ namespace Editor.States
 
         public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
         {
-            level.RenderManager.Draw(spriteBatch);
+            level.RenderManager.Draw(spriteBatch, camera);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace TimeSink.Editor.GUI.ViewModels
         #region Fields
 
         InMemoryResourceCache<Texture2D> cache;
-        IEnumerable<Entity> entities;
         List<string> entityKeys;
         int selectedEntity = -1;
 
@@ -26,8 +25,8 @@ namespace TimeSink.Editor.GUI.ViewModels
             : base (invokeCancel)
         {
             this.cache = cache;
-            this.entities = entities;
-            this.entityKeys = entities.Select(e => e.EditorName).ToList();
+            Entities = entities.ToList();
+            this.entityKeys = Entities.Select(e => e.EditorName).ToList();
         }
 
         public List<string> EntityKeys
@@ -42,6 +41,8 @@ namespace TimeSink.Editor.GUI.ViewModels
                 }
             }
         }
+
+        public List<Entity> Entities { get; set; }
 
         public int SelectedEntity
         {

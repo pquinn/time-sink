@@ -8,6 +8,7 @@ using TimeSink.Entities.Enemies;
 using TimeSink.Entities.Weapons;
 using TimeSink.Engine.Core;
 using System.Reflection;
+using TimeSink.Engine.Core.Editor;
 
 namespace Editor
 {
@@ -21,7 +22,8 @@ namespace Editor
             assembly.GetTypes().ForEach(
                 t =>
                 {
-                    if (!t.IsAbstract && t.IsSubclassOf(typeof(Entity)))
+                    if (!t.IsAbstract && t.IsSubclassOf(typeof(Entity)) && 
+                        t.GetCustomAttributes(typeof(EditorEnabledAttribute), false).Any())
                     {
                         builder.RegisterType(t).As<Entity>().WithMetadata<IEntityMetadata>(
                             m => m.For(tm => tm.Name, t.Name));
