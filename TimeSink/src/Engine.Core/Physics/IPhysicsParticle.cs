@@ -8,6 +8,7 @@ namespace TimeSink.Engine.Core.Physics
 {
     public interface IPhysicsParticle
     {
+        Vector2 OldPosition { get; }
         Vector2 Position { get; set; }
         Vector2 Velocity { get; set; }
         Vector2 Acceleration { get; set; }

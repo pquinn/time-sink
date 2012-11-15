@@ -15,6 +15,9 @@ namespace TimeSink.Engine.Game.Entities
     {
         const string WORLD_TEXTURE_NAME = "Textures/giroux";
 
+        public float Friction { get; set; }
+        public float Sticktion { get; set; }
+
         private CollisionSet collisionGeometry = new CollisionSet();
         private Texture2D geoTexture;
         public override ICollisionGeometry CollisionGeometry
@@ -29,6 +32,12 @@ namespace TimeSink.Engine.Game.Entities
 
         public WorldGeometry() { }
 
+        public WorldGeometry(float friction, float sticktion)
+        {
+            Friction = friction;
+            Sticktion = sticktion;
+        }
+
         public override void Load(EngineGame game)
         {
             geoTexture = game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
@@ -41,11 +50,41 @@ namespace TimeSink.Engine.Game.Entities
         [OnCollidedWith.Overload]
         public void OnCollidedWith(ICollideable body, CollisionInfo info)
         {
+            if (body is UserControlledCharacter)
+            {
+                Console.Write("hi");
+            }
+       
             if (body is IPhysicsEnabledBody)
             {
                 var phys = (body as IPhysicsEnabledBody).PhysicsController;
-                if (phys != null)
-                    phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
+
+                if (phys == null)
+                    return;
+
+                float mass = phys.Mass;
+                
+                var NDir = info.MinimumTranslationVector;
+                NDir.Normalize();
+
+                var Fg = mass * PhysicsConstants.Gravity;
+
+                float ftheta = (float)Math.Atan2(NDir.Y, NDir.X);
+                float Ntheta = (float)Math.PI / 2 - ftheta;
+
+                var N = Fg.Length() * (float)Math.Cos(Ntheta) * NDir;
+                var f = Fg.Length() * (float)Math.Cos(ftheta) * new Vector2(-NDir.Y, NDir.X);
+
+                float Us = f.Length() / N.Length();
+
+                phys.Position -= info.MinimumTranslationVector + new Vector2(0, -1);
+                if (Us <= Sticktion)
+                {
+                    var n = info.MinimumTranslationVector;
+                    var gamma = Ntheta;
+                    var Rmag = n * (float)Math.Tan(gamma);
+                    phys.Position += Rmag;
+                }
             }
         }
 

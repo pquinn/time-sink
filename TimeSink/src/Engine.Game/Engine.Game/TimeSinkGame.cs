@@ -82,7 +82,10 @@ namespace TimeSink.Engine.Game
 
             character = new UserControlledCharacter(Vector2.Zero);
             dummy = new Dummy(new Vector2(600, 350));
-            world = new WorldGeometry();
+            world = new WorldGeometry()
+            {
+                Sticktion = .5f
+            };
             normalCentipede = new NormalCentipede(new Vector2(300, 250));
 
             // Required for lighting system.
@@ -120,16 +123,16 @@ namespace TimeSink.Engine.Game
 
             var c = r.Center;
 
-            trigger = new Trigger(new AACollisionRectangle(new Rectangle((int)c.X - 50, (int)c.Y - 50, 100, 100)));
-            trigger.Triggered += delegate (ICollideable collided)
-            {
-                if (collided is IPhysicsEnabledBody && !(collided is Dummy))
-                {
-                    var phys = (collided as IPhysicsEnabledBody).PhysicsController;
-                    if (phys != null)
-                        phys.Position = Vector2.Zero;
-                }
-            };
+            //trigger = new Trigger(new AACollisionRectangle(new Rectangle((int)c.X - 50, (int)c.Y - 50, 100, 100)));
+            //trigger.Triggered += delegate (ICollideable collided)
+            //{
+            //    if (collided is IPhysicsEnabledBody && !(collided is Dummy))
+            //    {
+            //        var phys = (collided as IPhysicsEnabledBody).PhysicsController;
+            //        if (phys != null)
+            //            phys.Position = Vector2.Zero;
+            //    }
+            //};
 
 
 
@@ -152,7 +155,7 @@ namespace TimeSink.Engine.Game
             RenderManager.RegisterRenderable(normalCentipede);
             RenderManager.RegisterRenderable(world);
 
-            CollisionManager.RegisterCollisionBody(trigger);
+            //CollisionManager.RegisterCollisionBody(trigger);
         }
 
         /// <summary>
