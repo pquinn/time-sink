@@ -27,6 +27,8 @@ namespace Engine.Game.Entities.Enemies
         private List<DamageOverTimeEffect> dots;
 
         private float health;
+        private int textureHeight;
+        private int textureWidth;
         public float Health
         {
             get { return health; }
@@ -89,6 +91,12 @@ namespace Engine.Game.Entities.Enemies
             RegisterDot(dart.dot);
         }
 
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(UserControlledCharacter c, Contact info)
+        {
+            c.Health -= 25;
+        }
+
         public override void Update(GameTime time, EngineGame world)
         {
             if (health <= 0)
@@ -118,7 +126,9 @@ namespace Engine.Game.Entities.Enemies
 
         public override void Load(EngineGame engineGame)
         {
-            engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
+            var texture = engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
+            textureWidth = texture.Width;
+            textureHeight = texture.Height;
         }
 
         public void RegisterDot(DamageOverTimeEffect dot)
@@ -134,12 +144,21 @@ namespace Engine.Game.Entities.Enemies
         {
             Physics = BodyFactory.CreateRectangle(
                 world,
-                PhysicsConstants.PixelsToMeters(64),
-                PhysicsConstants.PixelsToMeters(128),
+                PhysicsConstants.PixelsToMeters(textureWidth),
+                PhysicsConstants.PixelsToMeters(textureHeight),
                 1,
                 _initialPosition);
             Physics.BodyType = BodyType.Dynamic;
             Physics.UserData = this;
+
+            var fix = Physics.FixtureList[0];
+            fix.CollisionCategories = Category.Cat3;
+            fix.CollidesWith = Category.Cat1;
+
+            var hitsensor = fix.Clone(Physics);
+            hitsensor.IsSensor = true;
+            hitsensor.CollisionCategories = Category.Cat2;
+            hitsensor.CollidesWith = Category.Cat2;
         }
     }
 }

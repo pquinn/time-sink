@@ -177,8 +177,21 @@ namespace TimeSink.Engine.Game.Entities
 
         public override void Update(GameTime gameTime, EngineGame game)
         {
-            touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
-            __touchingGroundFlag = false;
+            //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
+            //__touchingGroundFlag = false;
+
+            touchingGround = false;
+
+            var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+
+            game.PhysicsManager.World.RayCast(
+                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                {
+                    touchingGround = true;
+                    return 0;
+                },
+                start,
+                start + new Vector2(0, .1f));
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -189,7 +202,7 @@ namespace TimeSink.Engine.Game.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 5;
+            var amount = 4;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -294,8 +307,7 @@ namespace TimeSink.Engine.Game.Entities
                     currentFrame = 10;
                     AnimateJump(gameTime);
                     jumpSound.Play();
-                    Physics.LinearVelocity -= new Vector2(0, 500);
-                    Physics.ApplyLinearImpulse(new Vector2(0, -500));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
                     jumpToggleGuard = false;
                 }
             }
@@ -369,6 +381,7 @@ namespace TimeSink.Engine.Game.Entities
             }
 
         }
+
         protected void AnimateJump(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -426,18 +439,39 @@ namespace TimeSink.Engine.Game.Entities
         public override void InitializePhysics(World world)
         {
             Physics = BodyFactory.CreateBody(world, _initialPosition, this);
-            FixtureFactory.AttachRectangle(
-                PhysicsConstants.PixelsToMeters(spriteWidth),
-                PhysicsConstants.PixelsToMeters(spriteHeight),
+
+            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
+            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+            
+            var r = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters - spriteWidthMeters / 2,
                 1.4f,
-                Vector2.Zero,
+                new Vector2(0, -spriteWidthMeters / 4),
                 Physics);
-            //FixtureFactory.AttachRectangle(
-            //    PhysicsConstants.PixelsToMeters(50),
-            //    PhysicsConstants.PixelsToMeters(132),
-            //    1.4f,
-            //    PhysicsConstants.PixelsToMeters(new Vector2(50, 111)),
-            //    Physics);
+            var c = FixtureFactory.AttachCircle(
+                spriteWidthMeters / 2,
+                1.4f,
+                Physics,
+                new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+
+            r.CollidesWith = Category.Cat1;
+            r.CollisionCategories = Category.Cat3;
+            c.CollidesWith = Category.Cat1;
+            c.CollisionCategories = Category.Cat3;
+
+            var rSens = r.Clone(Physics);
+            rSens.IsSensor = true;
+            rSens.Shape.Density = 0;
+
+            var cSens = c.Clone(Physics);
+            cSens.IsSensor = true;
+            cSens.Shape.Density = 0;
+
+            rSens.CollidesWith = Category.All;
+            cSens.CollidesWith = Category.All;
+            rSens.CollisionCategories = Category.Cat2;
+            cSens.CollisionCategories = Category.Cat2;
 
             Physics.BodyType = BodyType.Dynamic;
             Physics.FixedRotation = true;

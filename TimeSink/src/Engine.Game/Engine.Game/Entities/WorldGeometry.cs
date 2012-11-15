@@ -133,6 +133,9 @@ namespace TimeSink.Engine.Game.Entities
             PhysicsBody.BodyType = BodyType.Static;
             PhysicsBody.Friction = .5f;
             collisionGeometry = PhysicsBody.FixtureList;
+
+            PhysicsBody.CollidesWith = Category.All;
+            PhysicsBody.CollisionCategories = Category.Cat1;
         }
     }
 }

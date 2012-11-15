@@ -17,7 +17,6 @@ namespace Engine.Game.Entities.Enemies
 {
     class NormalCentipede : Entity, IHaveHealth
     {
-
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Goomba";
 
@@ -92,6 +91,12 @@ namespace Engine.Game.Entities.Enemies
             RegisterDot(dart.dot);
         }
 
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(UserControlledCharacter c, Contact info)
+        {
+            c.Health -= 25;
+        }
+
         public override void Update(GameTime time, EngineGame world)
         {
             if (health <= 0)
@@ -152,6 +157,15 @@ namespace Engine.Game.Entities.Enemies
             Physics.BodyType = BodyType.Dynamic;
             Physics.FixedRotation = true;
             Physics.UserData = this;
+
+            var fix = Physics.FixtureList[0];
+            fix.CollisionCategories = Category.Cat3;
+            fix.CollidesWith = Category.Cat1 | Category.Cat2;
+
+            //var hitsensor = fix.Clone(Physics);
+            //hitsensor.IsSensor = true;
+            //hitsensor.CollidesWith = Category.Cat2;
+            //hitsensor.CollisionCategories = Category.Cat2;
         }
     }
 }

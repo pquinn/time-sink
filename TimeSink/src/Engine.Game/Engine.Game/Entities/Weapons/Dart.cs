@@ -51,23 +51,19 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         {
             get
             {
-                return new BasicRendering(
-                    DART_TEXTURE_NAME,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
-                    (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                    Vector2.One
-                );
+                return Dead 
+                    ? null 
+                    : new BasicRendering(
+                        DART_TEXTURE_NAME,
+                        PhysicsConstants.MetersToPixels(Physics.Position),
+                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        Vector2.One
+                    );
             }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-        }
-
-        [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry entity, Contact info)
-        {
-            Dead = true;
         }
 
         [OnCollidedWith.Overload]
@@ -92,6 +88,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             {
                 world.RenderManager.UnregisterRenderable(this);
                 world.CollisionManager.UnregisterCollideable(this);
+                Physics.Dispose();
             }
             else
             {
