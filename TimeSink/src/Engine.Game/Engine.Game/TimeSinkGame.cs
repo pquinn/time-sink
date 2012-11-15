@@ -58,7 +58,7 @@ namespace TimeSink.Engine.Game
         const float moveScale = 100.0f;
 
         UserControlledCharacter character;
-        Dummy dummy;
+        Enemy dummy;
         NormalCentipede normalCentipede;
         WorldGeometry world;
         Trigger trigger;
@@ -81,7 +81,7 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
-            dummy = new Dummy(new Vector2(600, 350));
+            dummy = new Enemy(new Vector2(600, 350));
             world = new WorldGeometry();
             normalCentipede = new NormalCentipede(new Vector2(300, 250));
 
@@ -123,7 +123,7 @@ namespace TimeSink.Engine.Game
             trigger = new Trigger(new AACollisionRectangle(new Rectangle((int)c.X - 50, (int)c.Y - 50, 100, 100)));
             trigger.Triggered += delegate (ICollideable collided)
             {
-                if (collided is IPhysicsEnabledBody && !(collided is Dummy))
+                if (collided is IPhysicsEnabledBody && !(collided is Enemy))
                 {
                     var phys = (collided as IPhysicsEnabledBody).PhysicsController;
                     if (phys != null)
@@ -199,7 +199,6 @@ namespace TimeSink.Engine.Game
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
 
-            InputManager.Instance.Update();
             HandleInput(gameTime);
 
             base.Update(gameTime);
@@ -216,6 +215,7 @@ namespace TimeSink.Engine.Game
             {
                 backgroundTrack.TogglePauseSound();
             }
+            
             character.HandleKeyboardInput(gametime, this);
             
         }
@@ -238,7 +238,6 @@ namespace TimeSink.Engine.Game
         Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
-        public SpriteBatch spriteBatch;
 
 #if WINDOWS_PHONE
         /// <summary>

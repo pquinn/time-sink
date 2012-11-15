@@ -9,11 +9,14 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace TimeSink.Engine.Core
 {
     public class EngineGame : Microsoft.Xna.Framework.Game
     {
+        private bool showCollisionGeometry;
         // Components
         public PhysicsManager PhysicsManager { get; private set; }
         public CollisionManager CollisionManager { get; private set; }
@@ -53,6 +56,11 @@ namespace TimeSink.Engine.Core
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            TextureCache.LoadResource("Textures/circle");
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            TextureCache.AddResource("blank", blank);
+
             foreach (var entity in Entities)
                 entity.Load(this);
         }
@@ -61,19 +69,30 @@ namespace TimeSink.Engine.Core
         {
             base.Update(gameTime);
 
+            InputManager.Instance.Update();
+
             PhysicsManager.Update(gameTime);
             CollisionManager.Update(gameTime);
 
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);
 
-            Entities.RemoveWhere(e => e.Dead);
+            if (InputManager.Instance.IsNewKey(Keys.C))
+            {
+                showCollisionGeometry = !showCollisionGeometry;
+            }
 
+            Entities.RemoveWhere(e => e.Dead);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             RenderManager.Draw(SpriteBatch);
+
+            if (showCollisionGeometry)
+            {
+                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
+            }
 
             base.Draw(gameTime);
         }

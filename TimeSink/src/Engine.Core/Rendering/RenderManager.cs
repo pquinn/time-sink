@@ -44,12 +44,16 @@ namespace TimeSink.Engine.Core.Rendering
             foreach (var renderable in renderables)
             {
                 renderable.Rendering.Draw(
-                    spriteBatch, 
-                    TextureCache, 
-                    Vector2.Zero, 
-                    0.0f,
-                    Vector2.One
+                    spriteBatch,
+                    TextureCache,
+                    Matrix.Identity
                 );
+                //renderable.Rendering.Draw(
+                //    spriteBatch,
+                //    TextureCache,
+                //    Vector2.Zero,
+                //    0,
+                //    Vector2.One);
             }
 
             spriteBatch.End();

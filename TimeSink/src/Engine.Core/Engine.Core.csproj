@@ -141,6 +141,7 @@
     <Compile Include="Rendering\BoundingBox.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\DrawExtensions.cs" />
+    <Compile Include="Rendering\NonAxisAlignedBoundingBox.cs" />
     <Compile Include="Rendering\StackableRendering.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
@@ -148,6 +149,8 @@
     <Compile Include="Rendering\TintedRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\DefaultEditorState.cs" />
+    <Compile Include="States\RotationEditorState.cs" />
+    <Compile Include="States\ScalingEditorState.cs" />
     <Compile Include="States\SelectionEditorState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
