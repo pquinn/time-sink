@@ -26,6 +26,11 @@ namespace TimeSink.Engine.Core.Rendering
             get { return srcRectangle; }
             set { srcRectangle = value; }
         }
+        public Vector2 Scale
+        {
+            get { return scale; }
+            set { scale = value; }
+        }
 
         public BasicRendering(string textureKey)
             : this(textureKey, Vector2.Zero, 0.0f, Vector2.One)

@@ -19,7 +19,7 @@ namespace TimeSink.Engine.Game.Entities
     {
         const float PLAYER_MASS = 100f;
 
-        enum BodyStates { Neutral, Idle, Walking, Running, Jumping };
+        enum BodyStates { Neutral, Idle, StartWalking, Walking, StartRunning, Running, Jumping };
         int currentState;
 
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
@@ -34,14 +34,15 @@ namespace TimeSink.Engine.Game.Entities
         const string HAND_CLOSE = "Textures/Sprites/SpriteSheets/openClose";
         const string HEAD_STATES = "Textures/Sprites/SpriteSheets/headStates";
         const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
+        const string BODY_NEUTRAL = "Textures/Sprites/Body/Body_Neutral";
 
-        Animation bodyWalk = new Animation(8, BODY_WALK, 120, 198, Vector2.Zero);
+        Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
         Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
-        Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, Vector2.Zero);
+        Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, new Vector2(0, 45));
         Animation bodyStartRun = new Animation(2, BODY_START_RUN, 81, 198, Vector2.Zero);
-        Animation bodyJump = new Animation(8, BODY_JUMP, 136, 159, Vector2.Zero);
+        Animation bodyJump = new Animation(4, BODY_JUMP, 136, 159, Vector2.Zero);
         Animation hairMove = new Animation(2, HAIR_MOVE, 66, 63, Vector2.Zero);
-        Animation armMove = new Animation(2, ARM_MOVE, 51, 85, Vector2.Zero);
+        Animation armMove = new Animation(2, ARM_MOVE, 51, 85, new Vector2(12,65));
         Animation idle = new Animation(6, IDLE_BODY_HEAD_HAIR, 95, 245, Vector2.Zero);
 
 
@@ -110,7 +111,8 @@ namespace TimeSink.Engine.Game.Entities
 
 
         float timer = 0f;
-        float interval = 150f;
+        float idleInterval = 2000f;
+        float interval = 200f;
         float jumpInterval = 100f;
         int currentFrame = 0;
         int spriteWidth = 130;
@@ -168,6 +170,7 @@ namespace TimeSink.Engine.Game.Entities
             game.TextureCache.LoadResource(HAIR_MOVE);
             game.TextureCache.LoadResource(HAND_CLOSE);
             game.TextureCache.LoadResource(HEAD_STATES);
+            game.TextureCache.LoadResource(BODY_NEUTRAL);
             /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
                SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
@@ -210,38 +213,107 @@ namespace TimeSink.Engine.Game.Entities
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
             var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+            var d = InputManager.Instance.Pressed(Keys.D);
+            var a = InputManager.Instance.Pressed(Keys.A);
+            timer += (timeframe * 1000);
+
+            #region UpdateAnimations
+            if ((currentState == (int)BodyStates.Idle) && (timer >= interval))
+            {
+                idle.UpdateFrame();
+                timer = 0f;
+            }
+            else if ((currentState == (int)BodyStates.Neutral) && timer >= idleInterval)
+            {
+                currentState = (int)BodyStates.Idle;
+                timer = 0f;
+            }
+
+            else if (currentState == (int)BodyStates.Walking && timer >= interval)
+            {
+                bodyWalk.UpdateFrame();
+                timer = 0f;
+            }
+            else if (currentState == (int)BodyStates.StartWalking && timer >= (interval * 2))
+            {
+                bodyStartWalk.UpdateFrame();
+                currentState = (int)BodyStates.Walking;
+                timer = 0f;
+            }
+            else if (currentState == (int)BodyStates.Jumping && timer >= interval)
+            {
+                if (bodyJump.CurrentFrame != (bodyJump.TotalFrames - 1))
+                {
+                    bodyJump.UpdateFrame();
+                }
+                timer = 0f;
+            }
+            #endregion
+
+
 
             #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
                 movedirection.X -= 1.0f;
                 if (touchingGround)
+                {
+                    currentState = (int)BodyStates.Walking;
                     AnimateRight(gameTime);
+                }
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
                 movedirection.X += 1.0f;
                 if (touchingGround)
+                {
+                    currentState = (int)BodyStates.Walking;
                     AnimateRight(gameTime);
+                }
             }
             if (gamepad.ThumbSticks.Left.X != 0)
             {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
                 if (touchingGround)
+                {
+                    currentState = (int)BodyStates.Walking;
                     AnimateRight(gameTime);
+                }
             }
 
             if (keyboard.IsKeyDown(Keys.A))
             {
                 movedirection.X -= 1.0f;
                 if (touchingGround)
-                    AnimateRight(gameTime);
+                {
+                    if (currentState != (int)BodyStates.Walking)
+                    {
+                        currentState = (int)BodyStates.StartWalking;
+                    }
+                    else
+                    {
+                        currentState = (int)BodyStates.Walking;
+                        //AnimateRight(gameTime);
+                    }
+                }
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
                 movedirection.X += 1.0f;
                 if (touchingGround)
-                    AnimateRight(gameTime);
+                {
+                    if (currentState != (int)BodyStates.Walking)
+                    {
+                        bodyStartWalk.Reset();
+                        bodyWalk.Reset();
+                        currentState = (int)BodyStates.StartWalking;
+                    }
+                    else
+                    {
+                        currentState = (int)BodyStates.Walking;
+                        //AnimateRight(gameTime);
+                    }
+                }
             }
             #endregion
 
@@ -305,9 +377,8 @@ namespace TimeSink.Engine.Game.Entities
             {
                 if (jumpToggleGuard && touchingGround)
                 {
+                    currentState = (int)BodyStates.Jumping;
                     jumpStarted = true;
-                    currentFrame = 10;
-                    AnimateJump(gameTime);
                     jumpSound.Play();
                     physics.Velocity -= new Vector2(0, 500);
                     jumpToggleGuard = false;
@@ -317,10 +388,6 @@ namespace TimeSink.Engine.Game.Entities
             else if (touchingGround)
             {
                 jumpToggleGuard = true;
-            }
-            else if (jumpStarted)
-            {
-                AnimateJump(gameTime);
             }
 
             #endregion
@@ -350,6 +417,13 @@ namespace TimeSink.Engine.Game.Entities
             }
 
             #endregion
+
+            if ((keyboard.GetPressedKeys().GetLength(0) == 0) && 
+                (currentState != (int)BodyStates.Idle) && (touchingGround))
+            {
+                idle.Reset();
+                currentState = (int)BodyStates.Neutral;
+            }
 
             if (movedirection != Vector2.Zero)
             {
@@ -414,7 +488,7 @@ namespace TimeSink.Engine.Game.Entities
             {
                 if (!jumpToggleGuard)
                 {
-                    currentFrame = 13;
+                    bodyJump.Reset();
                 }
                 __touchingGroundFlag = true;
                 GravityEnabled = false;
@@ -426,16 +500,52 @@ namespace TimeSink.Engine.Game.Entities
         {
             get
             {
-               /* Stack<IRendering> stack = new Stack<IRendering>();
-                stack.
-                return new StackableRendering(*/
-                return new BasicRendering(
+                Stack<IRendering> stack = new Stack<IRendering>();
+                #region neutral
+                if (currentState == (int)BodyStates.Neutral)
+                {
+                    stack.Push(armMove.Rendering);
+                    stack.Push(hairMove.Rendering);
+                    stack.Push(new BasicRendering(BODY_NEUTRAL,new Vector2(0, 45),0,Vector2.One));
+                }
+                #endregion
+                #region idle
+                else if (currentState == (int)BodyStates.Idle)
+                {
+                    stack.Push(armMove.Rendering);
+                    stack.Push(idle.Rendering);
+                }
+                #endregion
+                #region start walking
+                else if (currentState == (int)BodyStates.StartWalking)
+                {
+                    stack.Push(armMove.Rendering);
+                    stack.Push(bodyStartWalk.Rendering);
+                }
+                #endregion
+                #region walking
+                else if (currentState == (int)BodyStates.Walking)
+                {
+                    stack.Push(armMove.Rendering);
+                    stack.Push(bodyWalk.Rendering);
+                }
+                #endregion
+                #region jumping
+                else if (currentState == (int)BodyStates.Jumping)
+                {
+                    stack.Push(armMove.Rendering);
+                    stack.Push(bodyJump.Rendering);
+                }
+                #endregion
+
+                return new StackableRendering(stack,physics.Position,0,Vector2.One);
+                /*return new BasicRendering(
                     PLAYER_TEXTURE_NAME,
                     physics.Position,
                     0,
                     Vector2.One,
                     sourceRect
-                );
+                );*/
             }
         }
 
