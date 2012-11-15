@@ -9,11 +9,12 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 
-namespace TimeSink.Engine.Game.Entities
+namespace TimeSink.Entities
 {
     public class WorldGeometry : Entity
     {
         const string WORLD_TEXTURE_NAME = "Textures/giroux";
+        const string EDITOR_NAME = "World Geometry";
 
         public float Friction { get; set; }
         public float Sticktion { get; set; }
@@ -36,6 +37,11 @@ namespace TimeSink.Engine.Game.Entities
         {
             Friction = friction;
             Sticktion = sticktion;
+        }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
         }
 
         public override void Load(EngineGame game)

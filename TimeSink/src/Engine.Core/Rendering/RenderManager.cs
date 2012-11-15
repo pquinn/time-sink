@@ -37,7 +37,7 @@ namespace TimeSink.Engine.Core.Rendering
             return renderables.Remove(renderable);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Camera camera)
         {
             spriteBatch.Begin();
 
@@ -46,14 +46,8 @@ namespace TimeSink.Engine.Core.Rendering
                 renderable.Rendering.Draw(
                     spriteBatch,
                     TextureCache,
-                    Matrix.Identity
+                    camera.Transform
                 );
-                //renderable.Rendering.Draw(
-                //    spriteBatch,
-                //    TextureCache,
-                //    Vector2.Zero,
-                //    0,
-                //    Vector2.One);
             }
 
             spriteBatch.End();

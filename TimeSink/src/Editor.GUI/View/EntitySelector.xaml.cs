@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Editor.GUI.ViewModels;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -22,10 +23,11 @@ namespace TimeSink.Editor.GUI.Views
     /// </summary>
     public partial class EntitySelector : Window
     {
-        public EntitySelector(InMemoryResourceCache<Texture2D> cache)
+        public EntitySelector(IEnumerable<Entity> entities, InMemoryResourceCache<Texture2D> cache)
         {
             InitializeComponent();
-            DataContext = new StaticMeshSelectorViewModel(
+            DataContext = new EntitySelectorViewModel(
+                entities,
                 cache,
                 (string s, bool b) =>
                 {

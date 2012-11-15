@@ -16,6 +16,8 @@ namespace TimeSink.Engine.Core
 {
     public class StaticMesh : Entity
     {
+        const string EDITOR_NAME = "Static Mesh";
+
         string texture;
         IResourceCache<Texture2D> cache;
 
@@ -26,6 +28,11 @@ namespace TimeSink.Engine.Core
             this.Rotation = rotation;
             this.Scale = scale;
             this.cache = cache;
+        }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
         }
 
         public Vector2 Position { get; set; }

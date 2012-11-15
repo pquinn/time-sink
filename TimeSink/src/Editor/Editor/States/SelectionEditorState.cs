@@ -13,6 +13,10 @@ namespace Editor.States
 {
     public class SelectionEditorState : DefaultEditorState
     {
+        const int CAMERA_TOLERANCE = 10;
+        const int CAMERA_MOVE_SPEED = 5;
+        private Vector3 cameraOffset = Vector3.Zero;
+
         protected List<StaticMesh> selectedMeshes;
         protected int drillIndex;
         protected bool drag;
@@ -89,6 +93,17 @@ namespace Editor.States
             {
                 selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
             }
+
+            cameraOffset = Vector3.Zero;
+            var mouse = GetMousePosition();
+            if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
+                cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
+            if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
+                cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
+            if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
+                cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
+            if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
+                cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
         }
 
         public override void Exit(Level level)
@@ -97,6 +112,8 @@ namespace Editor.States
 
         public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
         {
+            camera.PanCamera(cameraOffset);
+
             base.Draw(spriteBatch, camera, level);
 
             spriteBatch.Begin();
@@ -105,7 +122,7 @@ namespace Editor.States
             {
                 var box = selectedMeshes[i].Rendering.GetNonAxisAlignedBoundingBox(
                         level.RenderManager.TextureCache,
-                        Matrix.Identity);
+                        camera.Transform);
 
                 if (i == drillIndex)
                 {

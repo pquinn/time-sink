@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Editor.GUI.ViewModels;
 using Editor;
 using TimeSink.Engine.Core;
+using Autofac;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -137,7 +138,8 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!entitiesButtonPressed)
             {
-                var entityWindow = new EntitySelector(m_game.TextureCache);
+                var entities = m_game.Container.Resolve<IEnumerable<Entity>>();
+                var entityWindow = new EntitySelector(entities, m_game.TextureCache);
 
                 entityWindow.ShowDialog();
 

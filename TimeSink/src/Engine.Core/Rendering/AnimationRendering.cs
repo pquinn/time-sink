@@ -53,10 +53,7 @@ namespace TimeSink.Engine.Core.Rendering
                Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
                transform;
 
-            var origin = Vector2.Transform(
-                new Vector2((srcRectangle.Width / 2),
-                            (srcRectangle.Height / 2)),
-                transform);
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             if (InputManager.Instance.Pressed(Keys.B))
             {

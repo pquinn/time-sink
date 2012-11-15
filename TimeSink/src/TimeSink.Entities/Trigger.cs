@@ -7,14 +7,15 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Game.Entities;
 
-namespace Engine.Game.Entities
+namespace TimeSink.Entities
 {
     public delegate void TriggerDelegate(ICollideable collided);
 
     public class Trigger : Entity
     {
+        const string EDITOR_NAME = "Trigger";
+
         public event TriggerDelegate Triggered;
 
         private ICollisionGeometry _geom;
@@ -23,9 +24,18 @@ namespace Engine.Game.Entities
             get { return _geom; }
         }
 
+        public Trigger()
+        {
+        }
+
         public Trigger(ICollisionGeometry geom)
         {
             _geom = geom;
+        }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
         }
 
         public override IPhysicsParticle PhysicsController
