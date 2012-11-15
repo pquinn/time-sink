@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B82CD8ED-436D-4920-B182-536D19C2E904}</ProjectGuid>
@@ -91,7 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Enemies\Dummy.cs" />
+    <Compile Include="Entities\Enemies\Enemy.cs" />
     <Compile Include="Entities\Enemies\NormalCentipede.cs" />
     <Compile Include="Entities\Trigger.cs" />
     <Compile Include="Entities\IInventoryItem.cs" />
