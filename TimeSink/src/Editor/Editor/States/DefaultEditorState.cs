@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class DefaultEditorState : State<Level>
     {

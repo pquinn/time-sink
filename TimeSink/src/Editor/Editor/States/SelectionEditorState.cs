@@ -7,17 +7,18 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class SelectionEditorState : DefaultEditorState
     {
-        List<StaticMesh> selectedMeshes;
-        int drillIndex;
-        bool drag;
-        bool emptySelect;
-        Vector2 dragPivot;
-        Vector2 selectionPivot;
+        protected List<StaticMesh> selectedMeshes;
+        protected int drillIndex;
+        protected bool drag;
+        protected bool emptySelect;
+        protected Vector2 dragPivot;
+        protected Vector2 selectionPivot;
 
         public SelectionEditorState()
         {
@@ -45,10 +46,7 @@ namespace TimeSink.Engine.Core.States
                 }
                 else if (hasSelect && sameClick && !drag && !emptySelect)  // enter drag
                 {
-                    drag = true;
-                    //lastMouse = GetMousePosition();
-                    dragPivot = GetMousePosition();
-                    selectionPivot = selectedMeshes[drillIndex].Position;
+                    DragStart();
                 }
                 else if (hasSelect && drag && !emptySelect) // dragging
                 {
@@ -70,7 +68,7 @@ namespace TimeSink.Engine.Core.States
 
                 emptySelect = false;
             }
-            
+
             if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
             {
                 drillIndex = (drillIndex + 1) % selectedMeshes.Count;
@@ -103,69 +101,34 @@ namespace TimeSink.Engine.Core.States
 
             spriteBatch.Begin();
 
-                for (int i = 0; i < selectedMeshes.Count; i++)
+            for (int i = 0; i < selectedMeshes.Count; i++)
+            {
+                var box = selectedMeshes[i].Rendering.GetNonAxisAlignedBoundingBox(
+                        level.RenderManager.TextureCache,
+                        Matrix.Identity);
+
+                if (i == drillIndex)
                 {
-                    var accRef = new Rendering.BoundingBox(
-                        Single.PositiveInfinity, Single.NegativeInfinity,
-                        Single.NegativeInfinity, Single.PositiveInfinity);
-                    if (i == drillIndex)
-                    {
-                        selectedMeshes[i].Rendering.GetBoundingBox(
-                            level.RenderManager.TextureCache,
-                            ref accRef,
-                            new Vector2(0, 0));
-
-                        DrawBoundingBox(spriteBatch, camera, Color.LightGreen, accRef);
-                    }
-                    else
-                    {
-                        selectedMeshes[i].Rendering.GetBoundingBox(
-                            level.RenderManager.TextureCache,
-                            ref accRef,
-                            new Vector2(0, 0));
-
-                        DrawBoundingBox(spriteBatch, camera, Color.LightYellow, accRef);
-                    }         
+                    DrawBoundingBox(spriteBatch, camera, Color.LightGreen, box);
+                }
+                else
+                {
+                    DrawBoundingBox(spriteBatch, camera, Color.LightYellow, box);
+                }
             }
 
             spriteBatch.End();
         }
 
-        private void DrawBoundingBox(SpriteBatch spriteBatch, Camera camera, Color color, Rendering.BoundingBox bounds)
+        protected virtual void DragStart()
         {
-            var blank = StateMachine.Owner.RenderManager.TextureCache.GetResource("blank");
-            spriteBatch.DrawRect(
-                blank,
-                new Vector2(bounds.Min_X, bounds.Min_Y),
-                new Vector2(bounds.Max_X, bounds.Max_Y),
-                5, color);
+            drag = true;
+
+            dragPivot = GetMousePosition();
+            selectionPivot = selectedMeshes[drillIndex].Position;
         }
 
-        private List<StaticMesh> GetSelections(Level level)
-        {
-            var selected = new List<StaticMesh>();
-            foreach (var mesh in level.GetStaticMeshes())
-            {
-                if (mesh.Rendering.Contains(
-                        GetMousePosition(),
-                        level.RenderManager.TextureCache,
-                        new Vector2(0, 0)))
-                {
-                    selected.Add(mesh);
-                }
-            }
-
-            return selected;
-        }
-
-        private Vector2 GetMousePosition()
-        {
-            return new Vector2(
-                    InputManager.Instance.CurrentMouseState.X,
-                    InputManager.Instance.CurrentMouseState.Y);
-        }
-
-        private void HandleDrag()
+        protected virtual void HandleDrag()
         {
             var mousePos = GetMousePosition();
             var offset = mousePos - dragPivot;
@@ -174,7 +137,7 @@ namespace TimeSink.Engine.Core.States
             var offY = 0f;
 
             if (EditorProperties.Instance.EnableSnapping && offset.Length() > 0)
-           {
+            {
                 var gridSpace = EditorProperties.Instance.GridLineSpacing;
                 var halfSpace = gridSpace / 2;
                 var leftDist = newPos.X % gridSpace;
@@ -185,6 +148,36 @@ namespace TimeSink.Engine.Core.States
             }
 
             selectedMeshes[drillIndex].Position = newPos;
+        }
+
+        protected Vector2 GetMousePosition()
+        {
+            return new Vector2(
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y);
+        }
+
+        private void DrawBoundingBox(SpriteBatch spriteBatch, Camera camera, Color color, NonAxisAlignedBoundingBox box)
+        {
+            var blank = StateMachine.Owner.RenderManager.TextureCache.GetResource("blank");
+            spriteBatch.DrawRect(blank, box, 5, color);
+        }
+
+        private List<StaticMesh> GetSelections(Level level)
+        {
+            var selected = new List<StaticMesh>();
+            foreach (var mesh in level.GetStaticMeshes())
+            {
+                if (mesh.Rendering.Contains(
+                        GetMousePosition(),
+                        level.RenderManager.TextureCache,
+                        Matrix.Identity))
+                {
+                    selected.Add(mesh);
+                }
+            }
+
+            return selected;
         }
     }
 }

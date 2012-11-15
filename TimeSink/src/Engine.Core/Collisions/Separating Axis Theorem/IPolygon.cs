@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -38,6 +41,22 @@ namespace TimeSink.Engine.Core.Collisions
         }
 
         public abstract IList<Vector2> Vertices { get; }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            var transformedVerts = Vertices.Select(
+                    v => Vector2.Transform(v, globalTransform));
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                spriteBatch.DrawLine(
+                    cache.GetResource("blank"), 
+                    Vertices[i], 
+                    Vertices[(i + 1) % Vertices.Count], 
+                    3, 
+                    Color.Red);
+            }
+        }
     }
 
     internal class Polygon : APolygon

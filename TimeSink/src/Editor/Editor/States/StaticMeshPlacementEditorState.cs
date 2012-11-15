@@ -7,8 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
+using TimeSink.Engine.Core;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class StaticMeshPlacementEditorState : DefaultEditorState
     {
@@ -33,8 +34,10 @@ namespace TimeSink.Engine.Core.States
                 var mesh = new StaticMesh(
                     textureKey,
                     new Vector2(
-                        Input.InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
-                        Input.InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)));
+                        InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
+                        InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
+                    0, Vector2.One,
+                    level.RenderManager.TextureCache);
                 level.RegisterStaticMesh(mesh);
 
                 StateMachine.RevertToPreviousState(true);
@@ -53,13 +56,13 @@ namespace TimeSink.Engine.Core.States
 
             Console.WriteLine(
                 "{0}, {1}",
-                Input.InputManager.Instance.CurrentMouseState.X,
-                Input.InputManager.Instance.CurrentMouseState.Y);
+                InputManager.Instance.CurrentMouseState.X,
+                InputManager.Instance.CurrentMouseState.Y);
             spriteBatch.Draw(
                 texture,
                 new Vector2(
-                    Input.InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
-                    Input.InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
+                    InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
+                    InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
                 new Color(255, 255, 255, 80));
 
             spriteBatch.End();

@@ -1,43 +1,86 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// Game.cs
+//-----------------------------------------------
+// Synapse Gaming - SunBurn Starter Kit
+//-----------------------------------------------
 //
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
+// Provides an empty solution for creating new SunBurn based games and
+// projects.
+// 
+// To use:
+//   -Run the solution from Visual Studio
+//   -When running press F11 to open the in-game editor
+//   -Import new models into the content repository (using the Scene Object tab)
+//   -Drag models from the repository into the scene tree-view
+//   -Add lights, adjust materials, the environment, and more
+//
+// Please see the included Readme.htm for details and documentation.
+//
 //-----------------------------------------------------------------------------
+
+#region Using Statements
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
+
+using GameStateManagement;
+using DB;
 #endregion
 
-using System;
-using GameStateManagement;
-using Microsoft.Xna.Framework;
 
 namespace GameStateManagementSample
 {
     /// <summary>
-    /// Sample showing how to manage different game states, with transitions
-    /// between menu screens, a loading screen, the game itself, and a pause
-    /// menu. This main game class is extremely simple: all the interesting
-    /// stuff happens in the ScreenManager component.
+    /// This is the main type for your game
     /// </summary>
-    public class GameStateManagementGame : Microsoft.Xna.Framework.Game
+    public class StarterGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        #region Fields
+
+        // Default XNA members.
+        public GraphicsDeviceManager graphics;
+
+        // Screen Manager
         ScreenManager screenManager;
         ScreenFactory screenFactory;
 
+        public SQLiteDatabase database;
 
+        #endregion
 
-        /// <summary>
-        /// The main game constructor.
-        /// </summary>
-        public GameStateManagementGame()
+        public static StarterGame Instance;
+
+        #region Initialization Methods
+
+        public StarterGame()
         {
+            // Default XNA setup.
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics = new GraphicsDeviceManager(this);
+            // Required for lighting system.
+            graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+
+            // Frame rate is 30 fps by default for Windows Phone.
             TargetElapsedTime = TimeSpan.FromTicks(333333);
-            graphics.PreferredBackBufferWidth = 1200;
-            graphics.PreferredBackBufferHeight = 800;
+
+            // Create the screen factory and add it to the Services
+            screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
+            //Create a new instance of the Screen Manager
+            screenManager = new ScreenManager(this);
+            Components.Add(screenManager);
+
+            database = new SQLiteDatabase();
+
+            Instance = this;
 
 #if WINDOWS_PHONE
             graphics.IsFullScreen = true;
@@ -45,28 +88,27 @@ namespace GameStateManagementSample
             // Choose whether you want a landscape or portait game by using one of the two helper functions.
             InitializeLandscapeGraphics();
             // InitializePortraitGraphics();
+#else
+            graphics.IsFullScreen = false;
 #endif
-
-            // Create the screen factory and add it to the Services
-            screenFactory = new ScreenFactory();
-            Services.AddService(typeof(IScreenFactory), screenFactory);
-
-            // Create the screen manager component.
-            screenManager = new ScreenManager(this);
-            Components.Add(screenManager);
 
 #if WINDOWS_PHONE
             // Hook events on the PhoneApplicationService so we're notified of the application's life cycle
-            Microsoft.Phone.Shell.PhoneApplicationService.Current.Launching += 
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Launching +=
                 new EventHandler<Microsoft.Phone.Shell.LaunchingEventArgs>(GameLaunching);
-            Microsoft.Phone.Shell.PhoneApplicationService.Current.Activated += 
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Activated +=
                 new EventHandler<Microsoft.Phone.Shell.ActivatedEventArgs>(GameActivated);
-            Microsoft.Phone.Shell.PhoneApplicationService.Current.Deactivated += 
+            Microsoft.Phone.Shell.PhoneApplicationService.Current.Deactivated +=
                 new EventHandler<Microsoft.Phone.Shell.DeactivatedEventArgs>(GameDeactivated);
 #else
             // On Windows and Xbox we just add the initial screens
             AddInitialScreens();
 #endif
+
+            // AudioManager.Initialize(this);
+
+
+            // Required for lighting system.
         }
 
         private void AddInitialScreens()
@@ -83,15 +125,18 @@ namespace GameStateManagementSample
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// Allows the game to perform any initialization it needs to before starting to run.
+        /// This is where it can query for any required services and load any non-graphic
+        /// related content.  Calling base.Initialize will enumerate through any components
+        /// and initialize them as well.
         /// </summary>
-        protected override void Draw(GameTime gameTime)
+        protected override void Initialize()
         {
-            graphics.GraphicsDevice.Clear(Color.Black);
+            // TODO: Add your initialization logic here
 
-            // The real drawing happens inside the screen manager component.
-            base.Draw(gameTime);
+            base.Initialize();
         }
+        #endregion
 
 #if WINDOWS_PHONE
         /// <summary>
@@ -133,5 +178,53 @@ namespace GameStateManagementSample
             screenManager.Deactivate();
         }
 #endif
+
+        #region Update Methods
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
+        }
+        #endregion
+
+        #region Draw Methods
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+
+            base.Draw(gameTime);
+        }
+        #endregion
+
+        #region Main entry point
+#if !WINDOWS_PHONE
+        static class Program
+        {
+            /// <summary>
+            /// The main entry point for the application.
+            /// </summary>
+            [STAThread]
+            static void Main(string[] args)
+            {
+#if WINDOWS
+                // Improved ui.
+                System.Windows.Forms.Application.EnableVisualStyles();
+#endif
+
+                using (StarterGame game = new StarterGame())
+                    game.Run();
+            }
+        }
+#endif
+        #endregion
     }
 }

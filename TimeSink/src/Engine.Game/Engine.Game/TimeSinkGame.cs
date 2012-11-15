@@ -58,7 +58,7 @@ namespace TimeSink.Engine.Game
         const float moveScale = 100.0f;
 
         UserControlledCharacter character;
-        Dummy dummy;
+        Enemy dummy;
         NormalCentipede normalCentipede;
         WorldGeometry world;
         Trigger trigger;
@@ -81,11 +81,16 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
+<<<<<<< HEAD
             dummy = new Dummy(new Vector2(600, 350));
             world = new WorldGeometry()
             {
                 Sticktion = .5f
             };
+=======
+            dummy = new Enemy(new Vector2(600, 350));
+            world = new WorldGeometry();
+>>>>>>> f35cfa8f4fe027f23023948f448f24c58ba1102e
             normalCentipede = new NormalCentipede(new Vector2(300, 250));
 
             // Required for lighting system.
@@ -133,7 +138,6 @@ namespace TimeSink.Engine.Game
             //            phys.Position = Vector2.Zero;
             //    }
             //};
-
 
 
             CollisionManager.RegisterCollisionBody(world);
@@ -202,7 +206,6 @@ namespace TimeSink.Engine.Game
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
 
-            InputManager.Instance.Update();
             HandleInput(gameTime);
 
             base.Update(gameTime);
@@ -219,6 +222,12 @@ namespace TimeSink.Engine.Game
             {
                 backgroundTrack.TogglePauseSound();
             }
+
+            if (InputManager.Instance.IsNewKey(Keys.C))
+            {
+                showCollisionGeometry = !showCollisionGeometry;
+            }
+
             character.HandleKeyboardInput(gametime, this);
             
         }
@@ -230,6 +239,11 @@ namespace TimeSink.Engine.Game
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            if (showCollisionGeometry)
+            {
+                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
+            }
         }
 
 
@@ -241,7 +255,7 @@ namespace TimeSink.Engine.Game
         Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
-        public SpriteBatch spriteBatch;
+        private bool showCollisionGeometry;
 
 #if WINDOWS_PHONE
         /// <summary>

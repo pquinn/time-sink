@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -45,6 +47,18 @@ namespace TimeSink.Engine.Core.Collisions
         {
             Collided.DoAutoRegister();
             OnCollidedWith.DoAutoRegister();
+        }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            spriteBatch.Begin();
+
+            foreach (var collideable in collideables)
+            {
+                collideable.CollisionGeometry.Draw(spriteBatch, cache, globalTransform);
+            }
+
+            spriteBatch.End();
         }
     }
 }

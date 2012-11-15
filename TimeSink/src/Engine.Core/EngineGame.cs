@@ -9,6 +9,8 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace TimeSink.Engine.Core
 {
@@ -53,6 +55,11 @@ namespace TimeSink.Engine.Core
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            TextureCache.LoadResource("Textures/circle");
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            TextureCache.AddResource("blank", blank);
+
             foreach (var entity in Entities)
                 entity.Load(this);
         }
@@ -61,6 +68,8 @@ namespace TimeSink.Engine.Core
         {
             base.Update(gameTime);
 
+            InputManager.Instance.Update();
+
             PhysicsManager.Update(gameTime);
             CollisionManager.Update(gameTime);
 
@@ -68,7 +77,6 @@ namespace TimeSink.Engine.Core
                 entity.Update(gameTime, this);
 
             Entities.RemoveWhere(e => e.Dead);
-
         }
 
         protected override void Draw(GameTime gameTime)

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core.Collisions;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core.Collisions
 {
@@ -45,6 +47,14 @@ namespace TimeSink.Engine.Core.Collisions
                 Intersect = intersected,
                 MinimumTranslationVector = new Vector2(movex, movey)
             };
+        }
+
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        {
+            foreach (var geom in Geometry)
+            {
+                geom.Draw(spriteBatch, cache, globalTransform);
+            }
         }
     }
 }
