@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using GameStateManagement;
 using System.Collections.Generic;
 using GameStateManagementSample.Items;
+using DialoguePrototype;
 #endregion
 
 namespace GameStateManagementSample
@@ -56,6 +57,7 @@ namespace GameStateManagementSample
         float pauseAlpha;
 
         InputAction pauseAction;
+        InputAction startAction;
 
         public List<IHudElement> HudElements
         {
@@ -79,6 +81,10 @@ namespace GameStateManagementSample
             pauseAction = new InputAction(
                 new Buttons[] { Buttons.Start, Buttons.Back },
                 new Keys[] { Keys.Escape },
+                true);
+            startAction = new InputAction(
+                new Buttons[] { Buttons.A },
+                new Keys[] { Keys.Enter },
                 true);
         }
 
@@ -273,6 +279,10 @@ namespace GameStateManagementSample
 #else
                 ScreenManager.AddScreen(new PauseMenuScreen(hudElements), ControllingPlayer);
 #endif
+            }
+            else if (startAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
+            {
+                ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid("4cf17838-279c-11e2-b64d-109adda800ea")), null);
             }
             else
             {
