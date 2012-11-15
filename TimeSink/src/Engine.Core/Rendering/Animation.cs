@@ -55,18 +55,34 @@ namespace TimeSink.Engine.Core.Rendering
         }
         public void UpdateFrame()
         {
-            currentFrame++;
-            if (currentFrame >= totalFrames)
+            if (currentFrame <= (totalFrames - 1))
+            {
+                UpdateSourceRect();
+                currentFrame++;
+            }
+            else
             {
                 currentFrame = 0;
+                UpdateSourceRect();
+                currentFrame++;
             }
-            UpdateSourceRect();
-           
         }
 
         public void Reset()
         {
             currentFrame = 0;
+            UpdateSourceRect();
+        }
+
+        public void Reverse()
+        {
+            if (currentFrame == 0)
+            {
+                currentFrame = totalFrames - 1;
+            }
+            else
+                currentFrame--;
+
             UpdateSourceRect();
         }
     }

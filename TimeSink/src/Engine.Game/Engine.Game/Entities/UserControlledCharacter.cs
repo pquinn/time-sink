@@ -19,9 +19,10 @@ namespace TimeSink.Engine.Game.Entities
     {
         const float PLAYER_MASS = 100f;
 
-        enum BodyStates { Neutral, Idle, StartWalking, Walking, StartRunning, Running, Jumping };
+        enum BodyStates { Neutral, Idle, StartWalking, Walking, StopWalking, StartRunning, Running, StopRunning, Jumping, Shooting };
         int currentState;
 
+        //Texture strings for content loading
         const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
         const string BODY_START_WALK = "Textures/Sprites/SpriteSheets/StartWalk";
@@ -36,6 +37,8 @@ namespace TimeSink.Engine.Game.Entities
         const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
         const string BODY_NEUTRAL = "Textures/Sprites/Body/Body_Neutral";
 
+        //Animation holders which create Renderings and set up relative positions
+        //**We will not sizes/relative positions once all sprites are resized to 128x256
         Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
         Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
         Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, new Vector2(0, 45));
@@ -171,20 +174,7 @@ namespace TimeSink.Engine.Game.Entities
             game.TextureCache.LoadResource(HAND_CLOSE);
             game.TextureCache.LoadResource(HEAD_STATES);
             game.TextureCache.LoadResource(BODY_NEUTRAL);
-            /*   SpriteTextureCache.LoadResource("Textures/Sprites/Body/Body_Neutral");
-               SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Arm_Neutral");
-               SpriteTextureCache.LoadResource("Textures/Sprites/Body/Arms/Hands/Hand_Neutral");
-               SpriteTextureCache.LoadResource("Textures/Sprites/Head/Face_Neutral");
-               SpriteTextureCache.LoadResource("Textures/Sprites/Head/Hair/Hair_Neutral");
-
-               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Hands/Hand_Neutral", new Vector2(37, 80)));
-               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Arms/Arm_Neutral", new Vector2(23, 20)));
-               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Head/Hair/Hair_Neutral", new Vector2(15, -45)));
-               spriteStack.Push(new Tuple<string,Vector2>("Textures/Sprites/Head/Face_Neutral", new Vector2(45, -38)));
-               spriteStack.Push(new Tuple<string, Vector2>("Textures/Sprites/Body/Body_Neutral", Vector2.Zero));
-               */
-
-            //playerTexture = content.Load<Texture2D>("Textures/Sprites/Body/Body_Neutral");
+            
 
             jumpSound = game.SoundCache.LoadResource(JUMP_SOUND_NAME);
         }
@@ -215,42 +205,11 @@ namespace TimeSink.Engine.Game.Entities
             var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
             var d = InputManager.Instance.Pressed(Keys.D);
             var a = InputManager.Instance.Pressed(Keys.A);
+
+            //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
 
-            #region UpdateAnimations
-            if ((currentState == (int)BodyStates.Idle) && (timer >= interval))
-            {
-                idle.UpdateFrame();
-                timer = 0f;
-            }
-            else if ((currentState == (int)BodyStates.Neutral) && timer >= idleInterval)
-            {
-                currentState = (int)BodyStates.Idle;
-                timer = 0f;
-            }
-
-            else if (currentState == (int)BodyStates.Walking && timer >= interval)
-            {
-                bodyWalk.UpdateFrame();
-                timer = 0f;
-            }
-            else if (currentState == (int)BodyStates.StartWalking && timer >= (interval * 2))
-            {
-                bodyStartWalk.UpdateFrame();
-                currentState = (int)BodyStates.Walking;
-                timer = 0f;
-            }
-            else if (currentState == (int)BodyStates.Jumping && timer >= interval)
-            {
-                if (bodyJump.CurrentFrame != (bodyJump.TotalFrames - 1))
-                {
-                    bodyJump.UpdateFrame();
-                }
-                timer = 0f;
-            }
-            #endregion
-
-
+            UpdateAnimationStates();
 
             #region Movement
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
@@ -304,7 +263,6 @@ namespace TimeSink.Engine.Game.Entities
                 {
                     if (currentState != (int)BodyStates.Walking)
                     {
-                        bodyStartWalk.Reset();
                         bodyWalk.Reset();
                         currentState = (int)BodyStates.StartWalking;
                     }
@@ -396,6 +354,7 @@ namespace TimeSink.Engine.Game.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
+                currentState = (int)BodyStates.Shooting;
                 holdTime = gameTime.TotalGameTime.TotalSeconds;
                 inHold = true;
             }
@@ -418,11 +377,20 @@ namespace TimeSink.Engine.Game.Entities
 
             #endregion
 
+            //No keys are pressed and we're on the ground, we're neutral
             if ((keyboard.GetPressedKeys().GetLength(0) == 0) && 
-                (currentState != (int)BodyStates.Idle) && (touchingGround))
+                (touchingGround))
             {
-                idle.Reset();
-                currentState = (int)BodyStates.Neutral;
+                if ((currentState == (int)BodyStates.Walking))
+                {
+                    bodyStartWalk.Reset();
+                    currentState = (int)BodyStates.StopWalking;
+                }
+                else if ((currentState != (int)BodyStates.Idle) && (currentState != (int)BodyStates.StopWalking))
+                {
+                    idle.Reset();
+                    currentState = (int)BodyStates.Neutral;
+                }
             }
 
             if (movedirection != Vector2.Zero)
@@ -442,6 +410,56 @@ namespace TimeSink.Engine.Game.Entities
             }
         }
 
+        protected void UpdateAnimationStates()
+        {
+            if ((currentState == (int)BodyStates.Idle) && (timer >= interval))
+            {
+                idle.UpdateFrame();
+                timer = 0f;
+            }
+            else if ((currentState == (int)BodyStates.Neutral) && timer >= idleInterval)
+            {
+                currentState = (int)BodyStates.Idle;
+                timer = 0f;
+            }
+
+            else if (currentState == (int)BodyStates.Walking && timer >= interval)
+            {
+                bodyWalk.UpdateFrame();
+                timer = 0f;
+            }
+            else if (currentState == (int)BodyStates.StartWalking && timer >= interval)
+            {
+                if (bodyStartWalk.CurrentFrame == (bodyStartWalk.TotalFrames))
+                {
+                    currentState = (int)BodyStates.Walking;
+                }
+                else
+                {
+                    bodyStartWalk.UpdateFrame();
+                }
+                timer = 0f;
+            }
+            else if (currentState == (int)BodyStates.StopWalking && timer >= interval)
+            {
+                bodyStartWalk.Reverse();
+                if (bodyStartWalk.CurrentFrame == 0)
+                {
+                    currentState = (int)BodyStates.Neutral;
+                    bodyStartWalk.Reset();
+                    bodyWalk.Reset();
+                }
+                timer = 0f;
+            }
+            else if (currentState == (int)BodyStates.Jumping && timer >= interval)
+            {
+                if (bodyJump.CurrentFrame != (bodyJump.TotalFrames - 1))
+                {
+                    bodyJump.UpdateFrame();
+                }
+                timer = 0f;
+            }
+        }
         protected void AnimateRight(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -496,6 +514,61 @@ namespace TimeSink.Engine.Game.Entities
             }
         }
 
+        private void CreateAnimationStack(Stack<IRendering> stack)
+        {
+            #region neutral
+            if (currentState == (int)BodyStates.Neutral)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(hairMove.Rendering);
+                stack.Push(bodyStartWalk.Rendering);
+            }
+            #endregion
+            #region idle
+            else if (currentState == (int)BodyStates.Idle)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(idle.Rendering);
+            }
+            #endregion
+            #region start walking
+            else if (currentState == (int)BodyStates.StartWalking)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(bodyStartWalk.Rendering);
+            }
+            #endregion
+            #region stop walking
+            else if (currentState == (int)BodyStates.StopWalking)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(bodyStartWalk.Rendering);
+            }
+            #endregion
+            #region walking
+            else if (currentState == (int)BodyStates.Walking)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(bodyWalk.Rendering);
+            }
+            #endregion
+            #region jumping
+            else if (currentState == (int)BodyStates.Jumping)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(bodyJump.Rendering);
+            }
+            #endregion
+            #region shooting
+            if (currentState == (int)BodyStates.Shooting)
+            {
+                stack.Push(armMove.Rendering);
+                stack.Push(hairMove.Rendering);
+                stack.Push(bodyStartWalk.Rendering);
+            }
+            #endregion
+        }
+
         public override IRendering Rendering
         {
             get
@@ -505,42 +578,7 @@ namespace TimeSink.Engine.Game.Entities
                 return new StackableRendering(*/
                 Console.WriteLine(physics.Position);
                 Stack<IRendering> stack = new Stack<IRendering>();
-                #region neutral
-                if (currentState == (int)BodyStates.Neutral)
-                {
-                    stack.Push(armMove.Rendering);
-                    stack.Push(hairMove.Rendering);
-                    stack.Push(bodyStartWalk.Rendering);
-                }
-                #endregion
-                #region idle
-                else if (currentState == (int)BodyStates.Idle)
-                {
-                    stack.Push(armMove.Rendering);
-                    stack.Push(idle.Rendering);
-                }
-                #endregion
-                #region start walking
-                else if (currentState == (int)BodyStates.StartWalking)
-                {
-                    stack.Push(armMove.Rendering);
-                    stack.Push(bodyStartWalk.Rendering);
-                }
-                #endregion
-                #region walking
-                else if (currentState == (int)BodyStates.Walking)
-                {
-                    stack.Push(armMove.Rendering);
-                    stack.Push(bodyWalk.Rendering);
-                }
-                #endregion
-                #region jumping
-                else if (currentState == (int)BodyStates.Jumping)
-                {
-                    stack.Push(armMove.Rendering);
-                    stack.Push(bodyJump.Rendering);
-                }
-                #endregion
+                CreateAnimationStack(stack);
 
                 Console.WriteLine(physics.Position.Y);
                 return new StackableRendering(stack,physics.Position,0,Vector2.One);
