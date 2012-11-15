@@ -506,7 +506,7 @@ namespace TimeSink.Engine.Game.Entities
                 {
                     stack.Push(armMove.Rendering);
                     stack.Push(hairMove.Rendering);
-                    stack.Push(new BasicRendering(BODY_NEUTRAL,new Vector2(0, 45),0,Vector2.One));
+                    stack.Push(bodyStartWalk.Rendering);
                 }
                 #endregion
                 #region idle
@@ -538,6 +538,7 @@ namespace TimeSink.Engine.Game.Entities
                 }
                 #endregion
 
+                Console.WriteLine(physics.Position.Y);
                 return new StackableRendering(stack,physics.Position,0,Vector2.One);
                 /*return new BasicRendering(
                     PLAYER_TEXTURE_NAME,

@@ -12,7 +12,7 @@ namespace TimeSink.Engine.Core.Rendering
         private int currentFrame = 0;
         private int maxWidth;
         private int maxHeight;
-        private BasicRendering rendering;
+        private AnimationRendering rendering;
 
         public int TotalFrames
         {
@@ -32,7 +32,7 @@ namespace TimeSink.Engine.Core.Rendering
             get { return currentFrame; }
         }
 
-        public BasicRendering Rendering
+        public AnimationRendering Rendering
         {
             get { return rendering; }
             set { rendering = value; }
@@ -43,18 +43,15 @@ namespace TimeSink.Engine.Core.Rendering
             this.totalFrames = totalFrames;
             this.maxWidth = maxWidth;
             this.maxHeight = maxHeight;
-            this.rendering = new BasicRendering(texture, loc, 0, Vector2.One, new Rectangle(0, 0, maxWidth, maxHeight));
+            this.rendering = new AnimationRendering(texture, loc, 0, Vector2.One, new Rectangle(0, 0, maxWidth, maxHeight));
         }
 
         public void UpdateSourceRect()
         {
-            if (rendering.SrcRectangle.HasValue)
-            {
                 Rectangle rect = ((Rectangle)rendering.SrcRectangle);
                 rect.X = currentFrame * rect.Width;
                 rect.Y = 0;
                 this.rendering.SrcRectangle = rect;
-            }
         }
         public void UpdateFrame()
         {
