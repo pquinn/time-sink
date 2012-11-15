@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "src\Editor\Editor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorContent", "src\Editor\EditorContent\EditorContent.contentproj", "{27316DBF-4F07-4C66-8867-7BFEBAADD076}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSink.Entities", "src\TimeSink.Entities\TimeSink.Entities.csproj", "{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{27316DBF-4F07-4C66-8867-7BFEBAADD076}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{27316DBF-4F07-4C66-8867-7BFEBAADD076}.Release|Windows Phone.ActiveCfg = Release|x86
 		{27316DBF-4F07-4C66-8867-7BFEBAADD076}.Release|x86.ActiveCfg = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|Windows Phone.ActiveCfg = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|x86.ActiveCfg = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Debug|x86.Build.0 = Debug|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|Any CPU.ActiveCfg = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|Mixed Platforms.Build.0 = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|Windows Phone.ActiveCfg = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|x86.ActiveCfg = Release|x86
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +122,6 @@ Global
 		{8D3B71D1-B287-437C-85AD-5019BC9AE233} = {940724BB-A45E-4359-8789-F015A96A3796}
 		{B82CD8ED-436D-4920-B182-536D19C2E904} = {940724BB-A45E-4359-8789-F015A96A3796}
 		{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB} = {940724BB-A45E-4359-8789-F015A96A3796}
+		{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF} = {940724BB-A45E-4359-8789-F015A96A3796}
 	EndGlobalSection
 EndGlobal

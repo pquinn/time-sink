@@ -122,6 +122,8 @@
     <Compile Include="DamageOverTimeEffect.cs" />
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="EditorProperties.cs" />
+    <Compile Include="Editor\EditableFieldAttribute.cs" />
+    <Compile Include="Editor\EditorEnabledAttribute.cs" />
     <Compile Include="EngineGame.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IHaveHealth.cs" />
@@ -154,9 +156,7 @@
     <Compile Include="StaticMesh.cs" />
     <Compile Include="VectorExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

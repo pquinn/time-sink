@@ -68,7 +68,7 @@ namespace TimeSink.Engine.Core.Rendering
             );
         }
 
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform)
+        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var texture = cache.GetResource(textureKey);
 
@@ -76,11 +76,9 @@ namespace TimeSink.Engine.Core.Rendering
                Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
                Matrix.CreateRotationZ(rotation) *
                Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
-               transform;
+               globalTransform;
 
-            var origin = Vector2.Transform(
-                new Vector2(texture.Width / 2, texture.Height / 2),
-                transform);
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             if (InputManager.Instance.Pressed(Keys.B))
             {
@@ -112,10 +110,11 @@ namespace TimeSink.Engine.Core.Rendering
                 Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
                 globalTransform;
 
-            var topLeft = Vector2.Transform(Vector2.Zero, relativeTransform);
+            var topLeft = Vector2.Transform(
+                Vector2.Zero, 
+                relativeTransform);
             var topRight = Vector2.Transform(
-                new Vector2(
-                    texture.Width, 0),
+                new Vector2(texture.Width, 0),
                 relativeTransform);
             var botLeft = Vector2.Transform(
                 new Vector2(0, texture.Height),

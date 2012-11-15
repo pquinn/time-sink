@@ -36,6 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -65,44 +71,47 @@
     <Compile Include="ViewModels\EntitySelectorViewModel.cs" />
     <Compile Include="ViewModels\PopUpViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="View\EntitySelector.xaml.cs">
+    <Compile Include="Views\EntitySelector.xaml.cs">
       <DependentUpon>EntitySelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Level.xaml.cs">
+    <Compile Include="Views\Level.xaml.cs">
       <DependentUpon>Level.xaml</DependentUpon>
     </Compile>
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="View\Sounds.xaml.cs">
+    <Compile Include="Views\PreviewWindow.xaml.cs">
+      <DependentUpon>PreviewWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Sounds.xaml.cs">
       <DependentUpon>Sounds.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\StaticMeshSelector.xaml.cs">
+    <Compile Include="Views\StaticMeshSelector.xaml.cs">
       <DependentUpon>StaticMeshSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Triggers.xaml.cs">
+    <Compile Include="Views\Triggers.xaml.cs">
       <DependentUpon>Triggers.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StaticMeshSelectorViewModel.cs" />
-    <Page Include="View\Collisions.xaml">
+    <Page Include="Views\Collisions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\EntitySelector.xaml">
+    <Page Include="Views\EntitySelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Dialogue.xaml">
+    <Page Include="Views\Dialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Editor.xaml">
+    <Page Include="Views\Editor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Entities.xaml">
+    <Page Include="Views\Entities.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Level.xaml">
+    <Page Include="Views\Level.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,41 +123,45 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\Collisions.xaml.cs">
+    <Compile Include="Views\Collisions.xaml.cs">
       <DependentUpon>Collisions.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Dialogue.xaml.cs">
+    <Compile Include="Views\Dialogue.xaml.cs">
       <DependentUpon>Dialogue.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Editor.xaml.cs">
+    <Compile Include="Views\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Entities.xaml.cs">
+    <Compile Include="Views\Entities.xaml.cs">
       <DependentUpon>Entities.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\Physics.xaml">
+    <Page Include="Views\Physics.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Sounds.xaml">
+    <Page Include="Views\PreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\StaticMeshSelector.xaml">
+    <Page Include="Views\Sounds.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Triggers.xaml">
+    <Page Include="Views\StaticMeshSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Triggers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="View\Physics.xaml.cs">
+    <Compile Include="Views\Physics.xaml.cs">
       <DependentUpon>Physics.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -168,6 +181,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

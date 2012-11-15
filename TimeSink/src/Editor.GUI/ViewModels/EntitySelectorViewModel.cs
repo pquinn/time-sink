@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Editor.GUI.ViewModels
 {
@@ -20,10 +21,12 @@ namespace TimeSink.Editor.GUI.ViewModels
 
         #region Constructor
 
-        public EntitySelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
+        public EntitySelectorViewModel(IEnumerable<Entity> entities, InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
             : base (invokeCancel)
         {
             this.cache = cache;
+            Entities = entities.ToList();
+            this.entityKeys = Entities.Select(e => e.EditorName).ToList();
         }
 
         public List<string> EntityKeys
@@ -34,10 +37,12 @@ namespace TimeSink.Editor.GUI.ViewModels
                 if (value != entityKeys)
                 {
                     entityKeys = value;
-                    base.OnPropertyChanged("TextureKeys");
+                    base.OnPropertyChanged("EntityKeys");
                 }
             }
         }
+
+        public List<Entity> Entities { get; set; }
 
         public int SelectedEntity
         {
@@ -48,7 +53,7 @@ namespace TimeSink.Editor.GUI.ViewModels
                 {
                     selectedEntity = value;
                     SaveCommand.CanExecute(null);
-                    base.OnPropertyChanged("SelectedTextureKey");
+                    base.OnPropertyChanged("SelectedEntity");
                 }
             }
         }
