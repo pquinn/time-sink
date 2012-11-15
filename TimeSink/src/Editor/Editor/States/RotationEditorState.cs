@@ -7,7 +7,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class RotationEditorState : SelectionEditorState
     {

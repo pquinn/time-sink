@@ -7,8 +7,9 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class SelectionEditorState : DefaultEditorState
     {

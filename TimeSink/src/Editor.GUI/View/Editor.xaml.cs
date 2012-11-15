@@ -137,6 +137,15 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!entitiesButtonPressed)
             {
+                var entityWindow = new EntitySelector(m_game.TextureCache);
+
+                entityWindow.ShowDialog();
+
+                var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
+                if ((bool)entityWindow.DialogResult)
+                {
+                    m_game.EntitySelected(entityWindow.SelectedEntity);
+                }
             }
             else
             {

@@ -8,46 +8,45 @@ using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Editor.GUI.ViewModels
 {
-    public class StaticMeshSelectorViewModel : PopUpViewModel 
+    public class EntitySelectorViewModel : PopUpViewModel 
     {
         #region Fields
 
         InMemoryResourceCache<Texture2D> cache;
-        List<string> textureKeys;
-        int selectedTextureKey = -1;
+        List<string> entityKeys;
+        int selectedEntity = -1;
 
         #endregion // Fields
 
         #region Constructor
 
-        public StaticMeshSelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
+        public EntitySelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
             : base (invokeCancel)
         {
-            this.cache = cache; 
-            this.textureKeys = cache.GetResources().Select(x => x.Item1).ToList();
+            this.cache = cache;
         }
 
-        public List<string> TextureKeys
+        public List<string> EntityKeys
         {
-            get { return textureKeys; }
+            get { return entityKeys; }
             set
             {
-                if (value != textureKeys)
+                if (value != entityKeys)
                 {
-                    textureKeys = value;
+                    entityKeys = value;
                     base.OnPropertyChanged("TextureKeys");
                 }
             }
         }
 
-        public int SelectedTextureKey
+        public int SelectedEntity
         {
-            get { return selectedTextureKey; }
+            get { return selectedEntity; }
             set
             {
-                if (value != selectedTextureKey)
+                if (value != selectedEntity)
                 {
-                    selectedTextureKey = value;
+                    selectedEntity = value;
                     SaveCommand.CanExecute(null);
                     base.OnPropertyChanged("SelectedTextureKey");
                 }
@@ -61,13 +60,13 @@ namespace TimeSink.Editor.GUI.ViewModels
         protected override void Close(bool ok)
         {
             invokeCancel(
-                SelectedTextureKey < 0 ? null : TextureKeys[SelectedTextureKey], 
+                SelectedEntity < 0 ? null : EntityKeys[SelectedEntity], 
                 ok);
         }
 
         protected override bool CanSave
         {
-            get { return SelectedTextureKey >= 0; }
+            get { return SelectedEntity >= 0; }
         }
 
         #endregion

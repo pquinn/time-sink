@@ -16,7 +16,6 @@ namespace TimeSink.Engine.Core
 {
     public class EngineGame : Microsoft.Xna.Framework.Game
     {
-        private bool showCollisionGeometry;
         // Components
         public PhysicsManager PhysicsManager { get; private set; }
         public CollisionManager CollisionManager { get; private set; }
@@ -77,22 +76,12 @@ namespace TimeSink.Engine.Core
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);
 
-            if (InputManager.Instance.IsNewKey(Keys.C))
-            {
-                showCollisionGeometry = !showCollisionGeometry;
-            }
-
             Entities.RemoveWhere(e => e.Dead);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             RenderManager.Draw(SpriteBatch);
-
-            if (showCollisionGeometry)
-            {
-                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
-            }
 
             base.Draw(gameTime);
         }

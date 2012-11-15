@@ -73,7 +73,7 @@ namespace TimeSink.Engine.Core
             engineGame.TextureCache.LoadResource(texture);
         }
 
-        internal void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
+        public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {
             var tex = cache.GetResource(texture);
             var size = origScale * new Vector2(tex.Width, tex.Height);

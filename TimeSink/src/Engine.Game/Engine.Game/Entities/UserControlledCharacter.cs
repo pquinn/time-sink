@@ -429,6 +429,7 @@ namespace TimeSink.Engine.Game.Entities
                /* Stack<IRendering> stack = new Stack<IRendering>();
                 stack.
                 return new StackableRendering(*/
+                Console.WriteLine(physics.Position);
                 return new BasicRendering(
                     PLAYER_TEXTURE_NAME,
                     physics.Position,

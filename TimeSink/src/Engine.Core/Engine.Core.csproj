@@ -148,13 +148,8 @@
     <Compile Include="Rendering\RenderManager.cs" />
     <Compile Include="Rendering\TintedRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
-    <Compile Include="States\DefaultEditorState.cs" />
-    <Compile Include="States\RotationEditorState.cs" />
-    <Compile Include="States\ScalingEditorState.cs" />
-    <Compile Include="States\SelectionEditorState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
-    <Compile Include="States\StaticMeshPlacementEditorState.cs" />
     <Compile Include="StaticMesh.cs" />
     <Compile Include="VectorExtensions.cs" />
   </ItemGroup>

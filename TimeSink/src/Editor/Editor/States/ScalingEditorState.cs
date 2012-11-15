@@ -8,8 +8,9 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using TimeSink.Engine.Core;
 
-namespace TimeSink.Engine.Core.States
+namespace Editor.States
 {
     public class ScalingEditorState : SelectionEditorState
     {
