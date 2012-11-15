@@ -56,7 +56,7 @@ namespace TimeSink.Engine.Core.Rendering
             var origin = Vector2.Transform(
                 new Vector2((srcRectangle.Width / 2),
                             (srcRectangle.Height / 2)),
-                Matrix.Identity);//relativeTransform);
+                transform);
 
             if (InputManager.Instance.Pressed(Keys.B))
             {
@@ -65,8 +65,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(
                 texture,
-                //position + origin,
-                Vector2.Transform(Vector2.Zero, relativeTransform),
+                Vector2.Transform(Vector2.Zero, relativeTransform) + origin,
                 srcRectangle,
                 Color.White,
                 (float)rotation,

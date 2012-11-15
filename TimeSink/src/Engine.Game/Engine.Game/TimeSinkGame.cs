@@ -215,7 +215,12 @@ namespace TimeSink.Engine.Game
             {
                 backgroundTrack.TogglePauseSound();
             }
-            
+
+            if (InputManager.Instance.IsNewKey(Keys.C))
+            {
+                showCollisionGeometry = !showCollisionGeometry;
+            }
+
             character.HandleKeyboardInput(gametime, this);
             
         }
@@ -227,6 +232,11 @@ namespace TimeSink.Engine.Game
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            if (showCollisionGeometry)
+            {
+                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
+            }
         }
 
 
@@ -238,6 +248,7 @@ namespace TimeSink.Engine.Game
         Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
+        private bool showCollisionGeometry;
 
 #if WINDOWS_PHONE
         /// <summary>

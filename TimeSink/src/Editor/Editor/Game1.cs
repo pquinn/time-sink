@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
+using Editor.States;
 
 namespace Editor
 {
@@ -212,6 +213,13 @@ namespace Editor
         {
             stateMachine.ChangeState(
                 new StaticMeshPlacementEditorState(textureKey),
+                true, true);
+        }
+
+        public void EntitySelected(string entityKey)
+        {
+            stateMachine.ChangeState(
+                new EntityPlacementState(),
                 true, true);
         }
 

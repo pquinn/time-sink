@@ -62,7 +62,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\EntitySelectorViewModel.cs" />
+    <Compile Include="ViewModels\PopUpViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="View\EntitySelector.xaml.cs">
+      <DependentUpon>EntitySelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Level.xaml.cs">
       <DependentUpon>Level.xaml</DependentUpon>
     </Compile>
@@ -80,6 +85,10 @@
     <Page Include="View\Collisions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntitySelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Dialogue.xaml">
       <SubType>Designer</SubType>

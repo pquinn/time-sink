@@ -89,7 +89,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(
                 texture,
-                position + origin,
+                Vector2.Transform(Vector2.Zero, relativeTransform) + origin,
                 srcRectangle,
                 Color.White,
                 (float)rotation,

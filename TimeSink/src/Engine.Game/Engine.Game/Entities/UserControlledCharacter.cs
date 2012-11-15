@@ -500,6 +500,10 @@ namespace TimeSink.Engine.Game.Entities
         {
             get
             {
+               /* Stack<IRendering> stack = new Stack<IRendering>();
+                stack.
+                return new StackableRendering(*/
+                Console.WriteLine(physics.Position);
                 Stack<IRendering> stack = new Stack<IRendering>();
                 #region neutral
                 if (currentState == (int)BodyStates.Neutral)
@@ -541,6 +545,7 @@ namespace TimeSink.Engine.Game.Entities
                 Console.WriteLine(physics.Position.Y);
                 return new StackableRendering(stack,physics.Position,0,Vector2.One);
                 /*return new BasicRendering(
+>>>>>>> ecf9b3b086b551162df87af2e83db4fe0dad82b1
                     PLAYER_TEXTURE_NAME,
                     physics.Position,
                     0,
