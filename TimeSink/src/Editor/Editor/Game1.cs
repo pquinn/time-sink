@@ -16,6 +16,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using Editor.States;
+using Autofac;
 
 namespace Editor
 {
@@ -46,6 +47,8 @@ namespace Editor
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
 
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
+
+        public IContainer Container { get; set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -123,7 +126,10 @@ namespace Editor
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // instantiate the container
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<EntityBootstrapper>();
+            Container = builder.Build();
         }
 
         /// <summary>

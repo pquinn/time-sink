@@ -36,9 +36,8 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Caching;
-using TimeSink.Engine.Game.Entities;
-using Engine.Game.Entities.Enemies;
-using Engine.Game.Entities;
+using TimeSink.Entities.Enemies;
+using TimeSink.Entities;
 #endregion
 
 

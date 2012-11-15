@@ -1,35 +1,61 @@
-﻿using Engine.Game.Entities;
 using Microsoft.Xna.Framework;
+
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Core.Input;
-using Microsoft.Xna.Framework.Input;
+
 using System;
+using TimeSink.Engine.Core.Editor;
 
-namespace TimeSink.Engine.Game.Entities.Weapons
+
+namespace TimeSink.Entities.Weapons
 {
-    public class Arrow : Entity, IWeapon
+    [EditorEnabled]
+    public class Dart : Entity, IWeapon
     {
-        const float ARROW_MASS = 1f;
-        const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
-
-        const float MAX_ARROW_HOLD = 1;
-        const float MIN_ARROW_INIT_SPEED = 500;
-        const float MAX_ARROW_INIT_SPEED = 1500;
+        const float DART_MASS = 1f;
+        const float DART_SPEED = 2000f;
+        const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
+        const string EDITOR_NAME = "Dart";
 
         public GravityPhysics physics { get; private set; }
+        public DamageOverTimeEffect dot { get; private set; }
 
-        public Arrow() { }
-
-        public Arrow(Vector2 position)
+        public Dart() 
+            : this(Vector2.Zero)
         {
-            physics = new GravityPhysics(position, ARROW_MASS)
+        }
+
+        public Dart(Vector2 position)
+        {
+            physics = new GravityPhysics(position, DART_MASS)
             {
                 GravityEnabled = true
             };
+
+            dot = new DamageOverTimeEffect(4, 100);
         }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
+        }
+
+        public override string EditorPreview
+        {
+            get
+            {
+                return DART_TEXTURE_NAME;
+            }
+        }
+
+        [EditableField("Position")]
+        public Vector2 Position
+        {
+            get { return physics.Position; }
+            set { physics.Position = value; }
+        }   
 
         public override ICollisionGeometry CollisionGeometry
         {
@@ -38,8 +64,8 @@ namespace TimeSink.Engine.Game.Entities.Weapons
                 return new CollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
-                    64,
-                    32
+                    16,
+                    8
                 ));
             }
         }
@@ -54,7 +80,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
             get
             {
                 return new BasicRendering(
-                    ARROW_TEXTURE_NAME,
+                    DART_TEXTURE_NAME,
                     physics.Position,
                     (float)Math.Atan2(physics.Velocity.Y, physics.Velocity.X),
                     Vector2.One
@@ -66,16 +92,16 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         {
         }
 
-        //[OnCollidedWith.Overload]
-        //public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
-        //{
-        //    Dead = true;
-        //}
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
+        {
+            Dead = true;
+        }
 
         [OnCollidedWith.Overload]
         public void OnCollidedWith(Entity entity, CollisionInfo info)
         {
-            if (!(entity is UserControlledCharacter || entity is Trigger))
+            if (!(entity is UserControlledCharacter))
             {
                 Dead = true;
             }
@@ -83,7 +109,7 @@ namespace TimeSink.Engine.Game.Entities.Weapons
 
         public override void Load(EngineGame engineGame)
         {
-            engineGame.TextureCache.LoadResource(ARROW_TEXTURE_NAME);
+            engineGame.TextureCache.LoadResource(DART_TEXTURE_NAME);
         }
 
         public override void Update(GameTime time, EngineGame world)
@@ -101,21 +127,15 @@ namespace TimeSink.Engine.Game.Entities.Weapons
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
             character.InHold = false;
-            Arrow arrow = new Arrow(
-                new Vector2(character.PhysicsController.Position.X + UserControlledCharacter.X_OFFSET,
-                            character.PhysicsController.Position.Y + UserControlledCharacter.Y_OFFSET));
-            var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_ARROW_HOLD);
-            // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
-            float speed =
-                MIN_ARROW_INIT_SPEED + (MAX_ARROW_INIT_SPEED - MIN_ARROW_INIT_SPEED) /
-                                       MAX_ARROW_HOLD *
-                                       (float)elapsedTime;
-            Vector2 initialVelocity = speed * character.Direction;
-            arrow.physics.Velocity += initialVelocity;
-            world.Entities.Add(arrow);
-            world.RenderManager.RegisterRenderable(arrow);
-            world.PhysicsManager.RegisterPhysicsBody(arrow);
-            world.CollisionManager.RegisterCollisionBody(arrow);
+            Dart dart = new Dart(
+                            new Vector2(character.PhysicsController.Position.X + UserControlledCharacter.X_OFFSET,
+                                        character.PhysicsController.Position.Y + UserControlledCharacter.Y_OFFSET));
+            Vector2 initialVelocity = character.Direction * DART_SPEED;
+            dart.physics.Velocity += initialVelocity;
+            world.Entities.Add(dart);
+            world.RenderManager.RegisterRenderable(dart);
+            world.PhysicsManager.RegisterPhysicsBody(dart);
+            world.CollisionManager.RegisterCollisionBody(dart);
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)

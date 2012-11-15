@@ -7,24 +7,23 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Game.Entities;
-using TimeSink.Engine.Game.Entities.Weapons;
+using TimeSink.Entities.Weapons;
 
-namespace Engine.Game.Entities.Enemies
+namespace TimeSink.Entities.Enemies
 {
     public class Enemy : Entity, IHaveHealth
     {
         const float DUMMY_MASS = 100f;
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
+        const string EDITOR_NAME = "Enemy";
 
         protected GravityPhysics physics;
         private List<DamageOverTimeEffect> dots;
+        protected float health;        
 
-        protected float health;
-        public float Health
+        public Enemy()
+            : this(Vector2.Zero)
         {
-            get { return health; }
-            set { health = value; }
         }
 
         public Enemy(Vector2 position)
@@ -35,6 +34,17 @@ namespace Engine.Game.Entities.Enemies
                 GravityEnabled = true
             };
             dots = new List<DamageOverTimeEffect>();
+        }
+
+        public float Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
         }
 
         public override ICollisionGeometry CollisionGeometry

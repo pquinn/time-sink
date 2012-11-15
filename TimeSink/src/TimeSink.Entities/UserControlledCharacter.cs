@@ -9,15 +9,16 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Game.Entities.Weapons;
+using TimeSink.Entities.Weapons;
+using TimeSink.Engine.Core.Editor;
 
-using Engine.Game.Entities;
-
-namespace TimeSink.Engine.Game.Entities
+namespace TimeSink.Entities
 {
+    [EditorEnabled]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
         const float PLAYER_MASS = 100f;
+        const string EDITOR_NAME = "User Controlled Character";
 
         enum BodyStates { Neutral, Idle, StartWalking, Walking, StartRunning, Running, Jumping };
         int currentState;
@@ -35,18 +36,16 @@ namespace TimeSink.Engine.Game.Entities
         const string HEAD_STATES = "Textures/Sprites/SpriteSheets/headStates";
         const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
         const string BODY_NEUTRAL = "Textures/Sprites/Body/Body_Neutral";
+        const string EDITOR_PREVIEW = null;
 
-        Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
-        Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
-        Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, new Vector2(0, 45));
-        Animation bodyStartRun = new Animation(2, BODY_START_RUN, 81, 198, Vector2.Zero);
-        Animation bodyJump = new Animation(4, BODY_JUMP, 136, 159, Vector2.Zero);
-        Animation hairMove = new Animation(2, HAIR_MOVE, 66, 63, Vector2.Zero);
-        Animation armMove = new Animation(2, ARM_MOVE, 51, 85, new Vector2(12,65));
-        Animation idle = new Animation(6, IDLE_BODY_HEAD_HAIR, 95, 245, Vector2.Zero);
-
-
-
+        private static readonly Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
+        private static readonly Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
+        private static readonly Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, new Vector2(0, 45));
+        private static readonly Animation bodyStartRun = new Animation(2, BODY_START_RUN, 81, 198, Vector2.Zero);
+        private static readonly Animation bodyJump = new Animation(4, BODY_JUMP, 136, 159, Vector2.Zero);
+        private static readonly Animation hairMove = new Animation(2, HAIR_MOVE, 66, 63, Vector2.Zero);
+        private static readonly Animation armMove = new Animation(2, ARM_MOVE, 51, 85, new Vector2(12, 65));
+        private static readonly Animation idle = new Animation(6, IDLE_BODY_HEAD_HAIR, 95, 245, Vector2.Zero);
 
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
@@ -67,6 +66,19 @@ namespace TimeSink.Engine.Game.Entities
 
         private List<IInventoryItem> inventory;
         private int activeItem;
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
+        }
+
+        public override string EditorPreview
+        {
+            get
+            {
+                return EDITOR_PREVIEW;
+            }
+        }
 
         public float Health
         {
@@ -109,7 +121,6 @@ namespace TimeSink.Engine.Game.Entities
             set { inHold = value; }
         }
 
-
         float timer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
@@ -140,6 +151,11 @@ namespace TimeSink.Engine.Game.Entities
                     100, 242
                 ));
             }
+        }
+
+        public UserControlledCharacter()
+            : this(Vector2.Zero)
+        {
         }
 
         public UserControlledCharacter(Vector2 position)
