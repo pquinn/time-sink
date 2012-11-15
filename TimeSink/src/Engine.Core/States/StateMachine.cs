@@ -79,7 +79,7 @@ namespace TimeSink.Engine.Core.States
         public void Update()
         {
             if (curState != null)
-                curState.Execute(owner);
+                curState.Execute();
         }
 
         /// <summary>
@@ -92,14 +92,14 @@ namespace TimeSink.Engine.Core.States
         public void ChangeState(State<T> state, bool enter, bool exit)
         {
             if (exit)
-                curState.Exit(owner);
+                curState.Exit();
 
             prevState = curState;
             CurState = state;
             state.StateMachine = this;
 
             if (enter)
-                curState.Enter(owner);
+                curState.Enter();
         }
 
         /// <summary>
@@ -135,9 +135,9 @@ namespace TimeSink.Engine.Core.States
         /// drawing logic.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        public void Draw(SpriteBatch spriteBatch, Camera camera)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            CurState.Draw(spriteBatch, camera, owner);
+            CurState.Draw(spriteBatch);
         }
 
         #endregion

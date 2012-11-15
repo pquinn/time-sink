@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Editor.States
 {
@@ -15,6 +18,11 @@ namespace Editor.States
         Vector2 dragOffset;
         double origAngle;
         double curAngle;
+
+        public RotationEditorState(Camera camera, IResourceCache<Texture2D> cache)
+            : base(camera, cache)
+        {
+        }
 
         protected override void DragStart()
         {

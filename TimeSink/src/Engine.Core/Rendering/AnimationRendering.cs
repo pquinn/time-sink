@@ -43,7 +43,7 @@ namespace TimeSink.Engine.Core.Rendering
             throw new NotImplementedException();
         }
 
-        public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, Microsoft.Xna.Framework.Matrix transform)
+        public void Draw(SpriteBatch spriteBatch, Caching.IResourceCache<Texture2D> cache, Matrix transform)
         {
             var texture = cache.GetResource(textureKey);
 

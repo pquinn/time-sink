@@ -35,18 +35,18 @@ namespace TimeSink.Engine.Core.States
         /// method must be explicitely called when changing states.
         /// </summary>
         /// <param name="stateObject"></param>
-        public abstract void Enter(T stateObject);
+        public abstract void Enter();
         /// <summary>
         /// Called each iteration of the game loop while state is active.
         /// </summary>
         /// <param name="stateObject"></param>
-        public abstract void Execute(T stateObject);
+        public abstract void Execute();
         /// <summary>
         /// Called when the state the state ceases being active.  Keep in mind
         /// method must be explicitely called when changing states.
         /// </summary>
         /// <param name="stateObject"></param>
-        public abstract void Exit(T stateObject);
+        public abstract void Exit();
 
         /// <summary>
         /// States are in charge of the drawing loop.  This draw method is called each 
@@ -54,7 +54,7 @@ namespace TimeSink.Engine.Core.States
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="stateObject"></param>
-        public virtual void Draw(SpriteBatch spriteBatch, Camera camera, T stateObject)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
         }
     }

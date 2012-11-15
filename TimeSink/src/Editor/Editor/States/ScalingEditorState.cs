@@ -9,6 +9,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor.States
 {
@@ -20,19 +21,17 @@ namespace Editor.States
 
         private Vector2 lastMouse;
 
+        public ScalingEditorState(Camera camera, IResourceCache<Texture2D> cache)
+            : base(camera, cache)
+        {
+        }
+
         protected override void DragStart()
         {
             base.DragStart();
 
-            //Vector2 normal;
-
-            //selectedEdge = selectedMeshes[drillIndex].Rendering.GetEdgeWithinTolerance(
-            //    GetMousePosition(), 30,
-            //    StateMachine.Owner.RenderManager.TextureCache, Matrix.Identity,
-            //    out normal);
-
             origScale = selectedMeshes[drillIndex].Scale;
-            //scalingNormal = normal;
+
             lastMouse = GetMousePosition();
         }
 
@@ -51,32 +50,11 @@ namespace Editor.States
 
             lastMouse = mouse;
             origScale = selectedMeshes[drillIndex].Scale;
-            //if (selectedEdge != null)
-            //{
-            //    var dragOffset = GetMousePosition() - dragPivot;
-            //    var dragDistanceAlongNorm = Vector2.Dot(
-            //        dragOffset,
-            //        (selectedEdge.Item2 - selectedEdge.Item1).GetSurfaceNormal());
-
-            //    selectedMeshes[drillIndex].Expand(dragDistanceAlongNorm, scalingNormal, 
-            //        StateMachine.Owner.RenderManager.TextureCache);
-            //}
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch, camera, level);
-
-            //spriteBatch.Begin();
-
-            //if (selectedEdge != null)
-            //{
-            //    spriteBatch.DrawLine(
-            //        StateMachine.Owner.RenderManager.TextureCache.GetResource("blank"),
-            //        selectedEdge.Item1, selectedEdge.Item2, 5, Color.LightBlue);
-            //}
-
-            //spriteBatch.End();
+            base.Draw(spriteBatch);
         }
     }
 }

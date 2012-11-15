@@ -55,7 +55,10 @@ namespace TimeSink.Engine.Core.Collisions
 
             foreach (var collideable in collideables)
             {
-                collideable.CollisionGeometry.Draw(spriteBatch, cache, globalTransform);
+                var collisionGeo = collideable.CollisionGeometry;
+
+                if (collisionGeo != null)
+                    collisionGeo.Draw(spriteBatch, cache, globalTransform);
             }
 
             spriteBatch.End();

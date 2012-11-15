@@ -153,7 +153,7 @@
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
-    <Compile Include="StaticMesh.cs" />
+    <Compile Include="Tile.cs" />
     <Compile Include="VectorExtensions.cs" />
   </ItemGroup>
   <ItemGroup />

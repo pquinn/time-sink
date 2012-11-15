@@ -8,6 +8,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor.States
 {
@@ -17,31 +18,32 @@ namespace Editor.States
         const int CAMERA_MOVE_SPEED = 5;
         private Vector3 cameraOffset = Vector3.Zero;
 
-        protected List<StaticMesh> selectedMeshes;
+        protected List<Tile> selectedMeshes;
         protected int drillIndex;
         protected bool drag;
         protected bool emptySelect;
         protected Vector2 dragPivot;
         protected Vector2 selectionPivot;
 
-        public SelectionEditorState()
+        public SelectionEditorState(Camera camera, IResourceCache<Texture2D> cache)
+            : base(camera, cache)
         {
-            selectedMeshes = new List<StaticMesh>();
+            selectedMeshes = new List<Tile>();
             drillIndex = 0;
         }
 
-        public override void Enter(Level level)
+        public override void Enter()
         {
         }
 
-        public override void Execute(Level level)
+        public override void Execute()
         {
             var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
             var hasSelect = selectedMeshes.Count > 0;
             var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
             if (buttonState == ButtonState.Pressed)
             {
-                var clicked = GetSelections(level);
+                var clicked = GetSelections(StateMachine.Owner);
                 var sameClick = clicked.Contains(lastSelected);
                 if (clicked.Count == 0) // cancel click
                 {
@@ -59,7 +61,7 @@ namespace Editor.States
                 }
                 else if (!emptySelect) // basic selection
                 {
-                    selectedMeshes = GetSelections(level);
+                    selectedMeshes = GetSelections(StateMachine.Owner);
                     drillIndex = 0;
                 }
             }
@@ -106,31 +108,31 @@ namespace Editor.States
                 cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
         }
 
-        public override void Exit(Level level)
+        public override void Exit()
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            camera.PanCamera(cameraOffset);
+            Camera.PanCamera(cameraOffset);
 
-            base.Draw(spriteBatch, camera, level);
+            base.Draw(spriteBatch);
 
             spriteBatch.Begin();
 
             for (int i = 0; i < selectedMeshes.Count; i++)
             {
                 var box = selectedMeshes[i].Rendering.GetNonAxisAlignedBoundingBox(
-                        level.RenderManager.TextureCache,
-                        camera.Transform);
+                        StateMachine.Owner.RenderManager.TextureCache,
+                        Camera.Transform);
 
                 if (i == drillIndex)
                 {
-                    DrawBoundingBox(spriteBatch, camera, Color.LightGreen, box);
+                    DrawBoundingBox(spriteBatch, Camera, Color.LightGreen, box);
                 }
                 else
                 {
-                    DrawBoundingBox(spriteBatch, camera, Color.LightYellow, box);
+                    DrawBoundingBox(spriteBatch, Camera, Color.LightYellow, box);
                 }
             }
 
@@ -180,9 +182,9 @@ namespace Editor.States
             spriteBatch.DrawRect(blank, box, 5, color);
         }
 
-        private List<StaticMesh> GetSelections(Level level)
+        private List<Tile> GetSelections(Level level)
         {
-            var selected = new List<StaticMesh>();
+            var selected = new List<Tile>();
             foreach (var mesh in level.GetStaticMeshes())
             {
                 if (mesh.Rendering.Contains(
