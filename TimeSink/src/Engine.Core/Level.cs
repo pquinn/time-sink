@@ -1,7 +1,6 @@
-using System;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
@@ -20,6 +19,7 @@ namespace TimeSink.Engine.Core
             CollisionManager = collisionsManager;
             PhysicsManager = physicsManager;
             RenderManager = renderManager;
+            CollisionGeometry = new List<LoopShape>();
         }
 
         public CollisionManager CollisionManager { get; private set; }
@@ -54,9 +54,11 @@ namespace TimeSink.Engine.Core
             entities.ForEach(RegisterEntity);
         }
 
-        public  IEnumerable<Tile> GetStaticMeshes()
+        public IEnumerable<Tile> GetStaticMeshes()
         {
             return staticMeshes;
         }
+
+        public List<LoopShape> CollisionGeometry { get; private set; }
     }
 }

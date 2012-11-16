@@ -254,5 +254,12 @@ namespace Editor
                 new ScalingEditorState(camera, TextureCache),
                 true, true);
         }
+
+        public void GeometrySelected()
+        {
+            stateMachine.ChangeState(
+                new GeometryPlacementState(camera, TextureCache),
+                true, true);
+        }
     }
 }
