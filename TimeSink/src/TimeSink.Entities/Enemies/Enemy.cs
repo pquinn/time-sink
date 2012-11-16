@@ -22,7 +22,6 @@ namespace TimeSink.Entities.Enemies
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
         const string EDITOR_NAME = "Enemy";
 
-        protected GravityPhysics physics;
         protected float health;
 
         public Enemy()
@@ -33,13 +32,14 @@ namespace TimeSink.Entities.Enemies
         public Enemy(Vector2 position)
         {
             health = 100;
+            _initialPosition = position;
 
             dots = new List<DamageOverTimeEffect>();
         }
 
         private Vector2 _initialPosition;
 
-        public Body Physics { get; private set; }
+        public Body Physics { get; protected set; }
 
         private List<DamageOverTimeEffect> dots;
 
@@ -56,8 +56,8 @@ namespace TimeSink.Entities.Enemies
         [EditableField("Position")]
         public Vector2 Position
         {
-            get { return physics.Position; }
-            set { physics.Position = value; }
+            get { return Physics.Position; }
+            set { Physics.Position = value; }
         }
 
         public override string EditorName

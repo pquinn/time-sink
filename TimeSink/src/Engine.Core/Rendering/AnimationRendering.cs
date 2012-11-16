@@ -44,12 +44,7 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(textureKey);
 
-            var relativeTransform =
-               Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
-               Matrix.CreateRotationZ(rotation) *
-               Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0));
-
-            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            var origin = new Vector2(srcRectangle.Width / 2, srcRectangle.Height / 2);
 
             spriteBatch.Begin(
                 SpriteSortMode.BackToFront,
@@ -62,7 +57,7 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(
                 texture,
-                Vector2.Transform(Vector2.Zero, relativeTransform) + origin,
+                position,
                 srcRectangle,
                 Color.White,
                 (float)rotation,

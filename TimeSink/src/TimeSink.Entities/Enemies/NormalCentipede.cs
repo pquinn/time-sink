@@ -31,20 +31,10 @@ namespace TimeSink.Entities.Enemies
             : base(position)
         {
             health = 150;
-            physics = new GravityPhysics(position, CENTIPEDE_MASS)
-            {
-                GravityEnabled = true
-            };
+            _initialPosition = position;
         }
 
         private Vector2 _initialPosition;
-
-        [EditableField("Position")]
-        public Vector2 Position
-        {
-            get { return physics.Position; }
-            set { physics.Position = value; }
-        }
 
         public override string EditorName
         {
@@ -67,8 +57,6 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public Body Physics { get; private set; }
-
         public override IRendering Rendering
         {
             get
@@ -76,7 +64,6 @@ namespace TimeSink.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   CENTIPEDE_TEXTURE,
-
                   PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
                   Vector2.One,

@@ -84,9 +84,9 @@ namespace TimeSink.Engine.Game
 
             character = new UserControlledCharacter(Vector2.Zero);
 
-            dummy = new Enemy(new Vector2(600, 350));
+            dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
-            normalCentipede = new NormalCentipede(new Vector2(300, 250));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(300, 250)));
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
@@ -188,10 +188,10 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            Camera.Position = new Vector3(
-                -GraphicsDevice.Viewport.Width / 2 + Character.Physics.Position.X,
-                -GraphicsDevice.Viewport.Height / 2 + Character.Physics.Position.Y,
-                0);
+            //Camera.Position = new Vector3(
+            //    -GraphicsDevice.Viewport.Width / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.X),
+            //    -GraphicsDevice.Viewport.Height / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.Y),
+            //    0);
 
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
