@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,7 +105,7 @@ namespace TimeSink.Engine.Core.Rendering
                 globalTransform;
 
             var topLeft = Vector2.Transform(
-                Vector2.Zero, 
+                Vector2.Zero,
                 relativeTransform);
             var topRight = Vector2.Transform(
                 new Vector2(texture.Width, 0),
