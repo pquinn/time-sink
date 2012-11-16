@@ -42,7 +42,7 @@ namespace TimeSink.Entities
 
         public override void Load(EngineGame game)
         {
-            geoTexture = game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
+            geoTexture = game.TextureCache.GetResource(WORLD_TEXTURE_NAME);
         }
 
         public override IRendering Rendering

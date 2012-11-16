@@ -64,6 +64,7 @@ namespace TimeSink.Engine.Game
         NormalCentipede normalCentipede;
         FlyingCentipede flyingCentipede;
         WorldGeometry world;
+        MovingPlatform movingPlatform;
         Trigger trigger;
 
 
@@ -88,11 +89,14 @@ namespace TimeSink.Engine.Game
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
 
+            movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(600, 150)),
+                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 150)),
+                                                4f, 64, 128);
+
             //normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
             flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(300, 400)));
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(60, 0)));
 
 
             // Required for lighting system.
@@ -103,6 +107,7 @@ namespace TimeSink.Engine.Game
             Entities.Add(dummy);
             Entities.Add(normalCentipede);
             Entities.Add(flyingCentipede);
+            Entities.Add(movingPlatform);
             Entities.Add(world);
         }
 
@@ -119,6 +124,7 @@ namespace TimeSink.Engine.Game
             PhysicsManager.RegisterPhysicsBody(character);
             PhysicsManager.RegisterPhysicsBody(world);
 
+            PhysicsManager.RegisterPhysicsBody(movingPlatform);
             PhysicsManager.RegisterPhysicsBody(dummy);
             PhysicsManager.RegisterPhysicsBody(normalCentipede);
             PhysicsManager.RegisterPhysicsBody(flyingCentipede);
@@ -128,6 +134,7 @@ namespace TimeSink.Engine.Game
             RenderManager.RegisterRenderable(normalCentipede);
             RenderManager.RegisterRenderable(flyingCentipede);
             RenderManager.RegisterRenderable(world);
+            RenderManager.RegisterRenderable(movingPlatform);
 
             FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),

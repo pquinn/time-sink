@@ -28,10 +28,6 @@ namespace TimeSink.Entities.Enemies
             : base(position)
         {
             health = 150;
-            physics = new GravityPhysics(position, CENTIPEDE_MASS)
-            {
-                GravityEnabled = false
-            };
         }
 
         public override string EditorName
