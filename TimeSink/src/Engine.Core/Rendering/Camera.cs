@@ -24,7 +24,7 @@ namespace TimeSink.Engine.Core.Rendering
             get
             {
                 return Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
-                       Matrix.CreateTranslation(Position);
+                       Matrix.CreateTranslation(-Position);
             }
         }
         

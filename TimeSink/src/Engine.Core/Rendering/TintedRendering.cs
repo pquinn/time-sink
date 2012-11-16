@@ -18,20 +18,34 @@ namespace TimeSink.Engine.Core.Rendering
             this.tintColor = tintColor;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, 
-            Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
+        public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
+            var texture = cache.GetResource(textureKey);
+
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
+            spriteBatch.Begin(
+                SpriteSortMode.BackToFront,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                globalTransform);
+
             spriteBatch.Draw(
-                cache.GetResource(textureKey),
-                positionOffset + position,
+                texture,
+                position,
                 srcRectangle,
                 tintColor,
-                rotationOffset + rotation,
-                Vector2.Zero,
-                scaleOffset * scale,
+                (float)rotation,
+                origin,
+                scale,
                 SpriteEffects.None,
                 0
             );
+
+            spriteBatch.End();
         }
     }
 }

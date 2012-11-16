@@ -7,6 +7,6 @@ namespace TimeSink.Engine.Core.Physics
 {
     public interface IPhysicsEnabledBody
     {
-        IPhysicsParticle PhysicsController { get; }
+        void InitializePhysics(FarseerPhysics.Dynamics.World world);
     }
 }

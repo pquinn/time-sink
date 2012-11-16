@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,9 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Factories;
 
 namespace TimeSink.Entities
 {
@@ -14,33 +17,33 @@ namespace TimeSink.Entities
 
     public class Trigger : Entity
     {
+        public Body PhysicsBody { get; private set; }
+
         const string EDITOR_NAME = "Trigger";
+
+        private Vector2 _position;
 
         public event TriggerDelegate Triggered;
 
-        private ICollisionGeometry _geom;
-        public override ICollisionGeometry CollisionGeometry
+        private List<Fixture> _geom;
+        public override List<Fixture> CollisionGeometry
         {
             get { return _geom; }
         }
 
         public Trigger()
         {
+
         }
 
-        public Trigger(ICollisionGeometry geom)
+        public Trigger(Vector2 position)
         {
-            _geom = geom;
+            _position = position;
         }
 
         public override string EditorName
         {
             get { return EDITOR_NAME; }
-        }
-
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return null; }
         }
 
         public override IRendering Rendering
@@ -50,19 +53,27 @@ namespace TimeSink.Entities
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            
+
         }
 
         public override void Load(EngineGame engineGame)
         {
-            
+
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(ICollideable obj, CollisionInfo info)
+        public void OnCollidedWith(ICollideable obj, Contact info)
         {
             if (Triggered != null)
                 Triggered(obj);
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            PhysicsBody = BodyFactory.CreateBody(world, _position, this);
+            PhysicsBody.BodyType = BodyType.Static;
+            PhysicsBody.IsSensor = true;
+            _geom = PhysicsBody.FixtureList;
         }
     }
 }

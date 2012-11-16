@@ -43,6 +43,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysicsXNA">
+      <HintPath>..\..\lib\FarseerPhysicsXNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -60,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
     <Compile Include="IInventoryItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

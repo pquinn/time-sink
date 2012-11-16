@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor.States
 {
@@ -16,41 +17,42 @@ namespace Editor.States
         string textureKey;
         Texture2D texture;
 
-        public StaticMeshPlacementEditorState(string textureKey)
+        public StaticMeshPlacementEditorState(Camera camera, IResourceCache<Texture2D> cache, string textureKey)
+            : base(camera, cache)
         {
             this.textureKey = textureKey;
         }
 
-        public override void Enter(Level level)
+        public override void Enter()
         {
 
             texture = StateMachine.Owner.RenderManager.TextureCache.GetResource(textureKey);
         }
 
-        public override void Execute(Level level)
+        public override void Execute()
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
-                var mesh = new StaticMesh(
+                var mesh = new Tile(
                     textureKey,
                     new Vector2(
                         InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
                         InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
                     0, Vector2.One,
-                    level.RenderManager.TextureCache);
-                level.RegisterStaticMesh(mesh);
+                    StateMachine.Owner.RenderManager.TextureCache);
+                StateMachine.Owner.RegisterStaticMesh(mesh);
 
                 StateMachine.RevertToPreviousState(true);
             }
         }
 
-        public override void Exit(Level level)
+        public override void Exit()
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level l)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch, camera, l);
+            base.Draw(spriteBatch);
 
             spriteBatch.Begin();
 

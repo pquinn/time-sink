@@ -27,39 +27,6 @@ namespace TimeSink.Engine.Core.Rendering
             this.parentScale = scale;
         }
 
-        public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache,
-            Vector2 positionOffset, float rotationOffset, Vector2 scaleOffset)
-        {
-            foreach (var rendering in renderStack)
-            {
-                rendering.Draw(
-                    spriteBatch, 
-                    cache, 
-                    positionOffset + parentPosition, 
-                    rotationOffset + parentRotation,
-                    scaleOffset * parentScale
-                );
-            }
-        }
-
-        public virtual bool Contains(Vector2 point, IResourceCache<Texture2D> cache, Vector2 positionOffset)
-        {
-            return renderStack.Any(x => x.Contains(point, cache, positionOffset));
-        }
-
-        public void GetBoundingBox(IResourceCache<Texture2D> cache, ref BoundingBox acc, Vector2 positionOffset)
-        {
-            var newAcc = new BoundingBox(
-                      Single.PositiveInfinity, Single.PositiveInfinity,
-                      0f, 0f);
-
-            foreach (var rendering in renderStack)
-            {
-                rendering.GetBoundingBox(cache, ref newAcc, positionOffset + parentPosition);
-            }
-        }
-
-
         public Vector2 GetCenter(IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var relativeTransform =

@@ -45,6 +45,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysicsXNA">
+      <HintPath>..\..\..\lib\FarseerPhysicsXNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -106,7 +109,7 @@
       <Name>Engine.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
-      <Project>{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}</Project>
+      <Project>{9c3bd6bb-3862-4a30-9dd2-5b929cc5ffcf}</Project>
       <Name>TimeSink.Entities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine.GameContent\Engine.GameContent.contentproj">

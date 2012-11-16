@@ -11,6 +11,10 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Entities.Weapons;
 using TimeSink.Engine.Core.Editor;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Common;
 
 namespace TimeSink.Entities
 {
@@ -53,10 +57,11 @@ namespace TimeSink.Entities
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
-        public const int X_OFFSET = 60;
-        public const int Y_OFFSET = 80;
+        public static float X_OFFSET = PhysicsConstants.PixelsToMeters(60-65);
+        public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(80-141);
 
-        private GravityPhysics physics;
+        public Body Physics { get; private set; }
+
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;
         private bool __touchingGroundFlag = false;
@@ -132,27 +137,13 @@ namespace TimeSink.Entities
         int spriteWidth = 130;
         int spriteHeight = 242;
 
-        public override ICollisionGeometry CollisionGeometry
+        private Vector2 _initialPosition;
+
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                //var colSet = new CollisionSet();
-                //colSet.Geometry.Add(new CollisionRectangle(
-                //    new Rectangle(
-                //        (int)physics.Position.X,
-                //        (int)physics.Position.Y,
-                //        75, 110)));
-                //colSet.Geometry.Add(new CollisionRectangle(
-                //    new Rectangle(
-                //        (int)physics.Position.X + 50,
-                //        (int)physics.Position.Y + 111,
-                //        50, 132)));
-                //return colSet;
-                return new CollisionRectangle(new Rectangle(
-                    (int)physics.Position.X,
-                    (int)physics.Position.Y,
-                    100, 242
-                ));
+                return Physics.FixtureList;
             }
         }
 
@@ -163,10 +154,11 @@ namespace TimeSink.Entities
 
         public UserControlledCharacter(Vector2 position)
         {
-            physics = new GravityPhysics(position, PLAYER_MASS)
-            {
-                GravityEnabled = true
-            };
+            //physics = new GravityPhysics(position, PLAYER_MASS)
+            //{
+            //    GravityEnabled = true
+            //};
+            _initialPosition = position;
             health = 100;
             direction = new Vector2(1, 0);
 
@@ -197,13 +189,22 @@ namespace TimeSink.Entities
 
         public override void Update(GameTime gameTime, EngineGame game)
         {
-            if (!__touchingGroundFlag)
-                GravityEnabled = true;
-            touchingGround = __touchingGroundFlag;
-            __touchingGroundFlag = false;
-        }
+            //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
+            //__touchingGroundFlag = false;
 
-        public override IPhysicsParticle PhysicsController { get { return physics; } }
+            touchingGround = false;
+
+            var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+
+            game.PhysicsManager.World.RayCast(
+                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                {
+                    touchingGround = true;
+                    return 0;
+                },
+                start,
+                start + new Vector2(0, .1f));
+        }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
@@ -213,7 +214,7 @@ namespace TimeSink.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 150f;
+            var amount = 4;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -354,9 +355,8 @@ namespace TimeSink.Entities
                     currentState = (int)BodyStates.Jumping;
                     jumpStarted = true;
                     jumpSound.Play();
-                    physics.Velocity -= new Vector2(0, 500);
+                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
                     jumpToggleGuard = false;
-                    GravityEnabled = true;
                 }
             }
             else if (touchingGround)
@@ -422,7 +422,7 @@ namespace TimeSink.Entities
                 playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
                 // Move player based on the controller direction and time scale.
-                physics.Position += movedirection * timeframe * amount;
+                Physics.ApplyLinearImpulse(movedirection * amount);
             }
         }
 
@@ -492,6 +492,7 @@ namespace TimeSink.Entities
             }
 
         }
+
         protected void AnimateJump(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -508,25 +509,19 @@ namespace TimeSink.Entities
             }
         }
 
-        public bool GravityEnabled
-        {
-            get { return physics.GravityEnabled; }
-            set { physics.GravityEnabled = value; }
-        }
-
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry world, CollisionInfo info)
+        public void OnCollidedWith(WorldGeometry world, Contact info)
         {
-            // Handle whether collision should disable gravity
-            if (info.MinimumTranslationVector.Y > 0)
+            Vector2 normal;
+            FixedArray2<Vector2> points;
+            info.GetWorldManifold(out normal, out points);
+            if (normal.Y > 0)
             {
                 if (!jumpToggleGuard)
                 {
                     bodyJump.Reset();
                 }
                 __touchingGroundFlag = true;
-                GravityEnabled = false;
-                physics.Velocity = new Vector2(physics.Velocity.X, Math.Min(0, physics.Velocity.Y));
             }
         }
 
@@ -589,23 +584,13 @@ namespace TimeSink.Entities
         {
             get
             {
-               /* Stack<IRendering> stack = new Stack<IRendering>();
-                stack.
-                return new StackableRendering(*/
-                Console.WriteLine(physics.Position);
                 Stack<IRendering> stack = new Stack<IRendering>();
                 CreateAnimationStack(stack);
-
-                Console.WriteLine(physics.Position.Y);
-                return new StackableRendering(stack,physics.Position,0,Vector2.One);
-                /*return new BasicRendering(
->>>>>>> ecf9b3b086b551162df87af2e83db4fe0dad82b1
-                    PLAYER_TEXTURE_NAME,
-                    physics.Position,
-                    0,
-                    Vector2.One,
-                    sourceRect
-                );*/
+                return new StackableRendering(
+                    stack, 
+                    PhysicsConstants.MetersToPixels(Physics.Position), 
+                    0, 
+                    Vector2.One);
             }
         }
 
@@ -613,5 +598,47 @@ namespace TimeSink.Entities
         {
         }
 
+
+        public override void InitializePhysics(World world)
+        {
+            Physics = BodyFactory.CreateBody(world, _initialPosition, this);
+
+            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
+            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+            
+            var r = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters - spriteWidthMeters / 2,
+                1.4f,
+                new Vector2(0, -spriteWidthMeters / 4),
+                Physics);
+            var c = FixtureFactory.AttachCircle(
+                spriteWidthMeters / 2,
+                1.4f,
+                Physics,
+                new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+
+            r.CollidesWith = Category.Cat1;
+            r.CollisionCategories = Category.Cat3;
+            c.CollidesWith = Category.Cat1;
+            c.CollisionCategories = Category.Cat3;
+
+            var rSens = r.Clone(Physics);
+            rSens.IsSensor = true;
+            rSens.Shape.Density = 0;
+
+            var cSens = c.Clone(Physics);
+            cSens.IsSensor = true;
+            cSens.Shape.Density = 0;
+
+            rSens.CollidesWith = Category.All;
+            cSens.CollidesWith = Category.All;
+            rSens.CollisionCategories = Category.Cat2;
+            cSens.CollisionCategories = Category.Cat2;
+
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.FixedRotation = true;
+            Physics.Friction = .5f;
+        }
     }
 }

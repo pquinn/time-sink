@@ -50,6 +50,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysicsXNA">
+      <HintPath>..\..\lib\FarseerPhysicsXNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
@@ -153,10 +156,12 @@
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
-    <Compile Include="StaticMesh.cs" />
+    <Compile Include="Tile.cs" />
     <Compile Include="VectorExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--
