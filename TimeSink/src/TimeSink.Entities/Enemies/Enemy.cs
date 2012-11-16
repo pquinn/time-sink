@@ -22,7 +22,10 @@ namespace TimeSink.Entities.Enemies
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
         const string EDITOR_NAME = "Enemy";
 
-        protected float health;
+        protected GravityPhysics physics;
+        private List<DamageOverTimeEffect> dots;
+        protected float health;        
+
 
         public Enemy()
             : this(Vector2.Zero)
@@ -37,14 +40,12 @@ namespace TimeSink.Entities.Enemies
             dots = new List<DamageOverTimeEffect>();
         }
 
-        private Vector2 _initialPosition;
+        protected Vector2 _initialPosition;
 
         public Body Physics { get; protected set; }
 
-        private List<DamageOverTimeEffect> dots;
-
-        private int textureHeight;
-        private int textureWidth;
+        protected int textureHeight;
+        protected int textureWidth;
 
         [EditableField("Health")]
         public float Health
@@ -73,6 +74,7 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -89,7 +91,6 @@ namespace TimeSink.Entities.Enemies
                 return new TintedRendering(
                   DUMMY_TEXTURE,
                   PhysicsConstants.MetersToPixels(Physics.Position),
-
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));//Math.Max(2.55f * health, 155)));
@@ -127,6 +128,7 @@ namespace TimeSink.Entities.Enemies
             }
 
             RemoveInactiveDots();
+
             foreach (DamageOverTimeEffect dot in dots)
             {
                 if (dot.Active)
@@ -147,6 +149,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void Load(EngineGame engineGame)
         {
+
             var texture = engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height;

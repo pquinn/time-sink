@@ -61,10 +61,7 @@ namespace TimeSink.Entities.Weapons
 
         public override List<Fixture> CollisionGeometry
         {
-            get
-            {
-                return Physics.FixtureList;
-            }
+            get { return Physics.FixtureList; }
         }
 
         public override IRendering Rendering

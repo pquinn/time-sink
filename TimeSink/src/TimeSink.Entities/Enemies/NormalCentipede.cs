@@ -21,20 +21,27 @@ namespace TimeSink.Entities.Enemies
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Goomba";
         const string EDITOR_NAME = "Normal Centipede";
 
-        private List<DamageOverTimeEffect> dots;
+        private bool first;
+        private float tZero;
+
+        public Func<float, Vector2> PatrolFunction { get; private set; }
+
         public NormalCentipede()
-            : this(Vector2.Zero)
+            : this(Vector2.Zero, Vector2.Zero, Vector2.Zero)
         {
         }
 
-        public NormalCentipede(Vector2 position)
-            : base(position)
+        public NormalCentipede(Vector2 position, Vector2 start, Vector2 end) : base(position)
         {
             health = 150;
-            _initialPosition = position;
-        }
+            physics = new GravityPhysics(position, CENTIPEDE_MASS)
+            {
+                GravityEnabled = true
+            };
 
-        private Vector2 _initialPosition;
+            first = true;
+            PatrolFunction = (time) => start + time * (end - start);
+        }
 
         public override string EditorName
         {
@@ -51,10 +58,7 @@ namespace TimeSink.Entities.Enemies
 
         public override List<Fixture> CollisionGeometry
         {
-            get
-            {
-                return Physics.FixtureList;
-            }
+            get { return Physics.FixtureList; }
         }
 
         public override IRendering Rendering
@@ -71,47 +75,25 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
-        [OnCollidedWith.Overload]
-        public void OnCollidedWith(UserControlledCharacter c, Contact info)
-        {
-            c.Health -= 25;
-        }
-
-
         public override void Update(GameTime time, EngineGame world)
         {
             base.Update(time, world);
+
+            if (first)
+            {
+                tZero = time.TotalGameTime.Seconds;
+                first = false;
+            }
+
+            var positionDelta = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero) - physics.Position;
+            physics.Position += positionDelta;
         }
 
         public override void Load(EngineGame engineGame)
         {
-            engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
-        }
-
-        public override void InitializePhysics(World world)
-        {
-            Physics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(32),
-                PhysicsConstants.PixelsToMeters(32),
-                1,
-                _initialPosition);
-            Physics.BodyType = BodyType.Dynamic;
-            Physics.FixedRotation = true;
-            Physics.UserData = this;
-
-            var fix = Physics.FixtureList[0];
-            fix.CollisionCategories = Category.Cat3;
-            fix.CollidesWith = Category.Cat1 | Category.Cat2;
-
-            //var hitsensor = fix.Clone(Physics);
-            //hitsensor.IsSensor = true;
-            //hitsensor.CollidesWith = Category.Cat2;
-            //hitsensor.CollisionCategories = Category.Cat2;
+            var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
+            textureWidth = texture.Width;
+            textureHeight = texture.Height;
         }
     }
 }
