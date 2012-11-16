@@ -31,7 +31,7 @@ namespace TimeSink.Editor.GUI.Views
         bool selectionButtonPressed;
         bool rotationButtonPressed;
         bool scalingButtonPressed;
-        bool _ButtonPressed;
+        bool geomButtonPressed;
         bool entitiesButtonPressed;
         bool meshButtonPressed;
 
@@ -125,17 +125,6 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
-        private void _Click(object sender, RoutedEventArgs e)
-        {
-            if (!selectionButtonPressed)
-            {
-            }
-            else
-            {
-                ClearButtons();
-            }
-        }
-
         private void Entities_Click(object sender, RoutedEventArgs e)
         {
             if (!entitiesButtonPressed)
@@ -186,6 +175,18 @@ namespace TimeSink.Editor.GUI.Views
             Microsoft.Xna.Framework.Input.Mouse.WindowHandle = xnaControl.Handle;
         }
 
+        private void Geometry_Click(object sender, RoutedEventArgs e)
+        {
+            if (!geomButtonPressed)
+            {
+                m_game.GeometrySelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
+
         private void ClearButtons()
         {
             panButtonPressed = false;
@@ -193,7 +194,7 @@ namespace TimeSink.Editor.GUI.Views
             selectionButtonPressed = false;
             rotationButtonPressed = false;
             scalingButtonPressed = false;
-            _ButtonPressed = false;
+            geomButtonPressed = false;
             entitiesButtonPressed = false;
             meshButtonPressed = false;
         }
