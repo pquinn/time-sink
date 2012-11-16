@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Engine.Core.Rendering
 {
@@ -23,6 +24,7 @@ namespace TimeSink.Engine.Core.Rendering
             get { return srcRectangle; }
             set { srcRectangle = value; }
         }
+
         public Vector2 Scale
         {
             get { return scale; }
@@ -38,27 +40,25 @@ namespace TimeSink.Engine.Core.Rendering
             this.scale = scale;
         }
 
-        public void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, Microsoft.Xna.Framework.Vector2 positionOffset, float rotationOffset, Microsoft.Xna.Framework.Vector2 scaleOffset)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Draw(SpriteBatch spriteBatch, Caching.IResourceCache<Texture2D> cache, Matrix transform)
+        public void Draw(SpriteBatch spriteBatch, Caching.IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var texture = cache.GetResource(textureKey);
 
             var relativeTransform =
                Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
                Matrix.CreateRotationZ(rotation) *
-               Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
-               transform;
+               Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0));
 
             var origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
-            if (InputManager.Instance.Pressed(Keys.B))
-            {
-                //Debugger.Break();
-            }
+            spriteBatch.Begin(
+                SpriteSortMode.BackToFront,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                globalTransform);
 
             spriteBatch.Draw(
                 texture,
@@ -71,21 +71,6 @@ namespace TimeSink.Engine.Core.Rendering
                 SpriteEffects.None,
                 0
             );
-        }
-
-        public void GetBoundingBox(Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, ref BoundingBox acc, Microsoft.Xna.Framework.Vector2 positionOffset)
-        {
-            var texture = cache.GetResource(textureKey);
-            var relativeLeft = positionOffset.X + position.X;
-            var relativeRight = relativeLeft + srcRectangle.X + srcRectangle.Width;
-            var relativeTop = position.Y - positionOffset.Y;
-            var relativeBot = relativeTop + srcRectangle.Y + srcRectangle.Height;
-
-            acc = new BoundingBox(
-                Math.Min(acc.Min_X, relativeLeft),
-                Math.Max(acc.Max_X, relativeRight),
-                Math.Max(acc.Min_Y, relativeBot),
-                Math.Min(acc.Max_Y, relativeTop));
         }
 
         public NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(Caching.IResourceCache<Texture2D> cache, Matrix globalTransform)
@@ -103,7 +88,7 @@ namespace TimeSink.Engine.Core.Rendering
             throw new NotImplementedException();
         }
 
-        public Microsoft.Xna.Framework.Vector2 GetCenter(Caching.IResourceCache<Texture2D> cache, Matrix transform)
+        public Vector2 GetCenter(IResourceCache<Texture2D> cache, Matrix transform)
         {
             var texture = cache.GetResource(textureKey);
             var center = new Vector2(position.X + srcRectangle.X + srcRectangle.Width / 2,

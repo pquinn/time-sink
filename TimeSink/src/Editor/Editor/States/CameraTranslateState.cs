@@ -27,11 +27,6 @@ namespace Editor.States
 
         public override void Execute()
         {
-            if (InputManager.Instance.IsNewKey(Keys.X))
-            {
-                Debugger.Break();
-            }
-
             var leftMouse = InputManager.Instance.CurrentMouseState.LeftButton;
             if (leftMouse == ButtonState.Pressed && !inDrag)
             {
@@ -42,7 +37,7 @@ namespace Editor.States
             else if (leftMouse == ButtonState.Pressed)
             {
                 var mouse = GetMousePosition();
-                Camera.Position = mouse - dragPivot + cameraStart;
+                Camera.Position = cameraStart - mouse + dragPivot;
             }
             else if (leftMouse == ButtonState.Released)
             {

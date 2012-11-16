@@ -213,6 +213,13 @@ namespace Editor
                 true, true);
         }
 
+        public void ZoomSelected()
+        {
+            stateMachine.ChangeState(
+                new CameraZoomState(camera, TextureCache),
+                true, true);
+        }
+
         public void StaticMeshSelected(string textureKey)
         {
             stateMachine.ChangeState(

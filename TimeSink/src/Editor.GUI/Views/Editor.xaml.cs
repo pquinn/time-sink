@@ -81,6 +81,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!selectionButtonPressed)
             {
+                m_game.ZoomSelected();
             }
             else
             {

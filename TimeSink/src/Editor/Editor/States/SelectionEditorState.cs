@@ -99,13 +99,13 @@ namespace Editor.States
             cameraOffset = Vector3.Zero;
             var mouse = GetMousePosition();
             if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
-                cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
-            if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
                 cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
+            if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
+                cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
             if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
-                cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
-            if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
                 cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
+            if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
+                cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
         }
 
         public override void Exit()
@@ -169,13 +169,6 @@ namespace Editor.States
             selectedMeshes[drillIndex].Position = newPos;
         }
 
-        protected Vector2 GetMousePosition()
-        {
-            return new Vector2(
-                    InputManager.Instance.CurrentMouseState.X,
-                    InputManager.Instance.CurrentMouseState.Y);
-        }
-
         private void DrawBoundingBox(SpriteBatch spriteBatch, Camera camera, Color color, NonAxisAlignedBoundingBox box)
         {
             var blank = StateMachine.Owner.RenderManager.TextureCache.GetResource("blank");
@@ -190,7 +183,7 @@ namespace Editor.States
                 if (mesh.Rendering.Contains(
                         GetMousePosition(),
                         level.RenderManager.TextureCache,
-                        Matrix.Identity))
+                        Camera.Transform))
                 {
                     selected.Add(mesh);
                 }

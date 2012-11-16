@@ -7,6 +7,8 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Input;
 
 namespace Editor.States
 {
@@ -37,6 +39,13 @@ namespace Editor.States
         public override void Draw(SpriteBatch spriteBatch)
         {
             StateMachine.Owner.RenderManager.Draw(spriteBatch, Camera);
+        }
+
+        protected Vector2 GetMousePosition()
+        {
+            return new Vector2(
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y);
         }
     }
 }
