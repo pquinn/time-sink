@@ -79,19 +79,19 @@ namespace Editor
 
             // create default level
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
-            level.RegisterStaticMeshes(new List<StaticMesh>()
+            level.RegisterStaticMeshes(new List<Tile>()
                 {
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One, TextureCache),
-                    new StaticMesh("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One, TextureCache),
                 });
 
             // set up state machine
-            initState = new DefaultEditorState();
+            initState = new DefaultEditorState(camera, TextureCache);
             stateMachine = new StateMachine<Level>(initState, level);
             initState.StateMachine = stateMachine;
         }
@@ -196,11 +196,11 @@ namespace Editor
 
             spriteBatch.End();
 
-            stateMachine.Draw(spriteBatch, camera);
+            stateMachine.Draw(spriteBatch);
 
             if (showCollisionGeometry)
             {
-                level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
+                //level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
             }
 
             base.Draw(gameTime);
@@ -209,42 +209,49 @@ namespace Editor
         public void PanSelected()
         {
             stateMachine.ChangeState(
-                new CameraTranslateState(),
+                new CameraTranslateState(camera, TextureCache),
+                true, true);
+        }
+
+        public void ZoomSelected()
+        {
+            stateMachine.ChangeState(
+                new CameraZoomState(camera, TextureCache),
                 true, true);
         }
 
         public void StaticMeshSelected(string textureKey)
         {
             stateMachine.ChangeState(
-                new StaticMeshPlacementEditorState(textureKey),
+                new StaticMeshPlacementEditorState(camera, TextureCache, textureKey),
                 true, true);
         }
 
         public void EntitySelected(string entityKey)
         {
             stateMachine.ChangeState(
-                new EntityPlacementState(),
+                new EntityPlacementState(camera, TextureCache),
                 true, true);
         }
 
         public void SelectionSelected()
         {
             stateMachine.ChangeState(
-                new SelectionEditorState(),
+                new SelectionEditorState(camera, TextureCache),
                 true, true);
         }
 
         public void RotationSelected()
         {
             stateMachine.ChangeState(
-                new RotationEditorState(),
+                new RotationEditorState(camera, TextureCache),
                 true, true);
         }
 
         public void ScalingSelected()
         {
             stateMachine.ChangeState(
-                new ScalingEditorState(),
+                new ScalingEditorState(camera, TextureCache),
                 true, true);
         }
     }

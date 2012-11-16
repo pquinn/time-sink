@@ -4,22 +4,30 @@ using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Rendering;
+using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor.States
 {
-    public class EntityPlacementState : State<Level>
+    public class EntityPlacementState : DefaultEditorState
     {
-        public override void Enter(Level stateObject)
+        public EntityPlacementState(Camera camera, IResourceCache<Texture2D> cache)
+            : base(camera, cache)
+        {
+        }
+
+        public override void Enter()
         {
             throw new NotImplementedException();
         }
 
-        public override void Execute(Level stateObject)
+        public override void Execute()
         {
             throw new NotImplementedException();
         }
 
-        public override void Exit(Level stateObject)
+        public override void Exit()
         {
             throw new NotImplementedException();
         }

@@ -36,8 +36,10 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Caching;
-using TimeSink.Entities.Enemies;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using TimeSink.Entities;
+using TimeSink.Entities.Enemies;
 #endregion
 
 
@@ -57,13 +59,14 @@ namespace TimeSink.Engine.Game
         const float moveScale = 100.0f;
 
         UserControlledCharacter character;
+
         Enemy dummy;
         NormalCentipede normalCentipede;
         FlyingCentipede flyingCentipede;
         WorldGeometry world;
         Trigger trigger;
-        
-        
+
+
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
@@ -81,11 +84,16 @@ namespace TimeSink.Engine.Game
             Content.RootDirectory = "Content";
 
             character = new UserControlledCharacter(Vector2.Zero);
-            dummy = new Enemy(new Vector2(600, 350));
+
+            dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
 
-            normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
-            flyingCentipede = new FlyingCentipede(new Vector2(300, 100));
+            //normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
+            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(300, 400)));
+
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
@@ -108,46 +116,9 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
-            world.CollisionSet.Add(new AACollisionRectangle(new Rectangle(
-                300, 400, 100, 50
-            )));
-
-            var r = new CollisionRectangle(
-                new Vector2(500, 300),
-                new Vector2(520, 360),
-                new Vector2(620, 340),
-                new Vector2(600, 280)
-            );
-
-            world.CollisionSet.Add(r);
-
-            var c = r.Center;
-
-            trigger = new Trigger(new AACollisionRectangle(new Rectangle((int)c.X - 50, (int)c.Y - 50, 100, 100)));
-            trigger.Triggered += delegate (ICollideable collided)
-            {
-                if (collided is IPhysicsEnabledBody && !(collided is Enemy))
-                {
-                    var phys = (collided as IPhysicsEnabledBody).PhysicsController;
-                    if (phys != null)
-                        phys.Position = Vector2.Zero;
-                }
-            };
-
-
-
-            CollisionManager.RegisterCollisionBody(world);
-            CollisionManager.RegisterCollisionBody(character);
-
             PhysicsManager.RegisterPhysicsBody(character);
+            PhysicsManager.RegisterPhysicsBody(world);
 
-            RenderManager.RegisterRenderable(character);
-
-            CollisionManager.RegisterCollisionBody(dummy);
-            CollisionManager.RegisterCollisionBody(normalCentipede);
-            CollisionManager.RegisterCollisionBody(flyingCentipede);
-
-            PhysicsManager.RegisterPhysicsBody(character);
             PhysicsManager.RegisterPhysicsBody(dummy);
             PhysicsManager.RegisterPhysicsBody(normalCentipede);
             PhysicsManager.RegisterPhysicsBody(flyingCentipede);
@@ -158,7 +129,39 @@ namespace TimeSink.Engine.Game
             RenderManager.RegisterRenderable(flyingCentipede);
             RenderManager.RegisterRenderable(world);
 
-            CollisionManager.RegisterCollisionBody(trigger);
+            FixtureFactory.AttachRectangle(
+                PhysicsConstants.PixelsToMeters(100),
+                PhysicsConstants.PixelsToMeters(50),
+                1,
+                PhysicsConstants.PixelsToMeters(new Vector2(300, 400)),
+                world.PhysicsBody,
+                world);
+
+            FixtureFactory.AttachPolygon(
+                new FarseerPhysics.Common.Vertices() {
+                    PhysicsConstants.PixelsToMeters(new Vector2(500, 300)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(600, 280)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(620, 340)),
+                    PhysicsConstants.PixelsToMeters(new Vector2(520, 360))
+                },
+                1,
+                world.PhysicsBody,
+                world);
+
+            FixtureFactory.AttachRectangle(
+                PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                PhysicsConstants.PixelsToMeters(10),
+                1,
+                PhysicsConstants.PixelsToMeters(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height)),
+                world.PhysicsBody,
+                world);
+
+            CollisionManager.RegisterCollideable(world);
+            CollisionManager.RegisterCollideable(character);
+            CollisionManager.RegisterCollideable(dummy);
+            CollisionManager.RegisterCollideable(normalCentipede);
+
+            //CollisionManager.RegisterCollideable(trigger);
         }
 
         /// <summary>
@@ -169,17 +172,10 @@ namespace TimeSink.Engine.Game
         {
             base.LoadContent();
 
-            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
-                0,
-                GraphicsDevice.Viewport.Height,
-                GraphicsDevice.Viewport.Width,
-                10
-            )));
-
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
-           // backgroundTrack.PlaySound();
+            // backgroundTrack.PlaySound();
         }
 
         /// <summary>
@@ -203,12 +199,13 @@ namespace TimeSink.Engine.Game
                 this.Exit();
 
             //Camera.Position = new Vector3(
-            //    Character.PhysicsController.Position.X,
-            //    Character.PhysicsController.Position.Y,
+            //    -GraphicsDevice.Viewport.Width / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.X),
+            //    -GraphicsDevice.Viewport.Height / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.Y),
             //    0);
 
             // Calculate the view.
             view = ProcessCameraInput(gameTime);
+
 
             HandleInput(gameTime);
 
@@ -233,7 +230,7 @@ namespace TimeSink.Engine.Game
             }
 
             character.HandleKeyboardInput(gametime, this);
-            
+
         }
 
         /// <summary>
@@ -246,7 +243,7 @@ namespace TimeSink.Engine.Game
 
             if (showCollisionGeometry)
             {
-                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
+                //CollisionManager.Draw(SpriteBatch, TextureCache, Camera.Transform);
             }
         }
 
@@ -259,6 +256,7 @@ namespace TimeSink.Engine.Game
         Vector3 viewRotation = new Vector3(-2.2f, 0.16f, 0.0f);
         Matrix view = Matrix.Identity;
         Matrix projection = Matrix.Identity;
+
         private bool showCollisionGeometry;
 
 #if WINDOWS_PHONE

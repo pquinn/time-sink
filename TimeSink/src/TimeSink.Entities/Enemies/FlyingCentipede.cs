@@ -8,6 +8,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Editor;
+using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -46,17 +47,9 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
-            get
-            {
-                return new CollisionRectangle(
-                    new Rectangle(
-                        (int)physics.Position.X,
-                        (int)physics.Position.Y,
-                        32, 32
-                    ));
-            }
+            get { return Physics.FixtureList; }
         }
 
         public override IRendering Rendering
@@ -66,7 +59,7 @@ namespace TimeSink.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   CENTIPEDE_TEXTURE,
-                  PhysicsController.Position,
+                  PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));
@@ -86,7 +79,9 @@ namespace TimeSink.Entities.Enemies
 
         public override void Load(EngineGame engineGame)
         {
-            engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
+            var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
+            textureWidth = texture.Width;
+            textureHeight = texture.Height;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +10,12 @@ namespace TimeSink.Engine.Core
 {
     public class Level
     {
-        private List<StaticMesh> staticMeshes;
+        private List<Tile> staticMeshes;
         private List<Entity> entities;
 
         public Level(CollisionManager collisionsManager, PhysicsManager physicsManager, RenderManager renderManager)
         {
-            staticMeshes = new List<StaticMesh>();
+            staticMeshes = new List<Tile>();
             entities = new List<Entity>();
             CollisionManager = collisionsManager;
             PhysicsManager = physicsManager;
@@ -28,15 +28,15 @@ namespace TimeSink.Engine.Core
 
         public RenderManager RenderManager { get; private set; }
 
-        public void RegisterStaticMesh(StaticMesh mesh)
+        public void RegisterStaticMesh(Tile mesh)
         {
             staticMeshes.Add(mesh);
-            CollisionManager.RegisterCollisionBody(mesh);
+            CollisionManager.RegisterCollideable(mesh);
             PhysicsManager.RegisterPhysicsBody(mesh);
             RenderManager.RegisterRenderable(mesh);
         }
 
-        public void RegisterStaticMeshes(IEnumerable<StaticMesh> meshes)
+        public void RegisterStaticMeshes(IEnumerable<Tile> meshes)
         {
             meshes.ForEach(RegisterStaticMesh);
         }
@@ -44,7 +44,7 @@ namespace TimeSink.Engine.Core
         public void RegisterEntity(Entity entity)
         {
             entities.Add(entity);
-            CollisionManager.RegisterCollisionBody(entity);
+            CollisionManager.RegisterCollideable(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
             RenderManager.RegisterRenderable(entity);
         }
@@ -54,7 +54,7 @@ namespace TimeSink.Engine.Core
             entities.ForEach(RegisterEntity);
         }
 
-        public  IEnumerable<StaticMesh> GetStaticMeshes()
+        public  IEnumerable<Tile> GetStaticMeshes()
         {
             return staticMeshes;
         }

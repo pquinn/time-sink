@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -74,7 +74,6 @@ namespace TimeSink.Engine.Core
             InputManager.Instance.Update();
 
             PhysicsManager.Update(gameTime);
-            CollisionManager.Update(gameTime);
 
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);

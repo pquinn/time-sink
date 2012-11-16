@@ -9,45 +9,41 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor.States
 {
     public class CameraTranslateState : DefaultEditorState
     {
         private bool inDrag;
-        private Vector3 lastMouse;
+        private Vector3 dragPivot;
+        private Vector3 cameraStart;
         private Vector3 negOffset;
 
-        public override void Execute(Level level)
+        public CameraTranslateState(Camera camera, IResourceCache<Texture2D> cache)
+            : base(camera, cache)
         {
-            if (InputManager.Instance.IsNewKey(Keys.X))
-            {
-                Debugger.Break();
-            }
+        }
 
+        public override void Execute()
+        {
             var leftMouse = InputManager.Instance.CurrentMouseState.LeftButton;
             if (leftMouse == ButtonState.Pressed && !inDrag)
             {
                 inDrag = true;
-                lastMouse = GetMousePosition();
+                dragPivot = GetMousePosition();
+                cameraStart = Camera.Position;
             }
             else if (leftMouse == ButtonState.Pressed)
             {
                 var mouse = GetMousePosition();
-                negOffset = mouse - lastMouse;
-                lastMouse = mouse;
+                Camera.Position = cameraStart - mouse + dragPivot;
             }
             else if (leftMouse == ButtonState.Released)
             {
                 inDrag = false;
                 negOffset = Vector3.Zero;
             }
-        }
-
-        public override void Draw(SpriteBatch spriteBatch, Camera camera, Level level)
-        {
-            camera.PanCamera(negOffset);
-            base.Draw(spriteBatch, camera, level);
         }
 
         private Vector3 GetMousePosition()

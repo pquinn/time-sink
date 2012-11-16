@@ -39,8 +39,6 @@ namespace TimeSink.Engine.Core.Rendering
 
         public void Draw(SpriteBatch spriteBatch, Camera camera)
         {
-            spriteBatch.Begin();
-
             foreach (var renderable in renderables)
             {
                 renderable.Rendering.Draw(
@@ -49,8 +47,6 @@ namespace TimeSink.Engine.Core.Rendering
                     camera.Transform
                 );
             }
-
-            spriteBatch.End();
         }
     }
 }
