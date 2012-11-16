@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ namespace TimeSink.Engine.Core
         public void RegisterStaticMesh(StaticMesh mesh)
         {
             staticMeshes.Add(mesh);
-            CollisionManager.RegisterCollisionBody(mesh);
+            CollisionManager.RegisterCollideable(mesh);
             PhysicsManager.RegisterPhysicsBody(mesh);
             RenderManager.RegisterRenderable(mesh);
         }
@@ -44,7 +44,7 @@ namespace TimeSink.Engine.Core
         public void RegisterEntity(Entity entity)
         {
             entities.Add(entity);
-            CollisionManager.RegisterCollisionBody(entity);
+            CollisionManager.RegisterCollideable(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
             RenderManager.RegisterRenderable(entity);
         }
@@ -54,7 +54,7 @@ namespace TimeSink.Engine.Core
             entities.ForEach(RegisterEntity);
         }
 
-        public  IEnumerable<StaticMesh> GetStaticMeshes()
+        internal IEnumerable<StaticMesh> GetStaticMeshes()
         {
             return staticMeshes;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,8 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Input;
@@ -24,26 +26,49 @@ namespace TimeSink.Engine.Core
         public StaticMesh(string texture, Vector2 position, float rotation, Vector2 scale, IResourceCache<Texture2D> cache)
         {
             this.texture = texture;
+            _initialPosition = position;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
             this.cache = cache;
         }
 
+        private Vector2 _initialPosition;
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
+        private Body _physics;
         public Vector2 Position { get; set; }
         public float Rotation { get; set; }
         public Vector2 Scale { get; set; }
 
-        public override ICollisionGeometry CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get
             {
-                var tex = cache.GetResource(texture);
+                return _physics.FixtureList;
+            }
+        }
+
+        public void InitializePhysics(World world)
+        {
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            _physics = BodyFactory.CreateRectangle(
+                world,
+                PhysicsConstants.PixelsToMeters(128),
+                PhysicsConstants.PixelsToMeters(128),
+                1,
+                _initialPosition,
+                this);
+            _physics.BodyType = BodyType.Static;
+
+            /*var tex = cache.GetResource(texture);
                 var relativeTransform =
                     Matrix.CreateTranslation(new Vector3(-tex.Width / 2, -tex.Height / 2, 0)) *
                     Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
@@ -55,7 +80,7 @@ namespace TimeSink.Engine.Core
                     Vector2.Transform(new Vector2(0, tex.Height), relativeTransform),
                     Vector2.Transform(new Vector2(tex.Width, tex.Height), relativeTransform),
                     Vector2.Transform(new Vector2(tex.Width, 0), relativeTransform));
-            }
+            */
         }
 
         public override IRendering Rendering
@@ -66,11 +91,6 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override IPhysicsParticle PhysicsController
-        {
-            get { return null; }
-        }
-
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
         }
@@ -79,6 +99,7 @@ namespace TimeSink.Engine.Core
         {
             engineGame.TextureCache.LoadResource(texture);
         }
+
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {
