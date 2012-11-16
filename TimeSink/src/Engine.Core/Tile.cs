@@ -22,26 +22,30 @@ namespace TimeSink.Engine.Core
 
         string texture;
         IResourceCache<Texture2D> cache;
+        Vector2 texCenter;
+        Vector2 position;
 
         public Tile(string texture, Vector2 position, float rotation, Vector2 scale, IResourceCache<Texture2D> cache)
         {
+            var tex = cache.GetResource(texture);
+            texCenter = new Vector2(tex.Width, tex.Height) / 2;
             this.texture = texture;
-            _initialPosition = position;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
             this.cache = cache;
         }
 
-        private Vector2 _initialPosition;
-
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        private Body _physics;
-        public Vector2 Position { get; set; }
+        public Vector2 Position 
+        {
+            get { return position; }
+            set { position = value; }
+        }
         public float Rotation { get; set; }
         public Vector2 Scale { get; set; }
 
@@ -77,8 +81,7 @@ namespace TimeSink.Engine.Core
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {
-            var tex = cache.GetResource(texture);
-            var size = origScale * new Vector2(tex.Width, tex.Height);
+            var size = origScale * texCenter * 2;
 
             var relativeTransform =
                 Matrix.CreateRotationZ(Rotation) *

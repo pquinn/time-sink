@@ -81,13 +81,13 @@ namespace Editor
             level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
             level.RegisterStaticMeshes(new List<Tile>()
                 {
-                    new Tile("Textures/Ground_Tile1", new Vector2(50, 300), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Ground_Tile1", new Vector2(324, 300), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Ground_Tile1", new Vector2(598, 300), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Side_Tile01", new Vector2(872, 300), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(50, 286), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(324, 286), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(598, 286), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(187, 361.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(461, 361.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Ground_Tile1", new Vector2(735, 361.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Side_Tile01", new Vector2(1009, 361.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(187, 293.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(461, 293.5f), 0, Vector2.One, TextureCache),
+                    new Tile("Textures/Top_Tile01", new Vector2(735, 293.5f), 0, Vector2.One, TextureCache),
                 });
 
             // set up state machine

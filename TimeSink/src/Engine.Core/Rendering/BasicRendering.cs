@@ -92,24 +92,22 @@ namespace TimeSink.Engine.Core.Rendering
             var texture = cache.GetResource(textureKey);
 
             var relativeTransform =
-                Matrix.CreateTranslation(new Vector3(-texture.Width / 2, -texture.Height / 2, 0)) *
                 Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
                 Matrix.CreateRotationZ(rotation) *
-                Matrix.CreateTranslation(new Vector3(texture.Width / 2, texture.Height / 2, 0)) *
                 Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
                 globalTransform;
 
             var topLeft = Vector2.Transform(
-                Vector2.Zero,
+                new Vector2(-texture.Width / 2, -texture.Height / 2),
                 relativeTransform);
             var topRight = Vector2.Transform(
-                new Vector2(texture.Width, 0),
+                new Vector2(texture.Width / 2, -texture.Height / 2),
                 relativeTransform);
             var botLeft = Vector2.Transform(
-                new Vector2(0, texture.Height),
+                new Vector2(-texture.Width / 2, texture.Height / 2),
                 relativeTransform);
             var botRight = Vector2.Transform(
-                new Vector2(texture.Width, texture.Height),
+                new Vector2(texture.Width / 2, texture.Height / 2),
                 relativeTransform);
 
             if (InputManager.Instance.Pressed(Keys.N))
@@ -125,29 +123,25 @@ namespace TimeSink.Engine.Core.Rendering
             var texture = cache.GetResource(textureKey);
 
             var relativeTransform =
-                Matrix.CreateTranslation(new Vector3(-texture.Width / 2, -texture.Height / 2, 0)) *
                 Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
                 Matrix.CreateRotationZ(rotation) *
-                Matrix.CreateTranslation(new Vector3(texture.Width / 2, texture.Height / 2, 0)) *
                 Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
                 transform;
 
             var pointInRenderCoordinates =
                 Vector2.Transform(point, Matrix.Invert(relativeTransform));
 
-            return (pointInRenderCoordinates.X >= 0) &&
-                   (pointInRenderCoordinates.X <= texture.Width) &&
-                   (pointInRenderCoordinates.Y >= 0) &&
-                   (pointInRenderCoordinates.Y <= texture.Height);
+            return (pointInRenderCoordinates.X >= -texture.Width / 2) &&
+                   (pointInRenderCoordinates.X <= texture.Width / 2) &&
+                   (pointInRenderCoordinates.Y >= -texture.Height / 2) &&
+                   (pointInRenderCoordinates.Y <= texture.Height / 2);
         }
 
         public Vector2 GetCenter(IResourceCache<Texture2D> cache, Matrix transform)
         {
             var texture = cache.GetResource(textureKey);
-            var center = new Vector2(position.X + texture.Width / 2, position.Y + texture.Height / 2);
 
-            var debug = Vector2.Transform(center, transform);
-            return debug;
+            return Vector2.Transform(position, transform);
         }
     }
 }
