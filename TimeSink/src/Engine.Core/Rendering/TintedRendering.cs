@@ -25,10 +25,18 @@ namespace TimeSink.Engine.Core.Rendering
             var relativeTransform =
                Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
                Matrix.CreateRotationZ(rotation) *
-               Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
-               globalTransform;
+               Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0));
 
             var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+
+            spriteBatch.Begin(
+                SpriteSortMode.BackToFront,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                globalTransform);
 
             spriteBatch.Draw(
                 texture,
@@ -41,6 +49,8 @@ namespace TimeSink.Engine.Core.Rendering
                 SpriteEffects.None,
                 0
             );
+
+            spriteBatch.End();
         }
     }
 }

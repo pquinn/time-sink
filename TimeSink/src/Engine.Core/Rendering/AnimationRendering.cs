@@ -71,6 +71,8 @@ namespace TimeSink.Engine.Core.Rendering
                 SpriteEffects.None,
                 0
             );
+
+            spriteBatch.End();
         }
 
         public NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(Caching.IResourceCache<Texture2D> cache, Matrix globalTransform)
