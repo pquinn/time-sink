@@ -68,7 +68,7 @@ namespace SpriteSheetCreator
                 {
                     Image img = Image.FromFile(file);
                     if (img.Width > MAX_WIDTH)
-                        MAX_WIDTH = img.Width + 10;
+                        MAX_WIDTH = img.Width;
                     if (img.Height > MAX_HEIGHT)
                         MAX_HEIGHT = img.Height;
 
@@ -142,14 +142,15 @@ namespace SpriteSheetCreator
         {
             if (sheetCreated)
             {
-                AnimateImage();
                 if (currentFrame < TOTAL_IMAGES)
                 {
+                    AnimateImage();
                     currentFrame++;
                 }
                 else
                 {
                     currentFrame = 0;
+                    AnimateImage();
                 }
             }
         }

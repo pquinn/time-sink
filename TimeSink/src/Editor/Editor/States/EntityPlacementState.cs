@@ -7,38 +7,34 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Input;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace Editor.States
 {
-    public class StaticMeshPlacementEditorState : DefaultEditorState
+    public class EntityPlacementState : DefaultEditorState
     {
-        string textureKey;
+        Entity entity;
         Texture2D texture;
 
-        public StaticMeshPlacementEditorState(Camera camera, IResourceCache<Texture2D> cache, string textureKey)
+        public EntityPlacementState(Camera camera, IResourceCache<Texture2D> cache, Entity entity)
             : base(camera, cache)
         {
-            this.textureKey = textureKey;
+            this.entity = entity;
         }
 
         public override void Enter()
         {
 
-            texture = StateMachine.Owner.RenderManager.TextureCache.GetResource(textureKey);
+            texture = StateMachine.Owner.RenderManager.TextureCache.GetResource(entity.EditorPreview);
         }
 
         public override void Execute()
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
-                var mesh = new Tile(
-                    textureKey,
-                    new Vector2(
-                        InputManager.Instance.CurrentMouseState.X,
-                        InputManager.Instance.CurrentMouseState.Y),
-                    0, Vector2.One,
-                    StateMachine.Owner.RenderManager.TextureCache);
-                StateMachine.Owner.RegisterStaticMesh(mesh);
+                StateMachine.Owner.RegisterEntity(entity);
 
                 StateMachine.RevertToPreviousState(true);
             }

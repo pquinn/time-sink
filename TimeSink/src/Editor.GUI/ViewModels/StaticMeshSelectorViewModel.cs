@@ -16,15 +16,17 @@ namespace TimeSink.Editor.GUI.ViewModels
         List<string> textureKeys;
         int selectedTextureKey = -1;
 
+        Action<string, bool> invokeCancel;
+
         #endregion // Fields
 
         #region Constructor
 
         public StaticMeshSelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
-            : base (invokeCancel)
         {
             this.cache = cache; 
             this.textureKeys = cache.GetResources().Select(x => x.Item1).ToList();
+            this.invokeCancel = invokeCancel;
         }
 
         public List<string> TextureKeys

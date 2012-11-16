@@ -227,10 +227,10 @@ namespace Editor
                 true, true);
         }
 
-        public void EntitySelected(string entityKey)
+        public void EntitySelected(Entity entity)
         {
             stateMachine.ChangeState(
-                new EntityPlacementState(camera, TextureCache),
+                new EntityPlacementState(camera, TextureCache, entity),
                 true, true);
         }
 
