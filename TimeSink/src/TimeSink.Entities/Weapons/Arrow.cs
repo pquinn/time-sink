@@ -63,8 +63,8 @@ namespace TimeSink.Entities.Weapons
                 return new CollisionRectangle(new Rectangle(
                     (int)physics.Position.X,
                     (int)physics.Position.Y,
-                    64,
-                    32
+                    89,
+                    12
                 ));
             }
         }

@@ -59,6 +59,7 @@ namespace TimeSink.Engine.Game
         UserControlledCharacter character;
         Enemy dummy;
         NormalCentipede normalCentipede;
+        FlyingCentipede flyingCentipede;
         WorldGeometry world;
         Trigger trigger;
         
@@ -82,7 +83,9 @@ namespace TimeSink.Engine.Game
             character = new UserControlledCharacter(Vector2.Zero);
             dummy = new Enemy(new Vector2(600, 350));
             world = new WorldGeometry();
-            normalCentipede = new NormalCentipede(new Vector2(300, 250));
+
+            normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
+            flyingCentipede = new FlyingCentipede(new Vector2(300, 100));
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
@@ -91,6 +94,7 @@ namespace TimeSink.Engine.Game
 
             Entities.Add(dummy);
             Entities.Add(normalCentipede);
+            Entities.Add(flyingCentipede);
             Entities.Add(world);
         }
 
@@ -141,14 +145,17 @@ namespace TimeSink.Engine.Game
 
             CollisionManager.RegisterCollisionBody(dummy);
             CollisionManager.RegisterCollisionBody(normalCentipede);
+            CollisionManager.RegisterCollisionBody(flyingCentipede);
 
             PhysicsManager.RegisterPhysicsBody(character);
             PhysicsManager.RegisterPhysicsBody(dummy);
             PhysicsManager.RegisterPhysicsBody(normalCentipede);
+            PhysicsManager.RegisterPhysicsBody(flyingCentipede);
 
             RenderManager.RegisterRenderable(character);
             RenderManager.RegisterRenderable(dummy);
             RenderManager.RegisterRenderable(normalCentipede);
+            RenderManager.RegisterRenderable(flyingCentipede);
             RenderManager.RegisterRenderable(world);
 
             CollisionManager.RegisterCollisionBody(trigger);
