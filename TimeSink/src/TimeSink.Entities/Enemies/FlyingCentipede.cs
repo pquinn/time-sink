@@ -81,7 +81,7 @@ namespace TimeSink.Entities.Enemies
         {
             var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
             textureWidth = texture.Width;
-            textureHeight = texture.Height;
+            textureHeight = texture.Height; 
         }
     }
 }
