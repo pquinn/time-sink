@@ -38,6 +38,7 @@ namespace Editor.States
 
         public override void Execute()
         {
+            Console.WriteLine(GetMousePosition());
             var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
             var hasSelect = selectedMeshes.Count > 0;
             var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
