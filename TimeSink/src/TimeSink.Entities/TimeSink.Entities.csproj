@@ -62,8 +62,8 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
     <Compile Include="IInventoryItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
