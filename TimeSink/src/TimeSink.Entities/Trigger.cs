@@ -7,7 +7,6 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Game.Entities;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;

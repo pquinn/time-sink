@@ -36,10 +36,10 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Caching;
-using TimeSink.Entities.Enemies;
-using TimeSink.Entities;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using TimeSink.Entities;
+using TimeSink.Entities.Enemies;
 #endregion
 
 
@@ -108,28 +108,8 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             PhysicsManager.RegisterPhysicsBody(character);
             PhysicsManager.RegisterPhysicsBody(world);
-
-
-
 
             PhysicsManager.RegisterPhysicsBody(dummy);
             PhysicsManager.RegisterPhysicsBody(normalCentipede);
@@ -166,7 +146,6 @@ namespace TimeSink.Engine.Game
                 world.PhysicsBody,
                 world);
 
-
             CollisionManager.RegisterCollideable(world);
             CollisionManager.RegisterCollideable(character);
             CollisionManager.RegisterCollideable(dummy);
@@ -182,13 +161,6 @@ namespace TimeSink.Engine.Game
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            world.CollisionSet.Add(new CollisionRectangle(new Rectangle(
-                0,
-                GraphicsDevice.Viewport.Height,
-                GraphicsDevice.Viewport.Width,
-                10
-            )));
 
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
@@ -261,7 +233,7 @@ namespace TimeSink.Engine.Game
 
             if (showCollisionGeometry)
             {
-                CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
+                //CollisionManager.Draw(SpriteBatch, TextureCache, Matrix.Identity);
             }
         }
 

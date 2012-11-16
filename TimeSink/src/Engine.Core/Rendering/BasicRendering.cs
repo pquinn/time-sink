@@ -57,15 +57,14 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(textureKey);
             var originTexture = srcRectangle ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            
             spriteBatch.Draw(
                 texture,
-
                 positionOffset + position,
                 srcRectangle,
                 Color.White,
                 rotationOffset + rotation,
                 new Vector2(originTexture.Width / 2, originTexture.Height / 2),
-
                 scaleOffset * scale,
                 SpriteEffects.None,
                 0);
@@ -82,11 +81,6 @@ namespace TimeSink.Engine.Core.Rendering
                globalTransform;
 
             var origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
-            if (InputManager.Instance.Pressed(Keys.B))
-            {
-                //Debugger.Break();
-            }
 
             spriteBatch.Draw(
                 texture,

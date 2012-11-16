@@ -11,8 +11,6 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Entities.Weapons;
 using TimeSink.Engine.Core.Editor;
-using System.Collections.Generic;
-using Engine.Game.Entities;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
@@ -586,23 +584,13 @@ namespace TimeSink.Entities
         {
             get
             {
-               /* Stack<IRendering> stack = new Stack<IRendering>();
-                stack.
-                return new StackableRendering(*/
-                Console.WriteLine(physics.Position);
                 Stack<IRendering> stack = new Stack<IRendering>();
                 CreateAnimationStack(stack);
-
-                Console.WriteLine(physics.Position.Y);
-                return new StackableRendering(stack,physics.Position,0,Vector2.One);
-                /*return new BasicRendering(
->>>>>>> ecf9b3b086b551162df87af2e83db4fe0dad82b1
-                    PLAYER_TEXTURE_NAME,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
-                    0,
-                    Vector2.One,
-                    sourceRect
-                );*/
+                return new StackableRendering(
+                    stack, 
+                    PhysicsConstants.MetersToPixels(Physics.Position), 
+                    0, 
+                    Vector2.One);
             }
         }
 

@@ -1,17 +1,14 @@
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using TimeSink.Engine.Core;
-using TimeSink.Engine.Core.Collisions;
-using TimeSink.Engine.Core.Physics;
-using TimeSink.Engine.Core.Rendering;
 using System;
-using TimeSink.Engine.Core.Editor;
-using TimeSink.Engine.Game.Entities;
-using FarseerPhysics.Dynamics;
 using System.Collections.Generic;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
-
+using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Collisions;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -29,7 +26,6 @@ namespace TimeSink.Entities.Weapons
         private Vector2 _initialPosition;
 
         public Body Physics { get; private set; }
-        public DamageOverTimeEffect dot { get; private set; }
 
         public Dart() 
             : this(Vector2.Zero)

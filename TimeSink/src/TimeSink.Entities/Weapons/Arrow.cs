@@ -1,9 +1,4 @@
 using Microsoft.Xna.Framework;
-using TimeSink.Engine.Core;
-using TimeSink.Engine.Core.Collisions;
-using TimeSink.Engine.Core.Physics;
-using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System;
 using FarseerPhysics.Dynamics;
@@ -11,6 +6,10 @@ using System.Collections.Generic;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
 using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Collisions;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -56,8 +55,8 @@ namespace TimeSink.Entities.Weapons
         [EditableField("Position")]
         public Vector2 Position
         {
-            get { return physics.Position; }
-            set { physics.Position = value; }
+            get { return Physics.Position; }
+            set { Physics.Position = value; }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -112,7 +111,7 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollisionBody(this);
+                world.CollisionManager.UnregisterCollideable(this);
             }
         }
 

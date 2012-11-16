@@ -7,10 +7,10 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
-using TimeSink.Engine.Game.Entities.Weapons;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
+using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Entities.Enemies
 {

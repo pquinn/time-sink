@@ -53,10 +53,6 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public void InitializePhysics(World world)
-        {
-        }
-
         public override void InitializePhysics(World world)
         {
             _physics = BodyFactory.CreateRectangle(

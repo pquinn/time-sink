@@ -200,7 +200,7 @@ namespace Editor
 
             if (showCollisionGeometry)
             {
-                level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
+                //level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
             }
 
             base.Draw(gameTime);
