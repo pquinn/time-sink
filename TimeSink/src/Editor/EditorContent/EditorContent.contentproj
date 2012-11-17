@@ -97,6 +97,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Enemies\Necky.png">
+      <Name>Necky</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Enemies\Dummy.png">
       <Name>Dummy</Name>
       <Importer>TextureImporter</Importer>

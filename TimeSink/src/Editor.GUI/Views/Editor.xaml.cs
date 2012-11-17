@@ -134,6 +134,8 @@ namespace TimeSink.Editor.GUI.Views
 
                 entityWindow.ShowDialog();
 
+                ResetHandle();
+
                 var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
                 if ((bool)entityWindow.DialogResult)
                 {
@@ -154,6 +156,8 @@ namespace TimeSink.Editor.GUI.Views
 
                 selectorWindow.ShowDialog();
 
+                ResetHandle();
+
                 var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
                 if ((bool)selectorWindow.DialogResult)
                 {
@@ -164,6 +168,11 @@ namespace TimeSink.Editor.GUI.Views
             {
                 ClearButtons();
             }
+        }
+
+        private void ResetHandle()
+        {
+            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = xnaControl.Handle;
         }
 
         private void Geometry_Click(object sender, RoutedEventArgs e)
@@ -177,7 +186,6 @@ namespace TimeSink.Editor.GUI.Views
                 ClearButtons();
             }
         }
-
 
         private void ClearButtons()
         {

@@ -44,8 +44,8 @@ namespace TimeSink.Engine.Core
         public void RegisterEntity(Entity entity)
         {
             entities.Add(entity);
-            CollisionManager.RegisterCollideable(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
+            CollisionManager.RegisterCollideable(entity);
             RenderManager.RegisterRenderable(entity);
         }
 

@@ -29,14 +29,14 @@ namespace TimeSink.Editor.GUI.Views
             DataContext = new EntitySelectorViewModel(
                 entities,
                 cache,
-                (string s, bool b) =>
+                (Entity s, bool b) =>
                 {
                     this.SelectedEntity = s;
                     this.DialogResult = b;
                 });
         }
 
-        public string SelectedEntity { get; set; }
+        public Entity SelectedEntity { get; set; }
 
         private void Entity_Changed(object sender, RoutedEventArgs e)
         {
