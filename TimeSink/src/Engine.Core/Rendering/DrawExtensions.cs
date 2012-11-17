@@ -15,8 +15,10 @@ namespace TimeSink.Engine.Core.Rendering
             float angle = (float)Math.Atan2(end.Y - start.Y, end.X - start.X);
             float length = Vector2.Distance(start, end);
 
+            var origin = new Vector2(0, thinkness / 2);
+
             spriteBatch.Draw(texture, start, null, color,
-                       angle, Vector2.Zero, new Vector2(length, thinkness),
+                       angle, Vector2.UnitY / 2, new Vector2(length, thinkness),
                        SpriteEffects.None, 0);    
         }
 
@@ -62,16 +64,16 @@ namespace TimeSink.Engine.Core.Rendering
 
         public static void DrawCircle(this SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Vector2 center, Vector2 size, Color color)
         {
-            var texture = cache.GetResource("circle");
+            var texture = cache.GetResource("Textures/circle");
             var textureSize = new Vector2(texture.Width, texture.Height);
 
             spriteBatch.Draw(
                 texture,
-                size + center,
+                center,
                 null,
                 color,
                 0,
-                center,
+                textureSize / 2,
                 size / textureSize,
                 SpriteEffects.None,
                 0

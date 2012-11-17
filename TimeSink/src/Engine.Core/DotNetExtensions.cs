@@ -11,7 +11,7 @@ namespace TimeSink.Engine.Core
         {
             foreach (var item in list)
             {
-                action.Invoke(item);
+                action(item);
             }
         }
     }
