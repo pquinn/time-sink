@@ -41,6 +41,7 @@ namespace Editor
 
         private Vector2? highlighted;
         private Vector2? lastPlaced;
+        private Vector2? dragging;
 
         public override void Execute()
         {
@@ -51,9 +52,11 @@ namespace Editor
 
             var closestDistance = Single.PositiveInfinity;
 
-            foreach (var nearVertex in chains.Aggregate(new List<Vector2>() as IEnumerable<Vector2>, (a, x) => a.Concat(x))
-                                             .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x))))
-                                             .Where(x => x.Item2 <= 100))
+            var near = chains.Aggregate(new List<Vector2>() as IEnumerable<Vector2>, (a, x) => a.Concat(x))
+                            .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x))))
+                            .Where(x => x.Item2 <= 100);
+
+            foreach (var nearVertex in near)
             {
                 if (nearVertex.Item2 < closestDistance)
                 {
@@ -62,38 +65,70 @@ namespace Editor
                 }
             }
 
-            if (clickToggleGuard && mouse.LeftButton == ButtonState.Pressed)
+            if (mouse.LeftButton == ButtonState.Pressed)
             {
-                clickToggleGuard = false;
-
-                if (highlighted == null)
+                if (InputManager.Instance.Pressed(Keys.LeftShift) || InputManager.Instance.Pressed(Keys.RightShift))
                 {
-                    var position = GetMousePosition();
+                    if (dragging == null)
+                    {
+                        if (highlighted == null)
+                            return;
+                        else
+                            dragging = highlighted;
+                    }
 
-                    if (!makingChain)
-                        startMakingNewChain();
+                    var newPos = PhysicsConstants.PixelsToMeters(
+                        Vector2.Transform(mousePosition, Camera.Transform));
 
-                    var vertex = PhysicsConstants.PixelsToMeters(
-                                    Vector2.Transform(
-                                        position,
-                                        Matrix.Invert(Camera.Transform)));
+                    foreach (var chain in chains)
+                    {
+                        for (int i = 0; i < chain.Count; i++)
+                        {
+                            var vertex = chain[i];
+                            if (vertex == dragging)
+                                chain[i] = newPos;
+                        }
+                    }
 
-                    selectedChain.Add(vertex);
-                    lastPlaced = vertex;
+                    dragging = newPos;
                 }
-                else if (highlighted != lastPlaced)
+                else
                 {
-                    var newChain = !makingChain;
-                    if (newChain)
-                        startMakingNewChain();
-                    
-                    var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
+                    dragging = null;
 
-                    selectedChain.Add(highlighted ?? Vector2.Zero);
-                    lastPlaced = highlighted;
+                    if (!clickToggleGuard) return;
 
-                    if (!newChain && inCurrentChain)
-                        stopMakingChain();
+                    clickToggleGuard = false;
+
+                    if (highlighted == null)
+                    {
+                        var position = GetMousePosition();
+
+                        if (!makingChain)
+                            startMakingNewChain();
+
+                        var vertex = PhysicsConstants.PixelsToMeters(
+                                        Vector2.Transform(
+                                            position,
+                                            Matrix.Invert(Camera.Transform)));
+
+                        selectedChain.Add(vertex);
+                        lastPlaced = vertex;
+                    }
+                    else if (highlighted != lastPlaced)
+                    {
+                        var newChain = !makingChain;
+                        if (newChain)
+                            startMakingNewChain();
+
+                        var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
+
+                        selectedChain.Add(highlighted ?? Vector2.Zero);
+                        lastPlaced = highlighted;
+
+                        if (!newChain && inCurrentChain)
+                            stopMakingChain();
+                    }
                 }
             }
             else if ((clickToggleGuard && mouse.RightButton == ButtonState.Pressed) ||
@@ -101,9 +136,13 @@ namespace Editor
             {
                 clickToggleGuard = false;
                 stopMakingChain();
+                dragging = null;
             }
             else
+            {
                 clickToggleGuard = true;
+                dragging = null;
+            }
         }
 
         private void startMakingNewChain()
