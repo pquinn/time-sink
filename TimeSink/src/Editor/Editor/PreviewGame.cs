@@ -14,6 +14,7 @@ namespace Editor
     public class PreviewGame : XNAControl.XNAControlGame
     {
         SpriteBatch spriteBatch;
+
         private Texture2D texture;
 
         public PreviewGame(IntPtr windowHandle, int width, int height)

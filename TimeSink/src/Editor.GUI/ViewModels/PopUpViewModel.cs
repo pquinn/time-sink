@@ -13,13 +13,10 @@ namespace TimeSink.Editor.GUI.ViewModels
         protected RelayCommand _closeCommand;
         protected RelayCommand _saveCommand;
 
-        protected Action<string, bool> invokeCancel;
-
         #endregion
 
-        public PopUpViewModel(Action<string, bool> invokeCancel)
+        public PopUpViewModel()
         {
-            this.invokeCancel = invokeCancel;
         }
 
         /// <summary>
@@ -58,7 +55,6 @@ namespace TimeSink.Editor.GUI.ViewModels
 
         protected virtual void Close(bool ok)
         {
-            invokeCancel(string.Empty, ok);
         }
 
         protected virtual bool CanSave

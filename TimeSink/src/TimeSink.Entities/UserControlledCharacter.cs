@@ -24,41 +24,37 @@ namespace TimeSink.Entities
         const float PLAYER_MASS = 100f;
         const string EDITOR_NAME = "User Controlled Character";
 
-        enum BodyStates { Neutral, Idle, StartWalking, Walking, StopWalking, StartRunning, Running, StopRunning, Jumping, Shooting };
-        int currentState;
+        enum BodyStates
+        {
+            NeutralRight,
+            IdleRightOpen, IdleRightClosed,
+            WalkingStartRight, WalkingRight, WalkingEndRight,
+            RunningIntermediateRight, RunningRight,
+            JumpingRight,
+            ShootingRight
+        };
+
+        BodyStates currentState;
 
         //Texture strings for content loading
-        const string PLAYER_TEXTURE_NAME = "Textures/Sprites/SpriteSheet";
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
-        const string BODY_START_WALK = "Textures/Sprites/SpriteSheets/StartWalk";
-        const string BODY_START_RUN = "Textures/Sprites/SpriteSheets/StartRun";
-        const string BODY_WALK = "Textures/Sprites/SpriteSheets/BodyWalk";
-        const string BODY_RUN = "Textures/Sprites/SpriteSheets/Running";
-        const string BODY_JUMP = "Textures/Sprites/SpriteSheets/jump";
-        const string ARM_MOVE = "Textures/Sprites/SpriteSheets/arm move";
-        const string HAIR_MOVE = "Textures/Sprites/SpriteSheets/HairMove";
-        const string HAND_CLOSE = "Textures/Sprites/SpriteSheets/openClose";
-        const string HEAD_STATES = "Textures/Sprites/SpriteSheets/headStates";
-        const string IDLE_BODY_HEAD_HAIR = "Textures/Sprites/SpriteSheets/IdleBody+Head+Hair";
-        const string BODY_NEUTRAL = "Textures/Sprites/Body/Body_Neutral";
-        const string EDITOR_PREVIEW = "Textures/Character";
 
-        //Animation holders which create Renderings and set up relative positions
-        //**We will not sizes/relative positions once all sprites are resized to 128x256
-        private static readonly Animation bodyWalk = new Animation(7, BODY_WALK, 120, 198, new Vector2(0, 45));
-        private static readonly Animation bodyRun = new Animation(8, BODY_RUN, 209, 191, Vector2.Zero);
-        private static readonly Animation bodyStartWalk = new Animation(2, BODY_START_WALK, 109, 198, new Vector2(0, 45));
-        private static readonly Animation bodyStartRun = new Animation(2, BODY_START_RUN, 81, 198, Vector2.Zero);
-        private static readonly Animation bodyJump = new Animation(4, BODY_JUMP, 136, 159, Vector2.Zero);
-        private static readonly Animation hairMove = new Animation(2, HAIR_MOVE, 66, 63, Vector2.Zero);
-        private static readonly Animation armMove = new Animation(2, ARM_MOVE, 51, 85, new Vector2(12, 65));
-        private static readonly Animation idle = new Animation(6, IDLE_BODY_HEAD_HAIR, 95, 245, Vector2.Zero);
+        const string EDITOR_PREVIEW = "Textures/Sprites/SpriteSheets/Body_Neutral";
+
+        const string NEUTRAL_RIGHT = "Textures/Sprites/SpriteSheets/Body_Neutral";
+        const string IDLE_CLOSED_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
+        const string IDLE_OPEN_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
+        const string WALKING_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Intermediate";
+        const string WALKING_RIGHT = "Textures/Sprites/SpriteSheets/Body_Walking_Right";
+        const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
+
+        private Dictionary<BodyStates, NewAnimationRendering> animations;
 
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
-        public static float X_OFFSET = PhysicsConstants.PixelsToMeters(60-65);
-        public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(80-141);
+        public static float X_OFFSET = PhysicsConstants.PixelsToMeters(60 - 65);
+        public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(80 - 141);
 
         public Body Physics { get; private set; }
 
@@ -167,23 +163,12 @@ namespace TimeSink.Entities
             inventory = new List<IInventoryItem>();
             inventory.Add(new Arrow());
             inventory.Add(new Dart());
+
+            animations = CreateAnimations();
         }
 
         public override void Load(EngineGame game)
         {
-            game.TextureCache.LoadResource(PLAYER_TEXTURE_NAME);
-            game.TextureCache.LoadResource(BODY_JUMP);
-            game.TextureCache.LoadResource(BODY_RUN);
-            game.TextureCache.LoadResource(BODY_WALK);
-            game.TextureCache.LoadResource(BODY_START_RUN);
-            game.TextureCache.LoadResource(BODY_START_WALK);
-            game.TextureCache.LoadResource(ARM_MOVE);
-            game.TextureCache.LoadResource(HAIR_MOVE);
-            game.TextureCache.LoadResource(HAND_CLOSE);
-            game.TextureCache.LoadResource(HEAD_STATES);
-            game.TextureCache.LoadResource(BODY_NEUTRAL);
-            
-
             jumpSound = game.SoundCache.LoadResource(JUMP_SOUND_NAME);
         }
 
@@ -226,16 +211,14 @@ namespace TimeSink.Entities
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
 
-            UpdateAnimationStates();
-
             #region Movement
+            #region gamepad
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
                 movedirection.X -= 1.0f;
                 if (touchingGround)
                 {
-                    currentState = (int)BodyStates.Walking;
-                    AnimateRight(gameTime);
+                    currentState = BodyStates.WalkingRight;
                 }
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
@@ -243,8 +226,7 @@ namespace TimeSink.Entities
                 movedirection.X += 1.0f;
                 if (touchingGround)
                 {
-                    currentState = (int)BodyStates.Walking;
-                    AnimateRight(gameTime);
+                    currentState = BodyStates.WalkingRight;
                 }
             }
             if (gamepad.ThumbSticks.Left.X != 0)
@@ -252,24 +234,24 @@ namespace TimeSink.Entities
                 movedirection.X += gamepad.ThumbSticks.Left.X;
                 if (touchingGround)
                 {
-                    currentState = (int)BodyStates.Walking;
-                    AnimateRight(gameTime);
+                    currentState = BodyStates.WalkingRight;
                 }
             }
+            #endregion
 
             if (keyboard.IsKeyDown(Keys.A))
             {
                 movedirection.X -= 1.0f;
                 if (touchingGround)
                 {
-                    if (currentState != (int)BodyStates.Walking)
+                    if (currentState != BodyStates.WalkingRight)
                     {
-                        currentState = (int)BodyStates.StartWalking;
+                        animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                        currentState = BodyStates.WalkingStartRight;
                     }
                     else
                     {
-                        currentState = (int)BodyStates.Walking;
-                        //AnimateRight(gameTime);
+                        currentState = BodyStates.WalkingRight;
                     }
                 }
             }
@@ -278,15 +260,14 @@ namespace TimeSink.Entities
                 movedirection.X += 1.0f;
                 if (touchingGround)
                 {
-                    if (currentState != (int)BodyStates.Walking)
+                    if (currentState != BodyStates.WalkingRight)
                     {
-                        bodyWalk.Reset();
-                        currentState = (int)BodyStates.StartWalking;
+                        animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                        currentState = BodyStates.WalkingStartRight;
                     }
                     else
                     {
-                        currentState = (int)BodyStates.Walking;
-                        //AnimateRight(gameTime);
+                        currentState = BodyStates.WalkingRight;
                     }
                 }
             }
@@ -352,7 +333,8 @@ namespace TimeSink.Entities
             {
                 if (jumpToggleGuard && touchingGround)
                 {
-                    currentState = (int)BodyStates.Jumping;
+                    currentState = BodyStates.JumpingRight;
+                    animations[BodyStates.JumpingRight].CurrentFrame = 0;
                     jumpStarted = true;
                     jumpSound.Play();
                     Physics.ApplyLinearImpulse(new Vector2(0, -100));
@@ -370,7 +352,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                currentState = (int)BodyStates.Shooting;
+                currentState = BodyStates.ShootingRight;
                 holdTime = gameTime.TotalGameTime.TotalSeconds;
                 inHold = true;
             }
@@ -394,19 +376,19 @@ namespace TimeSink.Entities
             #endregion
 
             //No keys are pressed and we're on the ground, we're neutral
-            if ((keyboard.GetPressedKeys().GetLength(0) == 0) && 
-                (touchingGround))
+            if (keyboard.GetPressedKeys().GetLength(0) == 0 && touchingGround && timer >= interval)
             {
-                if ((currentState == (int)BodyStates.Walking))
+                if (currentState == BodyStates.WalkingRight)
                 {
-                    bodyStartWalk.Reset();
-                    currentState = (int)BodyStates.StopWalking;
+                    currentState = BodyStates.WalkingEndRight;
                 }
-                else if ((currentState != (int)BodyStates.Idle) && (currentState != (int)BodyStates.StopWalking))
+                else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
                 {
-                    idle.Reset();
-                    currentState = (int)BodyStates.Neutral;
+                    animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                    currentState = BodyStates.NeutralRight;
                 }
+
+                timer = 0f;
             }
 
             if (movedirection != Vector2.Zero)
@@ -424,87 +406,57 @@ namespace TimeSink.Entities
                 // Move player based on the controller direction and time scale.
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
+
+            UpdateAnimationStates();
         }
 
         protected void UpdateAnimationStates()
         {
-            if ((currentState == (int)BodyStates.Idle) && (timer >= interval))
+            if (currentState == BodyStates.IdleRightOpen && timer >= interval)
             {
-                idle.UpdateFrame();
+                var idle = animations[BodyStates.IdleRightOpen];
+                idle.CurrentFrame = (idle.CurrentFrame + 1) % idle.NumFrames;
                 timer = 0f;
             }
-            else if ((currentState == (int)BodyStates.Neutral) && timer >= idleInterval)
+            else if ((currentState == BodyStates.NeutralRight) && timer >= idleInterval)
             {
-                currentState = (int)BodyStates.Idle;
+                currentState = BodyStates.IdleRightOpen;
                 timer = 0f;
             }
 
-            else if (currentState == (int)BodyStates.Walking && timer >= interval)
+            else if (currentState == BodyStates.WalkingRight && timer >= interval)
             {
-                bodyWalk.UpdateFrame();
+                var walking = animations[BodyStates.WalkingRight];
+                walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
                 timer = 0f;
             }
-            else if (currentState == (int)BodyStates.StartWalking && timer >= interval)
+            else if (currentState == BodyStates.WalkingStartRight && timer >= interval)
             {
-                if (bodyStartWalk.CurrentFrame == (bodyStartWalk.TotalFrames))
+                var walking = animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                currentState = BodyStates.WalkingRight;
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingEndRight && timer >= interval)
+            {
+                currentState = BodyStates.NeutralRight;
+                timer = 0f;
+            }
+
+            if (currentState == BodyStates.JumpingRight && timer >= interval)
+            {
+                if (!touchingGround && Physics.LinearVelocity.Y < 0)
                 {
-                    currentState = (int)BodyStates.Walking;
+                    animations[BodyStates.JumpingRight].CurrentFrame = 1;
                 }
-                else
+                else if (!touchingGround && Physics.LinearVelocity.Y > 0)
                 {
-                    bodyStartWalk.UpdateFrame();
+                    animations[BodyStates.JumpingRight].CurrentFrame = 2;
                 }
-                timer = 0f;
-            }
-            else if (currentState == (int)BodyStates.StopWalking && timer >= interval)
-            {
-                bodyStartWalk.Reverse();
-                if (bodyStartWalk.CurrentFrame == 0)
+                else if (touchingGround)
                 {
-                    currentState = (int)BodyStates.Neutral;
-                    bodyStartWalk.Reset();
-                    bodyWalk.Reset();
+                    animations[BodyStates.JumpingRight].CurrentFrame = 3;
                 }
-                timer = 0f;
-            }
-            else if (currentState == (int)BodyStates.Jumping && timer >= interval)
-            {
-                if (bodyJump.CurrentFrame != (bodyJump.TotalFrames - 1))
-                {
-                    bodyJump.UpdateFrame();
-                }
-                timer = 0f;
-            }
-        }
-        protected void AnimateRight(GameTime gameTime)
-        {
-            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (timer > interval)
-            {
-                currentFrame++;
-
-                if (currentFrame > 8)
-                {
-                    currentFrame = 0;
-                }
-                timer = 0f;
-            }
-
-        }
-
-        protected void AnimateJump(GameTime gameTime)
-        {
-            timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (timer > jumpInterval)
-            {
-                currentFrame++;
-
-                if (currentFrame > 12)
-                {
-                    currentFrame = 12;
-                }
                 timer = 0f;
             }
         }
@@ -517,81 +469,106 @@ namespace TimeSink.Entities
             info.GetWorldManifold(out normal, out points);
             if (normal.Y > 0)
             {
-                if (!jumpToggleGuard)
-                {
-                    bodyJump.Reset();
-                }
                 __touchingGroundFlag = true;
             }
-        }
-
-        private void CreateAnimationStack(Stack<IRendering> stack)
-        {
-            #region neutral
-            if (currentState == (int)BodyStates.Neutral)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(hairMove.Rendering);
-                stack.Push(bodyStartWalk.Rendering);
-            }
-            #endregion
-            #region idle
-            else if (currentState == (int)BodyStates.Idle)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(idle.Rendering);
-            }
-            #endregion
-            #region start walking
-            else if (currentState == (int)BodyStates.StartWalking)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(bodyStartWalk.Rendering);
-            }
-            #endregion
-            #region stop walking
-            else if (currentState == (int)BodyStates.StopWalking)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(bodyStartWalk.Rendering);
-            }
-            #endregion
-            #region walking
-            else if (currentState == (int)BodyStates.Walking)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(bodyWalk.Rendering);
-            }
-            #endregion
-            #region jumping
-            else if (currentState == (int)BodyStates.Jumping)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(bodyJump.Rendering);
-            }
-            #endregion
-            #region shooting
-            if (currentState == (int)BodyStates.Shooting)
-            {
-                stack.Push(armMove.Rendering);
-                stack.Push(hairMove.Rendering);
-                stack.Push(bodyStartWalk.Rendering);
-            }
-            #endregion
         }
 
         public override IRendering Rendering
         {
             get
             {
-                Stack<IRendering> stack = new Stack<IRendering>();
-                CreateAnimationStack(stack);
-                return new StackableRendering(
-                    stack, 
-                    PhysicsConstants.MetersToPixels(Physics.Position), 
-                    0, 
-                    Vector2.One);
+                var anim = animations[currentState];
+                anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                return anim;
             }
+        }
+
+        private Dictionary<BodyStates, NewAnimationRendering> CreateAnimations()
+        {
+            var dictionary = new Dictionary<BodyStates, NewAnimationRendering>();
+
+            #region Neutral
+
+            dictionary.Add(
+                BodyStates.NeutralRight,
+                new NewAnimationRendering(
+                    NEUTRAL_RIGHT,
+                    new Vector2(128, 256),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            #endregion
+
+            #region Idle
+
+            dictionary.Add(
+                BodyStates.IdleRightOpen,
+                new NewAnimationRendering(
+                        IDLE_OPEN_HAND,
+                        new Vector2(128, 256),
+                        5,
+                        Vector2.Zero,
+                        0,
+                        Vector2.One));
+            dictionary.Add(
+                BodyStates.IdleRightClosed,
+                new NewAnimationRendering(
+                        IDLE_CLOSED_HAND,
+                        new Vector2(128, 256),
+                        5,
+                        Vector2.Zero,
+                        0,
+                        Vector2.One));
+
+            #endregion
+
+            #region Walking
+
+            dictionary.Add(BodyStates.WalkingStartRight,
+                new NewAnimationRendering(
+                    WALKING_RIGHT_INTERMEDIATE,
+                    new Vector2(128, 256),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.WalkingRight,
+                new NewAnimationRendering(
+                    WALKING_RIGHT,
+                    new Vector2(128, 256),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.WalkingEndRight,
+                new NewAnimationRendering(
+                    WALKING_RIGHT_INTERMEDIATE,
+                    new Vector2(128, 256),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            #endregion
+
+            #region Jumping
+
+            dictionary.Add(BodyStates.JumpingRight,
+                new NewAnimationRendering(
+                    JUMPING_RIGHT,
+                    new Vector2(128, 256),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            #endregion
+
+            return dictionary;
         }
 
         public void RegisterDot(DamageOverTimeEffect dot)
@@ -605,7 +582,7 @@ namespace TimeSink.Entities
 
             float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
             float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
-            
+
             var r = FixtureFactory.AttachRectangle(
                 spriteWidthMeters,
                 spriteHeightMeters - spriteWidthMeters / 2,

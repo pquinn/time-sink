@@ -147,6 +147,7 @@
     <Compile Include="Rendering\BoundingBox.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\DrawExtensions.cs" />
+    <Compile Include="Rendering\NewAnimationRendering.cs" />
     <Compile Include="Rendering\NonAxisAlignedBoundingBox.cs" />
     <Compile Include="Rendering\StackableRendering.cs" />
     <Compile Include="Rendering\IRenderable.cs" />

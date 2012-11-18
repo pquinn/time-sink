@@ -227,10 +227,10 @@ namespace Editor
                 true, true);
         }
 
-        public void EntitySelected(string entityKey)
+        public void EntitySelected(Entity entity)
         {
             stateMachine.ChangeState(
-                new EntityPlacementState(camera, TextureCache),
+                new EntityPlacementState(camera, TextureCache, entity),
                 true, true);
         }
 
@@ -252,6 +252,13 @@ namespace Editor
         {
             stateMachine.ChangeState(
                 new ScalingEditorState(camera, TextureCache),
+                true, true);
+        }
+
+        public void GeometrySelected()
+        {
+            stateMachine.ChangeState(
+                new GeometryPlacementState(camera, TextureCache),
                 true, true);
         }
     }

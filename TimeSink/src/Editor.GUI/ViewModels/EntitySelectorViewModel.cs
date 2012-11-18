@@ -17,16 +17,18 @@ namespace TimeSink.Editor.GUI.ViewModels
         List<string> entityKeys;
         int selectedEntity = -1;
 
+        Action<Entity, bool> invokeCancel;
+
         #endregion // Fields
 
         #region Constructor
 
-        public EntitySelectorViewModel(IEnumerable<Entity> entities, InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
-            : base (invokeCancel)
+        public EntitySelectorViewModel(IEnumerable<Entity> entities, InMemoryResourceCache<Texture2D> cache, Action<Entity, bool> invokeCancel)
         {
             this.cache = cache;
             Entities = entities.ToList();
             this.entityKeys = Entities.Select(e => e.EditorName).ToList();
+            this.invokeCancel = invokeCancel;
         }
 
         public List<string> EntityKeys
@@ -65,7 +67,7 @@ namespace TimeSink.Editor.GUI.ViewModels
         protected override void Close(bool ok)
         {
             invokeCancel(
-                SelectedEntity < 0 ? null : EntityKeys[SelectedEntity], 
+                SelectedEntity < 0 ? null : Entities[SelectedEntity], 
                 ok);
         }
 

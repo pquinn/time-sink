@@ -31,7 +31,7 @@ namespace TimeSink.Editor.GUI.Views
         bool selectionButtonPressed;
         bool rotationButtonPressed;
         bool scalingButtonPressed;
-        bool _ButtonPressed;
+        bool geomButtonPressed;
         bool entitiesButtonPressed;
         bool meshButtonPressed;
 
@@ -125,17 +125,6 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
-        private void _Click(object sender, RoutedEventArgs e)
-        {
-            if (!selectionButtonPressed)
-            {
-            }
-            else
-            {
-                ClearButtons();
-            }
-        }
-
         private void Entities_Click(object sender, RoutedEventArgs e)
         {
             if (!entitiesButtonPressed)
@@ -144,6 +133,8 @@ namespace TimeSink.Editor.GUI.Views
                 var entityWindow = new EntitySelector(entities, m_game.TextureCache);
 
                 entityWindow.ShowDialog();
+
+                ResetHandle();
 
                 var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
                 if ((bool)entityWindow.DialogResult)
@@ -165,6 +156,8 @@ namespace TimeSink.Editor.GUI.Views
 
                 selectorWindow.ShowDialog();
 
+                ResetHandle();
+
                 var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
                 if ((bool)selectorWindow.DialogResult)
                 {
@@ -177,7 +170,22 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
+        private void ResetHandle()
+        {
+            Microsoft.Xna.Framework.Input.Mouse.WindowHandle = xnaControl.Handle;
+        }
 
+        private void Geometry_Click(object sender, RoutedEventArgs e)
+        {
+            if (!geomButtonPressed)
+            {
+                m_game.GeometrySelected();
+            }
+            else
+            {
+                ClearButtons();
+            }
+        }
 
         private void ClearButtons()
         {
@@ -186,7 +194,7 @@ namespace TimeSink.Editor.GUI.Views
             selectionButtonPressed = false;
             rotationButtonPressed = false;
             scalingButtonPressed = false;
-            _ButtonPressed = false;
+            geomButtonPressed = false;
             entitiesButtonPressed = false;
             meshButtonPressed = false;
         }

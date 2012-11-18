@@ -9,6 +9,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Physics;
 
 namespace Editor.States
 {
@@ -36,8 +37,8 @@ namespace Editor.States
                 var mesh = new Tile(
                     textureKey,
                     new Vector2(
-                        InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
-                        InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
+                        InputManager.Instance.CurrentMouseState.X,
+                        InputManager.Instance.CurrentMouseState.Y),
                     0, Vector2.One,
                     StateMachine.Owner.RenderManager.TextureCache);
                 StateMachine.Owner.RegisterStaticMesh(mesh);
@@ -55,16 +56,12 @@ namespace Editor.States
             base.Draw(spriteBatch);
 
             spriteBatch.Begin();
-
-            Console.WriteLine(
-                "{0}, {1}",
-                InputManager.Instance.CurrentMouseState.X,
-                InputManager.Instance.CurrentMouseState.Y);
+            
             spriteBatch.Draw(
                 texture,
                 new Vector2(
-                    InputManager.Instance.CurrentMouseState.X - (texture.Width / 2),
-                    InputManager.Instance.CurrentMouseState.Y - (texture.Height / 2)),
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y),
                 new Color(255, 255, 255, 80));
 
             spriteBatch.End();

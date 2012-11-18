@@ -56,7 +56,11 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(textureKey);
 
-            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            Vector2 origin;
+            if (srcRectangle.HasValue)
+                origin = new Vector2(srcRectangle.Value.Width / 2, srcRectangle.Value.Height / 2);
+            else
+                origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             if (InputManager.Instance.Pressed(Keys.B))
             {
