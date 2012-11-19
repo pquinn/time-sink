@@ -171,6 +171,7 @@ namespace TimeSink.Entities.Enemies
                 PhysicsConstants.PixelsToMeters(textureHeight),
                 1,
                 _initialPosition);
+            Physics.FixedRotation = true;
             Physics.BodyType = BodyType.Dynamic;
             Physics.UserData = this;
 
