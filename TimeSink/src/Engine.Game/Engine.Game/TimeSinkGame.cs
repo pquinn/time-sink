@@ -105,6 +105,8 @@ namespace TimeSink.Engine.Game
             Entities.Add(normalCentipede);
             Entities.Add(flyingCentipede);
             Entities.Add(world);
+
+            RenderDebugGeometry = true;
         }
 
         /// <summary>

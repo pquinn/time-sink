@@ -11,6 +11,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.DebugViews;
 
 namespace TimeSink.Engine.Core
 {
@@ -27,6 +28,10 @@ namespace TimeSink.Engine.Core
         public SpriteBatch SpriteBatch { get; private set; }
         public HashSet<Entity> Entities { get; private set; }
 
+        public bool RenderDebugGeometry { get; set; }
+
+        private DebugViewXNA debugView;
+
         public EngineGame()
             : base()
         {
@@ -42,6 +47,9 @@ namespace TimeSink.Engine.Core
             PhysicsManager = new PhysicsManager();
             CollisionManager = new CollisionManager();
             RenderManager = new RenderManager(TextureCache);
+
+            debugView = new DebugViewXNA(PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
 
             CollisionManager.Initialize();
         }
@@ -84,6 +92,22 @@ namespace TimeSink.Engine.Core
         protected override void Draw(GameTime gameTime)
         {
             RenderManager.Draw(SpriteBatch, Camera);
+
+            SpriteBatch.Begin();
+
+            if (RenderDebugGeometry)
+            {
+                var projection = Matrix.CreateOrthographicOffCenter(
+                    0,
+                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
+                    0,
+                    0,
+                    1);
+                debugView.RenderDebugData(ref projection);
+            }
+
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }
