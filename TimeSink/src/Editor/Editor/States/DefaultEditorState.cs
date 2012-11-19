@@ -12,7 +12,7 @@ using TimeSink.Engine.Core.Input;
 
 namespace Editor.States
 {
-    public class DefaultEditorState : State<Level>
+    public class DefaultEditorState : State<LevelManager>
     {
         public DefaultEditorState(Camera camera, IResourceCache<Texture2D> textureCache)
         {

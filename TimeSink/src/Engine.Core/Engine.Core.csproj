@@ -134,7 +134,7 @@
     <Compile Include="IHaveShield.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="Level.cs" />
+    <Compile Include="States\Level.cs" />
     <Compile Include="Physics\GravityPhysics.cs" />
     <Compile Include="Physics\IPhysicsEnabledBody.cs" />
     <Compile Include="Physics\IPhysicsParticle.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="Rendering\RenderManager.cs" />
     <Compile Include="Rendering\TintedRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
+    <Compile Include="States\LevelManager.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
     <Compile Include="Tile.cs" />

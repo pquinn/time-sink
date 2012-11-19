@@ -17,6 +17,8 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using Editor.States;
 using Autofac;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace Editor
 {
@@ -29,12 +31,12 @@ namespace Editor
 
         RenderManager renderManager;
 
-        Level level;
+        LevelManager leveManager;
 
         Camera camera;
 
-        StateMachine<Level> stateMachine;
-        State<Level> initState;
+        StateMachine<LevelManager> stateMachine;
+        State<LevelManager> initState;
         private bool showCollisionGeometry;
 
         public Game1(IntPtr handle, int width, int height)
@@ -78,8 +80,8 @@ namespace Editor
             renderManager = new RenderManager(TextureCache);
 
             // create default level
-            level = new Level(new CollisionManager(), new PhysicsManager(), renderManager);
-            level.RegisterStaticMeshes(new List<Tile>()
+            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(), renderManager, new Level());
+            leveManager.RegisterTiles(new List<Tile>()
                 {
                     new Tile("Textures/Ground_Tile1", new Vector2(187, 361.5f), 0, Vector2.One, TextureCache),
                     new Tile("Textures/Ground_Tile1", new Vector2(461, 361.5f), 0, Vector2.One, TextureCache),
@@ -92,7 +94,7 @@ namespace Editor
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
-            stateMachine = new StateMachine<Level>(initState, level);
+            stateMachine = new StateMachine<LevelManager>(initState, leveManager);
             initState.StateMachine = stateMachine;
         }
 
@@ -260,6 +262,11 @@ namespace Editor
             stateMachine.ChangeState(
                 new GeometryPlacementState(camera, TextureCache),
                 true, true);
+        }
+
+        public void SaveAs()
+        {
+            leveManager.SerializeLevel();
         }
     }
 }

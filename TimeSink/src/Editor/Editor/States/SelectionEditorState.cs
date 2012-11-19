@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.States;
 
 namespace Editor.States
 {
@@ -176,17 +177,17 @@ namespace Editor.States
             spriteBatch.DrawRect(blank, box, 5, color);
         }
 
-        private List<Tile> GetSelections(Level level)
+        private List<Tile> GetSelections(LevelManager levelManager)
         {
             var selected = new List<Tile>();
-            foreach (var mesh in level.GetStaticMeshes())
+            foreach (var tile in levelManager.Level.Tiles)
             {
-                if (mesh.Rendering.Contains(
+                if (tile.Rendering.Contains(
                         GetMousePosition(),
-                        level.RenderManager.TextureCache,
+                        levelManager.RenderManager.TextureCache,
                         Camera.Transform))
                 {
-                    selected.Add(mesh);
+                    selected.Add(tile);
                 }
             }
 

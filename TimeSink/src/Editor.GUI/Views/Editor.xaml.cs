@@ -60,6 +60,11 @@ namespace TimeSink.Editor.GUI.Views
             EditorProperties.Instance.GridLineSpacing = size;
         }
 
+        public void SaveAs()
+        {
+            m_game.SaveAs();
+        }
+
         void Editor_Loaded(object sender, RoutedEventArgs e)
         {
             m_game = new Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);

@@ -65,8 +65,8 @@ namespace Editor
             {
                 makingChain = false;
 
-                StateMachine.Owner.CollisionGeometry.Clear();
-                StateMachine.Owner.CollisionGeometry.AddRange(
+                StateMachine.Owner.Level.CollisionGeometry.Clear();
+                StateMachine.Owner.Level.CollisionGeometry.AddRange(
                     chains.Select(x => new LoopShape(new Vertices(x))));
             }
             else
