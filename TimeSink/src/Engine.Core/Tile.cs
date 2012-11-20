@@ -21,29 +21,16 @@ namespace TimeSink.Engine.Core
     {
         const string EDITOR_NAME = "Tile";
 
-        [NonSerialized]
-        IResourceCache<Texture2D> cache;
-
-        Vector2 texCenter;
-
         public Tile()
         {
         }
 
-        public Tile(string texture, Vector2 position, float rotation, Vector2 scale, IResourceCache<Texture2D> cache)
+        public Tile(string texture, Vector2 position, float rotation, Vector2 scale)
         {
-            var tex = cache.GetResource(texture);
-            texCenter = new Vector2(tex.Width, tex.Height) / 2;
             this.Texture = texture;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
-            this.cache = cache;
-        }
-
-        public override string EditorName
-        {
-            get { return EDITOR_NAME; }
         }
 
         public string Texture { get; set; }
@@ -53,6 +40,11 @@ namespace TimeSink.Engine.Core
         public float Rotation { get; set; }
 
         public Vector2 Scale { get; set; }
+
+        public override string EditorName
+        {
+            get { return EDITOR_NAME; }
+        }
 
         [XmlIgnore]
         public override List<Fixture> CollisionGeometry
@@ -88,7 +80,9 @@ namespace TimeSink.Engine.Core
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {
-            var size = origScale * texCenter * 2;
+            var tex = cache.GetResource(Texture);
+
+            var size = origScale * new Vector2(tex.Width / 2, tex.Height / 2) * 2;
 
             var relativeTransform =
                 Matrix.CreateRotationZ(Rotation) *

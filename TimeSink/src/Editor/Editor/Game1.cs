@@ -80,17 +80,7 @@ namespace Editor
             renderManager = new RenderManager(TextureCache);
 
             // create default level
-            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(), renderManager, new Level());
-            leveManager.RegisterTiles(new List<Tile>()
-                {
-                    new Tile("Textures/Ground_Tile1", new Vector2(187, 361.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Ground_Tile1", new Vector2(461, 361.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Ground_Tile1", new Vector2(735, 361.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Side_Tile01", new Vector2(1009, 361.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(187, 293.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(461, 293.5f), 0, Vector2.One, TextureCache),
-                    new Tile("Textures/Top_Tile01", new Vector2(735, 293.5f), 0, Vector2.One, TextureCache),
-                });
+            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(), renderManager);
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);

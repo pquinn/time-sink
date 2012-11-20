@@ -39,8 +39,7 @@ namespace Editor.States
                     new Vector2(
                         InputManager.Instance.CurrentMouseState.X,
                         InputManager.Instance.CurrentMouseState.Y),
-                    0, Vector2.One,
-                    StateMachine.Owner.RenderManager.TextureCache);
+                    0, Vector2.One);
                 StateMachine.Owner.RegisterTile(tile);
 
                 StateMachine.RevertToPreviousState(true);

@@ -83,7 +83,8 @@ namespace TimeSink.Engine.Game
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            character = new UserControlledCharacter(Vector2.Zero);
+            character = new UserControlledCharacter(
+                PhysicsConstants.PixelsToMeters(new Vector2(100, 0)));
 
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
@@ -104,6 +105,8 @@ namespace TimeSink.Engine.Game
             Entities.Add(normalCentipede);
             Entities.Add(flyingCentipede);
             Entities.Add(world);
+
+            RenderDebugGeometry = true;
         }
 
         /// <summary>
