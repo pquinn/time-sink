@@ -130,7 +130,7 @@ namespace TimeSink.Engine.Game
             RenderManager.RegisterRenderable(dummy);
             RenderManager.RegisterRenderable(normalCentipede);
             RenderManager.RegisterRenderable(flyingCentipede);
-            RenderManager.RegisterRenderable(world);
+            //RenderManager.RegisterRenderable(world);
 
             FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),
