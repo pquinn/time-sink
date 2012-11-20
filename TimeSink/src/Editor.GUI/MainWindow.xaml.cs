@@ -23,5 +23,21 @@ namespace TimeSink.Editor.GUI
         {
             InitializeComponent();
         }
+
+        private void Show_Grid_Lines_Click(object sender, RoutedEventArgs e)
+        {
+            editor.ToggleGridLines();
+        }
+
+        private void Grid_Line_Size_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            editor.SetGridLineSize(Int32.Parse(item.Tag.ToString()));
+        }
+
+        private void Enable_Snapping_Click(object sender, RoutedEventArgs e)
+        {
+            editor.ToggleSnapping();
+        }
     }
 }

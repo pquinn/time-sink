@@ -4,27 +4,30 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.DebugViews;
 
 namespace TimeSink.Engine.Core.Physics
 {
     public class PhysicsManager
     {
-        private HashSet<IPhysicsEnabledBody> bodies = new HashSet<IPhysicsEnabledBody>();
+        //private HashSet<IPhysicsEnabledBody> bodies = new HashSet<IPhysicsEnabledBody>();
+        public World World { get; private set; }
 
-        public bool RegisterPhysicsBody(IPhysicsEnabledBody body)
+        public PhysicsManager()
         {
-            return bodies.Add(body);
+            World = new World(PhysicsConstants.Gravity);
         }
 
-        public bool UnregisterPhysicsBody(IPhysicsEnabledBody body)
+        public void RegisterPhysicsBody(IPhysicsEnabledBody body)
         {
-            return bodies.Remove(body);
+            body.InitializePhysics(World);
         }
 
-        public void Update(GameTime gameTime) 
+        public void Update(GameTime gameTime)
         {
-            foreach (var body in bodies)
-                body.PhysicsController.Update(gameTime);
+            World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
     }
 }

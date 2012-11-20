@@ -22,7 +22,6 @@ namespace TimeSink.Engine.Core.Sound
         //Dynamic sound object for modular panning and volume
          SoundEffectInstance dynamic;
 
-
         #endregion
 
         #region Initialization
@@ -123,6 +122,10 @@ namespace TimeSink.Engine.Core.Sound
             else if (dynamic.State.Equals(SoundState.Paused))
             {
                 dynamic.Resume();
+            }
+            else
+            {
+                PlaySound();
             }
         }
 

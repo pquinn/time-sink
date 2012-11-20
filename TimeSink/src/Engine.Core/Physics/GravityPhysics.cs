@@ -8,6 +8,7 @@ namespace TimeSink.Engine.Core.Physics
 {
     public class GravityPhysics : IPhysicsParticle
     {
+        public Vector2 OldPosition { get; private set; }
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
@@ -23,6 +24,7 @@ namespace TimeSink.Engine.Core.Physics
             Position = p;
             Velocity = v;
             Acceleration = a;
+            OldPosition = Vector2.Zero;
         }
 
         bool _gravity;
@@ -48,6 +50,7 @@ namespace TimeSink.Engine.Core.Physics
         public void Update(GameTime timeStep)
         {
             var time = (float)timeStep.ElapsedGameTime.TotalSeconds;
+            OldPosition = Position;
             Position += Velocity * time;
             Velocity += Acceleration * time;
         }

@@ -5,47 +5,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GameStateManagement;
+using GameStateManagementSample.Items;
 
 namespace GameStateManagementSample
 {
-    class ShieldBar : IHudElement
+    class ShieldBar : HudBar
     {
-        #region Fields
-        /**************************************
-         * The image used to represent the weapon
-         **************************************/
-        Texture2D icon;
+       public ShieldBar(Texture2D texture)
+       {
+           this.icon = texture;
+       }
 
-        /******************************************
-         * The outline of the weapon slot
-         ******************************************/
-        Rectangle outline;
-
-        /**********************************
-         * The position of the slot
-         *********************************/
-        Point position;
-
-        #endregion
-
-        public void Update(MenuScreen menu, Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Update(MenuScreen menu, Microsoft.Xna.Framework.GameTime gameTime)
         {
-            throw new NotImplementedException();
         }
 
-        public void Draw(GameScreen screen, bool isSelected, Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Draw(GameScreen screen, bool isSelected, Microsoft.Xna.Framework.GameTime gameTime)
         {
-            throw new NotImplementedException();
-        }
+            ScreenManager screenManager = screen.ScreenManager;
+            SpriteBatch spriteBatch = screenManager.SpriteBatch;
+            GraphicsDevice graphics = screenManager.GraphicsDevice;
 
-        public virtual bool IsSlot()
-        {
-            return false;
-        }
 
-        public virtual bool GameplayDraw()
-        {
-            return true;
+            outline.Location = position;
+            outline.Width = ((graphics.PresentationParameters.BackBufferWidth / 45) * 14);
+            outline.Height = (graphics.Viewport.Width / 30);
+
+            spriteBatch.Draw(icon, outline, Color.SkyBlue);
         }
     }
 }

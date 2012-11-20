@@ -17,7 +17,7 @@
     <XnaCrossPlatformGroupID>80062647-ac55-4753-8b5e-87a7eddc7520</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <Thumbnail>HambagLtdLogo2.png</Thumbnail>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +45,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysicsXNA">
+      <HintPath>..\..\..\lib\FarseerPhysicsXNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -97,12 +100,17 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="HambagLtdLogo2.png" />
     <None Include="readme.htm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine.Core\Engine.Core.csproj">
       <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
       <Name>Engine.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
+      <Project>{9c3bd6bb-3862-4a30-9dd2-5b929cc5ffcf}</Project>
+      <Name>TimeSink.Entities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine.GameContent\Engine.GameContent.contentproj">
       <Name>Engine.GameContent %28Content%29</Name>

@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Input;
 using GameStateManagement;
 using Microsoft.Xna.Framework.Content;
+using GameStateManagementSample.Items;
 #endregion
 
 namespace GameStateManagementSample
@@ -198,7 +199,7 @@ namespace GameStateManagementSample
         /// Allows the screen the chance to position the menu entries. By default
         /// all menu entries are lined up in a vertical list, centered on the screen.
         /// </summary>
-        protected virtual void UpdateMenuEntryLocations()
+        protected virtual void UpdateMenuEntryLocations(GraphicsDevice graphics)
         {
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
@@ -206,7 +207,7 @@ namespace GameStateManagementSample
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 200; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 200f);
+            Vector2 position = new Vector2(0f, graphics.PresentationParameters.BackBufferHeight / 3);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)
@@ -227,35 +228,45 @@ namespace GameStateManagementSample
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight(this) + 10;
             }
+            UpdateHudElements();
 
-            Point posn = new Point(ScreenManager.FrameWidth / 9, 0);
-            float transitionOffset2 = (float)Math.Pow(TransitionPosition, 2);
+
+
+        }
+
+        public void UpdateHudElements()
+        {
+            Point posn = new Point(0, 0);
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+
             for (int i = 0; i < hudElements.Count; i++)
             {
-                IHudElement weaponSlot = HudElements[i];
-                if (weaponSlot.GameplayDraw())
+                IHudElement hudElement = HudElements[i];
+
+                if (hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
                 {
+                    posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30;
                 }
 
                 else if (ScreenState == ScreenState.TransitionOn)
-                    posn.Y -= (int)(transitionOffset * 50);
-                else if (!((WeaponSlot)weaponSlot).Item.IsPrimary && !((WeaponSlot)weaponSlot).Item.IsSecondary) 
+                {
+                    if (!hudElement.GameplayDraw())
+                        posn.Y -= (int)(transitionOffset * 50);
+                }
+                else if (!hudElement.GameplayDraw())
                 {
                     posn.Y -= (int)(transitionOffset * 512);
                 }
-              /*  if (ScreenState == ScreenState.TransitionOn)
-                    posn.Y += (int)transitionOffset2 * 256;
 
-                else
-                    posn.Y -= (int)transitionOffset2 * 512;
-                */
-                ((WeaponSlot)weaponSlot).Position = posn;
+                hudElement.Position = posn;
 
-                posn.X += ((WeaponSlot)weaponSlot).GetWidth();
+                if (!hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
+                    posn.X += hudElement.GetWidth();
+
+                posn.Y = 0;
 
             }
         }
-
 
         /// <summary>
         /// Updates the menu.
@@ -284,12 +295,13 @@ namespace GameStateManagementSample
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // make sure our entries are in the right place before we draw them
-            UpdateMenuEntryLocations();
 
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
+
+            // make sure our entries are in the right place before we draw them
+            UpdateMenuEntryLocations(graphics);
 
             spriteBatch.Begin();
 
@@ -319,7 +331,7 @@ namespace GameStateManagementSample
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 100);
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, graphics.Viewport.Height / 5);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;
             float titleScale = 1.25f;

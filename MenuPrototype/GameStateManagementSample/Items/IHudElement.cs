@@ -21,6 +21,12 @@ namespace GameStateManagementSample
         //Draw this always during gameplay
          bool GameplayDraw();
 
+         int GetWidth();
 
+         Point Position
+         {
+             get;
+             set;
+         }
     }
 }

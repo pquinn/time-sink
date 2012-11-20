@@ -16,6 +16,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GameStateManagement;
 using System.Collections.Generic;
+using GameStateManagementSample.Items;
+using DialoguePrototype;
 #endregion
 
 namespace GameStateManagementSample
@@ -37,8 +39,9 @@ namespace GameStateManagementSample
         Texture2D empty;
         Texture2D outline;
         Texture2D shield;
+        Texture2D trans;
 
-        public const int MAX_WEAPON_SLOTS = 10;
+        public const int MAX_WEAPON_SLOTS = 9;
 
         public int currentSlots = 0;
 
@@ -47,12 +50,14 @@ namespace GameStateManagementSample
 
 
         List<IHudElement> hudElements = new List<IHudElement>();
+        List<Rectangle> transparencies = new List<Rectangle>();
 
         Random random = new Random();
 
         float pauseAlpha;
 
         InputAction pauseAction;
+        InputAction startAction;
 
         public List<IHudElement> HudElements
         {
@@ -73,24 +78,13 @@ namespace GameStateManagementSample
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-     /*       foreach (IHudElement x in target)
-            {
-                if (x.IsSlot())
-                {
-                    if (((WeaponSlot)x).IsPrimary())
-                    {
-                        hudElements.Add(x);
-                    }
-                    if (((WeaponSlot)x).IsSecondary())
-                    {
-                        hudElements.Add(x);
-                    }
-                }
-            }
-            */
             pauseAction = new InputAction(
                 new Buttons[] { Buttons.Start, Buttons.Back },
                 new Keys[] { Keys.Escape },
+                true);
+            startAction = new InputAction(
+                new Buttons[] { Buttons.A },
+                new Keys[] { Keys.Enter },
                 true);
         }
 
@@ -120,6 +114,7 @@ namespace GameStateManagementSample
                 empty = content.Load<Texture2D>("Empty");
                 outline = content.Load<Texture2D>("Slot Outline-01");
                 shield = content.Load<Texture2D>("shield");
+                trans = content.Load<Texture2D>("hBar");
 
                 CreateMenuItems();
             }
@@ -140,10 +135,18 @@ namespace GameStateManagementSample
             SlotItem grenadeItemBackup = new Grenade(grenade);
             SlotItem grenadeItemBackup2 = new Grenade(grenade);
             SlotItem blankItem = new Grenade(empty);
+            MagicBar mBar = new MagicBar(shield);
+            HealthBar hBar = new HealthBar(trans);
+            ShieldBar sBar = new ShieldBar(empty);
+            Rectangle hBarTrans = new Rectangle(0, 0, 200, 75);
 
             grenadeItem.IsPrimary = true;
             grenadeItemBackup.IsSecondary = true;
 
+            transparencies.Add(hBarTrans);
+            hudElements.Add(mBar);
+            hudElements.Add(hBar);
+            hudElements.Add(sBar);
             AddWeaponSlot(grenadeItem);
             AddWeaponSlot(grenadeItemBackup);
             AddWeaponSlot(grenadeItemBackup2);
@@ -197,8 +200,7 @@ namespace GameStateManagementSample
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
-
+          
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -209,47 +211,43 @@ namespace GameStateManagementSample
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
 
-                enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                Vector2 targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - gameFont.MeasureString("Insert Gameplay Here").X / 2, 
-                    200);
-
-                enemyPosition = Vector2.Lerp(enemyPosition, targetPosition, 0.05f);
-
-                // TODO: this game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
-            }
-            Point posn = new Point(ScreenManager.FrameWidth / 9, 0);
-            float transitionOffset2 = (float)Math.Pow(TransitionPosition, 2);
-            for (int i = 0; i < hudElements.Count; i++)
-            {
-                IHudElement weaponSlot = HudElements[i];
-
-                if (ScreenState == ScreenState.TransitionOn)
-                    posn.Y -= (int)(transitionOffset * 50);
-                else if (!((WeaponSlot)weaponSlot).Item.IsPrimary && !((WeaponSlot)weaponSlot).Item.IsSecondary)
-                {
-                    posn.Y -= (int)(transitionOffset * 512);
-                }
-                /*  if (ScreenState == ScreenState.TransitionOn)
-                      posn.Y += (int)transitionOffset2 * 256;
-
-                  else
-                      posn.Y -= (int)transitionOffset2 * 512;
-                  */
-                ((WeaponSlot)weaponSlot).Position = posn;
-
-                posn.X += ((WeaponSlot)weaponSlot).GetWidth();
-
+                UpdateHudElements();
             }
         }
 
+        public void UpdateHudElements()
+        {
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            Point posn = new Point(0, 0);
+                for (int i = 0; i < hudElements.Count; i++)
+                {
+                    IHudElement hudElement = HudElements[i];
+
+                    if (hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
+                    {
+                      posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30;
+                    }
+                    
+                    if (ScreenState == ScreenState.TransitionOn)
+                    {
+                        posn.Y -= (int)(transitionOffset * 50);
+                    }
+
+                    else if (!hudElement.GameplayDraw())
+                    {
+                        posn.Y -= (int)(transitionOffset * 512);
+                    }
+                    hudElement.Position = posn;
+
+                    if (!hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
+                        posn.X += hudElement.GetWidth();
+
+                    posn.Y = 0;
+
+                }
+            
+        }
 
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
@@ -281,6 +279,10 @@ namespace GameStateManagementSample
 #else
                 ScreenManager.AddScreen(new PauseMenuScreen(hudElements), ControllingPlayer);
 #endif
+            }
+            else if (startAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
+            {
+                ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid("4cf17838-279c-11e2-b64d-109adda800ea")), null);
             }
             else
             {
@@ -343,7 +345,7 @@ namespace GameStateManagementSample
             for (int i = 0; i < hudElements.Count; i++)
             {
                 IHudElement hudElement = hudElements[i];
-
+                 
                // bool isSelected = IsActive && (i == selectedEntry);
                 if (hudElement.GameplayDraw())
                 {

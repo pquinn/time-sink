@@ -1,44 +1,39 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Engine.Core.Collisions
 {
     public class CollisionManager
     {
-        private HashSet<ICollideable> collideables = new HashSet<ICollideable>();
-
-        public bool RegisterCollisionBody(ICollideable coll)
+        public void RegisterCollideable(ICollideable coll)
         {
-            return collideables.Add(coll);
+            foreach (var geo in coll.CollisionGeometry)
+                geo.OnCollision += onCollision;
         }
 
-        public bool UnregisterPhysicsBody(ICollideable coll)
+        private static bool onCollision(Fixture f1, Fixture f2, Contact contact)
         {
-            return collideables.Remove(coll);
+            OnCollidedWith.Invoke(f1.Body.UserData as ICollideable, f2.Body.UserData as ICollideable, contact);
+            return true;
         }
 
-        public void Update(GameTime gt)
+        public void UnregisterCollideable(ICollideable coll)
         {
-            CollisionInfo result;
+            foreach (var geo in coll.CollisionGeometry)
+                geo.OnCollision -= onCollision;
+        }
 
-            int i = 1;
-            foreach (var body in collideables)
-            {
-                foreach (var other in collideables.Skip(i))
-                {
-                    result = Collided.Invoke(body.CollisionGeometry, other.CollisionGeometry);
-                    if (result.Intersect)
-                    {
-                        Collisions.OnCollidedWith.Invoke(body, other, result);
-                        Collisions.OnCollidedWith.Invoke(other, body, result);
-                    }
-                }
-                i++;
-            }
+        public void Initialize()
+        {
+            OnCollidedWith.DoAutoRegister();
         }
     }
 }

@@ -76,8 +76,8 @@ namespace GameStateManagementSample
             GraphicsDevice graphics = screenManager.GraphicsDevice;
 
             outline.Location = position;
-            outline.Width = (graphics.PresentationParameters.BackBufferWidth / 20);
-            outline.Height = (graphics.PresentationParameters.BackBufferWidth / 20);
+            outline.Width = (graphics.Viewport.Width / 15);
+            outline.Height = (graphics.Viewport.Width / 15);
 
             if (item.IsPrimary)
             {
