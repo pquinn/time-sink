@@ -12,6 +12,8 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.DebugViews;
+using Autofac;
+using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core
 {
@@ -31,6 +33,7 @@ namespace TimeSink.Engine.Core
         public bool RenderDebugGeometry { get; set; }
 
         private DebugViewXNA debugView;
+        private IContainer container;
 
         public EngineGame()
             : base()
@@ -44,7 +47,7 @@ namespace TimeSink.Engine.Core
 
             Camera = Camera.ZeroedCamera;
 
-            PhysicsManager = new PhysicsManager();
+            PhysicsManager = new PhysicsManager(container);
             CollisionManager = new CollisionManager();
             RenderManager = new RenderManager(TextureCache);
 
@@ -69,10 +72,16 @@ namespace TimeSink.Engine.Core
             TextureCache.LoadResource("Textures/circle");
             var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             blank.SetData(new[] { Color.White });
-            TextureCache.AddResource("blank", blank);
+            TextureCache.AddResource("blank", blank);            
+
+            var builder = new ContainerBuilder();
+            builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
+            builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
+            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
+            container = builder.Build();
 
             foreach (var entity in Entities)
-                entity.Load(this);
+                entity.Load(container);
         }
 
         protected override void Update(GameTime gameTime)

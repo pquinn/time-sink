@@ -102,6 +102,10 @@ namespace TimeSink.Engine.Core.Caching
         public virtual T LoadResource(string key)
         {
             var resource = provider.GetResource(key);
+            
+            if (cache.ContainsKey(key))
+                cache.Remove(key);
+
             cache.Add(key, resource);
 
             return resource;

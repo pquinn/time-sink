@@ -11,6 +11,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
 using TimeSink.Engine.Core.Editor;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -20,6 +23,9 @@ namespace TimeSink.Entities.Enemies
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Goomba";
         const string EDITOR_NAME = "Normal Centipede";
+
+        new private static int textureHeight;
+        new private static int textureWidth;
 
         private bool first;
         private float tZero;
@@ -89,11 +95,17 @@ namespace TimeSink.Entities.Enemies
             physics.Position += positionDelta;
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
-            var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = textureCache.LoadResource(CENTIPEDE_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height;
+        }
+
+        protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
+        {
+            return textureCache.GetResource(CENTIPEDE_TEXTURE);
         }
     }
 }

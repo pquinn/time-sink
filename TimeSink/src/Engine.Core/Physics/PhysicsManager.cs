@@ -7,22 +7,26 @@ using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.DebugViews;
+using Autofac;
 
 namespace TimeSink.Engine.Core.Physics
 {
     public class PhysicsManager
     {
+        private IContainer engineRegistrations;
+
         //private HashSet<IPhysicsEnabledBody> bodies = new HashSet<IPhysicsEnabledBody>();
         public World World { get; private set; }
 
-        public PhysicsManager()
+        public PhysicsManager(IContainer engineRegistrations)
         {
-            World = new World(PhysicsConstants.Gravity);
+            World = engineRegistrations.Resolve<World>();
+            this.engineRegistrations = engineRegistrations;
         }
 
         public void RegisterPhysicsBody(IPhysicsEnabledBody body)
         {
-            body.InitializePhysics(World);
+            body.InitializePhysics(engineRegistrations);
         }
 
         public void Update(GameTime gameTime)

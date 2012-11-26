@@ -9,6 +9,9 @@ using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Dynamics;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -18,6 +21,9 @@ namespace TimeSink.Entities.Enemies
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Necky";
         const string EDITOR_NAME = "Flying Centipede";
+
+        new private static int textureHeight;
+        new private static int textureWidth;
 
         public FlyingCentipede()
             : this(Vector2.Zero)
@@ -77,11 +83,17 @@ namespace TimeSink.Entities.Enemies
             base.Update(time, world);
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
-            var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = textureCache.LoadResource(CENTIPEDE_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height; 
+        }
+
+        protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
+        {
+            return textureCache.GetResource(CENTIPEDE_TEXTURE);
         }
     }
 }

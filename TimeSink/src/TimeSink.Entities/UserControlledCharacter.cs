@@ -15,6 +15,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Common;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities
 {
@@ -39,7 +42,7 @@ namespace TimeSink.Entities
         //Texture strings for content loading
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
 
-        const string EDITOR_PREVIEW = "Textures/Sprites/SpriteSheets/Body_Neutral";
+        const string EDITOR_PREVIEW = "Textures/Body_Neutral";
 
         const string NEUTRAL_RIGHT = "Textures/Sprites/SpriteSheets/Body_Neutral";
         const string IDLE_CLOSED_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
@@ -167,9 +170,10 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
         }
 
-        public override void Load(EngineGame game)
+        public override void Load(IContainer engineRegistrations)
         {
-            jumpSound = game.SoundCache.LoadResource(JUMP_SOUND_NAME);
+            var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
+            jumpSound = soundCache.LoadResource(JUMP_SOUND_NAME);
         }
 
         public override void Update(GameTime gameTime, EngineGame game)
@@ -576,8 +580,9 @@ namespace TimeSink.Entities
         }
 
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistration)
         {
+            var world = engineRegistration.Resolve<World>();
             Physics = BodyFactory.CreateBody(world, _initialPosition, this);
 
             float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);

@@ -14,6 +14,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Xml.Serialization;
+using Autofac;
 
 namespace TimeSink.Engine.Core
 {
@@ -55,7 +56,7 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistrations)
         {
         }
 
@@ -72,9 +73,10 @@ namespace TimeSink.Engine.Core
         {
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
-            engineGame.TextureCache.LoadResource(Texture);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            textureCache.LoadResource(Texture);
         }
 
 

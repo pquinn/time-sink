@@ -13,6 +13,10 @@ namespace TimeSink.Engine.Core.Caching
 
         void AddResource(string key, T resource);
         void AddResources(IEnumerable<Tuple<string, T>> resources);
+        
+        T LoadResource(string key);
+        IEnumerable<Tuple<string, T>> LoadResources();
+        IEnumerable<T> LoadResources(IEnumerable<string> keys);
 
         void Clear();
     }

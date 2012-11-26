@@ -12,6 +12,8 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Entities
 {
@@ -40,9 +42,10 @@ namespace TimeSink.Entities
 
         public Body PhysicsBody { get; private set; }
 
-        public override void Load(EngineGame game)
+        public override void Load(IContainer engineRegistrations)
         {
-            geoTexture = game.TextureCache.LoadResource(WORLD_TEXTURE_NAME);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            textureCache.LoadResource(WORLD_TEXTURE_NAME);
         }
 
         public override IRendering Rendering
@@ -125,8 +128,10 @@ namespace TimeSink.Entities
         {
         }
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistrations)
         {
+            var world = engineRegistrations.Resolve<World>();
+
             PhysicsBody = BodyFactory.CreateBody(world, this);
             PhysicsBody.BodyType = BodyType.Static;
             PhysicsBody.Friction = .5f;

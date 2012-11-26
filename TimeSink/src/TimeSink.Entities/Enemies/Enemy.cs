@@ -12,6 +12,9 @@ using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -22,10 +25,12 @@ namespace TimeSink.Entities.Enemies
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
         const string EDITOR_NAME = "Enemy";
 
+        private static int textureHeight;
+        private static int textureWidth;
+
         protected GravityPhysics physics;
         private List<DamageOverTimeEffect> dots;
-        protected float health;        
-
+        protected float health;       
 
         public Enemy()
             : this(Vector2.Zero)
@@ -43,9 +48,6 @@ namespace TimeSink.Entities.Enemies
         protected Vector2 _initialPosition;
 
         public Body Physics { get; protected set; }
-
-        protected int textureHeight;
-        protected int textureWidth;
 
         [EditableField("Health")]
         public float Health
@@ -147,9 +149,10 @@ namespace TimeSink.Entities.Enemies
             dots.RemoveAll(x => x.Finished);
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
-            var texture = engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = textureCache.LoadResource(DUMMY_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height;
         }
@@ -163,12 +166,15 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistrations)
         {
+            var world = engineRegistrations.Resolve<World>();
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = GetTexture(textureCache);
             Physics = BodyFactory.CreateRectangle(
                 world,
-                PhysicsConstants.PixelsToMeters(textureWidth),
-                PhysicsConstants.PixelsToMeters(textureHeight),
+                PhysicsConstants.PixelsToMeters(texture.Width),
+                PhysicsConstants.PixelsToMeters(texture.Height),
                 1,
                 _initialPosition);
             Physics.FixedRotation = true;
@@ -183,6 +189,11 @@ namespace TimeSink.Entities.Enemies
             hitsensor.IsSensor = true;
             hitsensor.CollisionCategories = Category.Cat2;
             hitsensor.CollidesWith = Category.Cat2;
+        }
+
+        protected virtual Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
+        {
+            return textureCache.GetResource(DUMMY_TEXTURE);
         }
     }
 }

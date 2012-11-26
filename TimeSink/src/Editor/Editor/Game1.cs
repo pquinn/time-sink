@@ -19,6 +19,8 @@ using Editor.States;
 using Autofac;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Collections;
+using FarseerPhysics.Dynamics;
 
 namespace Editor
 {
@@ -80,7 +82,7 @@ namespace Editor
             renderManager = new RenderManager(TextureCache);
 
             // create default level
-            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(), renderManager);
+            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(Container), renderManager);
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
@@ -94,11 +96,18 @@ namespace Editor
         /// </summary>
         protected override void LoadContent()
         {
+            // instantiate the container
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<EntityBootstrapper>();
+
             // setup caches            
             TextureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
             SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
+
+            builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
+            builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
 
             TextureCache.LoadResources(
                 new List<string> 
@@ -115,14 +124,18 @@ namespace Editor
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
 
+            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
+
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
-            // instantiate the container
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<EntityBootstrapper>();
             Container = builder.Build();
+
+            foreach (var entity in Container.Resolve<IEnumerable<Entity>>())
+            {
+                entity.Load(Container);
+            }
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Rendering;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
+using Autofac;
 
 namespace TimeSink.Entities
 {
@@ -56,7 +57,7 @@ namespace TimeSink.Entities
 
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
 
         }
@@ -68,8 +69,10 @@ namespace TimeSink.Entities
                 Triggered(obj);
         }
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistrations)
         {
+            var world = engineRegistrations.Resolve<World>();
+
             PhysicsBody = BodyFactory.CreateBody(world, _position, this);
             PhysicsBody.BodyType = BodyType.Static;
             PhysicsBody.IsSensor = true;

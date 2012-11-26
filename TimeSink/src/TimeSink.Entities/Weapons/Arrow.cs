@@ -10,6 +10,9 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Collisions;
+using Autofac;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -96,9 +99,10 @@ namespace TimeSink.Entities.Weapons
             }
         }
 
-        public override void Load(EngineGame engineGame)
+        public override void Load(IContainer engineRegistrations)
         {
-            engineGame.TextureCache.LoadResource(ARROW_TEXTURE_NAME);
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            textureCache.LoadResource(ARROW_TEXTURE_NAME);
         }
 
         public override void Update(GameTime time, EngineGame world)
@@ -141,8 +145,10 @@ namespace TimeSink.Entities.Weapons
             Fire(character, world, gameTime, holdTime);
         }
 
-        public override void InitializePhysics(World world)
+        public override void InitializePhysics(IContainer engineRegistrations)
         {
+            var world = engineRegistrations.Resolve<World>();
+
             Physics = BodyFactory.CreateRectangle(
                 world,
                 PhysicsConstants.PixelsToMeters(64),

@@ -11,6 +11,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using FarseerPhysics.Dynamics;
 using System.Xml.Serialization;
+using Autofac;
 
 namespace TimeSink.Engine.Core
 {
@@ -23,13 +24,13 @@ namespace TimeSink.Engine.Core
 
         public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
 
-        public abstract void Load(EngineGame engineGame);
+        public abstract void Load(IContainer engineRegistrations);
 
         public abstract string EditorName { get; }
 
         public virtual string EditorPreview { get { return null; } }
 
-        public abstract void InitializePhysics(World world);
+        public abstract void InitializePhysics(IContainer engineRegistrations);
 
         [XmlIgnore]
         public abstract IRendering Rendering

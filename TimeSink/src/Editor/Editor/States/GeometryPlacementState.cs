@@ -175,9 +175,8 @@ namespace Editor
 
             makingChain = false;
 
-            StateMachine.Owner.Level.CollisionGeometry.Clear();
-            StateMachine.Owner.Level.CollisionGeometry.AddRange(
-                chains.Select(x => new LoopShape(new Vertices(x))));
+            StateMachine.Owner.Level.GeoChains.Clear();
+            StateMachine.Owner.Level.GeoChains.AddRange(chains);
 
             lastPlaced = null;
             _chainIndex = chains.Count;
