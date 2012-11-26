@@ -77,8 +77,7 @@ namespace Editor
                             dragging = highlighted;
                     }
 
-                    var newPos = PhysicsConstants.PixelsToMeters(
-                        Vector2.Transform(mousePosition, Camera.Transform));
+                    var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
 
                     foreach (var chain in chains)
                     {
@@ -91,6 +90,23 @@ namespace Editor
                     }
 
                     dragging = newPos;
+                }
+                else if (InputManager.Instance.Pressed(Keys.LeftControl) || InputManager.Instance.Pressed(Keys.RightControl))
+                {
+                    var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
+
+                    if (makingChain)
+                    {
+                        selectedChain.RemoveAll(x => x == highlighted);
+                    }
+                    else
+                    {
+                        foreach (var chain in chains)
+                        {
+                            chain.RemoveAll(x => x == highlighted);
+                        }
+                        chains.RemoveAll(x => !x.Any());
+                    }
                 }
                 else
                 {

@@ -50,6 +50,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DebugViewXNA">
+      <HintPath>..\..\lib\DebugViewXNA.dll</HintPath>
+    </Reference>
     <Reference Include="FarseerPhysicsXNA">
       <HintPath>..\..\lib\FarseerPhysicsXNA.dll</HintPath>
     </Reference>

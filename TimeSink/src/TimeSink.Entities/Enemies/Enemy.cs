@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -170,6 +170,7 @@ namespace TimeSink.Entities.Enemies
                 PhysicsConstants.PixelsToMeters(textureHeight),
                 1,
                 _initialPosition);
+            Physics.FixedRotation = true;
             Physics.BodyType = BodyType.Dynamic;
             Physics.UserData = this;
 

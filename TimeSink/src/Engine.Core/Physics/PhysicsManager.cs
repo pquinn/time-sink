@@ -5,6 +5,8 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.DebugViews;
 
 namespace TimeSink.Engine.Core.Physics
 {
@@ -23,7 +25,7 @@ namespace TimeSink.Engine.Core.Physics
             body.InitializePhysics(World);
         }
 
-        public void Update(GameTime gameTime) 
+        public void Update(GameTime gameTime)
         {
             World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
