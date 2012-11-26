@@ -34,14 +34,13 @@ namespace Editor.States
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
-                var mesh = new Tile(
+                var tile = new Tile(
                     textureKey,
                     new Vector2(
                         InputManager.Instance.CurrentMouseState.X,
                         InputManager.Instance.CurrentMouseState.Y),
-                    0, Vector2.One,
-                    StateMachine.Owner.RenderManager.TextureCache);
-                StateMachine.Owner.RegisterStaticMesh(mesh);
+                    0, Vector2.One);
+                StateMachine.Owner.RegisterTile(tile);
 
                 StateMachine.RevertToPreviousState(true);
             }

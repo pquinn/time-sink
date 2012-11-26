@@ -13,42 +13,40 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace TimeSink.Engine.Core
 {
     public class Tile : Entity
     {
-        const string EDITOR_NAME = "Static Mesh";
+        const string EDITOR_NAME = "Tile";
 
-        string texture;
-        IResourceCache<Texture2D> cache;
-        Vector2 texCenter;
-        Vector2 position;
-
-        public Tile(string texture, Vector2 position, float rotation, Vector2 scale, IResourceCache<Texture2D> cache)
+        public Tile()
         {
-            var tex = cache.GetResource(texture);
-            texCenter = new Vector2(tex.Width, tex.Height) / 2;
-            this.texture = texture;
+        }
+
+        public Tile(string texture, Vector2 position, float rotation, Vector2 scale)
+        {
+            this.Texture = texture;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
-            this.cache = cache;
         }
+
+        public string Texture { get; set; }
+
+        public Vector2 Position { get; set; }
+
+        public float Rotation { get; set; }
+
+        public Vector2 Scale { get; set; }
 
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        public Vector2 Position 
-        {
-            get { return position; }
-            set { position = value; }
-        }
-        public float Rotation { get; set; }
-        public Vector2 Scale { get; set; }
-
+        [XmlIgnore]
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -61,11 +59,12 @@ namespace TimeSink.Engine.Core
         {
         }
 
+        [XmlIgnore]
         public override IRendering Rendering
         {
             get
             {
-                return new BasicRendering(texture, Position, Rotation, Scale);
+                return new BasicRendering(Texture, Position, Rotation, Scale);
             }
         }
 
@@ -75,13 +74,15 @@ namespace TimeSink.Engine.Core
 
         public override void Load(EngineGame engineGame)
         {
-            engineGame.TextureCache.LoadResource(texture);
+            engineGame.TextureCache.LoadResource(Texture);
         }
 
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {
-            var size = origScale * texCenter * 2;
+            var tex = cache.GetResource(Texture);
+
+            var size = origScale * new Vector2(tex.Width / 2, tex.Height / 2) * 2;
 
             var relativeTransform =
                 Matrix.CreateRotationZ(Rotation) *

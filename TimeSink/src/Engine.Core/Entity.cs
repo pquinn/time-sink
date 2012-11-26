@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using FarseerPhysics.Dynamics;
+using System.Xml.Serialization;
 
 namespace TimeSink.Engine.Core
 {
@@ -17,11 +18,6 @@ namespace TimeSink.Engine.Core
         : ICollideable, IRenderable, IKeyboardControllable
     {
         public virtual void Update(GameTime time, EngineGame world) { }
-
-        public abstract IRendering Rendering
-        {
-            get;
-        }
 
         public bool Dead { get; set; }
 
@@ -35,6 +31,13 @@ namespace TimeSink.Engine.Core
 
         public abstract void InitializePhysics(World world);
 
+        [XmlIgnore]
+        public abstract IRendering Rendering
+        {
+            get;
+        }
+
+        [XmlIgnore]
         public abstract List<Fixture> CollisionGeometry
         {
             get;

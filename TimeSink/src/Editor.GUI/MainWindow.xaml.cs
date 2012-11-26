@@ -39,5 +39,10 @@ namespace TimeSink.Editor.GUI
         {
             editor.ToggleSnapping();
         }
+
+        private void Save_As_Click(object sender, RoutedEventArgs e)
+        {
+            editor.SaveAs();
+        }
     }
 }

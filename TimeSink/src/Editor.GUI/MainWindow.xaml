@@ -14,7 +14,7 @@
                 <MenuItem Header="New..." />
                 <MenuItem Header="Open..." />
                 <MenuItem Header="Save..." />
-                <MenuItem Header="Save As..." />
+                <MenuItem Header="Save As..." Click="Save_As_Click" />
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Show Grid Lines" Click="Show_Grid_Lines_Click" />
