@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +22,6 @@ namespace TimeSink.Entities.Enemies
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
         const string EDITOR_NAME = "Enemy";
 
-        protected GravityPhysics physics;
         private List<DamageOverTimeEffect> dots;
         protected float health;        
 
