@@ -119,13 +119,14 @@
       <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
       <Name>Engine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Engine.Game\Engine.GameContent\Engine.GameContent.contentproj">
+      <Project>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</Project>
+      <Name>Engine.GameContent %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
       <Project>{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}</Project>
       <Name>TimeSink.Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EditorContent\EditorContent.contentproj">
-      <Name>EditorContent</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

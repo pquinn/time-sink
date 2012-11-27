@@ -33,5 +33,10 @@ namespace TimeSink.Engine.Core.Physics
         {
             World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
+
+        internal void Clear()
+        {
+            World.Clear();
+        }
     }
 }
