@@ -126,7 +126,8 @@ namespace TimeSink.Engine.Game
                     dummy,
                     normalCentipede,
                     flyingCentipede,
-                    vine
+                    vine,
+                    npc
                 });
 
             FixtureFactory.AttachRectangle(
@@ -249,10 +250,6 @@ namespace TimeSink.Engine.Game
         {
             base.Draw(gameTime);
 
-            if (showCollisionGeometry)
-            {
-                //CollisionManager.Draw(SpriteBatch, TextureCache, Camera.Transform);
-            }
             ScreenManager.Draw(gameTime);
         }
 
@@ -445,8 +442,6 @@ namespace TimeSink.Engine.Game
         }
 #endif
         #endregion
-
-        //  public SpriteContainer staticSceneSprites { get; set; }
     }
 }
 

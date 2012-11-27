@@ -35,10 +35,8 @@ namespace TimeSink.Engine.Core
         public HashSet<Entity> Entities { get; private set; }
         public SQLiteDatabase database;
 
-
         public ScreenManager ScreenManager { get; private set; }
         public ScreenFactory ScreenFactory { get; private set; }
-
 
         public bool RenderDebugGeometry { get; set; }
 

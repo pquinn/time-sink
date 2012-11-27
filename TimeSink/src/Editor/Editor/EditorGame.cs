@@ -23,6 +23,7 @@ using System.Collections;
 using FarseerPhysics.Dynamics;
 using XNAControl;
 using TimeSink.Engine.Core.Editor;
+using FarseerPhysics.DebugViews;
 
 namespace Editor
 {
@@ -38,6 +39,8 @@ namespace Editor
         StateMachine<LevelManager> stateMachine;
         State<LevelManager> initState;
         private bool showCollisionGeometry;
+
+        private DebugViewXNA debugView;
 
         public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
@@ -83,6 +86,9 @@ namespace Editor
 
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
+
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
@@ -203,7 +209,14 @@ namespace Editor
 
             if (showCollisionGeometry)
             {
-                //level.CollisionManager.Draw(spriteBatch, TextureCache, Matrix.Identity);
+                var projection = Matrix.CreateOrthographicOffCenter(
+                    0,
+                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
+                    0,
+                    0,
+                    1);
+                debugView.RenderDebugData(ref projection);
             }
 
             base.Draw(gameTime);
