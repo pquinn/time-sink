@@ -14,15 +14,19 @@ using TimeSink.Engine.Core.Editor;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Enemies
 {
     [EditorEnabled]
+    [SerializableEntity("849aaec2-7155-4c37-aa71-42d0c1611881")]
     public class NormalCentipede : Enemy, IHaveHealth
     {
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Goomba";
         const string EDITOR_NAME = "Normal Centipede";
+
+        private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");
 
         new private static int textureHeight;
         new private static int textureWidth;
@@ -49,17 +53,12 @@ namespace TimeSink.Entities.Enemies
             PatrolFunction = (time) => start + time * (end - start);
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
-        }
-
-        public override string EditorPreview
-        {
-            get
-            {
-                return CENTIPEDE_TEXTURE;
-            }
         }
 
         public override List<Fixture> CollisionGeometry

@@ -15,12 +15,15 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.Xml.Serialization;
 using Autofac;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Engine.Core
 {
+    [SerializableEntity("50be45d6-51a2-462e-a8e5-0779832ffee3")]
     public class Tile : Entity
     {
         const string EDITOR_NAME = "Tile";
+        private static readonly Guid GUID = new Guid("50be45d6-51a2-462e-a8e5-0779832ffee3");
 
         public Tile()
         {
@@ -34,12 +37,19 @@ namespace TimeSink.Engine.Core
             this.Scale = scale;
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
+        [SerializableField]
         public string Texture { get; set; }
 
+        [SerializableField]
         public Vector2 Position { get; set; }
 
+        [SerializableField]
         public float Rotation { get; set; }
 
+        [SerializableField]
         public Vector2 Scale { get; set; }
 
         public override string EditorName
@@ -69,6 +79,12 @@ namespace TimeSink.Engine.Core
             }
         }
 
+        [XmlIgnore]
+        public override IRendering Preview
+        {
+            get { return Rendering; }
+        }
+
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
         }
@@ -78,7 +94,6 @@ namespace TimeSink.Engine.Core
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             textureCache.LoadResource(Texture);
         }
-
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)
         {

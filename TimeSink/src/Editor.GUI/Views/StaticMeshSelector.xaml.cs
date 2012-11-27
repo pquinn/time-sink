@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Editor.GUI.ViewModels;
+using TimeSink.Engine.Core;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -22,23 +24,25 @@ namespace TimeSink.Editor.GUI.Views
     /// </summary>
     public partial class StaticMeshSelector : Window
     {
-        public StaticMeshSelector(InMemoryResourceCache<Texture2D> cache)
+        public StaticMeshSelector(IEnumerable<string> tiles, InMemoryResourceCache<Texture2D> cache)
         {
             InitializeComponent();
-            DataContext = new StaticMeshSelectorViewModel(
-                cache,
+            DataContext = new TileSelectorViewModel(
+                tiles,
                 (string s, bool b) =>
                 {
-                    this.SelectedTexture = s;
+                    this.SelectedKey = s;
                     this.DialogResult = b;
                 });
         }
 
-        public string SelectedTexture { get; set; }
+        public string SelectedKey { get; set; }
 
         private void Mesh_Changed(object sender, RoutedEventArgs e)
         {
-            preview.ChangeTextures(meshList.SelectedItem.ToString());
+            var viewModel = DataContext as TileSelectorViewModel;
+            var textureKey = viewModel.TextureKeys[meshList.SelectedIndex];
+            preview.ChangePreview(new Tile(textureKey, Vector2.Zero, 0, Vector2.One));
         }
     }
 }

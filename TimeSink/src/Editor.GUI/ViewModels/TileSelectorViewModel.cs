@@ -5,10 +5,11 @@ using System.Text;
 using System.Windows.Input;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Editor.GUI.ViewModels
 {
-    public class StaticMeshSelectorViewModel : PopUpViewModel 
+    public class TileSelectorViewModel : PopUpViewModel 
     {
         #region Fields
 
@@ -22,10 +23,9 @@ namespace TimeSink.Editor.GUI.ViewModels
 
         #region Constructor
 
-        public StaticMeshSelectorViewModel(InMemoryResourceCache<Texture2D> cache, Action<string, bool> invokeCancel)
+        public TileSelectorViewModel(IEnumerable<string> tiles, Action<string, bool> invokeCancel)
         {
-            this.cache = cache; 
-            this.textureKeys = cache.GetResources().Select(x => x.Item1).ToList();
+            this.textureKeys = tiles.ToList();
             this.invokeCancel = invokeCancel;
         }
 
@@ -63,7 +63,7 @@ namespace TimeSink.Editor.GUI.ViewModels
         protected override void Close(bool ok)
         {
             invokeCancel(
-                SelectedTextureKey < 0 ? null : TextureKeys[SelectedTextureKey], 
+                SelectedTextureKey < 0 ? null : TextureKeys[SelectedTextureKey],
                 ok);
         }
 

@@ -11,16 +11,19 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Autofac;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
     public delegate void TriggerDelegate(ICollideable collided);
 
+    [SerializableEntity("f3722310-9db5-478f-9e37-608cbcbf92f9")]
     public class Trigger : Entity
     {
-        public Body PhysicsBody { get; private set; }
-
         const string EDITOR_NAME = "Trigger";
+
+        private static readonly Guid GUID = new Guid("f3722310-9db5-478f-9e37-608cbcbf92f9");
 
         private Vector2 _position;
 
@@ -42,9 +45,17 @@ namespace TimeSink.Entities
             _position = position;
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
+        }
+        
+        public override IRendering Preview
+        {
+            get { return Rendering; }
         }
 
         public override IRendering Rendering
@@ -73,10 +84,10 @@ namespace TimeSink.Entities
         {
             var world = engineRegistrations.Resolve<World>();
 
-            PhysicsBody = BodyFactory.CreateBody(world, _position, this);
-            PhysicsBody.BodyType = BodyType.Static;
-            PhysicsBody.IsSensor = true;
-            _geom = PhysicsBody.FixtureList;
+            Physics = BodyFactory.CreateBody(world, _position, this);
+            Physics.BodyType = BodyType.Static;
+            Physics.IsSensor = true;
+            _geom = Physics.FixtureList;
         }
     }
 }

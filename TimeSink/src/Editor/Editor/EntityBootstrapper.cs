@@ -9,6 +9,7 @@ using TimeSink.Entities.Weapons;
 using TimeSink.Engine.Core;
 using System.Reflection;
 using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.States;
 
 namespace Editor
 {
@@ -25,8 +26,10 @@ namespace Editor
                     if (!t.IsAbstract && t.IsSubclassOf(typeof(Entity)) && 
                         t.GetCustomAttributes(typeof(EditorEnabledAttribute), false).Any())
                     {
+                        var id = t.GetCustomAttributes(typeof(SerializableEntityAttribute), false).First() as SerializableEntityAttribute;
+
                         builder.RegisterType(t).As<Entity>().WithMetadata<IEntityMetadata>(
-                            m => m.For(tm => tm.Name, t.Name));
+                            m => m.For(tm => tm.Name, id.Id));
                     }
                 });
         }

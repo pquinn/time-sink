@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 
 namespace Editor
 {
@@ -15,16 +17,18 @@ namespace Editor
     {
         SpriteBatch spriteBatch;
 
-        private Texture2D texture;
+        IResourceCache<Texture2D> textureCache;
+
+        private Entity entity;
 
         public PreviewGame(IntPtr windowHandle, int width, int height)
             :base(windowHandle, "Content", width, height)
         {
         }
 
-        public void ChangeTexture(string textureToDisplay)
+        public void ChangePreview(Entity entity)
         {
-            texture = Content.Load<Texture2D>(textureToDisplay);
+            this.entity = entity;
         }
 
         protected override void Initialize()
@@ -49,6 +53,9 @@ namespace Editor
         {
             base.LoadContent();
 
+            textureCache = new InMemoryResourceCache<Texture2D>(
+                new ContentManagerProvider<Texture2D>(Content));
+
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
         }
 
@@ -60,28 +67,14 @@ namespace Editor
 
             base.Draw(gameTime);
 
-            if (texture != null)
+            if (entity != null)
             {
-                var origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
-                spriteBatch.Begin();
-
-                spriteBatch.Draw(
-                    texture,
-                    new Vector2(
+                var camera = Matrix.CreateTranslation(
                         GraphicsDevice.Viewport.Width / 2,
-                        GraphicsDevice.Viewport.Height / 2),
-                    null,
-                    Color.White,
-                    0,
-                    origin,
-                    (origin.X < 64 && origin.Y < 64) ? 
-                        new Vector2(2, 2) :
-                        Vector2.One,
-                    SpriteEffects.None,
-                    0);
+                        GraphicsDevice.Viewport.Height / 2,
+                        0);
 
-                spriteBatch.End();
+                entity.Preview.Draw(spriteBatch, textureCache, camera);
             }
         }
     }

@@ -15,12 +15,19 @@ using FarseerPhysics.Dynamics.Contacts;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Enemies
 {
     [EditorEnabled]
+    [SerializableEntity("7d61f455-3da6-4b9d-ad7a-5f4c21e79527")]
     public class Enemy : Entity, IHaveHealth
     {
+        #region fields
+
+        private static readonly Guid GUID = new Guid("7d61f455-3da6-4b9d-ad7a-5f4c21e79527");
+
         const float DUMMY_MASS = 100f;
         const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
         const string EDITOR_NAME = "Enemy";
@@ -30,7 +37,11 @@ namespace TimeSink.Entities.Enemies
 
         protected GravityPhysics physics;
         private List<DamageOverTimeEffect> dots;
-        protected float health;       
+        protected float health;
+
+        protected Vector2 _initialPosition;
+
+        #endregion
 
         public Enemy()
             : this(Vector2.Zero)
@@ -45,37 +56,26 @@ namespace TimeSink.Entities.Enemies
             dots = new List<DamageOverTimeEffect>();
         }
 
-        protected Vector2 _initialPosition;
-
-        public Body Physics { get; protected set; }
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
 
         [EditableField("Health")]
+        [SerializableField]
         public float Health
         {
             get { return health; }
             set { health = value; }
         }
 
-        [EditableField("Position")]
-        public Vector2 Position
-        {
-            get { return Physics.Position; }
-            set { Physics.Position = value; }
-        }
-
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
-
-        public override string EditorPreview
+        
+        public override IRendering Preview
         {
-            get
-            {
-                return DUMMY_TEXTURE;
-            }
+            get { return Rendering; }
         }
-
 
         public override List<Fixture> CollisionGeometry
         {

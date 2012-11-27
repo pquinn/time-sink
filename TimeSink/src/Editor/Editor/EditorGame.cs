@@ -21,30 +21,32 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Collections;
 using FarseerPhysics.Dynamics;
+using XNAControl;
+using TimeSink.Engine.Core.Editor;
 
 namespace Editor
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : XNAControl.XNAControlGame
+    public class EditorGame : XNAControlGame
     {
         SpriteBatch spriteBatch;
-
-        RenderManager renderManager;
-
-        LevelManager leveManager;
-
+        
         Camera camera;
 
         StateMachine<LevelManager> stateMachine;
         State<LevelManager> initState;
         private bool showCollisionGeometry;
 
-        public Game1(IntPtr handle, int width, int height)
+        public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
         {
         }
+
+        public LevelManager LevelManager { get; private set; }
+
+        public IEnumerable<string> Tiles { get; private set; }
 
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
 
@@ -78,15 +80,17 @@ namespace Editor
 
             camera = Camera.ZeroedCamera;
 
-            //set up managers
-            renderManager = new RenderManager(TextureCache);
-
             // create default level
-            leveManager = new LevelManager(new CollisionManager(), new PhysicsManager(Container), renderManager);
+            LevelManager = new LevelManager(
+                new CollisionManager(), 
+                new PhysicsManager(Container), 
+                new RenderManager(TextureCache),
+                new EditorRenderManager(TextureCache),
+                Container);
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
-            stateMachine = new StateMachine<LevelManager>(initState, leveManager);
+            stateMachine = new StateMachine<LevelManager>(initState, LevelManager);
             initState.StateMachine = stateMachine;
         }
 
@@ -100,6 +104,8 @@ namespace Editor
             var builder = new ContainerBuilder();
             builder.RegisterModule<EntityBootstrapper>();
 
+            Tiles = new TileBootstrapper().GetTiles(Content);
+
             // setup caches            
             TextureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
@@ -109,15 +115,7 @@ namespace Editor
             builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
             builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
 
-            TextureCache.LoadResources(
-                new List<string> 
-                {
-                    "Textures/Ground_Tile1",
-                    "Textures/Top_Tile01",
-                    "Textures/Top_Tile02",
-                    "Textures/Top_Tile03",
-                    "Textures/Side_Tile01"
-                });
+            TextureCache.LoadResources(Tiles);
             var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             blank.SetData(new[] { Color.White });
             TextureCache.AddResource("blank", blank);
@@ -125,8 +123,7 @@ namespace Editor
             SoundCache.LoadResource("Audio/Music/Four");
 
             builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
-
-
+            
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
@@ -267,9 +264,19 @@ namespace Editor
                 true, true);
         }
 
-        public void SaveAs()
+        public void SaveAs(string fileName)
         {
-            leveManager.SerializeLevel();
+            LevelManager.SerializeLevel(fileName);
+        }
+
+        public void Open(string fileName)
+        {
+            LevelManager.DeserializeLevel(fileName);
+        }
+
+        public void New()
+        {
+            LevelManager.Clear();
         }
     }
 }

@@ -11,8 +11,8 @@
         <Menu Grid.Row="0" Height="Auto" HorizontalAlignment="Stretch" Margin="0" Name="menu1" VerticalAlignment="Top" Width="Auto"
               IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New..." />
-                <MenuItem Header="Open..." />
+                <MenuItem Header="New..." Click="New_Click"/>
+                <MenuItem Header="Open..." Click="Open_Click"/>
                 <MenuItem Header="Save..." />
                 <MenuItem Header="Save As..." Click="Save_As_Click" />
             </MenuItem>
@@ -58,7 +58,7 @@
                 </Core:Dialogue>
             </TabItem>
             <TabItem Header="Level" Name="tabItem8">
-                <Core:Level>
+                <Core:Level x:Name="levelControl">
                 </Core:Level>
             </TabItem>
         </TabControl>

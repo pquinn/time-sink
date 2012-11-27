@@ -58,6 +58,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFFolderBrowser">
+      <HintPath>..\..\lib\WPFFolderBrowser.dll</HintPath>
+    </Reference>
     <Reference Include="XNAControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\lib\XNAControl.dll</HintPath>
     </Reference>
@@ -70,6 +73,7 @@
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\EntitySelectorViewModel.cs" />
     <Compile Include="ViewModels\PopUpViewModel.cs" />
+    <Compile Include="ViewModels\TileSelectorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\EntitySelector.xaml.cs">
       <DependentUpon>EntitySelector.xaml</DependentUpon>
@@ -90,7 +94,7 @@
     <Compile Include="Views\Triggers.xaml.cs">
       <DependentUpon>Triggers.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\StaticMeshSelectorViewModel.cs" />
+    <Compile Include="WPFExtension.cs" />
     <Page Include="Views\Collisions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

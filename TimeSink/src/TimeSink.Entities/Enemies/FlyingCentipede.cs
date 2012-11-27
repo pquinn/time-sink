@@ -12,15 +12,19 @@ using FarseerPhysics.Dynamics;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Enemies
 {
     [EditorEnabled]
+    [SerializableEntity("bb7f91f9-af92-41cc-a985-bd1e85066403")]
     public class FlyingCentipede : Enemy, IHaveHealth
     {
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Necky";
         const string EDITOR_NAME = "Flying Centipede";
+
+        private static readonly Guid GUID = new Guid("bb7f91f9-af92-41cc-a985-bd1e85066403");
 
         new private static int textureHeight;
         new private static int textureWidth;
@@ -40,17 +44,12 @@ namespace TimeSink.Entities.Enemies
             };
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
-        }
-
-        public override string EditorPreview
-        {
-            get
-            {
-                return CENTIPEDE_TEXTURE;
-            }
         }
 
         public override List<Fixture> CollisionGeometry

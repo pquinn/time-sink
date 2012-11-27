@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Physics;
 
 namespace Editor.States
 {
@@ -26,8 +27,6 @@ namespace Editor.States
 
         public override void Enter()
         {
-
-            texture = StateMachine.Owner.RenderManager.TextureCache.GetResource(entity.EditorPreview);
         }
 
         public override void Execute()
@@ -35,6 +34,12 @@ namespace Editor.States
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 StateMachine.Owner.RegisterEntity(entity);
+
+                var position = new Vector2(
+                        InputManager.Instance.CurrentMouseState.X,
+                        InputManager.Instance.CurrentMouseState.Y);
+                entity.Position = PhysicsConstants.PixelsToMeters(
+                    Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
 
                 StateMachine.RevertToPreviousState(true);
             }
@@ -48,16 +53,13 @@ namespace Editor.States
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Begin();
-            
-            spriteBatch.Draw(
-                texture,
-                new Vector2(
+            entity.Preview.Draw(
+                spriteBatch, 
+                TextureCache, 
+                Matrix.CreateTranslation(
                     InputManager.Instance.CurrentMouseState.X,
-                    InputManager.Instance.CurrentMouseState.Y),
-                new Color(255, 255, 255, 80));
-
-            spriteBatch.End();
+                    InputManager.Instance.CurrentMouseState.Y,
+                    0));
         }
     }
 }

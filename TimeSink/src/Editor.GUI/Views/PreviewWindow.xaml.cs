@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Editor;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -33,9 +34,9 @@ namespace TimeSink.Editor.GUI.Views
             m_game = new PreviewGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
         }
 
-        public void ChangeTextures(string texturePathToDisplay)
+        internal void ChangePreview(Entity entity)
         {
-            m_game.ChangeTexture(texturePathToDisplay);
+            m_game.ChangePreview(entity);
         }
     }
 }

@@ -25,7 +25,8 @@ namespace Editor.States
         {
             var leftMouse = InputManager.Instance.CurrentMouseState.LeftButton;
             var rightMouse = InputManager.Instance.CurrentMouseState.RightButton;
-            if (leftMouse == ButtonState.Pressed && !leftClick)
+            var onScreen = MouseOnScreen();
+            if (leftMouse == ButtonState.Pressed && !leftClick && onScreen)
             {
                 leftClick = true;
                 Camera.Scale += new Vector2(.1f, .1f);
@@ -35,7 +36,7 @@ namespace Editor.States
                 leftClick = false;
             }
             
-            if (rightMouse == ButtonState.Pressed && !rightClick)
+            if (rightMouse == ButtonState.Pressed && !rightClick && onScreen)
             {
                 rightClick = true;
                 Camera.Scale -= new Vector2(.1f, .1f);

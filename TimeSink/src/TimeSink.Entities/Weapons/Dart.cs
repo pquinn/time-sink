@@ -12,14 +12,19 @@ using TimeSink.Engine.Core.Collisions;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Weapons
 {
     [EditorEnabled]
+    [SerializableEntity("158e2984-34ce-4c1f-93ef-fbf81c5fed1f")]
     public class Dart : Entity, IWeapon
     {
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
         const string EDITOR_NAME = "Dart";
+
+        private static readonly Guid GUID = new Guid("158e2984-34ce-4c1f-93ef-fbf81c5fed1f");
 
         public GravityPhysics physics { get; private set; }
         public DamageOverTimeEffect dot { get; private set; }
@@ -27,8 +32,6 @@ namespace TimeSink.Entities.Weapons
         const float DART_SPEED = 30;
 
         private Vector2 _initialPosition;
-
-        public Body Physics { get; private set; }
 
         public Dart() 
             : this(Vector2.Zero)
@@ -46,6 +49,9 @@ namespace TimeSink.Entities.Weapons
             dot = new DamageOverTimeEffect(4, 100);
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -58,20 +64,10 @@ namespace TimeSink.Entities.Weapons
         {
             get { return EDITOR_NAME; }
         }
-
-        public override string EditorPreview
+        
+        public override IRendering Preview
         {
-            get
-            {
-                return DART_TEXTURE_NAME;
-            }
-        }
-
-        [EditableField("Position")]
-        public Vector2 Position
-        {
-            get { return physics.Position; }
-            set { physics.Position = value; }
+            get { return Rendering; }
         }
 
         public override IRendering Rendering

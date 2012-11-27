@@ -14,15 +14,23 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
+    [SerializableEntity("23a14bb4-caab-4b6b-9ec5-62dfc1561cf9")]
     public class WorldGeometry : Entity
     {
         const string WORLD_TEXTURE_NAME = "Textures/giroux";
         const string EDITOR_NAME = "World Geometry";
 
+        private static readonly Guid GUID = new Guid("23a14bb4-caab-4b6b-9ec5-62dfc1561cf9");
+
+        [SerializableField]
         public float Friction { get; set; }
+
+        [SerializableField]
         public float Sticktion { get; set; }
 
         private Texture2D geoTexture;
@@ -34,13 +42,19 @@ namespace TimeSink.Entities
         }
 
         public WorldGeometry() { }
+
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
         
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        public Body PhysicsBody { get; private set; }
+        public override IRendering Preview
+        {
+            get { return Rendering; }
+        }
 
         public override void Load(IContainer engineRegistrations)
         {
@@ -132,13 +146,13 @@ namespace TimeSink.Entities
         {
             var world = engineRegistrations.Resolve<World>();
 
-            PhysicsBody = BodyFactory.CreateBody(world, this);
-            PhysicsBody.BodyType = BodyType.Static;
-            PhysicsBody.Friction = .5f;
-            collisionGeometry = PhysicsBody.FixtureList;
+            Physics = BodyFactory.CreateBody(world, this);
+            Physics.BodyType = BodyType.Static;
+            Physics.Friction = .5f;
+            collisionGeometry = Physics.FixtureList;
 
-            PhysicsBody.CollidesWith = Category.All;
-            PhysicsBody.CollisionCategories = Category.Cat1;
+            Physics.CollidesWith = Category.All;
+            Physics.CollisionCategories = Category.Cat1;
         }
     }
 }

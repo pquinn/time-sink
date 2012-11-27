@@ -7,6 +7,6 @@ namespace Editor
 {
     public interface IEntityMetadata
     {
-        string Name { get; }
+        Guid Name { get; }
     }
 }

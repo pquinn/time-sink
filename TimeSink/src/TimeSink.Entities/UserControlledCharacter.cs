@@ -18,14 +18,19 @@ using FarseerPhysics.Common;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
     [EditorEnabled]
+    [SerializableEntity("defb4f64-1021-420d-8069-e24acebf70bb")]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
         const float PLAYER_MASS = 100f;
         const string EDITOR_NAME = "User Controlled Character";
+
+        private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
 
         enum BodyStates
         {
@@ -74,31 +79,40 @@ namespace TimeSink.Entities
         private List<IInventoryItem> inventory;
         private int activeItem;
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        public override string EditorPreview
+        public override IRendering Preview
         {
             get
             {
-                return EDITOR_PREVIEW;
+                return new BasicRendering(
+                    EDITOR_PREVIEW,
+                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    playerRotation, Vector2.One);
             }
         }
 
+        [SerializableField]
         public float Health
         {
             get { return health; }
             set { health = value; }
         }
 
+        [SerializableField]
         public float Shield
         {
             get { return shield; }
             set { shield = value; }
         }
 
+        [SerializableField]
         public float Mana
         {
             get { return mana; }
@@ -110,18 +124,21 @@ namespace TimeSink.Entities
 
         // not sure if these should be public
         private Vector2 direction;
+        [SerializableField]
         public Vector2 Direction
         {
             get { return direction; }
             private set { direction = value; }
         }
         private double holdTime;
+        [SerializableField]
         public double HoldTime
         {
             get { return holdTime; }
             set { holdTime = value; }
         }
         private bool inHold;
+        [SerializableField]
         public bool InHold
         {
             get { return inHold; }

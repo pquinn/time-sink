@@ -38,7 +38,7 @@ namespace Editor.States
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            StateMachine.Owner.RenderManager.Draw(spriteBatch, Camera);
+            StateMachine.Owner.EditorRenderManager.Draw(spriteBatch, Camera);
         }
 
         protected Vector2 GetMousePosition()
@@ -46,6 +46,14 @@ namespace Editor.States
             return new Vector2(
                     InputManager.Instance.CurrentMouseState.X,
                     InputManager.Instance.CurrentMouseState.Y);
+        }
+
+        protected bool MouseOnScreen()
+        {
+            var mouse = GetMousePosition();
+
+            return mouse.X > 0 && mouse.X < Constants.SCREEN_X &&
+                   mouse.Y > 0 && mouse.Y < Constants.SCREEN_Y;
         }
     }
 }

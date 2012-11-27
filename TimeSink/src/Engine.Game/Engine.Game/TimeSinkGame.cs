@@ -137,7 +137,7 @@ namespace TimeSink.Engine.Game
                 PhysicsConstants.PixelsToMeters(50),
                 1,
                 PhysicsConstants.PixelsToMeters(new Vector2(300, 400)),
-                world.PhysicsBody,
+                world.Physics,
                 world);
 
             FixtureFactory.AttachPolygon(
@@ -148,7 +148,7 @@ namespace TimeSink.Engine.Game
                     PhysicsConstants.PixelsToMeters(new Vector2(520, 360))
                 },
                 1,
-                world.PhysicsBody,
+                world.Physics,
                 world);
 
             FixtureFactory.AttachRectangle(
@@ -156,7 +156,7 @@ namespace TimeSink.Engine.Game
                 PhysicsConstants.PixelsToMeters(10),
                 1,
                 PhysicsConstants.PixelsToMeters(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height)),
-                world.PhysicsBody,
+                world.Physics,
                 world);
 
             CollisionManager.RegisterCollideable(world);

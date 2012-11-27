@@ -10,18 +10,22 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Editor;
+using Autofac;
 
 namespace TimeSink.Engine.Core.States
 {
     public class LevelManager
     {
-        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager, RenderManager renderManager)
+        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager, 
+            RenderManager renderManager, EditorRenderManager editorRenderManager, IContainer container)
         {
             CollisionManager = collisionsManager;
             PhysicsManager = physicsManager;
             RenderManager = renderManager;
-
-            DeserializeLevel();
+            EditorRenderManager = editorRenderManager;
+            Container = container;
+            Level = new Level();
         }
 
         public CollisionManager CollisionManager { get; private set; }
@@ -30,17 +34,34 @@ namespace TimeSink.Engine.Core.States
 
         public RenderManager RenderManager { get; private set; }
 
+        public EditorRenderManager EditorRenderManager { get; private set; }
+
+        public IContainer Container { get; private set; }
+
         public Level Level { get; set; }
 
-        public void RegisterTile(Tile mesh)
+        public void RegisterMidground(Tile tile)
         {
-            Level.Tiles.Add(mesh);
-            RenderManager.RegisterRenderable(mesh);
+            Level.Midground.Add(tile);
+            RenderManager.RegisterRenderable(tile);
+            EditorRenderManager.RegisterPreviewable(tile);
         }
 
-        public void RegisterTiles(IEnumerable<Tile> meshes)
+        public void RegisterMidground(IEnumerable<Tile> tiles)
         {
-            meshes.ForEach(RegisterTile);
+            tiles.ForEach(RegisterMidground);
+        }
+
+        public void RegisterTile(Tile tile)
+        {
+            Level.Tiles.Add(tile);
+            RenderManager.RegisterRenderable(tile);
+            EditorRenderManager.RegisterPreviewable(tile);
+        }
+
+        public void RegisterTiles(IEnumerable<Tile> tiles)
+        {
+            tiles.ForEach(RegisterTile);
         }
 
         public void RegisterEntity(Entity entity)
@@ -49,6 +70,7 @@ namespace TimeSink.Engine.Core.States
             PhysicsManager.RegisterPhysicsBody(entity);
             CollisionManager.RegisterCollideable(entity);
             RenderManager.RegisterRenderable(entity);
+            EditorRenderManager.RegisterPreviewable(entity);
         }
 
         public void RegisterEntities(IEnumerable<Entity> entities)
@@ -56,10 +78,12 @@ namespace TimeSink.Engine.Core.States
             entities.ForEach(RegisterEntity);
         }
 
-        public void SerializeLevel()
+        public void SerializeLevel(string fileName)
         {
-            using (var xmlWriter = XmlWriter.Create("test.txt"))
+            using (var xmlWriter = XmlWriter.Create(fileName))
             {
+                Level.FlushEntities();
+
                 var serializer = new XmlSerializer(typeof(Level));
                 serializer.Serialize(xmlWriter, Level);
 
@@ -67,44 +91,51 @@ namespace TimeSink.Engine.Core.States
             }
         }
 
-        public void DeserializeLevel()
+        public void DeserializeLevel(string fileName)
         {
-            if (File.Exists("test.txt"))
+            if (File.Exists(fileName))
             {
-                using (var xmlReader = XmlReader.Create("test.txt"))
+                using (var xmlReader = XmlReader.Create(fileName))
                 {
                     var deserializer = new XmlSerializer(typeof(Level));
                     Level = deserializer.Deserialize(xmlReader) as Level;
 
+                    Level.ExtractEntities(Container);
+
                     RegisterLevelComponents();
                 }
             }
-            else
-            {
-                Level = new Level();
+        }
 
-                RegisterTiles(new List<Tile>()
-                {
-                    new Tile("Textures/Ground_Tile1", new Vector2(187, 361.5f), 0, Vector2.One),
-                    new Tile("Textures/Ground_Tile1", new Vector2(461, 361.5f), 0, Vector2.One),
-                    new Tile("Textures/Ground_Tile1", new Vector2(735, 361.5f), 0, Vector2.One),
-                    new Tile("Textures/Side_Tile01", new Vector2(1009, 361.5f), 0, Vector2.One),
-                    new Tile("Textures/Top_Tile01", new Vector2(187, 293.5f), 0, Vector2.One),
-                    new Tile("Textures/Top_Tile01", new Vector2(461, 293.5f), 0, Vector2.One),
-                    new Tile("Textures/Top_Tile01", new Vector2(735, 293.5f), 0, Vector2.One),
-                });
-            }
+        public void Clear()
+        {
+            RenderManager.Clear();
+            EditorRenderManager.Clear();
         }
 
         private void RegisterLevelComponents()
         {
-            Level.Tiles.ForEach(x => RenderManager.RegisterRenderable(x));
+            Level.Midground.ForEach(
+                x =>
+                {
+                    RenderManager.RegisterRenderable(x);
+                    EditorRenderManager.RegisterPreviewable(x);
+                });
+
+            Level.Tiles.ForEach(
+                x =>
+                {
+                    RenderManager.RegisterRenderable(x);
+                    EditorRenderManager.RegisterPreviewable(x);
+                });
+
             Level.Entities.ForEach(
                 x =>
                 {
                     PhysicsManager.RegisterPhysicsBody(x);
                     CollisionManager.RegisterCollideable(x);
                     RenderManager.RegisterRenderable(x);
+                    EditorRenderManager.RegisterPreviewable(x);
                 });
         }
     }

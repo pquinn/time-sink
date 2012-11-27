@@ -28,13 +28,14 @@ namespace Editor.States
         public override void Execute()
         {
             var leftMouse = InputManager.Instance.CurrentMouseState.LeftButton;
-            if (leftMouse == ButtonState.Pressed && !inDrag)
+            var onScreen = MouseOnScreen();
+            if (leftMouse == ButtonState.Pressed && !inDrag && onScreen)
             {
                 inDrag = true;
                 dragPivot = GetMousePosition();
                 cameraStart = Camera.Position;
             }
-            else if (leftMouse == ButtonState.Pressed)
+            else if (leftMouse == ButtonState.Pressed && onScreen)
             {
                 var mouse = GetMousePosition();
                 Camera.Position = cameraStart - mouse + dragPivot;

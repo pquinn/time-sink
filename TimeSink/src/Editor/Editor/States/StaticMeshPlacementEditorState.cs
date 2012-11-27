@@ -34,11 +34,12 @@ namespace Editor.States
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
+                var position = new Vector2(
+                        InputManager.Instance.CurrentMouseState.X ,
+                        InputManager.Instance.CurrentMouseState.Y);
                 var tile = new Tile(
-                    textureKey,
-                    new Vector2(
-                        InputManager.Instance.CurrentMouseState.X,
-                        InputManager.Instance.CurrentMouseState.Y),
+                    textureKey,                    
+                    Vector2.Transform(position, Matrix.Invert(Camera.Transform)),
                     0, Vector2.One);
                 StateMachine.Owner.RegisterTile(tile);
 

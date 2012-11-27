@@ -13,10 +13,13 @@ using TimeSink.Engine.Core.Collisions;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using System.Xml.Serialization;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Weapons
 {
     [EditorEnabled]
+    [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
     public class Arrow : Entity, IWeapon
     {
         const float ARROW_MASS = 1f;
@@ -27,10 +30,9 @@ namespace TimeSink.Entities.Weapons
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
 
+        private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
+
         private Vector2 _initialPosition;
-
-        public Body Physics { get; private set; }
-
 
         public Arrow()
             : this(Vector2.Zero)
@@ -42,24 +44,17 @@ namespace TimeSink.Entities.Weapons
             _initialPosition = position;
         }
 
+        [SerializableField]
+        public override Guid Id { get { return GUID; } set { } }
+
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        public override string EditorPreview
+        public override IRendering Preview
         {
-            get
-            {
-                return ARROW_TEXTURE_NAME;
-            }
-        }
-
-        [EditableField("Position")]
-        public Vector2 Position
-        {
-            get { return Physics.Position; }
-            set { Physics.Position = value; }
+            get { return Rendering; }
         }
 
         public override List<Fixture> CollisionGeometry

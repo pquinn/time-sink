@@ -48,5 +48,10 @@ namespace TimeSink.Engine.Core.Rendering
                 );
             }
         }
+
+        public void Clear()
+        {
+            renderables.Clear();
+        }
     }
 }

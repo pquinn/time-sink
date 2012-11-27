@@ -9,6 +9,7 @@ namespace TimeSink.Engine.Core.Caching
     public class ContentManagerProvider<T> : IResourceProvider<T>
     {
         private ContentManager contentManager;
+        private string relativePath;
 
         public ContentManagerProvider(ContentManager contentManager)
         {

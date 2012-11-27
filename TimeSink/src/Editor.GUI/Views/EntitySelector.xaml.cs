@@ -41,8 +41,8 @@ namespace TimeSink.Editor.GUI.Views
         private void Entity_Changed(object sender, RoutedEventArgs e)
         {
             var viewModel = DataContext as EntitySelectorViewModel;
-            preview.ChangeTextures(
-                viewModel.Entities[entityList.SelectedIndex].EditorPreview);
+            preview.ChangePreview(
+                viewModel.Entities[entityList.SelectedIndex]);
         }
     }
 }

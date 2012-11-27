@@ -43,7 +43,7 @@ namespace Editor.States
             var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
             var hasSelect = selectedMeshes.Count > 0;
             var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
-            if (buttonState == ButtonState.Pressed)
+            if (buttonState == ButtonState.Pressed && MouseOnScreen())
             {
                 var clicked = GetSelections(StateMachine.Owner);
                 var sameClick = clicked.Contains(lastSelected);

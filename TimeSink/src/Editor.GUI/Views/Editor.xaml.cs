@@ -24,7 +24,8 @@ namespace TimeSink.Editor.GUI.Views
     /// </summary>
     public partial class Editor : UserControl
     {
-        Game1 m_game;
+        private bool isLoaded;
+        EditorGame m_game;
 
         bool panButtonPressed;
         bool zoomButtonPressed;
@@ -60,14 +61,19 @@ namespace TimeSink.Editor.GUI.Views
             EditorProperties.Instance.GridLineSpacing = size;
         }
 
-        public void SaveAs()
+        public void SaveAs(string fileName)
         {
-            m_game.SaveAs();
+            m_game.SaveAs(fileName);
         }
 
         void Editor_Loaded(object sender, RoutedEventArgs e)
         {
-            m_game = new Game1(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
+            if (!isLoaded)
+            {
+                m_game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
+                this.TryFindParent<MainWindow>().levelControl.Game = m_game;
+                isLoaded = true;
+            }
         }
 
         private void Pan_Click(object sender, RoutedEventArgs e)
@@ -135,6 +141,7 @@ namespace TimeSink.Editor.GUI.Views
             if (!entitiesButtonPressed)
             {
                 var entities = m_game.Container.Resolve<IEnumerable<Entity>>();
+                entities.ForEach(x => x.InitializePhysics(m_game.Container));
                 var entityWindow = new EntitySelector(entities, m_game.TextureCache);
 
                 entityWindow.ShowDialog();
@@ -156,17 +163,17 @@ namespace TimeSink.Editor.GUI.Views
         private void Static_Click(object sender, RoutedEventArgs e)
         {
             if (!meshButtonPressed)
-            {
-                var selectorWindow = new StaticMeshSelector(m_game.TextureCache);
+            {                
+                var selectorWindow = new StaticMeshSelector(m_game.Tiles, m_game.TextureCache);
 
                 selectorWindow.ShowDialog();
 
                 ResetHandle();
 
-                var viewModel = selectorWindow.DataContext as StaticMeshSelectorViewModel;
+                var viewModel = selectorWindow.DataContext as TileSelectorViewModel;
                 if ((bool)selectorWindow.DialogResult)
                 {
-                    m_game.StaticMeshSelected(selectorWindow.SelectedTexture);
+                    m_game.StaticMeshSelected(selectorWindow.SelectedKey);
                 }
             }
             else
@@ -202,6 +209,16 @@ namespace TimeSink.Editor.GUI.Views
             geomButtonPressed = false;
             entitiesButtonPressed = false;
             meshButtonPressed = false;
+        }
+
+        internal void Open(string fileName)
+        {
+            m_game.Open(fileName);
+        }
+
+        internal void New()
+        {
+            m_game.New();
         }
     }
 }
