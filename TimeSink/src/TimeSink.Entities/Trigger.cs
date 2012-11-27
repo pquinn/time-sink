@@ -80,14 +80,20 @@ namespace TimeSink.Entities
                 Triggered(obj);
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
 
-            Physics = BodyFactory.CreateBody(world, _position, this);
-            Physics.BodyType = BodyType.Static;
-            Physics.IsSensor = true;
-            _geom = Physics.FixtureList;
+                Physics = BodyFactory.CreateBody(world, _position, this);
+                Physics.BodyType = BodyType.Static;
+                Physics.IsSensor = true;
+                _geom = Physics.FixtureList;
+
+                initialized = true;
+            }
         }
     }
 }

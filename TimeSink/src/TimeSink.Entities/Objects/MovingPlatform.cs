@@ -129,26 +129,32 @@ namespace TimeSink.Entities
         {
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
-            Physics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(Width),
-                PhysicsConstants.PixelsToMeters(Height),
-                1,
-                _initialPosition);
-            Physics.UserData = this;
-            Physics.BodyType = BodyType.Static;
-            Physics.Friction = .5f;
-            Physics.CollidesWith = Category.All | ~Category.Cat1;
-            Physics.CollisionCategories = Category.Cat1;
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
+                    1,
+                    _initialPosition);
+                Physics.UserData = this;
+                Physics.BodyType = BodyType.Static;
+                Physics.Friction = .5f;
+                Physics.CollidesWith = Category.All | ~Category.Cat1;
+                Physics.CollisionCategories = Category.Cat1;
 
-            var fix = Physics.FixtureList[0];
-            fix.CollisionCategories = Category.Cat1;
-            fix.CollidesWith = Category.All | ~Category.Cat1;
+                var fix = Physics.FixtureList[0];
+                fix.CollisionCategories = Category.Cat1;
+                fix.CollidesWith = Category.All | ~Category.Cat1;
 
-            //fix.Shape.Density = Single.PositiveInfinity;
+                //fix.Shape.Density = Single.PositiveInfinity;
+
+                initialized = true;
+            }
         }
 
         public override void Load(IComponentContext container)

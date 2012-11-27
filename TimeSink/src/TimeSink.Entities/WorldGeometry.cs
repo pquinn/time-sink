@@ -142,17 +142,23 @@ namespace TimeSink.Entities
         {
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
 
-            Physics = BodyFactory.CreateBody(world, this);
-            Physics.BodyType = BodyType.Static;
-            Physics.Friction = .5f;
-            collisionGeometry = Physics.FixtureList;
+                Physics = BodyFactory.CreateBody(world, this);
+                Physics.BodyType = BodyType.Static;
+                Physics.Friction = .5f;
+                collisionGeometry = Physics.FixtureList;
 
-            Physics.CollidesWith = Category.All;
-            Physics.CollisionCategories = Category.Cat1;
+                Physics.CollidesWith = Category.All;
+                Physics.CollisionCategories = Category.Cat1;
+
+                initialized = true;
+            }
         }
     }
 }

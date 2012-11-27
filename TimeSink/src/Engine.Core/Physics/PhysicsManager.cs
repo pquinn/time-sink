@@ -26,7 +26,7 @@ namespace TimeSink.Engine.Core.Physics
 
         public void RegisterPhysicsBody(IPhysicsEnabledBody body)
         {
-            body.InitializePhysics(engineRegistrations);
+            body.InitializePhysics(false, engineRegistrations);
         }
 
         public void Update(GameTime gameTime)

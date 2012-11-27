@@ -140,20 +140,26 @@ namespace TimeSink.Entities.Weapons
             Fire(character, world, gameTime, holdTime);
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
 
-            Physics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(16),
-                PhysicsConstants.PixelsToMeters(8),
-                1,
-                _initialPosition);
-            Physics.BodyType = BodyType.Dynamic;
-            Physics.IsBullet = true;
-            Physics.IsSensor = true;
-            Physics.UserData = this;
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(16),
+                    PhysicsConstants.PixelsToMeters(8),
+                    1,
+                    _initialPosition);
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.IsBullet = true;
+                Physics.IsSensor = true;
+                Physics.UserData = this;
+
+                initialized = true;
+            }
         }
     }
 }

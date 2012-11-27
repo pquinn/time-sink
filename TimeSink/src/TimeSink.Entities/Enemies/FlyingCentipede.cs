@@ -93,10 +93,16 @@ namespace TimeSink.Entities.Enemies
             return textureCache.GetResource(CENTIPEDE_TEXTURE);
         }
 
-        public override void InitializePhysics(IComponentContext container)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            base.InitializePhysics(container);
-            Physics.BodyType = BodyType.Static;
+            if (force || !initialized)
+            {
+                base.InitializePhysics(force, engineRegistrations);
+                Physics.BodyType = BodyType.Static;
+
+                initialized = true;
+            }
         }
     }
 }

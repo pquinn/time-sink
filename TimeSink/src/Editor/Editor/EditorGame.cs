@@ -272,6 +272,7 @@ namespace Editor
 
         public void Open(string fileName)
         {
+            LevelManager.Clear();
             LevelManager.DeserializeLevel(fileName);
         }
 

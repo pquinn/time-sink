@@ -145,7 +145,7 @@ namespace TimeSink.Editor.GUI.Views
                     x =>
                     {
                         x.Load(m_game.Container);
-                        x.InitializePhysics(m_game.Container);
+                        x.InitializePhysics(false, m_game.Container);
                     });
                 var entityWindow = new EntitySelector(entities, m_game.TextureCache);
 

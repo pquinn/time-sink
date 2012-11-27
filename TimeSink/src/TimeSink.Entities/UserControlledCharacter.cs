@@ -595,49 +595,54 @@ namespace TimeSink.Entities
         public void RegisterDot(DamageOverTimeEffect dot)
         {
         }
-
-
-        public override void InitializePhysics(IComponentContext engineRegistration)
+        
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistration.Resolve<World>();
-            Physics = BodyFactory.CreateBody(world, _initialPosition, this);
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
+                Physics = BodyFactory.CreateBody(world, _initialPosition, this);
 
-            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
 
-            var r = FixtureFactory.AttachRectangle(
-                spriteWidthMeters,
-                spriteHeightMeters - spriteWidthMeters / 2,
-                1.4f,
-                new Vector2(0, -spriteWidthMeters / 4),
-                Physics);
-            var c = FixtureFactory.AttachCircle(
-                spriteWidthMeters / 2,
-                1.4f,
-                Physics,
-                new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+                var r = FixtureFactory.AttachRectangle(
+                    spriteWidthMeters,
+                    spriteHeightMeters - spriteWidthMeters / 2,
+                    1.4f,
+                    new Vector2(0, -spriteWidthMeters / 4),
+                    Physics);
+                var c = FixtureFactory.AttachCircle(
+                    spriteWidthMeters / 2,
+                    1.4f,
+                    Physics,
+                    new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
 
-            r.CollidesWith = Category.Cat1;
-            r.CollisionCategories = Category.Cat3;
-            c.CollidesWith = Category.Cat1;
-            c.CollisionCategories = Category.Cat3;
+                r.CollidesWith = Category.Cat1;
+                r.CollisionCategories = Category.Cat3;
+                c.CollidesWith = Category.Cat1;
+                c.CollisionCategories = Category.Cat3;
 
-            var rSens = r.Clone(Physics);
-            rSens.IsSensor = true;
-            rSens.Shape.Density = 0;
+                var rSens = r.Clone(Physics);
+                rSens.IsSensor = true;
+                rSens.Shape.Density = 0;
 
-            var cSens = c.Clone(Physics);
-            cSens.IsSensor = true;
-            cSens.Shape.Density = 0;
+                var cSens = c.Clone(Physics);
+                cSens.IsSensor = true;
+                cSens.Shape.Density = 0;
 
-            rSens.CollidesWith = Category.All;
-            cSens.CollidesWith = Category.All;
-            rSens.CollisionCategories = Category.Cat2;
-            cSens.CollisionCategories = Category.Cat2;
+                rSens.CollidesWith = Category.All;
+                cSens.CollidesWith = Category.All;
+                rSens.CollisionCategories = Category.Cat2;
+                cSens.CollisionCategories = Category.Cat2;
 
-            Physics.BodyType = BodyType.Dynamic;
-            Physics.FixedRotation = true;
-            Physics.Friction = .5f;
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.FixedRotation = true;
+                Physics.Friction = .5f;
+
+                initialized = true;
+            }
         }
     }
 }

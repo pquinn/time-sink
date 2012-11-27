@@ -66,7 +66,7 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
         }
 

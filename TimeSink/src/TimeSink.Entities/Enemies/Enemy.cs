@@ -163,29 +163,35 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
-            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-            var texture = GetTexture(textureCache);
-            Physics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(texture.Width),
-                PhysicsConstants.PixelsToMeters(texture.Height),
-                1,
-                _initialPosition);
-            Physics.FixedRotation = true;
-            Physics.BodyType = BodyType.Dynamic;
-            Physics.UserData = this;
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
+                var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+                var texture = GetTexture(textureCache);
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(texture.Width),
+                    PhysicsConstants.PixelsToMeters(texture.Height),
+                    1,
+                    _initialPosition);
+                Physics.FixedRotation = true;
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.UserData = this;
 
-            var fix = Physics.FixtureList[0];
-            fix.CollisionCategories = Category.Cat3;
-            fix.CollidesWith = Category.Cat1;
+                var fix = Physics.FixtureList[0];
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollidesWith = Category.Cat1;
 
-            var hitsensor = fix.Clone(Physics);
-            hitsensor.IsSensor = true;
-            hitsensor.CollisionCategories = Category.Cat2;
-            hitsensor.CollidesWith = Category.Cat2;
+                var hitsensor = fix.Clone(Physics);
+                hitsensor.IsSensor = true;
+                hitsensor.CollisionCategories = Category.Cat2;
+                hitsensor.CollidesWith = Category.Cat2;
+
+                initialized = true;
+            }
         }
 
         protected virtual Texture2D GetTexture(IResourceCache<Texture2D> textureCache)

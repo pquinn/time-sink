@@ -31,7 +31,7 @@ namespace TimeSink.Engine.Core
 
         public abstract string EditorName { get; }
 
-        public abstract void InitializePhysics(IComponentContext engineRegistrations);
+        public abstract void InitializePhysics(bool force, IComponentContext engineRegistrations);
 
         public abstract Guid Id { get; set; }
 

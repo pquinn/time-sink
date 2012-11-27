@@ -62,27 +62,33 @@ namespace TimeSink.Entities
             textureHeight = texture.Height;
         }
 
-        public override void InitializePhysics(IComponentContext engineRegistrations)
+        private bool initialized;
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            var world = engineRegistrations.Resolve<World>();
-            Physics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(textureWidth),
-                PhysicsConstants.PixelsToMeters(textureHeight),
-                1,
-                _initialPosition);
-            Physics.FixedRotation = true;
-            Physics.BodyType = BodyType.Dynamic;
-            Physics.UserData = this;
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<World>();
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(textureWidth),
+                    PhysicsConstants.PixelsToMeters(textureHeight),
+                    1,
+                    _initialPosition);
+                Physics.FixedRotation = true;
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.UserData = this;
 
-            var fix = Physics.FixtureList[0];
-            fix.CollisionCategories = Category.Cat3;
-            fix.CollidesWith = Category.Cat1;
+                var fix = Physics.FixtureList[0];
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollidesWith = Category.Cat1;
 
-            var hitsensor = fix.Clone(Physics);
-            hitsensor.IsSensor = true;
-            hitsensor.CollisionCategories = Category.Cat2;
-            hitsensor.CollidesWith = Category.Cat2;
+                var hitsensor = fix.Clone(Physics);
+                hitsensor.IsSensor = true;
+                hitsensor.CollisionCategories = Category.Cat2;
+                hitsensor.CollidesWith = Category.Cat2;
+
+                initialized = true;
+            }
         }
 
         public override List<Fixture> CollisionGeometry
