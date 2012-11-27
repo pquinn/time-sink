@@ -18,7 +18,7 @@ namespace TimeSink.Engine.Core.States
     public class LevelManager
     {
         public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager, 
-            RenderManager renderManager, EditorRenderManager editorRenderManager, IContainer container)
+            RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
         {
             CollisionManager = collisionsManager;
             PhysicsManager = physicsManager;
@@ -36,7 +36,7 @@ namespace TimeSink.Engine.Core.States
 
         public EditorRenderManager EditorRenderManager { get; private set; }
 
-        public IContainer Container { get; private set; }
+        public IComponentContext Container { get; private set; }
 
         public Level Level { get; set; }
 

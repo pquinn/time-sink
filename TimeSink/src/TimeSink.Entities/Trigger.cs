@@ -68,7 +68,7 @@ namespace TimeSink.Entities
 
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
 
         }
@@ -80,7 +80,7 @@ namespace TimeSink.Entities
                 Triggered(obj);
         }
 
-        public override void InitializePhysics(IContainer engineRegistrations)
+        public override void InitializePhysics(IComponentContext engineRegistrations)
         {
             var world = engineRegistrations.Resolve<World>();
 

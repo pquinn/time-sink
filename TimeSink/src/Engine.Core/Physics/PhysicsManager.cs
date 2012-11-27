@@ -13,12 +13,12 @@ namespace TimeSink.Engine.Core.Physics
 {
     public class PhysicsManager
     {
-        private IContainer engineRegistrations;
+        private IComponentContext engineRegistrations;
 
         //private HashSet<IPhysicsEnabledBody> bodies = new HashSet<IPhysicsEnabledBody>();
         public World World { get; private set; }
 
-        public PhysicsManager(IContainer engineRegistrations)
+        public PhysicsManager(IComponentContext engineRegistrations)
         {
             World = engineRegistrations.Resolve<World>();
             this.engineRegistrations = engineRegistrations;

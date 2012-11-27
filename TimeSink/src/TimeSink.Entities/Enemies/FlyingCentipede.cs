@@ -13,6 +13,8 @@ using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -26,8 +28,8 @@ namespace TimeSink.Entities.Enemies
 
         private static readonly Guid GUID = new Guid("bb7f91f9-af92-41cc-a985-bd1e85066403");
 
-        new private static int textureHeight;
-        new private static int textureWidth;
+        private static int textureHeight;
+        private static int textureWidth;
 
         public FlyingCentipede()
             : this(Vector2.Zero)
@@ -38,10 +40,6 @@ namespace TimeSink.Entities.Enemies
             : base(position)
         {
             health = 150;
-            physics = new GravityPhysics(position, CENTIPEDE_MASS)
-            {
-                GravityEnabled = false
-            };
         }
 
         [SerializableField]
@@ -82,7 +80,7 @@ namespace TimeSink.Entities.Enemies
             base.Update(time, world);
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             var texture = textureCache.LoadResource(CENTIPEDE_TEXTURE);
@@ -93,6 +91,12 @@ namespace TimeSink.Entities.Enemies
         protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
         {
             return textureCache.GetResource(CENTIPEDE_TEXTURE);
+        }
+
+        public override void InitializePhysics(IComponentContext container)
+        {
+            base.InitializePhysics(container);
+            Physics.BodyType = BodyType.Static;
         }
     }
 }

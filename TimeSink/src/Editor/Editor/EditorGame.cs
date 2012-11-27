@@ -52,7 +52,7 @@ namespace Editor
 
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
 
-        public IContainer Container { get; set; }
+        public IComponentContext Container { get; set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -66,6 +66,7 @@ namespace Editor
 
             base.Initialize();
 
+            // todo: this is horrible
             Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
             Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
 
@@ -81,12 +82,7 @@ namespace Editor
             camera = Camera.ZeroedCamera;
 
             // create default level
-            LevelManager = new LevelManager(
-                new CollisionManager(), 
-                new PhysicsManager(Container), 
-                new RenderManager(TextureCache),
-                new EditorRenderManager(TextureCache),
-                Container);
+            LevelManager = Container.Resolve<LevelManager>();
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
@@ -111,7 +107,6 @@ namespace Editor
                 new ContentManagerProvider<Texture2D>(Content));
             SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
-
             builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
             builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
 
@@ -123,6 +118,12 @@ namespace Editor
             SoundCache.LoadResource("Audio/Music/Four");
 
             builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
+
+            builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
+            builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
+            builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
+            builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
+            builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
             
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);

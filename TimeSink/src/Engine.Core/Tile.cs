@@ -66,7 +66,7 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override void InitializePhysics(IContainer engineRegistrations)
+        public override void InitializePhysics(IComponentContext engineRegistrations)
         {
         }
 
@@ -89,7 +89,7 @@ namespace TimeSink.Engine.Core
         {
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             textureCache.LoadResource(Texture);

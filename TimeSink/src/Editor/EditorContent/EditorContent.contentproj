@@ -81,7 +81,13 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Textures\giroux.png">
+      <Name>giroux</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Textures\Body_Neutral.png">
       <Name>Body_Neutral</Name>
@@ -194,6 +200,13 @@
     </Compile>
     <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4033.PNG">
       <Name>Heroes_Entrance%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Vine.png">
+      <Name>Vine</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

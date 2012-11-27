@@ -98,7 +98,7 @@ namespace TimeSink.Entities.Weapons
             }
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             textureCache.LoadResource(DART_TEXTURE_NAME);
@@ -110,8 +110,8 @@ namespace TimeSink.Entities.Weapons
 
             if (Dead)
             {
-                world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollideable(this);
+                world.LevelManager.RenderManager.UnregisterRenderable(this);
+                world.LevelManager.CollisionManager.UnregisterCollideable(this);
                 Physics.Dispose();
             }
             else
@@ -126,9 +126,9 @@ namespace TimeSink.Entities.Weapons
                             new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
                                         character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
             world.Entities.Add(dart);
-            world.RenderManager.RegisterRenderable(dart);
-            world.PhysicsManager.RegisterPhysicsBody(dart);
-            world.CollisionManager.RegisterCollideable(dart);
+            world.LevelManager.RenderManager.RegisterRenderable(dart);
+            world.LevelManager.PhysicsManager.RegisterPhysicsBody(dart);
+            world.LevelManager.CollisionManager.RegisterCollideable(dart);
 
             character.InHold = false;
             Vector2 initialVelocity = character.Direction * DART_SPEED;
@@ -140,7 +140,7 @@ namespace TimeSink.Entities.Weapons
             Fire(character, world, gameTime, holdTime);
         }
 
-        public override void InitializePhysics(IContainer engineRegistrations)
+        public override void InitializePhysics(IComponentContext engineRegistrations)
         {
             var world = engineRegistrations.Resolve<World>();
 

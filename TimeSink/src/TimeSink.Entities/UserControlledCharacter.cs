@@ -187,7 +187,7 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
             jumpSound = soundCache.LoadResource(JUMP_SOUND_NAME);
@@ -202,7 +202,7 @@ namespace TimeSink.Entities
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
-            game.PhysicsManager.World.RayCast(
+            game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     touchingGround = true;
@@ -597,7 +597,7 @@ namespace TimeSink.Entities
         }
 
 
-        public override void InitializePhysics(IContainer engineRegistration)
+        public override void InitializePhysics(IComponentContext engineRegistration)
         {
             var world = engineRegistration.Resolve<World>();
             Physics = BodyFactory.CreateBody(world, _initialPosition, this);

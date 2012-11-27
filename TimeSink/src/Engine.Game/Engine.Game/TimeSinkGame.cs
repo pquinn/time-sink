@@ -1,21 +1,3 @@
-//-----------------------------------------------
-// Synapse Gaming - SunBurn Starter Kit
-//-----------------------------------------------
-//
-// Provides an empty solution for creating new SunBurn based games and
-// projects.
-// 
-// To use:
-//   -Run the solution from Visual Studio
-//   -When running press F11 to open the in-game editor
-//   -Import new models into the content repository (using the Scene Object tab)
-//   -Drag models from the repository into the scene tree-view
-//   -Add lights, adjust materials, the environment, and more
-//
-// Please see the included Readme.htm for details and documentation.
-//
-//-----------------------------------------------------------------------------
-
 #region Using Statements
 using System;
 using System.Collections.Generic;
@@ -40,8 +22,10 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using TimeSink.Entities;
 using TimeSink.Entities.Enemies;
+using TimeSink.Entities.Objects;
+using TimeSink.Engine.Core.StateManagement;
+using TimeSink.Entities.Objects;
 #endregion
-
 
 namespace TimeSink.Engine.Game
 {
@@ -51,7 +35,6 @@ namespace TimeSink.Engine.Game
     public class TimeSinkGame : EngineGame
     {
         const float viewWidth = 2f;
-
         // Default XNA members.
         GraphicsDeviceManager graphics;
 
@@ -65,11 +48,13 @@ namespace TimeSink.Engine.Game
         FlyingCentipede flyingCentipede;
         WorldGeometry world;
         Trigger trigger;
+        MovingPlatform movingPlatform;
+        NonPlayerCharacter npc;
 
+        Vine vine;
 
         SoundObject backgroundTrack;
         SoundEffect backHolder;
-
 
         public UserControlledCharacter Character
         {
@@ -89,24 +74,38 @@ namespace TimeSink.Engine.Game
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
 
-            //normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
             flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(300, 400)));
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(40, 0)));
+            npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
+            world = new WorldGeometry();
+
+            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(400, 0)));
+
+            movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
+                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
+                                                4f, 64, 128);
+
+            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
 
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
             Entities.Add(character);
-
             Entities.Add(dummy);
             Entities.Add(normalCentipede);
             Entities.Add(flyingCentipede);
             Entities.Add(world);
+            Entities.Add(npc);
+            Entities.Add(vine);
+            //Entities.Add(movingPlatform);
 
             RenderDebugGeometry = true;
+
+            AddInitialScreens();
         }
 
         /// <summary>
@@ -119,18 +118,16 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
-            PhysicsManager.RegisterPhysicsBody(character);
-            PhysicsManager.RegisterPhysicsBody(world);
-
-            PhysicsManager.RegisterPhysicsBody(dummy);
-            PhysicsManager.RegisterPhysicsBody(normalCentipede);
-            PhysicsManager.RegisterPhysicsBody(flyingCentipede);
-
-            RenderManager.RegisterRenderable(character);
-            RenderManager.RegisterRenderable(dummy);
-            RenderManager.RegisterRenderable(normalCentipede);
-            RenderManager.RegisterRenderable(flyingCentipede);
-            //RenderManager.RegisterRenderable(world);
+            LevelManager.RegisterEntities(
+                new List<Entity>()
+                {
+                    character,
+                    world,
+                    dummy,
+                    normalCentipede,
+                    flyingCentipede,
+                    vine
+                });
 
             FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),
@@ -158,13 +155,19 @@ namespace TimeSink.Engine.Game
                 PhysicsConstants.PixelsToMeters(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height)),
                 world.Physics,
                 world);
+        }
 
-            CollisionManager.RegisterCollideable(world);
-            CollisionManager.RegisterCollideable(character);
-            CollisionManager.RegisterCollideable(dummy);
-            CollisionManager.RegisterCollideable(normalCentipede);
+        private void AddInitialScreens()
+        {
+            // Activate the first screens.
+            ScreenManager.AddScreen(new BackgroundScreen(), null);
 
-            //CollisionManager.RegisterCollideable(trigger);
+            // We have different menus for Windows Phone to take advantage of the touch interface
+#if WINDOWS_PHONE
+            screenManager.AddScreen(new PhoneMainMenuScreen(), null);
+#else
+            ScreenManager.AddScreen(new MainMenuScreen(), null);
+#endif
         }
 
         /// <summary>
@@ -198,7 +201,7 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 this.Exit();
 
             //Camera.Position = new Vector3(
@@ -211,6 +214,8 @@ namespace TimeSink.Engine.Game
 
 
             HandleInput(gameTime);
+
+            ScreenManager.Update(gameTime, this);
 
             base.Update(gameTime);
         }
@@ -248,6 +253,7 @@ namespace TimeSink.Engine.Game
             {
                 //CollisionManager.Draw(SpriteBatch, TextureCache, Camera.Transform);
             }
+            ScreenManager.Draw(gameTime);
         }
 
 
@@ -443,3 +449,4 @@ namespace TimeSink.Engine.Game
         //  public SpriteContainer staticSceneSprites { get; set; }
     }
 }
+

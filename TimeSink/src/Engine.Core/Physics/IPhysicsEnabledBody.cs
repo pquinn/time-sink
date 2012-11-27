@@ -9,6 +9,6 @@ namespace TimeSink.Engine.Core.Physics
 {
     public interface IPhysicsEnabledBody
     {
-        void InitializePhysics(IContainer engineRegistrations);
+        void InitializePhysics(IComponentContext engineRegistrations);
     }
 }

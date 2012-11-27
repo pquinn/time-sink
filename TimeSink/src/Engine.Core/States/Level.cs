@@ -79,7 +79,7 @@ namespace TimeSink.Engine.Core
                 }).ToList();
         }
 
-        public void ExtractEntities(IContainer container)
+        public void ExtractEntities(IComponentContext container)
         {
             Entities.Clear();
             var entities = container.Resolve<IEnumerable<Entity>>().ToList();

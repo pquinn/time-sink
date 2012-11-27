@@ -56,10 +56,10 @@ namespace TimeSink.Entities
             get { return Rendering; }
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-            textureCache.LoadResource(WORLD_TEXTURE_NAME);
+            geoTexture = textureCache.LoadResource(WORLD_TEXTURE_NAME);
         }
 
         public override IRendering Rendering
@@ -142,7 +142,7 @@ namespace TimeSink.Entities
         {
         }
 
-        public override void InitializePhysics(IContainer engineRegistrations)
+        public override void InitializePhysics(IComponentContext engineRegistrations)
         {
             var world = engineRegistrations.Resolve<World>();
 

@@ -36,21 +36,17 @@ namespace TimeSink.Entities.Enemies
 
         public Func<float, Vector2> PatrolFunction { get; private set; }
 
+        private Vector2 PatrolDirection { get; set; }
+
         public NormalCentipede()
-            : this(Vector2.Zero, Vector2.Zero, Vector2.Zero)
+            : this(Vector2.Zero, Vector2.Zero)
         {
         }
 
-        public NormalCentipede(Vector2 position, Vector2 start, Vector2 end) : base(position)
+        public NormalCentipede(Vector2 position, Vector2 direction) : base(position)
         {
             health = 150;
-            physics = new GravityPhysics(position, CENTIPEDE_MASS)
-            {
-                GravityEnabled = true
-            };
-
-            first = true;
-            PatrolFunction = (time) => start + time * (end - start);
+            PatrolDirection = direction;
         }
 
         [SerializableField]
@@ -84,17 +80,30 @@ namespace TimeSink.Entities.Enemies
         {
             base.Update(time, world);
 
-            if (first)
-            {
-                tZero = time.TotalGameTime.Seconds;
-                first = false;
-            }
+            Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 
-            var positionDelta = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero) - physics.Position;
-            physics.Position += positionDelta;
+            var start = Physics.Position + new Vector2(
+                PatrolDirection.X >= 0 ? PhysicsConstants.PixelsToMeters(textureWidth) / 2 : -PhysicsConstants.PixelsToMeters(textureWidth) / 2, 
+                PhysicsConstants.PixelsToMeters(textureHeight) / 2);
+
+            var collided = false;
+
+            world.LevelManager.PhysicsManager.World.RayCast(
+                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                {
+                    collided = true;
+                    return 0;
+                },
+                start,
+                start + new Vector2(0, .1f));
+
+            if (!collided)
+            {
+                PatrolDirection *= -Vector2.UnitX;
+            }
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             var texture = textureCache.LoadResource(CENTIPEDE_TEXTURE);

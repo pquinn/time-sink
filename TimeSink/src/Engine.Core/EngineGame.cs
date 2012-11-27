@@ -10,10 +10,14 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.DB;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.DebugViews;
 using Autofac;
 using FarseerPhysics.Dynamics;
+using TimeSink.Engine.Core.StateManagement;
+using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Engine.Core
 {
@@ -21,67 +25,99 @@ namespace TimeSink.Engine.Core
     {
         // Components
         public Camera Camera { get; set; }
-        public PhysicsManager PhysicsManager { get; private set; }
-        public CollisionManager CollisionManager { get; private set; }
-        public RenderManager RenderManager { get; private set; }
+
+        public LevelManager LevelManager { get; set; }
+        public IComponentContext Container { get; set; }
 
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
         public HashSet<Entity> Entities { get; private set; }
+        public SQLiteDatabase database;
+
+
+        public ScreenManager ScreenManager { get; private set; }
+        public ScreenFactory ScreenFactory { get; private set; }
+
 
         public bool RenderDebugGeometry { get; set; }
 
+        public static EngineGame Instance;
+
         private DebugViewXNA debugView;
-        private IContainer container;
 
         public EngineGame()
             : base()
         {
             Entities = new HashSet<Entity>();
+
+            ScreenManager = new ScreenManager(this);
+            this.database = new SQLiteDatabase();
+
+            Instance = this;
         }
 
         protected override void Initialize()
         {
             base.Initialize();
 
+            // todo: this is horrible
+            Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
+            Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
+
             Camera = Camera.ZeroedCamera;
 
-            PhysicsManager = new PhysicsManager(container);
-            CollisionManager = new CollisionManager();
-            RenderManager = new RenderManager(TextureCache);
+            // create default level
+            LevelManager = new LevelManager(
+                new CollisionManager(),
+                new PhysicsManager(Container),
+                new RenderManager(TextureCache),
+                new EditorRenderManager(TextureCache),
+                Container);
 
-            debugView = new DebugViewXNA(PhysicsManager.World);
+            // create default level
+            LevelManager = Container.Resolve<LevelManager>();
+
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
+            
+            ScreenManager.Initialize();
 
-            CollisionManager.Initialize();
+            LevelManager.CollisionManager.Initialize();
         }
 
         protected override void LoadContent()
         {
-            base.LoadContent();
+            // instantiate the container
+            var builder = new ContainerBuilder();
 
             // setup caches            
             TextureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
             SoundCache = new InMemoryResourceCache<SoundEffect>(
                 new ContentManagerProvider<SoundEffect>(Content));
+            builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
+            builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             TextureCache.LoadResource("Textures/circle");
             var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             blank.SetData(new[] { Color.White });
-            TextureCache.AddResource("blank", blank);            
+            TextureCache.AddResource("blank", blank);
 
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance(TextureCache).As<IResourceCache<Texture2D>>();
-            builder.RegisterInstance(SoundCache).As<IResourceCache<SoundEffect>>();
             builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
-            container = builder.Build();
+
+            builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
+            builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
+            builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
+            builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
+            builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
+
+            Container = builder.Build();
 
             foreach (var entity in Entities)
-                entity.Load(container);
+                entity.Load(Container);
         }
 
         protected override void Update(GameTime gameTime)
@@ -90,7 +126,7 @@ namespace TimeSink.Engine.Core
 
             InputManager.Instance.Update();
 
-            PhysicsManager.Update(gameTime);
+            LevelManager.PhysicsManager.Update(gameTime);
 
             foreach (var entity in Entities)
                 entity.Update(gameTime, this);
@@ -100,7 +136,7 @@ namespace TimeSink.Engine.Core
 
         protected override void Draw(GameTime gameTime)
         {
-            RenderManager.Draw(SpriteBatch, Camera);
+            LevelManager.RenderManager.Draw(SpriteBatch, Camera);
 
             SpriteBatch.Begin();
 

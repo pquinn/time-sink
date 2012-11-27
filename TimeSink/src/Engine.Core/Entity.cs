@@ -27,11 +27,11 @@ namespace TimeSink.Engine.Core
 
         public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
 
-        public abstract void Load(IContainer engineRegistrations);
+        public abstract void Load(IComponentContext engineRegistrations);
 
         public abstract string EditorName { get; }
 
-        public abstract void InitializePhysics(IContainer engineRegistrations);
+        public abstract void InitializePhysics(IComponentContext engineRegistrations);
 
         public abstract Guid Id { get; set; }
 

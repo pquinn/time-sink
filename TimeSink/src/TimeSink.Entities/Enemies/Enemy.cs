@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +35,6 @@ namespace TimeSink.Entities.Enemies
         private static int textureHeight;
         private static int textureWidth;
 
-        protected GravityPhysics physics;
         private List<DamageOverTimeEffect> dots;
         protected float health;
 
@@ -139,8 +138,8 @@ namespace TimeSink.Entities.Enemies
 
             if (Dead)
             {
-                world.RenderManager.UnregisterRenderable(this);
-                world.CollisionManager.UnregisterCollideable(this);
+                world.LevelManager.RenderManager.UnregisterRenderable(this);
+                world.LevelManager.CollisionManager.UnregisterCollideable(this);
             }
         }
 
@@ -149,12 +148,10 @@ namespace TimeSink.Entities.Enemies
             dots.RemoveAll(x => x.Finished);
         }
 
-        public override void Load(IContainer engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             var texture = textureCache.LoadResource(DUMMY_TEXTURE);
-            textureWidth = texture.Width;
-            textureHeight = texture.Height;
         }
 
         public void RegisterDot(DamageOverTimeEffect dot)
@@ -166,7 +163,7 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override void InitializePhysics(IContainer engineRegistrations)
+        public override void InitializePhysics(IComponentContext engineRegistrations)
         {
             var world = engineRegistrations.Resolve<World>();
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();

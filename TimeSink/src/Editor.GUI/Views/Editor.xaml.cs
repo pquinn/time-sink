@@ -141,7 +141,12 @@ namespace TimeSink.Editor.GUI.Views
             if (!entitiesButtonPressed)
             {
                 var entities = m_game.Container.Resolve<IEnumerable<Entity>>();
-                entities.ForEach(x => x.InitializePhysics(m_game.Container));
+                entities.ForEach(
+                    x =>
+                    {
+                        x.Load(m_game.Container);
+                        x.InitializePhysics(m_game.Container);
+                    });
                 var entityWindow = new EntitySelector(entities, m_game.TextureCache);
 
                 entityWindow.ShowDialog();
