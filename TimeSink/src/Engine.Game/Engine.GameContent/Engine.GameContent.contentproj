@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</ProjectGuid>
@@ -487,6 +487,13 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+   <ItemGroup>
+      <Compile Include="Textures\Objects\Vine.png">
+        <Name>Vine</Name>
+        <Importer>TextureImporter</Importer>
+        <Processor>TextureProcessor</Processor>
+      </Compile>
+    </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,6 +9,7 @@ using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -78,6 +79,12 @@ namespace TimeSink.Entities.Enemies
             var texture = engineGame.TextureCache.LoadResource(CENTIPEDE_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height; 
+        }
+
+        public override void InitializePhysics(World world)
+        {
+            base.InitializePhysics(world);
+            Physics.BodyType = BodyType.Static;
         }
     }
 }

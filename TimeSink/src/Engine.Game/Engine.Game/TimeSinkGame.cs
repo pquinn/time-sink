@@ -1,4 +1,3 @@
-
 //-----------------------------------------------
 // Synapse Gaming - SunBurn Starter Kit
 //-----------------------------------------------
@@ -41,7 +40,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using TimeSink.Entities;
 using TimeSink.Entities.Enemies;
+using TimeSink.Entities.Objects;
 using TimeSink.Engine.Core.StateManagement;
+using TimeSink.Entities.Objects;
 #endregion
 
 
@@ -66,12 +67,14 @@ namespace TimeSink.Engine.Game
         FlyingCentipede flyingCentipede;
         WorldGeometry world;
         Trigger trigger;
+        MovingPlatform movingPlatform;
+        NonPlayerCharacter npc;
 
+        Vine vine;
 
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
-      
         public UserControlledCharacter Character
         {
             get { return character; }
@@ -95,17 +98,30 @@ namespace TimeSink.Engine.Game
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
                                                   PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
                                                   PhysicsConstants.PixelsToMeters(new Vector2(300, 400)));
+            npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
+            world = new WorldGeometry();
+
+            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(400, 0)));
+
+            movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
+                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
+                                                4f, 64, 128);
+
+            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
 
 
             // Required for lighting system.
             graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
             Entities.Add(character);
-
             Entities.Add(dummy);
             Entities.Add(normalCentipede);
             Entities.Add(flyingCentipede);
             Entities.Add(world);
+            Entities.Add(npc);
+            Entities.Add(vine);
 
             RenderDebugGeometry = true;
 
@@ -122,17 +138,22 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
+            PhysicsManager.RegisterPhysicsBody(movingPlatform);
             PhysicsManager.RegisterPhysicsBody(character);
+            PhysicsManager.RegisterPhysicsBody(npc);
             PhysicsManager.RegisterPhysicsBody(world);
-
             PhysicsManager.RegisterPhysicsBody(dummy);
             PhysicsManager.RegisterPhysicsBody(normalCentipede);
             PhysicsManager.RegisterPhysicsBody(flyingCentipede);
+            PhysicsManager.RegisterPhysicsBody(vine);
 
+            RenderManager.RegisterRenderable(npc);
+            RenderManager.RegisterRenderable(movingPlatform);
             RenderManager.RegisterRenderable(character);
             RenderManager.RegisterRenderable(dummy);
             RenderManager.RegisterRenderable(normalCentipede);
             RenderManager.RegisterRenderable(flyingCentipede);
+            RenderManager.RegisterRenderable(vine);
             //RenderManager.RegisterRenderable(world);
 
             FixtureFactory.AttachRectangle(
@@ -162,14 +183,15 @@ namespace TimeSink.Engine.Game
                 world.PhysicsBody,
                 world);
 
+            CollisionManager.RegisterCollideable(movingPlatform);
             CollisionManager.RegisterCollideable(world);
             CollisionManager.RegisterCollideable(character);
             CollisionManager.RegisterCollideable(dummy);
             CollisionManager.RegisterCollideable(normalCentipede);
+            CollisionManager.RegisterCollideable(npc);
 
             //CollisionManager.RegisterCollideable(trigger);
         }
-
 
         private void AddInitialScreens()
         {
@@ -463,3 +485,4 @@ namespace TimeSink.Engine.Game
         //  public SpriteContainer staticSceneSprites { get; set; }
     }
 }
+

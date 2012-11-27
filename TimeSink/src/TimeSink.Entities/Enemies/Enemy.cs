@@ -148,7 +148,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void Load(EngineGame engineGame)
         {
-            var texture = engineGame.TextureCache.LoadResource(DUMMY_TEXTURE);
+            var texture = engineGame.TextureCache.GetResource(DUMMY_TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height;
         }
