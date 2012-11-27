@@ -40,6 +40,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using TimeSink.Entities;
 using TimeSink.Entities.Enemies;
+using TimeSink.Engine.Core.StateManagement;
 #endregion
 
 
@@ -51,7 +52,6 @@ namespace TimeSink.Engine.Game
     public class TimeSinkGame : EngineGame
     {
         const float viewWidth = 2f;
-
         // Default XNA members.
         GraphicsDeviceManager graphics;
 
@@ -70,7 +70,7 @@ namespace TimeSink.Engine.Game
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
-
+      
         public UserControlledCharacter Character
         {
             get { return character; }
@@ -107,6 +107,8 @@ namespace TimeSink.Engine.Game
             Entities.Add(world);
 
             RenderDebugGeometry = true;
+
+            AddInitialScreens();
         }
 
         /// <summary>
@@ -167,6 +169,20 @@ namespace TimeSink.Engine.Game
             //CollisionManager.RegisterCollideable(trigger);
         }
 
+
+        private void AddInitialScreens()
+        {
+            // Activate the first screens.
+            ScreenManager.AddScreen(new BackgroundScreen(), null);
+
+            // We have different menus for Windows Phone to take advantage of the touch interface
+#if WINDOWS_PHONE
+            screenManager.AddScreen(new PhoneMainMenuScreen(), null);
+#else
+            ScreenManager.AddScreen(new MainMenuScreen(), null);
+#endif
+        }
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -198,7 +214,7 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 this.Exit();
 
             //Camera.Position = new Vector3(
@@ -211,6 +227,8 @@ namespace TimeSink.Engine.Game
 
 
             HandleInput(gameTime);
+
+            ScreenManager.Update(gameTime, this);
 
             base.Update(gameTime);
         }
@@ -248,6 +266,7 @@ namespace TimeSink.Engine.Game
             {
                 //CollisionManager.Draw(SpriteBatch, TextureCache, Camera.Transform);
             }
+            ScreenManager.Draw(gameTime);
         }
 
 

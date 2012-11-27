@@ -15,6 +15,8 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Common;
+using TimeSink.Engine.Core.StateManagement;
+using TimeSink.Engine.Core.StateManagement.HUD;
 
 namespace TimeSink.Entities
 {
@@ -64,7 +66,7 @@ namespace TimeSink.Entities
         private bool touchingGround = false;
         private bool jumpStarted = false;
         private Rectangle sourceRect;
-        private float health;
+        private float health = 100;
         private float mana;
         private float shield;
 
@@ -189,6 +191,14 @@ namespace TimeSink.Entities
                 },
                 start,
                 start + new Vector2(0, .1f));
+
+            foreach (GameScreen g in game.ScreenManager.GetScreens())
+            {
+                if (g.GetType().IsAssignableFrom(new GameplayScreen().GetType()))
+                {
+                    ((GameplayScreen)g).UpdateHealth(Health);
+                }
+            }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

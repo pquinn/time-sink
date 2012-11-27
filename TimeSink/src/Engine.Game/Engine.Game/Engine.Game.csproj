@@ -101,6 +101,7 @@
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
     <Content Include="HambagLtdLogo2.png" />
+    <None Include="App.config" />
     <None Include="readme.htm" />
   </ItemGroup>
   <ItemGroup>

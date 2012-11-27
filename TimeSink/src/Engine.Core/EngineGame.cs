@@ -10,8 +10,10 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.DB;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.DebugViews;
+using TimeSink.Engine.Core.StateManagement;
 
 namespace TimeSink.Engine.Core
 {
@@ -27,8 +29,16 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
         public HashSet<Entity> Entities { get; private set; }
+        public SQLiteDatabase database;
+
+
+        public ScreenManager ScreenManager { get; private set; }
+        public ScreenFactory ScreenFactory { get; private set; }
+
 
         public bool RenderDebugGeometry { get; set; }
+
+        public static EngineGame Instance;
 
         private DebugViewXNA debugView;
 
@@ -36,6 +46,11 @@ namespace TimeSink.Engine.Core
             : base()
         {
             Entities = new HashSet<Entity>();
+
+            ScreenManager = new ScreenManager(this);
+            this.database = new SQLiteDatabase();
+
+            Instance = this;
         }
 
         protected override void Initialize()
@@ -48,8 +63,12 @@ namespace TimeSink.Engine.Core
             CollisionManager = new CollisionManager();
             RenderManager = new RenderManager(TextureCache);
 
+
             debugView = new DebugViewXNA(PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
+
+
+            ScreenManager.Initialize();
 
             CollisionManager.Initialize();
         }
