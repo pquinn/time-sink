@@ -120,6 +120,7 @@ namespace TimeSink.Engine.Game
             Entities.Add(world);
             Entities.Add(npc);
             Entities.Add(vine);
+            //Entities.Add(movingPlatform);
 
             RenderDebugGeometry = true;
 

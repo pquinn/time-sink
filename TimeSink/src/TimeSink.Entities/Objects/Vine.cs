@@ -23,6 +23,7 @@ namespace TimeSink.Entities.Objects
         protected int textureWidth;
         protected float scale;
 
+        public Vector2 Size { get; set; }
         public Body Physics { get; protected set; }
 
         protected Vector2 _initialPosition;
@@ -52,6 +53,7 @@ namespace TimeSink.Entities.Objects
             var texture = engineGame.TextureCache.GetResource(VINE_TEXTURE);
             textureWidth = (int)(texture.Width * scale);
             textureHeight = (int)(texture.Height * scale);
+            Size = new Vector2(textureWidth, textureHeight);
         }
 
         public override string EditorName

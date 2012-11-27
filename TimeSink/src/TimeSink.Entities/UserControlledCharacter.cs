@@ -487,7 +487,7 @@ namespace TimeSink.Entities
         [OnCollidedWith.Overload]
         public void OnCollidedWith(Vine vine, Contact info)
         {
-
+            // do something here
         }
 
         public override IRendering Rendering

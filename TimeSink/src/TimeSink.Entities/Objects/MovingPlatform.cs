@@ -96,7 +96,7 @@ namespace TimeSink.Entities
                   PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
                   Vector2.One,
-                  new Color(255f, tint, tint, 255f));//Math.Max(2.55f * health, 155)));
+                  new Color(255f, tint, tint, 255f));
             }
         }
 
