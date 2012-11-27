@@ -93,11 +93,9 @@ namespace TimeSink.Engine.Game
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
 
-            //normalCentipede = new NormalCentipede(new Vector2(200, 400), new Vector2(200, 400), new Vector2(300, 400));
             flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(300, 400)));
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(40, 0)));
             npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
             world = new WorldGeometry();
 

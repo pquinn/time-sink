@@ -68,7 +68,7 @@ namespace TimeSink.Entities.Objects
                 1,
                 _initialPosition);
             Physics.FixedRotation = true;
-            Physics.BodyType = BodyType.Dynamic;
+            Physics.BodyType = BodyType.Static;
             Physics.UserData = this;
 
             var fix = Physics.FixtureList[0];

@@ -17,6 +17,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Common;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.StateManagement.HUD;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities
 {
@@ -481,6 +482,12 @@ namespace TimeSink.Entities
             {
                 __touchingGroundFlag = true;
             }
+        }
+
+        [OnCollidedWith.Overload]
+        public void OnCollidedWith(Vine vine, Contact info)
+        {
+
         }
 
         public override IRendering Rendering
