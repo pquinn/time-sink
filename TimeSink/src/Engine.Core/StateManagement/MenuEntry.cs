@@ -145,7 +145,7 @@ namespace TimeSink.Engine.Core.StateManagement
 #endif
 
             // Draw the selected entry in Gray, otherwise Red.
-            Color color = isSelected ? Color.Gray : Color.Red;
+            Color color = isSelected ? Color.Yellow : Color.Brown;
 
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;

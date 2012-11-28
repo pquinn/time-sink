@@ -193,6 +193,16 @@ namespace TimeSink.Entities
             jumpSound = soundCache.LoadResource(JUMP_SOUND_NAME);
         }
 
+        public void TakeDamage(float val)
+        {
+            
+            if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
+            {
+                Health -= val;
+                EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+            }
+        }
+
         public override void Update(GameTime gameTime, EngineGame game)
         {
             //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
