@@ -58,8 +58,6 @@ namespace TimeSink.Entities
         public override void Load(IComponentContext container)
         {
             var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(NPC_TEXTURE);
-            textureWidth = texture.Width;
-            textureHeight = texture.Height;
         }
 
         private bool initialized;
@@ -67,11 +65,12 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
+                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(NPC_TEXTURE);
                 var world = engineRegistrations.Resolve<World>();
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(textureWidth),
-                    PhysicsConstants.PixelsToMeters(textureHeight),
+                    PhysicsConstants.PixelsToMeters(texture.Width),
+                    PhysicsConstants.PixelsToMeters(texture.Height),
                     1,
                     _initialPosition);
                 Physics.FixedRotation = true;

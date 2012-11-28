@@ -21,9 +21,11 @@ using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Engine.Core
 {
-    public class EngineGame : Microsoft.Xna.Framework.Game
+    public class EngineGame : Game
     {
         // Components
+        public GraphicsDeviceManager graphics { get; set; }
+
         public Camera Camera { get; set; }
 
         public LevelManager LevelManager { get; set; }
@@ -32,7 +34,6 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
-        public HashSet<Entity> Entities { get; private set; }
         public SQLiteDatabase database;
 
         public ScreenManager ScreenManager { get; private set; }
@@ -44,10 +45,15 @@ namespace TimeSink.Engine.Core
 
         private DebugViewXNA debugView;
 
-        public EngineGame()
+        public EngineGame(int width, int height)
             : base()
         {
-            Entities = new HashSet<Entity>();
+            graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.PreferredBackBufferWidth = width;
+
+            Content.RootDirectory = "Content";
 
             ScreenManager = new ScreenManager(this);
             this.database = new SQLiteDatabase();
@@ -113,9 +119,6 @@ namespace TimeSink.Engine.Core
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
 
             Container = builder.Build();
-
-            foreach (var entity in Entities)
-                entity.Load(Container);
         }
 
         protected override void Update(GameTime gameTime)
@@ -126,10 +129,7 @@ namespace TimeSink.Engine.Core
 
             LevelManager.PhysicsManager.Update(gameTime);
 
-            foreach (var entity in Entities)
-                entity.Update(gameTime, this);
-
-            Entities.RemoveWhere(e => e.Dead);
+            LevelManager.Level.Entities.ForEach(x => x.Update(gameTime, this));
         }
 
         protected override void Draw(GameTime gameTime)

@@ -110,6 +110,7 @@ namespace TimeSink.Engine.Core.States
         public void Clear()
         {
             Level = new Level();
+            PhysicsManager.Clear();
             RenderManager.Clear();
             EditorRenderManager.Clear();
         }

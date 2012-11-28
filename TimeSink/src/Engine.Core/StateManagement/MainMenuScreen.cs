@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
+using Microsoft.Win32;
 #endregion
 
 namespace TimeSink.Engine.Core.StateManagement
@@ -35,7 +37,7 @@ namespace TimeSink.Engine.Core.StateManagement
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
-            MenuEntry holder1 = new MenuEntry("Load");
+            MenuEntry loadMenuEntry = new MenuEntry("Load");
             MenuEntry holder2 = new MenuEntry("Map");
             MenuEntry holder3 = new MenuEntry("Quests");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
@@ -45,11 +47,12 @@ namespace TimeSink.Engine.Core.StateManagement
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
+            loadMenuEntry.Selected += new System.EventHandler<PlayerIndexEventArgs>(loadMenuEntry_Selected);
 
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
-            MenuEntries.Add(holder1);
+            MenuEntries.Add(loadMenuEntry);
             MenuEntries.Add(holder2);
             MenuEntries.Add(holder3);
             MenuEntries.Add(exitMenuEntry);
@@ -70,13 +73,10 @@ namespace TimeSink.Engine.Core.StateManagement
                 content = ScreenManager.Game.Content;
             }
         }
-
        
         #endregion
 
         #region Handle Input
-
-
 
         /// <summary>
         /// Event handler for when the Play Game menu entry is selected.
@@ -88,8 +88,7 @@ namespace TimeSink.Engine.Core.StateManagement
                                gp);
             ScreenManager.CurrentGameplay = gp;
         }
-
-
+       
         /// <summary>
         /// Event handler for when the Options menu entry is selected.
         /// </summary>
@@ -97,7 +96,6 @@ namespace TimeSink.Engine.Core.StateManagement
         {
             ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
         }
-
 
         /// <summary>
         /// When the user cancels the main menu, ask if they want to exit the sample.
@@ -113,7 +111,6 @@ namespace TimeSink.Engine.Core.StateManagement
             ScreenManager.AddScreen(confirmExitMessageBox, playerIndex);
         }
 
-
         /// <summary>
         /// Event handler for when the user selects ok on the "are you sure
         /// you want to exit" message box.
@@ -121,6 +118,26 @@ namespace TimeSink.Engine.Core.StateManagement
         void ConfirmExitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
             ScreenManager.Game.Exit();
+        }
+
+        void loadMenuEntry_Selected(object sender, PlayerIndexEventArgs e)
+        {
+            // Configure open file dialog box
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.FileName = "Document"; // Default file name
+            dlg.DefaultExt = ".txt"; // Default file extension
+            dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension 
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results 
+            if (result == true)
+            {
+                // Open document  
+                ScreenManager.GameWorld.LevelManager.Clear();
+                ScreenManager.GameWorld.LevelManager.DeserializeLevel(dlg.FileName);
+            }
         }
 
 
