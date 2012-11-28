@@ -117,10 +117,7 @@ namespace TimeSink.Entities.Weapons
                 new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
                             character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
 
-            world.Entities.Add(arrow);
-            world.LevelManager.RenderManager.RegisterRenderable(arrow);
-            world.LevelManager.PhysicsManager.RegisterPhysicsBody(arrow);
-            world.LevelManager.CollisionManager.RegisterCollideable(arrow);
+            world.LevelManager.RegisterEntity(arrow);
 
             character.InHold = false;
 

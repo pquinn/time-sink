@@ -35,8 +35,6 @@ namespace TimeSink.Engine.Game
     public class TimeSinkGame : EngineGame
     {
         const float viewWidth = 2f;
-        // Default XNA members.
-        GraphicsDeviceManager graphics;
 
         // Controller related.
         const float moveScale = 100.0f;
@@ -62,12 +60,8 @@ namespace TimeSink.Engine.Game
         }
 
         public TimeSinkGame()
-            : base()
+            : base(1280, 720)
         {
-            // Default XNA setup.
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-
             character = new UserControlledCharacter(
                 PhysicsConstants.PixelsToMeters(new Vector2(100, 0)));
 
@@ -90,18 +84,6 @@ namespace TimeSink.Engine.Game
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
                                                   PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
 
-
-            // Required for lighting system.
-            graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
-
-            Entities.Add(character);
-            Entities.Add(dummy);
-            Entities.Add(normalCentipede);
-            Entities.Add(flyingCentipede);
-            Entities.Add(world);
-            Entities.Add(npc);
-            Entities.Add(vine);
-            //Entities.Add(movingPlatform);
 
             RenderDebugGeometry = true;
 
@@ -130,6 +112,11 @@ namespace TimeSink.Engine.Game
                     npc
                 });
 
+            // todo: this is a hack to fix a bug.  We need to 
+            // perform level-based loading eventually
+            world.Load(Container);
+            character.Load(Container);
+
             FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),
                 PhysicsConstants.PixelsToMeters(50),
@@ -153,7 +140,10 @@ namespace TimeSink.Engine.Game
                 PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
                 PhysicsConstants.PixelsToMeters(10),
                 1,
-                PhysicsConstants.PixelsToMeters(new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height)),
+                PhysicsConstants.PixelsToMeters(
+                    new Vector2(
+                        GraphicsDevice.Viewport.Width / 2, 
+                        GraphicsDevice.Viewport.Height)),
                 world.Physics,
                 world);
         }
@@ -205,12 +195,6 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 this.Exit();
 
-            //Camera.Position = new Vector3(
-            //    -GraphicsDevice.Viewport.Width / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.X),
-            //    -GraphicsDevice.Viewport.Height / 2 + PhysicsConstants.MetersToPixels(Character.Physics.Position.Y),
-            //    0);
-
-            // Calculate the view.
             view = ProcessCameraInput(gameTime);
 
 

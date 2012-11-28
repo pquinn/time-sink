@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</ProjectGuid>
@@ -30,15 +30,16 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\circle.png">
+      <Name>circle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\giroux.png">
       <Name>giroux</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment\" />
-    <Folder Include="Scenes\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\Sounds\Hop.wav">
@@ -55,6 +56,86 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4000.PNG">
+      <Name>Heroes_Entrance%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4001.PNG">
+      <Name>Heroes_Entrance%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4002.PNG">
+      <Name>Heroes_Entrance%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4003.PNG">
+      <Name>Heroes_Entrance%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4010.PNG">
+      <Name>Heroes_Entrance%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4011.PNG">
+      <Name>Heroes_Entrance%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4012.PNG">
+      <Name>Heroes_Entrance%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4013.PNG">
+      <Name>Heroes_Entrance%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4020.PNG">
+      <Name>Heroes_Entrance%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4021.PNG">
+      <Name>Heroes_Entrance%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4022.PNG">
+      <Name>Heroes_Entrance%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4023.PNG">
+      <Name>Heroes_Entrance%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4030.PNG">
+      <Name>Heroes_Entrance%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4031.PNG">
+      <Name>Heroes_Entrance%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4032.PNG">
+      <Name>Heroes_Entrance%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Heroes_Entrance\Heroes_Entrance%4033.PNG">
+      <Name>Heroes_Entrance%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Sprites\Body\Body_Neutral.png">
       <Name>Body_Neutral</Name>
       <Importer>TextureImporter</Importer>
@@ -338,6 +419,31 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Tiles\Ground_Tile1.png">
+      <Name>Ground_Tile1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\Side_Tile01.png">
+      <Name>Side_Tile01</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\Top_Tile01.png">
+      <Name>Top_Tile01</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\Top_Tile02.png">
+      <Name>Top_Tile02</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\Top_Tile03.png">
+      <Name>Top_Tile03</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Weapons\dart.png">
       <Name>dart</Name>
       <Importer>TextureImporter</Importer>
@@ -354,13 +460,6 @@
   <ItemGroup>
     <Compile Include="Textures\Enemies\goomba.png">
       <Name>goomba</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\circle.png">
-      <Name>circle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -487,13 +586,20 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-   <ItemGroup>
-      <Compile Include="Textures\Objects\Vine.png">
-        <Name>Vine</Name>
-        <Importer>TextureImporter</Importer>
-        <Processor>TextureProcessor</Processor>
-      </Compile>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Vine.png">
+      <Name>Vine</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Body_Neutral.png">
+      <Name>Body_Neutral</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

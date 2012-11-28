@@ -125,10 +125,7 @@ namespace TimeSink.Entities.Weapons
             Dart dart = new Dart(
                             new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
                                         character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
-            world.Entities.Add(dart);
-            world.LevelManager.RenderManager.RegisterRenderable(dart);
-            world.LevelManager.PhysicsManager.RegisterPhysicsBody(dart);
-            world.LevelManager.CollisionManager.RegisterCollideable(dart);
+            world.LevelManager.RegisterEntity(dart);
 
             character.InHold = false;
             Vector2 initialVelocity = character.Direction * DART_SPEED;
