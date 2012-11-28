@@ -34,7 +34,7 @@
                 </Core:Editor>
             </TabItem>
             <TabItem Header="Entities" Name="tabItem2">
-                <Core:Entities>
+                <Core:Entities x:Name="entities">
                 </Core:Entities>
             </TabItem>
             <TabItem Header="Physics" Name="tabItem3">

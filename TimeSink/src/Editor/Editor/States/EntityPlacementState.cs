@@ -18,11 +18,13 @@ namespace Editor.States
     {
         Entity entity;
         Texture2D texture;
+        Func<Entity, bool> onPlacePredicate;
 
-        public EntityPlacementState(Camera camera, IResourceCache<Texture2D> cache, Entity entity)
+        public EntityPlacementState(Camera camera, IResourceCache<Texture2D> cache, Entity entity, Func<Entity, bool> onPlacePredicate)
             : base(camera, cache)
         {
             this.entity = entity;
+            this.onPlacePredicate = onPlacePredicate;
         }
 
         public override void Enter()
@@ -33,13 +35,17 @@ namespace Editor.States
         {
             if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
-                StateMachine.Owner.RegisterEntity(entity);
+                if (onPlacePredicate(entity))
+                {
 
-                var position = new Vector2(
-                        InputManager.Instance.CurrentMouseState.X,
-                        InputManager.Instance.CurrentMouseState.Y);
-                entity.Position = PhysicsConstants.PixelsToMeters(
-                    Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
+                    StateMachine.Owner.RegisterEntity(entity);
+
+                    var position = new Vector2(
+                            InputManager.Instance.CurrentMouseState.X,
+                            InputManager.Instance.CurrentMouseState.Y);
+                    entity.Position = PhysicsConstants.PixelsToMeters(
+                        Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
+                }
 
                 StateMachine.RevertToPreviousState(true);
             }

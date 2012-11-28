@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Editor;
+using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -22,6 +24,30 @@ namespace TimeSink.Editor.GUI.Views
         public Entities()
         {
             InitializeComponent();
+        }
+
+        private EditorGame game;
+        public EditorGame Game 
+        {
+            get
+            {
+                return game;
+            }
+            set
+            {
+                game = value;
+                Ids = game.LevelManager.Level.Entities.Select(x => x.InstanceId).ToList();
+            }
+        }
+
+        public List<string> Ids { get; set; }
+
+        private void Id_Selected(object sender, EventArgs args)
+        {
+            var entity = game.LevelManager.Level.Entities.First(
+                x => x.InstanceId.Equals(entityIds.SelectedItem.ToString()));
+
+            entityEdit.InitGrid(entity);
         }
     }
 }

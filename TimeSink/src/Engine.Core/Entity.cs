@@ -35,6 +35,10 @@ namespace TimeSink.Engine.Core
 
         public abstract Guid Id { get; set; }
 
+        [EditableField("Instance Id")]
+        [SerializableField]
+        public string InstanceId { get; set; }
+
         [EditableField("Position")]
         [SerializableField]
         public Vector2 Position

@@ -71,7 +71,9 @@ namespace TimeSink.Editor.GUI.Views
             if (!isLoaded)
             {
                 m_game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
-                this.TryFindParent<MainWindow>().levelControl.Game = m_game;
+                var mainWindow = this.TryFindParent<MainWindow>();
+                mainWindow.levelControl.Game = m_game;
+                mainWindow.entities.Game = m_game;
                 isLoaded = true;
             }
         }
@@ -156,7 +158,15 @@ namespace TimeSink.Editor.GUI.Views
                 var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
                 if ((bool)entityWindow.DialogResult)
                 {
-                    m_game.EntitySelected(entityWindow.SelectedEntity);
+                    m_game.EntitySelected(
+                        entityWindow.SelectedEntity,
+                        (entity) =>
+                        {
+                            var dlg = new EntityCreateWindow(entity);
+                            Nullable<bool> result = dlg.ShowDialog();
+
+                            return result.Value;
+                        });
                 }
             }
             else
