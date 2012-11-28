@@ -139,8 +139,6 @@ namespace TimeSink.Engine.Core.StateManagement
                 ScreenManager.GameWorld.LevelManager.DeserializeLevel(dlg.FileName);
             }
         }
-
-
         #endregion
     }
 }
