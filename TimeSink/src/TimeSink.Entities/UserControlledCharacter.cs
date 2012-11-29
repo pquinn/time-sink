@@ -23,7 +23,6 @@ using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
-    [EditorEnabled]
     [SerializableEntity("defb4f64-1021-420d-8069-e24acebf70bb")]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
@@ -63,8 +62,6 @@ namespace TimeSink.Entities
         const float MAX_ARROW_INIT_SPEED = 1500;
         public static float X_OFFSET = PhysicsConstants.PixelsToMeters(60 - 65);
         public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(80 - 141);
-
-        public Body Physics { get; private set; }
 
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;

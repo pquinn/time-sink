@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 
 namespace TimeSink.Editor.GUI
 {
+    public delegate void LevelChangedEventHandler();
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -23,6 +25,8 @@ namespace TimeSink.Editor.GUI
         {
             InitializeComponent();
         }
+
+        public LevelChangedEventHandler LevelChanged { get; set; }
 
         private void Show_Grid_Lines_Click(object sender, RoutedEventArgs e)
         {
@@ -75,12 +79,18 @@ namespace TimeSink.Editor.GUI
             {
                 // Open document 
                 editor.Open(dlg.FileName);
+
+                if (LevelChanged != null)
+                    LevelChanged();
             }
         }
 
         private void New_Click(object sender, RoutedEventArgs e)
         {
             editor.New();
+
+            if (LevelChanged != null)
+                LevelChanged();
         }
     }
 }

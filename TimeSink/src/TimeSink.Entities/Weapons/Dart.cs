@@ -17,7 +17,6 @@ using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Weapons
 {
-    [EditorEnabled]
     [SerializableEntity("158e2984-34ce-4c1f-93ef-fbf81c5fed1f")]
     public class Dart : Entity, IWeapon
     {

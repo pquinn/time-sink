@@ -25,9 +25,23 @@ namespace TimeSink.Editor.GUI.Views
     /// </summary>
     public partial class Level : UserControl
     {
+        private bool isLoaded;
+
         public Level()
         {
             InitializeComponent();
+            Loaded += new RoutedEventHandler(Level_Loaded);
+        }
+
+        void Level_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded)
+            {
+                var mainWindow = this.TryFindParent<MainWindow>();
+                Game = mainWindow.editor.Game;
+
+                isLoaded = true;
+            }
         }
 
         public EditorGame Game { get; set; }

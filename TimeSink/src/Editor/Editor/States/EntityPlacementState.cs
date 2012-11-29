@@ -37,7 +37,6 @@ namespace Editor.States
             {
                 if (onPlacePredicate(entity))
                 {
-
                     StateMachine.Owner.RegisterEntity(entity);
 
                     var position = new Vector2(

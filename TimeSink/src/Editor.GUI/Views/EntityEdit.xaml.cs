@@ -41,14 +41,27 @@ namespace TimeSink.Editor.GUI.Views
 
                     var val = prop.GetValue(entity, null) ?? string.Empty;
                     var textBlock = new TextBlock() { Text = ((EditableFieldAttribute)attr[0]).Display };
-                    var textBox = new TextBox() { Text = val.ToString() };
-
                     dynamic.Children.Add(textBlock);
                     Grid.SetRow(textBlock, i);
                     Grid.SetColumn(textBlock, 0);
-                    dynamic.Children.Add(textBox);
-                    Grid.SetRow(textBox, i);
-                    Grid.SetColumn(textBox, 1);
+
+                    var type = prop.PropertyType;
+                    if (type.Equals(typeof(int)) || type.Equals(typeof(float)) || 
+                        type.Equals(typeof(string)) || type.Equals(typeof(Guid)))
+                    {
+                        var textBox = new TextBox() { Text = val.ToString() };
+                        dynamic.Children.Add(textBox);
+                        Grid.SetRow(textBox, i);
+                        Grid.SetColumn(textBox, 1);
+                    }
+                    else if (type.Equals(typeof(Vector2)))
+                    {
+                        var vec = (Vector2)val; 
+                        var textBox = new TextBox() { Text = string.Format("{0}, {1}", vec.X, vec.Y) };
+                        dynamic.Children.Add(textBox);
+                        Grid.SetRow(textBox, i);
+                        Grid.SetColumn(textBox, 1);
+                    }                    
 
                     i++;
                 }
@@ -77,7 +90,7 @@ namespace TimeSink.Editor.GUI.Views
                         valToSet = textBox.Text;
                     else if (type.Equals(typeof(Guid)))
                         valToSet = Guid.Parse(textBox.Text);
-                    else if (type.Equals(typeof(Vector)))
+                    else if (type.Equals(typeof(Vector2)))
                     {
                         var split = textBox.Text.Split(',');
                         valToSet = new Vector2(

@@ -26,6 +26,8 @@ namespace TimeSink.Engine.Core
             GeoChains = new List<List<Vector2>>();
         }
 
+        public Vector2 PlayerStart { get; set; }
+
         public List<Tile> Midground { get; set; }
 
         public List<Tile> Tiles { get; set; }

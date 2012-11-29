@@ -32,8 +32,12 @@ namespace TimeSink.Entities
 
         private Func<float, Vector2> PatrolFunction { get; set; }
         private int direction;
-        private Vector2 StartPosition { get; set; }
-        private Vector2 EndPosition { get; set; }
+        [SerializableField]
+        [EditableField("Start Position")]
+        public Vector2 StartPosition { get; set; }
+        [SerializableField]
+        [EditableField("End Position")]
+        public Vector2 EndPosition { get; set; }
         private bool first;
         private float tZero;
 

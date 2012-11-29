@@ -38,6 +38,7 @@ namespace TimeSink.Engine.Game
 
         // Controller related.
         const float moveScale = 100.0f;
+        Vector2 playerStart;
 
         UserControlledCharacter character;
 
@@ -62,8 +63,8 @@ namespace TimeSink.Engine.Game
         public TimeSinkGame()
             : base(1280, 720)
         {
-            character = new UserControlledCharacter(
-                PhysicsConstants.PixelsToMeters(new Vector2(100, 0)));
+            playerStart = PhysicsConstants.PixelsToMeters(new Vector2(100, 0));
+            character = new UserControlledCharacter(playerStart);
 
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
             world = new WorldGeometry();
@@ -111,6 +112,8 @@ namespace TimeSink.Engine.Game
                     vine,
                     npc
                 });
+
+            LevelManager.Level.PlayerStart = playerStart;
 
             // todo: this is a hack to fix a bug.  We need to 
             // perform level-based loading eventually

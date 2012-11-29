@@ -19,13 +19,17 @@ using Autofac;
 
 namespace TimeSink.Editor.GUI.Views
 {
+    public delegate void EntityAddedEventHandler(Entity entity);
+    public delegate void EntityRemovedEventHandler(Entity entity);
+    public delegate void TileAddedEventHandler(Tile tile);
+    public delegate void TileRemovedEventHandler(Tile tile);
+
     /// <summary>
     /// Interaction logic for Editor.xaml
     /// </summary>
     public partial class Editor : UserControl
     {
         private bool isLoaded;
-        EditorGame m_game;
 
         bool panButtonPressed;
         bool zoomButtonPressed;
@@ -42,9 +46,19 @@ namespace TimeSink.Editor.GUI.Views
             this.Loaded += new RoutedEventHandler(Editor_Loaded);
         }
 
+        public EditorGame Game { get; set; }
+
         public IEnumerable<string> Textures { get; set; }
 
         public IEnumerable<string> SelectedTexture { get; set; }
+
+        public EntityAddedEventHandler EntityAdded { get; set; }
+
+        public EntityRemovedEventHandler EntityRemoved { get; set; }
+
+        public TileAddedEventHandler TileAdded { get; set; }
+
+        public TileRemovedEventHandler TileRemoved { get; set; }
 
         public void ToggleGridLines()
         {
@@ -63,17 +77,15 @@ namespace TimeSink.Editor.GUI.Views
 
         public void SaveAs(string fileName)
         {
-            m_game.SaveAs(fileName);
+            Game.SaveAs(fileName);
         }
 
         void Editor_Loaded(object sender, RoutedEventArgs e)
         {
             if (!isLoaded)
             {
-                m_game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
-                var mainWindow = this.TryFindParent<MainWindow>();
-                mainWindow.levelControl.Game = m_game;
-                mainWindow.entities.Game = m_game;
+                Game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
+
                 isLoaded = true;
             }
         }
@@ -82,7 +94,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!selectionButtonPressed)
             {
-                m_game.PanSelected();
+                Game.PanSelected();
             }
             else
             {
@@ -94,7 +106,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!selectionButtonPressed)
             {
-                m_game.ZoomSelected();
+                Game.ZoomSelected();
             }
             else
             {
@@ -106,7 +118,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!selectionButtonPressed)
             {
-                m_game.SelectionSelected();
+                Game.SelectionSelected();
             }
             else
             {
@@ -118,7 +130,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!rotationButtonPressed)
             {
-                m_game.RotationSelected();
+                Game.RotationSelected();
             }
             else
             {
@@ -130,7 +142,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!selectionButtonPressed)
             {
-                m_game.ScalingSelected();
+                Game.ScalingSelected();
             }
             else
             {
@@ -142,14 +154,14 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!entitiesButtonPressed)
             {
-                var entities = m_game.Container.Resolve<IEnumerable<Entity>>();
+                var entities = Game.Container.Resolve<IEnumerable<Entity>>();
                 entities.ForEach(
                     x =>
                     {
-                        x.Load(m_game.Container);
-                        x.InitializePhysics(false, m_game.Container);
+                        x.Load(Game.Container);
+                        x.InitializePhysics(false, Game.Container);
                     });
-                var entityWindow = new EntitySelector(entities, m_game.TextureCache);
+                var entityWindow = new EntitySelector(entities, Game.TextureCache);
 
                 entityWindow.ShowDialog();
 
@@ -158,12 +170,17 @@ namespace TimeSink.Editor.GUI.Views
                 var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
                 if ((bool)entityWindow.DialogResult)
                 {
-                    m_game.EntitySelected(
+                    Game.EntitySelected(
                         entityWindow.SelectedEntity,
                         (entity) =>
                         {
                             var dlg = new EntityCreateWindow(entity);
                             Nullable<bool> result = dlg.ShowDialog();
+
+                            if (result.Value && EntityAdded != null)
+                            {
+                                EntityAdded(entity);
+                            }
 
                             return result.Value;
                         });
@@ -179,7 +196,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!meshButtonPressed)
             {                
-                var selectorWindow = new StaticMeshSelector(m_game.Tiles, m_game.TextureCache);
+                var selectorWindow = new StaticMeshSelector(Game.Tiles, Game.TextureCache);
 
                 selectorWindow.ShowDialog();
 
@@ -188,7 +205,7 @@ namespace TimeSink.Editor.GUI.Views
                 var viewModel = selectorWindow.DataContext as TileSelectorViewModel;
                 if ((bool)selectorWindow.DialogResult)
                 {
-                    m_game.StaticMeshSelected(selectorWindow.SelectedKey);
+                    Game.StaticMeshSelected(selectorWindow.SelectedKey);
                 }
             }
             else
@@ -206,7 +223,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!geomButtonPressed)
             {
-                m_game.GeometrySelected();
+                Game.GeometrySelected();
             }
             else
             {
@@ -228,12 +245,12 @@ namespace TimeSink.Editor.GUI.Views
 
         internal void Open(string fileName)
         {
-            m_game.Open(fileName);
+            Game.Open(fileName);
         }
 
         internal void New()
         {
-            m_game.New();
+            Game.New();
         }
     }
 }

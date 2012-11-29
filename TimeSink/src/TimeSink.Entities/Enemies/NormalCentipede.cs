@@ -36,7 +36,8 @@ namespace TimeSink.Entities.Enemies
 
         public Func<float, Vector2> PatrolFunction { get; private set; }
 
-        private Vector2 PatrolDirection { get; set; }
+        [EditableField("Patrol Direction")]
+        public Vector2 PatrolDirection { get; set; }
 
         public NormalCentipede()
             : this(Vector2.Zero, Vector2.Zero)

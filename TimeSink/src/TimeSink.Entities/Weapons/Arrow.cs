@@ -18,7 +18,6 @@ using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Weapons
 {
-    [EditorEnabled]
     [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
     public class Arrow : Entity, IWeapon
     {
