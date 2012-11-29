@@ -72,6 +72,7 @@
     <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
     <Compile Include="IInventoryItem.cs" />
+    <Compile Include="Objects\Ladder.cs" />
     <Compile Include="Objects\MovingPlatform.cs" />
     <Compile Include="NonPlayerCharacter.cs" />
     <Compile Include="Objects\Vine.cs" />

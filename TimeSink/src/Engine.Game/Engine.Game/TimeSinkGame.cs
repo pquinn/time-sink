@@ -49,6 +49,7 @@ namespace TimeSink.Engine.Game
         Trigger trigger;
         MovingPlatform movingPlatform;
         NonPlayerCharacter npc;
+        Ladder ladder;
 
         Vine vine;
 
@@ -76,6 +77,7 @@ namespace TimeSink.Engine.Game
             world = new WorldGeometry();
 
             vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(400, 0)));
+            ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
 
             movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
                                                 PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
@@ -110,7 +112,8 @@ namespace TimeSink.Engine.Game
                     normalCentipede,
                     flyingCentipede,
                     vine,
-                    npc
+                    npc,
+                    ladder
                 });
 
             // todo: this is a hack to fix a bug.  We need to 
