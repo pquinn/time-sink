@@ -74,7 +74,7 @@ namespace TimeSink.Engine.Game
             npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
             world = new WorldGeometry();
 
-            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(400, 0)));
+            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(800, 300)), 1f);
 
             movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
                                                 PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
