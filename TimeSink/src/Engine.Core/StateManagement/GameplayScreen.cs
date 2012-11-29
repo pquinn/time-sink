@@ -148,7 +148,7 @@ namespace TimeSink.Engine.Core.StateManagement
             SlotItem grenadeItemBackup2 = new Grenade(grenade);
             SlotItem blankItem = new Grenade(empty);
             MagicBar mBar = new MagicBar(shield);
-            HealthBar hBar = new HealthBar(trans);
+            HealthBar hBar = hudHealth = new HealthBar(trans);
             ShieldBar sBar = new ShieldBar(empty);
             Rectangle hBarTrans = new Rectangle(0, 0, 200, 75);
 
@@ -241,10 +241,10 @@ namespace TimeSink.Engine.Core.StateManagement
 
                     if (hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
                     {
-                        if (hudHealth == null)
+                        /*if (hudHealth == null)
                         {
                             hudHealth = (HealthBar)hudElement;
-                        }
+                        }*/
                       posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30;
                     }
                     

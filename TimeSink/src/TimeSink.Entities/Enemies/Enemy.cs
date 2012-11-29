@@ -117,7 +117,7 @@ namespace TimeSink.Entities.Enemies
         [OnCollidedWith.Overload]
         public void OnCollidedWith(UserControlledCharacter c, Contact info)
         {
-            c.Health -= 25;
+            c.TakeDamage(25);
         }
 
         public override void Update(GameTime time, EngineGame world)

@@ -56,6 +56,10 @@ namespace Editor
             textureCache = new InMemoryResourceCache<Texture2D>(
                 new ContentManagerProvider<Texture2D>(Content));
 
+            var blank = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blank.SetData(new[] { Color.White });
+            textureCache.AddResource("blank", blank);
+
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
         }
 

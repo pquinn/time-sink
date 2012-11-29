@@ -43,6 +43,7 @@ namespace TimeSink.Engine.Core.StateManagement
         SpriteFont font;
         Texture2D blankTexture;
         EngineGame gameWorld;
+        GameplayScreen currentGameplay;
 
 
 
@@ -89,6 +90,11 @@ namespace TimeSink.Engine.Core.StateManagement
             get { return input; }
         }
 
+        public GameplayScreen CurrentGameplay
+        {
+            get { return currentGameplay; }
+            set { currentGameplay = value; }
+        }
 
         /// <summary>
         /// A default font shared by all the screens. This saves

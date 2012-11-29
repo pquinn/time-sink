@@ -134,6 +134,7 @@
     <Compile Include="Collisions\CollisionGeometry.cs" />
     <Compile Include="Collisions\CollisionManager.cs" />
     <Compile Include="Collisions\Multimethods\OnCollidedWith.cs" />
+    <Compile Include="Collisions\Multimethods\OnSeparation.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\IPolygon.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\PolygonCollision.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\SeparatingAxisTheorem.cs" />
@@ -154,6 +155,8 @@
     <Compile Include="IHaveShield.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Rendering\EmptyPreviewRendering.cs" />
+    <Compile Include="Rendering\NullRendering.cs" />
     <Compile Include="States\EntitySerialization.cs" />
     <Compile Include="States\Pair.cs" />
     <Compile Include="States\SerializableEntityAttribute.cs" />

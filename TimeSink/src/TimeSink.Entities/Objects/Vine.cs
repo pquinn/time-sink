@@ -25,18 +25,48 @@ namespace TimeSink.Entities.Objects
 
         private static readonly Guid GUID = new Guid("b425aa27-bc56-4953-aa4c-be089fdc29c8");
 
+        protected int textureHeight;
+        protected int textureWidth;
         protected float scale;
+
+        private Func<float, float> PatrolFunction { get; set; }
+        private bool first;
+        private float tZero;
+
+        public float Rotation { get; set; }
 
         public Vector2 Size { get; set; }
 
         protected Vector2 _initialPosition;
 
-        public Vine() : this(Vector2.Zero) { }
+        public Vine() : this(Vector2.Zero, 1f) { }
 
-        public Vine(Vector2 position)
+        public Vine(Vector2 position) : this(position, 1f) { }
+
+        public Vine(Vector2 position, float timeSpan)
         {
             _initialPosition = position;
-            scale = .25f;
+            scale = .5f;
+            Rotation = 0f;
+
+            float startRotation = -MathHelper.PiOver4;
+            float endRotation = MathHelper.PiOver4;
+
+            PatrolFunction = delegate(float time)
+            {
+                float currentStep = time % timeSpan;
+                float newRotation = startRotation;
+                if (currentStep >= 0 && currentStep < (timeSpan / 2))
+                {
+                    var stepAmt = currentStep / timeSpan * 2;
+                    newRotation = startRotation + (stepAmt * (endRotation - startRotation));
+                }
+                else
+                {
+                    newRotation = endRotation + ((currentStep - timeSpan / 2) / timeSpan * 2 * (startRotation - endRotation));
+                }
+                return newRotation;
+            };
         }
 
         [SerializableField]
@@ -98,7 +128,7 @@ namespace TimeSink.Entities.Objects
                 return new BasicRendering(
                     VINE_TEXTURE,
                     PhysicsConstants.MetersToPixels(Physics.Position),
-                    0f,
+                    Rotation,
                     new Vector2(scale, scale));
             }
         }
@@ -106,6 +136,23 @@ namespace TimeSink.Entities.Objects
         public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
+        }
+
+        public override void Update(GameTime time, EngineGame world)
+        {
+            //interpolate the rotation like a line
+            base.Update(time, world);
+
+            if (first)
+            {
+                tZero = (float)time.ElapsedGameTime.TotalSeconds;
+                first = false;
+            }
+
+            Rotation = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
+            Physics.Rotation = Rotation;
+
+            //need to have rotation translated
         }
     }
 }
