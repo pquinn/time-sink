@@ -29,19 +29,44 @@ namespace TimeSink.Entities.Objects
         protected int textureWidth;
         protected float scale;
 
+        private Func<float, float> PatrolFunction { get; set; }
+        private bool first;
+        private float tZero;
+
         public float Rotation { get; set; }
 
         public Vector2 Size { get; set; }
 
         protected Vector2 _initialPosition;
 
-        public Vine() : this(Vector2.Zero) { }
+        public Vine() : this(Vector2.Zero, 1f) { }
 
-        public Vine(Vector2 position)
+        public Vine(Vector2 position) : this(position, 1f) { }
+
+        public Vine(Vector2 position, float timeSpan)
         {
             _initialPosition = position;
             scale = .5f;
             Rotation = 0f;
+
+            float startRotation = -MathHelper.PiOver4;
+            float endRotation = MathHelper.PiOver4;
+
+            PatrolFunction = delegate(float time)
+            {
+                float currentStep = time % timeSpan;
+                float newRotation = startRotation;
+                if (currentStep >= 0 && currentStep < (timeSpan / 2))
+                {
+                    var stepAmt = currentStep / timeSpan * 2;
+                    newRotation = startRotation + (stepAmt * (endRotation - startRotation));
+                }
+                else
+                {
+                    newRotation = endRotation + ((currentStep - timeSpan / 2) / timeSpan * 2 * (startRotation - endRotation));
+                }
+                return newRotation;
+            };
         }
 
         [SerializableField]
@@ -115,16 +140,19 @@ namespace TimeSink.Entities.Objects
 
         public override void Update(GameTime time, EngineGame world)
         {
-            // SLERP(P0, P1, t): (1 - t)p0 + t*p1
-            // interpolation might be unnecessary here since were updating the rotation directly
+            //interpolate the rotation like a line
+            base.Update(time, world);
 
-
-            // just interpolate rotation like a line!
-            float piOver64 = MathHelper.PiOver4 / 16;
-            if (Rotation < MathHelper.PiOver4 && Rotation > -MathHelper.PiOver4)
+            if (first)
             {
-                Rotation += piOver64;
+                tZero = (float)time.ElapsedGameTime.TotalSeconds;
+                first = false;
             }
+
+            Rotation = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
+            Physics.Rotation = Rotation;
+
+            //need to have rotation translated
         }
     }
 }
