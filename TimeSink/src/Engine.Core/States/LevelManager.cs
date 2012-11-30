@@ -176,10 +176,13 @@ namespace TimeSink.Engine.Core.States
             fixtures.ForEach(x => x.Dispose());
             fixtures.Clear();
 
+            // todo: this is not the right way to do this.
+            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+
             Level.CollisionGeometry.ForEach(
                 x =>
                 {
-                    Physics.CreateFixture(x);
+                    body.CreateFixture(x);
                 });
         }
     }

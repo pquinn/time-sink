@@ -194,7 +194,14 @@ namespace Editor
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(
+                 SpriteSortMode.BackToFront,
+                 BlendState.AlphaBlend,
+                 null,
+                 null,
+                 null,
+                 null,
+                 Camera.Transform);
 
             var cnt = 0;
             foreach (var chain in chains)

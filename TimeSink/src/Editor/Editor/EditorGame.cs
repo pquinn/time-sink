@@ -211,7 +211,14 @@ namespace Editor
 
             if (showCollisionGeometry)
             {
-                var projection = Matrix.CreateOrthographicOffCenter(
+                Vector3 scale;
+                Quaternion rot;
+                Vector3 tran;
+                camera.Transform.Decompose(out scale, out rot, out tran);
+                var projection =
+                    Matrix.CreateTranslation(tran / 64f) *
+                    Matrix.CreateScale(scale) *
+                    Matrix.CreateOrthographicOffCenter(
                     0,
                     PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
                     PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
