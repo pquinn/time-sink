@@ -155,6 +155,7 @@
     <Compile Include="IHaveShield.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Rendering\PivotedRendering.cs" />
     <Compile Include="Rendering\EmptyPreviewRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
     <Compile Include="States\EntitySerialization.cs" />

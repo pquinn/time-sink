@@ -14,6 +14,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -91,7 +92,7 @@ namespace TimeSink.Entities.Weapons
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Entity entity, Contact info)
         {
-            if (!(entity is UserControlledCharacter))
+            if (!(entity is UserControlledCharacter) && !(entity is Ladder))
             {
                 Dead = true;
             }
@@ -112,7 +113,7 @@ namespace TimeSink.Entities.Weapons
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
                 world.LevelManager.CollisionManager.UnregisterCollideable(this);
-                Physics.Dispose();
+               // Physics.Dispose();
             }
             else
             {
@@ -152,7 +153,7 @@ namespace TimeSink.Entities.Weapons
                     _initialPosition);
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
-                Physics.IsSensor = true;
+               // Physics.IsSensor = true;
                 Physics.UserData = this;
 
                 initialized = true;
