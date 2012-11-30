@@ -43,6 +43,11 @@ namespace Editor
         private Vector2? lastPlaced;
         private Vector2? dragging;
 
+        public override void Exit()
+        {
+            StateMachine.Owner.ResetGeometry();
+        }
+
         public override void Execute()
         {
             highlighted = null;

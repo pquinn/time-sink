@@ -12,6 +12,8 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Editor;
 using Autofac;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core.States
 {
@@ -26,6 +28,8 @@ namespace TimeSink.Engine.Core.States
             EditorRenderManager = editorRenderManager;
             Container = container;
             Level = new Level();
+
+            Physics = BodyFactory.CreateBody(PhysicsManager.World, Level);
         }
 
         public CollisionManager CollisionManager { get; private set; }
@@ -138,6 +142,27 @@ namespace TimeSink.Engine.Core.States
                     CollisionManager.RegisterCollideable(x);
                     RenderManager.RegisterRenderable(x);
                     EditorRenderManager.RegisterPreviewable(x);
+                });
+
+            Level.CollisionGeometry.ForEach(
+                x =>
+                {
+                    Physics.CreateFixture(x);
+                });
+        }
+
+        public Body Physics;
+        private List<Fixture> fixtures = new List<Fixture>();
+
+        public void ResetGeometry()
+        {
+            fixtures.ForEach(x => x.Dispose());
+            fixtures.Clear();
+
+            Level.CollisionGeometry.ForEach(
+                x =>
+                {
+                    Physics.CreateFixture(x);
                 });
         }
     }
