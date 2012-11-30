@@ -25,9 +25,13 @@ namespace TimeSink.Engine.Core.Collisions
         private static bool onCollision(Fixture f1, Fixture f2, Contact contact)
         {
             return OnCollidedWith.Invoke(
-                f1.Body.UserData as ICollideable, 
-                f2.Body.UserData as ICollideable, 
-                contact);
+                    f1.Body.UserData as ICollideable,
+                    f2.Body.UserData as ICollideable,
+                    contact)
+                && OnCollidedWith.Invoke(
+                    f2.Body.UserData as ICollideable,
+                    f1.Body.UserData as ICollideable,
+                    contact);
         }
 
         private static void onSeparation(Fixture f1, Fixture f2)
@@ -35,6 +39,9 @@ namespace TimeSink.Engine.Core.Collisions
             OnSeparation.Invoke(
                 f1.Body.UserData as ICollideable, f1,
                 f2.Body.UserData as ICollideable, f2);
+            OnSeparation.Invoke(
+                f2.Body.UserData as ICollideable, f2,
+                f1.Body.UserData as ICollideable, f1);
         }
 
         public void UnregisterCollideable(ICollideable coll)
