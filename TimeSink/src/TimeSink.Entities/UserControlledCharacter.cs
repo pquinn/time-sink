@@ -418,42 +418,24 @@ namespace TimeSink.Entities
                         currentState == BodyStates.NeutralRight ||
                         currentState == BodyStates.JumpingRight) //Will be changed once we have a landing anim
                     {
-                        //already climbing so continue with moving logic
-                        movedirection.Y -= 1.0f;
+                        currentState = BodyStates.JumpingRight;
+                        animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                        jumpStarted = true;
+                        jumpSound.Play();
+                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                        jumpToggleGuard = false;
                     }
                     else if (currentState == BodyStates.WalkingLeft ||
                              currentState == BodyStates.NeutralLeft ||
                              currentState == BodyStates.JumpingLeft)//Will be changed once we have a landing anim
                     {
-                        if (currentState == BodyStates.WalkingRight ||
-                            currentState == BodyStates.NeutralRight)
-                        {
-                            currentState = BodyStates.JumpingRight;
-                            animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                            jumpStarted = true;
-                            jumpSound.Play();
-                            Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                            jumpToggleGuard = false;
-                        }
-                        else if (currentState == BodyStates.WalkingLeft ||
-                                 currentState == BodyStates.NeutralLeft)
-                        {
-                            currentState = BodyStates.JumpingLeft;
-                            animations[BodyStates.JumpingLeft].CurrentFrame = 0;
-                            jumpStarted = true;
-                            jumpSound.Play();
-                            Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                            jumpToggleGuard = false;
-                        }
+                        currentState = BodyStates.JumpingLeft;
+                        animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                        jumpStarted = true;
+                        jumpSound.Play();
+                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                        jumpToggleGuard = false;
                     }
-                }
-                else
-                {
-                    jumpToggleGuard = false;
-                    attachedToVine = false;
-                    _world.RemoveJoint(vineAttachment);
-                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
-
                 }
             }
             else if (touchingGround)
