@@ -58,6 +58,11 @@ namespace Editor
             StateMachine.Owner.ResetGeometry();
         }
 
+        public override void Enter()
+        {
+            chains = StateMachine.Owner.Level.CollisionGeometry.Select(x => x.Vertices.ToList()).ToList();
+        }
+
         public override void Execute()
         {
             highlighted = null;
