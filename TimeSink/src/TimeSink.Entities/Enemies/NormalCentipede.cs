@@ -23,7 +23,8 @@ namespace TimeSink.Entities.Enemies
     public class NormalCentipede : Enemy, IHaveHealth
     {
         const float CENTIPEDE_MASS = 100f;
-        const string CENTIPEDE_TEXTURE = "Textures/Enemies/Goomba";
+        const string CENTIPEDE_TEXTURE = "Textures/Enemies/Centipede/Neutral";
+        const string CENTIPEDE_WALK_LEFT = "Textures/Enemies/Centipede/CentipedeWalk_Left";
         const string EDITOR_NAME = "Normal Centipede";
 
         private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");

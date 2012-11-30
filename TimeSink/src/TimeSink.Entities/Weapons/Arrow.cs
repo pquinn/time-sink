@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -26,8 +27,8 @@ namespace TimeSink.Entities.Weapons
         const string EDITOR_NAME = "Arrow";
 
         const float MAX_ARROW_HOLD = 1;
-        const float MIN_ARROW_INIT_SPEED = 500;
-        const float MAX_ARROW_INIT_SPEED = 1500;
+        const float MIN_ARROW_INIT_SPEED = 50;
+        const float MAX_ARROW_INIT_SPEED = 150;
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -87,7 +88,7 @@ namespace TimeSink.Entities.Weapons
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Entity entity, Contact info)
         {
-            if (!(entity is UserControlledCharacter || entity is Trigger))
+            if (!(entity is UserControlledCharacter || entity is Trigger || entity is Ladder))
             {
                 Dead = true;
             }

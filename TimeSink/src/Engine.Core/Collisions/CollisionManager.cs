@@ -46,8 +46,21 @@ namespace TimeSink.Engine.Core.Collisions
 
         public void UnregisterCollideable(ICollideable coll)
         {
-            foreach (var geo in coll.CollisionGeometry)
+            for (int i = 0; i < coll.CollisionGeometry.Count; i++)
+            {
+                var geo = coll.CollisionGeometry[i];
+
                 geo.OnCollision -= onCollision;
+                geo.Dispose();
+            }
+            /*
+            foreach (var geo in coll.CollisionGeometry)
+            {
+                geo.OnCollision -= onCollision;
+                geo.Dispose();
+                continue;
+            }
+            */
         }
 
         public void Initialize()

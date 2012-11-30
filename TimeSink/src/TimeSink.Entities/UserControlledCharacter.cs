@@ -282,17 +282,22 @@ namespace TimeSink.Entities
                 if (!(canClimb && !touchingGround))
                 {
                     movedirection.X -= 1.0f;
-                }
-                if (touchingGround)
-                {
-                    if (currentState != BodyStates.WalkingLeft)
+
+                    if (touchingGround)
                     {
-                        animations[BodyStates.WalkingLeft].CurrentFrame = 0;
-                        currentState = BodyStates.WalkingStartLeft;
+                        if (currentState != BodyStates.WalkingLeft)
+                        {
+                            animations[BodyStates.WalkingLeft].CurrentFrame = 0;
+                            currentState = BodyStates.WalkingStartLeft;
+                        }
+                        else
+                        {
+                            currentState = BodyStates.WalkingLeft;
+                        }
                     }
                     else
                     {
-                        currentState = BodyStates.WalkingLeft;
+                        currentState = BodyStates.JumpingLeft;
                     }
                 }
                 //TODO -- add logic for climbing state / animation
@@ -302,17 +307,22 @@ namespace TimeSink.Entities
                 if (!(canClimb && !touchingGround))
                 {
                     movedirection.X += 1.0f;
-                }
-                if (touchingGround)
-                {
-                    if (currentState != BodyStates.WalkingRight)
+
+                    if (touchingGround)
                     {
-                        animations[BodyStates.WalkingRight].CurrentFrame = 0;
-                        currentState = BodyStates.WalkingStartRight;
+                        if (currentState != BodyStates.WalkingRight)
+                        {
+                            animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                            currentState = BodyStates.WalkingStartRight;
+                        }
+                        else
+                        {
+                            currentState = BodyStates.WalkingRight;
+                        }
                     }
                     else
                     {
-                        currentState = BodyStates.WalkingRight;
+                        currentState = BodyStates.JumpingRight;
                     }
                 }
                 //TODO -- add logic for climbing state / animation
@@ -441,7 +451,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                currentState = BodyStates.ShootingRight;
+                //currentState = BodyStates.ShootingRight;
                 holdTime = gameTime.TotalGameTime.TotalSeconds;
                 inHold = true;
             }
@@ -617,7 +627,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                var anim = animations[currentState];
+                 var anim = animations[currentState];
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 return anim;
             }
