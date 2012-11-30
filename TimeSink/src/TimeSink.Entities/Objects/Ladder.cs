@@ -105,7 +105,6 @@ namespace TimeSink.Entities.Objects
         {
             //Enable the character to enter a climbing state thus effecting her input handling
             c.CanClimb = true;
-            c.Physics.IgnoreGravity = true;
             return true;
         }
 
