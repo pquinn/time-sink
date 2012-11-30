@@ -650,6 +650,84 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4000.PNG">
+      <Name>Level-2%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4001.PNG">
+      <Name>Level-2%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4002.PNG">
+      <Name>Level-2%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4003.PNG">
+      <Name>Level-2%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4010.PNG">
+      <Name>Level-2%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4011.PNG">
+      <Name>Level-2%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4012.PNG">
+      <Name>Level-2%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4013.PNG">
+      <Name>Level-2%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4020.PNG">
+      <Name>Level-2%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4021.PNG">
+      <Name>Level-2%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4022.PNG">
+      <Name>Level-2%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4023.PNG">
+      <Name>Level-2%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4030.PNG">
+      <Name>Level-2%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4031.PNG">
+      <Name>Level-2%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4032.PNG">
+      <Name>Level-2%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Level 2\Level-2%4033.PNG">
+      <Name>Level-2%4033</Name>
+    </Compile>
     <Compile Include="Textures\Enemies\Centipede\Neutral.png">
       <Name>Neutral</Name>
       <Importer>TextureImporter</Importer>
