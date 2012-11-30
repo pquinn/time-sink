@@ -43,6 +43,16 @@ namespace Editor
         private Vector2? lastPlaced;
         private Vector2? dragging;
 
+        public override void Enter()
+        {
+            chains = StateMachine.Owner.Level.CollisionGeometry.Select(x => x.Vertices.ToList()).ToList();
+
+            if (!chains.Any())
+            {
+                chains.Add(new List<Vector2>());
+            }
+        }
+
         public override void Exit()
         {
             StateMachine.Owner.ResetGeometry();
