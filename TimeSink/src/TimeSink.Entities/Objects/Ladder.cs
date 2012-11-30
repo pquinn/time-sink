@@ -105,7 +105,6 @@ namespace TimeSink.Entities.Objects
         {
             //Enable the character to enter a climbing state thus effecting her input handling
             c.CanClimb = true;
-            c.Physics.IgnoreGravity = true;
             return true;
         }
 
@@ -118,7 +117,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return new BasicRendering("blank", Position, 0, new Vector2(Width, Height)); }
+            get { return new BasicRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, new Vector2(200,1000)); }
         }
 
         public override IRendering Rendering

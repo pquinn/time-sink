@@ -285,34 +285,50 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                movedirection.X -= 1.0f;
-                if (touchingGround)
+                if (!(canClimb && !touchingGround))
                 {
-                    if (currentState != BodyStates.WalkingLeft)
+                    movedirection.X -= 1.0f;
+
+                    if (touchingGround)
                     {
-                        animations[BodyStates.WalkingLeft].CurrentFrame = 0;
-                        currentState = BodyStates.WalkingStartLeft;
+                        if (currentState != BodyStates.WalkingLeft)
+                        {
+                            animations[BodyStates.WalkingLeft].CurrentFrame = 0;
+                            currentState = BodyStates.WalkingStartLeft;
+                        }
+                        else
+                        {
+                            currentState = BodyStates.WalkingLeft;
+                        }
                     }
                     else
                     {
-                        currentState = BodyStates.WalkingLeft;
+                        currentState = BodyStates.JumpingLeft;
                     }
                 }
                 //TODO -- add logic for climbing state / animation
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                movedirection.X += 1.0f;
-                if (touchingGround)
+                if (!(canClimb && !touchingGround))
                 {
-                    if (currentState != BodyStates.WalkingRight)
+                    movedirection.X += 1.0f;
+
+                    if (touchingGround)
                     {
-                        animations[BodyStates.WalkingRight].CurrentFrame = 0;
-                        currentState = BodyStates.WalkingStartRight;
+                        if (currentState != BodyStates.WalkingRight)
+                        {
+                            animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                            currentState = BodyStates.WalkingStartRight;
+                        }
+                        else
+                        {
+                            currentState = BodyStates.WalkingRight;
+                        }
                     }
                     else
                     {
-                        currentState = BodyStates.WalkingRight;
+                        currentState = BodyStates.JumpingRight;
                     }
                 }
                 //TODO -- add logic for climbing state / animation
@@ -387,22 +403,27 @@ namespace TimeSink.Entities
 
             #region Jumping
             if (keyboard.IsKeyDown(Keys.Space)
-                || keyboard.IsKeyDown(Keys.W)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if (!attachedToVine)
+                if (canClimb && !touchingGround && jumpToggleGuard)
                 {
-                    if (canClimb && touchingGround)
-                    {
-                        //Insert anim state change here for climbing anim
-                        movedirection.Y -= 1.0f;
-                    }
-                    else if (canClimb)
+                    Physics.IgnoreGravity = false;
+                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                    jumpToggleGuard = false;
+                    canClimb = false;
+                }
+                if (jumpToggleGuard && touchingGround)
+                {
+                    if (currentState == BodyStates.WalkingRight ||
+                        currentState == BodyStates.NeutralRight ||
+                        currentState == BodyStates.JumpingRight) //Will be changed once we have a landing anim
                     {
                         //already climbing so continue with moving logic
                         movedirection.Y -= 1.0f;
                     }
-                    else if (jumpToggleGuard && touchingGround)
+                    else if (currentState == BodyStates.WalkingLeft ||
+                             currentState == BodyStates.NeutralLeft ||
+                             currentState == BodyStates.JumpingLeft)//Will be changed once we have a landing anim
                     {
                         if (currentState == BodyStates.WalkingRight ||
                             currentState == BodyStates.NeutralRight)
@@ -440,13 +461,27 @@ namespace TimeSink.Entities
                 jumpToggleGuard = true;
             }
 
+            if (keyboard.IsKeyDown(Keys.W))
+            {
+                if (canClimb && touchingGround)
+                {
+                    //Insert anim state change here for climbing anim
+                    Physics.IgnoreGravity = true;
+                    movedirection.Y -= 1.0f;
+                }
+                else if (canClimb)
+                {
+                    //already climbing so continue with moving logic
+                    movedirection.Y -= 1.0f;
+                }
+            }
             #endregion
 
             #region Shooting
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                currentState = BodyStates.ShootingRight;
+                //currentState = BodyStates.ShootingRight;
                 holdTime = gameTime.TotalGameTime.TotalSeconds;
                 inHold = true;
             }
@@ -637,7 +672,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                var anim = animations[currentState];
+                 var anim = animations[currentState];
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 return anim;
             }
