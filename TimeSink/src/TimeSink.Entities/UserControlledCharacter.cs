@@ -60,6 +60,7 @@ namespace TimeSink.Entities
         const string WALKING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Intermediate_Left";
         const string WALKING_LEFT = "Textures/Sprites/SpriteSheets/BodyWalkLeft";
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
+        const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
 
 
         private Dictionary<BodyStates, NewAnimationRendering> animations;
@@ -279,7 +280,7 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                if (!(canClimb && !touchingGround))
+                if (!(currentState == BodyStates.Climbing && !touchingGround))
                 {
                     movedirection.X -= 1.0f;
 
@@ -304,7 +305,7 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                if (!(canClimb && !touchingGround))
+                if (!(currentState == BodyStates.Climbing && !touchingGround))
                 {
                     movedirection.X += 1.0f;
 
@@ -398,7 +399,8 @@ namespace TimeSink.Entities
                     Physics.IgnoreGravity = false;
                     Physics.ApplyLinearImpulse(new Vector2(0, -100));
                     jumpToggleGuard = false;
-                    canClimb = false;
+                    //canClimb = false;
+                    currentState = BodyStates.JumpingRight;
                 }
                 if (jumpToggleGuard && touchingGround)
                 {
@@ -436,13 +438,19 @@ namespace TimeSink.Entities
                 if (canClimb && touchingGround)
                 {
                     //Insert anim state change here for climbing anim
+                    Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
-                    movedirection.Y -= 1.0f;
+                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    currentState = BodyStates.Climbing;
                 }
                 else if (canClimb)
                 {
-                    //already climbing so continue with moving logic
-                    movedirection.Y -= 1.0f;
+
+                    Physics.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = true;
+                    jumpToggleGuard = true;
+                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    currentState = BodyStates.Climbing;
                 }
             }
             #endregion
@@ -760,6 +768,17 @@ namespace TimeSink.Entities
                     0,
                     Vector2.One));
             #endregion
+            #region Climbing
+            dictionary.Add(BodyStates.Climbing,
+                new NewAnimationRendering(
+                    FACING_BACK,
+                    new Vector2(128, 256),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            #endregion
+
 
             return dictionary;
         }
