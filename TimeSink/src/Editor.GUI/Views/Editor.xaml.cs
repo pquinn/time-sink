@@ -154,12 +154,12 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!entitiesButtonPressed)
             {
-                var entities = Game.Container.Resolve<IEnumerable<Entity>>();
+                var entities = Game.Container.Resolve<IEnumerable<Entity>>().ToList();
                 entities.ForEach(
                     x =>
                     {
                         x.Load(Game.Container);
-                        x.InitializePhysics(false, Game.Container);
+                        Game.LevelManager.RegisterEntity(x);
                     });
                 var entityWindow = new EntitySelector(entities, Game.TextureCache);
 
@@ -170,6 +170,8 @@ namespace TimeSink.Editor.GUI.Views
                 var viewModel = entityWindow.DataContext as EntitySelectorViewModel;
                 if ((bool)entityWindow.DialogResult)
                 {
+                    entities.Remove(entityWindow.SelectedEntity);
+                    Game.LevelManager.UnregisterEntities(entities);
                     Game.EntitySelected(
                         entityWindow.SelectedEntity,
                         (entity) =>

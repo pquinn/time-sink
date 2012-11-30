@@ -123,7 +123,7 @@ namespace Editor
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
 
-            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
+            builder.RegisterInstance(new World(Vector2.Zero)).AsSelf();
 
             builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
@@ -169,6 +169,8 @@ namespace Editor
             {
                 showCollisionGeometry = !showCollisionGeometry;
             }
+
+            LevelManager.PhysicsManager.World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             stateMachine.Update();
 

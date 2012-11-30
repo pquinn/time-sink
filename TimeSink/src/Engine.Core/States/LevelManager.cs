@@ -19,7 +19,7 @@ namespace TimeSink.Engine.Core.States
 {
     public class LevelManager
     {
-        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager, 
+        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager,
             RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
         {
             CollisionManager = collisionsManager;
@@ -80,6 +80,20 @@ namespace TimeSink.Engine.Core.States
         public void RegisterEntities(IEnumerable<Entity> entities)
         {
             entities.ForEach(RegisterEntity);
+        }
+
+        public void UnregisterEntity(Entity entity)
+        {
+            Level.Entities.Remove(entity);
+            PhysicsManager.UnregisterPhysicsBody(entity);
+            CollisionManager.UnregisterCollideable(entity);
+            RenderManager.UnregisterRenderable(entity);
+            EditorRenderManager.UnregisterPreviewable(entity);
+        }
+
+        public void UnregisterEntities(IEnumerable<Entity> entities)
+        {
+            entities.ForEach(UnregisterEntity);
         }
 
         public void SerializeLevel(string fileName)

@@ -8,6 +8,7 @@ using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.DebugViews;
 using Autofac;
+using FarseerPhysics.Collision.Shapes;
 
 namespace TimeSink.Engine.Core.Physics
 {
@@ -27,6 +28,11 @@ namespace TimeSink.Engine.Core.Physics
         public void RegisterPhysicsBody(IPhysicsEnabledBody body)
         {
             body.InitializePhysics(false, engineRegistrations);
+        }
+
+        internal void UnregisterPhysicsBody(Entity entity)
+        {
+            entity.Physics.Dispose();
         }
 
         public void Update(GameTime gameTime)
