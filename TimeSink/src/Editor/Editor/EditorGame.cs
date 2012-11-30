@@ -123,7 +123,7 @@ namespace Editor
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
 
-            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
+            builder.RegisterInstance(new World(Vector2.Zero)).AsSelf();
 
             builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
@@ -170,6 +170,8 @@ namespace Editor
                 showCollisionGeometry = !showCollisionGeometry;
             }
 
+            LevelManager.PhysicsManager.World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             stateMachine.Update();
 
             base.Update(gameTime);
@@ -209,7 +211,14 @@ namespace Editor
 
             if (showCollisionGeometry)
             {
-                var projection = Matrix.CreateOrthographicOffCenter(
+                Vector3 scale;
+                Quaternion rot;
+                Vector3 tran;
+                camera.Transform.Decompose(out scale, out rot, out tran);
+                var projection =
+                    Matrix.CreateTranslation(tran / 64f) *
+                    Matrix.CreateScale(scale) *
+                    Matrix.CreateOrthographicOffCenter(
                     0,
                     PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
                     PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),

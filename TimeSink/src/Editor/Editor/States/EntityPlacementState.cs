@@ -33,17 +33,17 @@ namespace Editor.States
 
         public override void Execute()
         {
-            if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (onPlacePredicate(entity))
-                {
-                    StateMachine.Owner.RegisterEntity(entity);
-
-                    var position = new Vector2(
+            var position = new Vector2(
                             InputManager.Instance.CurrentMouseState.X,
                             InputManager.Instance.CurrentMouseState.Y);
-                    entity.Position = PhysicsConstants.PixelsToMeters(
-                        Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
+            entity.Position = PhysicsConstants.PixelsToMeters(
+                Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
+
+            if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (!onPlacePredicate(entity))
+                {
+                    StateMachine.Owner.UnregisterEntity(entity);                     
                 }
 
                 StateMachine.RevertToPreviousState(true);
@@ -58,13 +58,13 @@ namespace Editor.States
         {
             base.Draw(spriteBatch);
 
-            entity.Preview.Draw(
-                spriteBatch, 
-                TextureCache, 
-                Matrix.CreateTranslation(
-                    InputManager.Instance.CurrentMouseState.X,
-                    InputManager.Instance.CurrentMouseState.Y,
-                    0));
+            //entity.Preview.Draw(
+            //    spriteBatch, 
+            //    TextureCache, 
+            //    Matrix.CreateTranslation(
+            //        InputManager.Instance.CurrentMouseState.X,
+            //        InputManager.Instance.CurrentMouseState.Y,
+            //        0));
         }
     }
 }

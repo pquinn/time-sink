@@ -12,12 +12,14 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Editor;
 using Autofac;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core.States
 {
     public class LevelManager
     {
-        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager, 
+        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager,
             RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
         {
             CollisionManager = collisionsManager;
@@ -26,6 +28,8 @@ namespace TimeSink.Engine.Core.States
             EditorRenderManager = editorRenderManager;
             Container = container;
             Level = new Level();
+
+            Physics = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
         }
 
         public CollisionManager CollisionManager { get; private set; }
@@ -76,6 +80,20 @@ namespace TimeSink.Engine.Core.States
         public void RegisterEntities(IEnumerable<Entity> entities)
         {
             entities.ForEach(RegisterEntity);
+        }
+
+        public void UnregisterEntity(Entity entity)
+        {
+            Level.Entities.Remove(entity);
+            PhysicsManager.UnregisterPhysicsBody(entity);
+            CollisionManager.UnregisterCollideable(entity);
+            RenderManager.UnregisterRenderable(entity);
+            EditorRenderManager.UnregisterPreviewable(entity);
+        }
+
+        public void UnregisterEntities(IEnumerable<Entity> entities)
+        {
+            entities.ForEach(UnregisterEntity);
         }
 
         public void SerializeLevel(string fileName)
@@ -138,6 +156,33 @@ namespace TimeSink.Engine.Core.States
                     CollisionManager.RegisterCollideable(x);
                     RenderManager.RegisterRenderable(x);
                     EditorRenderManager.RegisterPreviewable(x);
+                });
+
+            // todo: this is not the right way to do this.
+            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+
+            Level.CollisionGeometry.ForEach(
+                x =>
+                {
+                    body.CreateFixture(x);
+                });
+        }
+
+        public Body Physics;
+        private List<Fixture> fixtures = new List<Fixture>();
+
+        public void ResetGeometry()
+        {
+            fixtures.ForEach(x => x.Dispose());
+            fixtures.Clear();
+
+            // todo: this is not the right way to do this.
+            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+
+            Level.CollisionGeometry.ForEach(
+                x =>
+                {
+                    body.CreateFixture(x);
                 });
         }
     }

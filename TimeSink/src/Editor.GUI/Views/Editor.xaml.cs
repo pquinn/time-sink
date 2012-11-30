@@ -154,16 +154,22 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!entitiesButtonPressed)
             {
-                var entities = Game.Container.Resolve<IEnumerable<Entity>>();
+                var entities = Game.Container.Resolve<IEnumerable<Entity>>().ToList();
                 entities.ForEach(
                     x =>
                     {
                         x.Load(Game.Container);
-                        x.InitializePhysics(false, Game.Container);
+                        Game.LevelManager.RegisterEntity(x);
                     });
                 var entityWindow = new EntitySelector(entities, Game.TextureCache);
 
                 entityWindow.ShowDialog();
+
+                if (entityWindow.SelectedEntity != null)
+                {
+                    entities.Remove(entityWindow.SelectedEntity);
+                }
+                Game.LevelManager.UnregisterEntities(entities);
 
                 ResetHandle();
 
@@ -184,6 +190,10 @@ namespace TimeSink.Editor.GUI.Views
 
                             return result.Value;
                         });
+                }
+                else if (entityWindow.SelectedEntity != null)
+                {
+                    Game.LevelManager.UnregisterEntity(entityWindow.SelectedEntity);
                 }
             }
             else

@@ -43,6 +43,11 @@ namespace Editor
         private Vector2? lastPlaced;
         private Vector2? dragging;
 
+        public override void Exit()
+        {
+            StateMachine.Owner.ResetGeometry();
+        }
+
         public override void Execute()
         {
             highlighted = null;
@@ -65,99 +70,102 @@ namespace Editor
                 }
             }
 
-            if (mouse.LeftButton == ButtonState.Pressed)
+            if (MouseOnScreen())
             {
-                if (InputManager.Instance.Pressed(Keys.LeftShift) || InputManager.Instance.Pressed(Keys.RightShift))
+                if (mouse.LeftButton == ButtonState.Pressed)
                 {
-                    if (dragging == null)
+                    if (InputManager.Instance.Pressed(Keys.LeftShift) || InputManager.Instance.Pressed(Keys.RightShift))
                     {
-                        if (highlighted == null)
-                            return;
-                        else
-                            dragging = highlighted;
-                    }
-
-                    var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
-
-                    foreach (var chain in chains)
-                    {
-                        for (int i = 0; i < chain.Count; i++)
+                        if (dragging == null)
                         {
-                            var vertex = chain[i];
-                            if (vertex == dragging)
-                                chain[i] = newPos;
+                            if (highlighted == null)
+                                return;
+                            else
+                                dragging = highlighted;
                         }
+
+                        var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
+
+                        foreach (var chain in chains)
+                        {
+                            for (int i = 0; i < chain.Count; i++)
+                            {
+                                var vertex = chain[i];
+                                if (vertex == dragging)
+                                    chain[i] = newPos;
+                            }
+                        }
+
+                        dragging = newPos;
                     }
-
-                    dragging = newPos;
-                }
-                else if (InputManager.Instance.Pressed(Keys.LeftControl) || InputManager.Instance.Pressed(Keys.RightControl))
-                {
-                    var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
-
-                    if (makingChain)
+                    else if (InputManager.Instance.Pressed(Keys.LeftControl) || InputManager.Instance.Pressed(Keys.RightControl))
                     {
-                        selectedChain.RemoveAll(x => x == highlighted);
+                        var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
+
+                        if (makingChain)
+                        {
+                            selectedChain.RemoveAll(x => x == highlighted);
+                        }
+                        else
+                        {
+                            foreach (var chain in chains)
+                            {
+                                chain.RemoveAll(x => x == highlighted);
+                            }
+                            chains.RemoveAll(x => !x.Any());
+                        }
                     }
                     else
                     {
-                        foreach (var chain in chains)
+                        dragging = null;
+
+                        if (!clickToggleGuard) return;
+
+                        clickToggleGuard = false;
+
+                        if (highlighted == null)
                         {
-                            chain.RemoveAll(x => x == highlighted);
+                            var position = GetMousePosition();
+
+                            if (!makingChain)
+                                startMakingNewChain();
+
+                            var vertex = PhysicsConstants.PixelsToMeters(
+                                            Vector2.Transform(
+                                                position,
+                                                Matrix.Invert(Camera.Transform)));
+
+                            selectedChain.Add(vertex);
+                            lastPlaced = vertex;
                         }
-                        chains.RemoveAll(x => !x.Any());
+                        else if (highlighted != lastPlaced)
+                        {
+                            var newChain = !makingChain;
+                            if (newChain)
+                                startMakingNewChain();
+
+                            var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
+
+                            selectedChain.Add(highlighted ?? Vector2.Zero);
+                            lastPlaced = highlighted;
+
+                            if (!newChain && inCurrentChain)
+                                stopMakingChain();
+                        }
                     }
+                }
+                else if ((clickToggleGuard && mouse.RightButton == ButtonState.Pressed) ||
+                         InputManager.Instance.IsNewKey(Keys.Escape))
+                {
+                    clickToggleGuard = false;
+                    stopMakingChain();
+                    dragging = null;
                 }
                 else
                 {
+                    clickToggleGuard = true;
                     dragging = null;
-
-                    if (!clickToggleGuard) return;
-
-                    clickToggleGuard = false;
-
-                    if (highlighted == null)
-                    {
-                        var position = GetMousePosition();
-
-                        if (!makingChain)
-                            startMakingNewChain();
-
-                        var vertex = PhysicsConstants.PixelsToMeters(
-                                        Vector2.Transform(
-                                            position,
-                                            Matrix.Invert(Camera.Transform)));
-
-                        selectedChain.Add(vertex);
-                        lastPlaced = vertex;
-                    }
-                    else if (highlighted != lastPlaced)
-                    {
-                        var newChain = !makingChain;
-                        if (newChain)
-                            startMakingNewChain();
-
-                        var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
-
-                        selectedChain.Add(highlighted ?? Vector2.Zero);
-                        lastPlaced = highlighted;
-
-                        if (!newChain && inCurrentChain)
-                            stopMakingChain();
-                    }
                 }
-            }
-            else if ((clickToggleGuard && mouse.RightButton == ButtonState.Pressed) ||
-                     InputManager.Instance.IsNewKey(Keys.Escape))
-            {
-                clickToggleGuard = false;
-                stopMakingChain();
-                dragging = null;
-            }
-            else
-            {
-                clickToggleGuard = true;
-                dragging = null;
             }
         }
 
@@ -186,7 +194,14 @@ namespace Editor
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(
+                 SpriteSortMode.BackToFront,
+                 BlendState.AlphaBlend,
+                 null,
+                 null,
+                 null,
+                 null,
+                 Camera.Transform);
 
             var cnt = 0;
             foreach (var chain in chains)
