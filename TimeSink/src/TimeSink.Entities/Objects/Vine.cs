@@ -13,6 +13,8 @@ using TimeSink.Engine.Core.States;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Collisions;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Objects
 {
@@ -25,19 +27,17 @@ namespace TimeSink.Entities.Objects
 
         private static readonly Guid GUID = new Guid("b425aa27-bc56-4953-aa4c-be089fdc29c8");
 
-        protected int textureHeight;
-        protected int textureWidth;
+        public float TextureHeight { get; set; }
+        public float TextureWidth { get; set; }
         protected float scale;
 
-        private Func<float, float> PatrolFunction { get; set; }
+        //private Func<float, float> PatrolFunction { get; set; }
         private bool first;
         private float tZero;
 
-        public float Rotation { get; set; }
-
-        public Vector2 Size { get; set; }
-
         protected Vector2 _initialPosition;
+        public Body VineAnchor { get; set; }
+        public Body VineEndAffector { get; set; }
 
         public Vine() : this(Vector2.Zero, 1f) { }
 
@@ -47,8 +47,8 @@ namespace TimeSink.Entities.Objects
         {
             _initialPosition = position;
             scale = .5f;
-            Rotation = 0f;
 
+            /*
             float startRotation = -MathHelper.PiOver4;
             float endRotation = MathHelper.PiOver4;
 
@@ -67,6 +67,7 @@ namespace TimeSink.Entities.Objects
                 }
                 return newRotation;
             };
+             * */
         }
 
         [SerializableField]
@@ -96,8 +97,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
-                var world = engineRegistrations.Resolve<World>();
+                /*
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     PhysicsConstants.PixelsToMeters((int)(texture.Width * scale)),
@@ -118,17 +118,83 @@ namespace TimeSink.Entities.Objects
                 hitsensor.CollidesWith = Category.Cat2;
 
                 initialized = true;
+                 * */
+
+                var world = engineRegistrations.Resolve<World>();
+                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
+
+                TextureWidth = PhysicsConstants.PixelsToMeters((int)(texture.Width * scale));
+                TextureHeight = PhysicsConstants.PixelsToMeters((int)(texture.Height * scale));
+
+                //anchor point
+                Physics = BodyFactory.CreateBody(world, _initialPosition, this);
+                Physics.FixedRotation = true;
+                Physics.BodyType = BodyType.Static;
+
+                VineAnchor = BodyFactory.CreateRectangle(
+                    world,
+                    TextureWidth,
+                    TextureHeight,
+                    1,
+                    _initialPosition);
+                VineAnchor.BodyType = BodyType.Dynamic;
+                VineAnchor.UserData = this;
+
+                var joint1 = JointFactory.CreateRevoluteJoint(world, Physics, VineAnchor, new Vector2(0, -TextureHeight / 2));
+
+                /*
+                VineEndAffector = BodyFactory.CreateRectangle(
+                    world,
+                    vineWidth,
+                    vineWidth,
+                    1,
+                    _initialPosition + new Vector2(0, vineHeight)
+                    );
+                VineEndAffector.BodyType = BodyType.Dynamic;
+
+                var joint2 = JointFactory.CreateRevoluteJoint(world, VineAnchor, VineEndAffector, new Vector2(0, 0));
+                 * */
+
+                var fix = VineAnchor.FixtureList[0];
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollidesWith = Category.Cat2;
+
+                var hitsensor = fix.Clone(VineAnchor);
+                hitsensor.IsSensor = true;
+                hitsensor.CollisionCategories = Category.Cat2;
+                hitsensor.CollidesWith = Category.All;
+
+                /*
+                var endFix = VineEndAffector.FixtureList[0];
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollidesWith = Category.Cat1;
+
+                var endHitsensor = fix.Clone(VineEndAffector);
+                endHitsensor.IsSensor = true;
+                endHitsensor.CollisionCategories = Category.Cat2;
+                endHitsensor.CollidesWith = Category.All;
+                 * */
+
             }
+        }
+
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(UserControlledCharacter character, Contact info)
+        {
+            Console.WriteLine("FORCE APPLIED");
+            VineAnchor.ApplyLinearImpulse(new Vector2(100, 0));
+            return true;
         }
 
         public override IRendering Rendering
         {
             get 
             {
-                return new BasicRendering(
+                return new PivotedRendering(
                     VINE_TEXTURE,
                     PhysicsConstants.MetersToPixels(Physics.Position),
-                    Rotation,
+                    //Need to translate rotation
+                    VineAnchor == null ? 0 : VineAnchor.Rotation,
                     new Vector2(scale, scale));
             }
         }
@@ -143,6 +209,9 @@ namespace TimeSink.Entities.Objects
             //interpolate the rotation like a line
             base.Update(time, world);
 
+
+
+            /*
             if (first)
             {
                 tZero = (float)time.ElapsedGameTime.TotalSeconds;
@@ -151,8 +220,7 @@ namespace TimeSink.Entities.Objects
 
             Rotation = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
             Physics.Rotation = Rotation;
-
-            //need to have rotation translated
+            */
         }
     }
 }

@@ -20,6 +20,8 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using TimeSink.Entities.Objects;
+using FarseerPhysics.Dynamics.Joints;
 
 namespace TimeSink.Entities
 {
@@ -80,6 +82,10 @@ namespace TimeSink.Entities
         private float mana;
         private float shield;
         private bool canClimb = false;
+        private World _world;
+        
+        private bool attachedToVine = false;
+        private Joint vineAttachment;
 
         public bool CanClimb { get { return canClimb; } set { canClimb = value; } }
 
@@ -330,21 +336,25 @@ namespace TimeSink.Entities
             if (up && right)
             {
                 direction = new Vector2(0.707106769f, -0.707106769f);
+                currentState = BodyStates.NeutralRight;
                 facing = 1;
             }
             else if (up && left)
             {
                 direction = new Vector2(-0.707106769f, -0.707106769f);
+                currentState = BodyStates.NeutralLeft;
                 facing = -1;
             }
             else if (down && right)
             {
                 direction = new Vector2(0.707106769f, 0.707106769f);
+                currentState = BodyStates.NeutralRight;
                 facing = 1;
             }
             else if (down && left)
             {
                 direction = new Vector2(-0.707106769f, 0.707106769f);
+                currentState = BodyStates.NeutralLeft;
                 facing = -1;
             }
             else if (up)
@@ -358,11 +368,13 @@ namespace TimeSink.Entities
             else if (right)
             {
                 direction = new Vector2(1, 0);
+                currentState = BodyStates.NeutralRight;
                 facing = 1;
             }
             else if (left)
             {
                 direction = new Vector2(-1, 0);
+                currentState = BodyStates.NeutralLeft;
                 facing = -1;
             }
             else
@@ -378,38 +390,49 @@ namespace TimeSink.Entities
                 || keyboard.IsKeyDown(Keys.W)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if (canClimb && touchingGround)
+                if (!attachedToVine)
                 {
-                    //Insert anim state change here for climbing anim
-                    movedirection.Y -= 1.0f;
-                }
-                else if (canClimb)
-                {
-                    //already climbing so continue with moving logic
-                    movedirection.Y -= 1.0f;
-                }
-                else if (jumpToggleGuard && touchingGround)
-                {
-                    if (currentState == BodyStates.WalkingRight ||
-                        currentState == BodyStates.NeutralRight)
+                    if (canClimb && touchingGround)
                     {
-                        currentState = BodyStates.JumpingRight;
-                        animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
+                        //Insert anim state change here for climbing anim
+                        movedirection.Y -= 1.0f;
                     }
-                    else if (currentState == BodyStates.WalkingLeft ||
-                             currentState == BodyStates.NeutralLeft)
+                    else if (canClimb)
                     {
-                        currentState = BodyStates.JumpingLeft;
-                        animations[BodyStates.JumpingLeft].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
+                        //already climbing so continue with moving logic
+                        movedirection.Y -= 1.0f;
                     }
+                    else if (jumpToggleGuard && touchingGround)
+                    {
+                        if (currentState == BodyStates.WalkingRight ||
+                            currentState == BodyStates.NeutralRight)
+                        {
+                            currentState = BodyStates.JumpingRight;
+                            animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                            jumpStarted = true;
+                            jumpSound.Play();
+                            Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                            jumpToggleGuard = false;
+                        }
+                        else if (currentState == BodyStates.WalkingLeft ||
+                                 currentState == BodyStates.NeutralLeft)
+                        {
+                            currentState = BodyStates.JumpingLeft;
+                            animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                            jumpStarted = true;
+                            jumpSound.Play();
+                            Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                            jumpToggleGuard = false;
+                        }
+                    }
+                }
+                else
+                {
+                    jumpToggleGuard = false;
+                    attachedToVine = false;
+                    _world.RemoveJoint(vineAttachment);
+                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
+
                 }
             }
             else if (touchingGround)
@@ -531,12 +554,14 @@ namespace TimeSink.Entities
             {
                 var walking = animations[BodyStates.WalkingLeft];
                 walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
+                facing = -1;
                 timer = 0f;
             }
             else if (currentState == BodyStates.WalkingStartLeft && timer >= interval)
             {
                 var walking = animations[BodyStates.WalkingLeft].CurrentFrame = 0;
                 currentState = BodyStates.WalkingLeft;
+                facing = -1;
                 timer = 0f;
             }
             else if (currentState == BodyStates.WalkingEndLeft && timer >= interval)
@@ -592,6 +617,19 @@ namespace TimeSink.Entities
             {
                 __touchingGroundFlag = true;
             }
+            return true;
+        }
+
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(Vine vine, Contact info)
+        {
+            attachedToVine = true;
+            vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
+            var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
+            var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+            vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight/2));
+            //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
+            //Physics.FixedRotation = false;
             return true;
         }
 
@@ -746,6 +784,7 @@ namespace TimeSink.Entities
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
+                _world = world;
                 Physics = BodyFactory.CreateBody(world, _initialPosition, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
