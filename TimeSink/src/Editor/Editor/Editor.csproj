@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>9ed30664-e5ae-41f8-8d82-02ce702f636d</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -116,14 +116,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ContentReference\ContentReference.csproj">
+      <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
+      <Name>ContentReference</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Engine.Core\Engine.Core.csproj">
       <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
       <Name>Engine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Engine.Game\Engine.GameContent\Engine.GameContent.contentproj">
-      <Project>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</Project>
-      <Name>Engine.GameContent %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
       <Project>{9C3BD6BB-3862-4A30-9DD2-5B929CC5FFCF}</Project>

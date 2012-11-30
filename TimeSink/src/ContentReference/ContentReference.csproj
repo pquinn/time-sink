@@ -1,24 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{B82CD8ED-436D-4920-B182-536D19C2E904}</ProjectGuid>
+    <ProjectGuid>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Engine.Game</RootNamespace>
-    <AssemblyName>Engine.Game</AssemblyName>
+    <RootNamespace>ContentReference</RootNamespace>
+    <AssemblyName>ContentReference</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaProfile>HiDef</XnaProfile>
-    <XnaCrossPlatformGroupID>80062647-ac55-4753-8b5e-87a7eddc7520</XnaCrossPlatformGroupID>
-    <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>HambagLtdLogo2.png</Thumbnail>
-    <!--<SkipNestedContentBuild>true</SkipNestedContentBuild>-->
+    <XnaCrossPlatformGroupID>a6522063-fcdb-4d74-9e51-93a2cbeec44e</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,15 +43,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Configuration">
-      <HintPath>..\..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="FarseerPhysicsXNA">
-      <HintPath>..\..\..\lib\FarseerPhysicsXNA.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -67,7 +55,6 @@
     <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
@@ -89,41 +76,29 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeSinkGame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-    <Content Include="HambagLtdLogo2.png" />
-    <None Include="App.config" />
-    <None Include="packages.config" />
-    <None Include="readme.htm" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ContentReference\ContentReference.csproj">
-      <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
-      <Name>ContentReference</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Engine.Core\Engine.Core.csproj">
-      <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
-      <Name>Engine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
-      <Project>{9c3bd6bb-3862-4a30-9dd2-5b929cc5ffcf}</Project>
-      <Name>TimeSink.Entities</Name>
+    <ProjectReference Include="..\Engine.Game\Engine.GameContent\Engine.GameContent.contentproj">
+      <Project>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</Project>
+      <Name>Engine.GameContent %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
