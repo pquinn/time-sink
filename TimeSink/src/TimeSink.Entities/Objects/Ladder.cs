@@ -117,7 +117,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return new BasicRendering("blank", Position, 0, new Vector2(Width, Height)); }
+            get { return new BasicRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, new Vector2(200,1000)); }
         }
 
         public override IRendering Rendering

@@ -57,7 +57,6 @@ namespace TimeSink.Engine.Core.Collisions
             foreach (var geo in coll.CollisionGeometry)
             {
                 geo.OnCollision -= onCollision;
-                geo.Dispose();
                 continue;
             }
             */
