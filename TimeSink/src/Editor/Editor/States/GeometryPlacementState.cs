@@ -50,7 +50,7 @@ namespace Editor
 
         public override void Enter()
         {
-            chains = StateMachine.Owner.Level.CollisionGeometry.Select(x => x.Vertices.ToList()).ToList();
+            chains = StateMachine.Owner.Level.CollisionGeometry;
         }
 
         public override void Execute()

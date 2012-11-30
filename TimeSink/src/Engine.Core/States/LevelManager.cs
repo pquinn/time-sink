@@ -164,7 +164,8 @@ namespace TimeSink.Engine.Core.States
             Level.CollisionGeometry.ForEach(
                 x =>
                 {
-                    body.CreateFixture(x);
+                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
+                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
                 });
         }
 
@@ -182,7 +183,8 @@ namespace TimeSink.Engine.Core.States
             Level.CollisionGeometry.ForEach(
                 x =>
                 {
-                    body.CreateFixture(x);
+                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
+                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
                 });
         }
     }
