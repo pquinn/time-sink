@@ -44,10 +44,5 @@ namespace TimeSink.Engine.Core.Physics
         {
             World.Clear();
         }
-
-        internal static void RegisterChain(LoopShape x)
-        {
-
-        }
     }
 }
