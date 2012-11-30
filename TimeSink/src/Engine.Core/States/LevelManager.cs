@@ -78,6 +78,20 @@ namespace TimeSink.Engine.Core.States
             entities.ForEach(RegisterEntity);
         }
 
+        public void UnregisterEntity(Entity entity)
+        {
+            Level.Entities.Remove(entity);
+            PhysicsManager.UnregisterPhysicsBody(entity);
+            CollisionManager.UnregisterCollideable(entity);
+            RenderManager.UnregisterRenderable(entity);
+            EditorRenderManager.UnregisterPreviewable(entity);
+        }
+
+        public void UnregisterEntities(IEnumerable<Entity> entities)
+        {
+            entities.ForEach(UnregisterEntity);
+        }
+
         public void SerializeLevel(string fileName)
         {
             using (var xmlWriter = XmlWriter.Create(fileName))
@@ -139,6 +153,12 @@ namespace TimeSink.Engine.Core.States
                     RenderManager.RegisterRenderable(x);
                     EditorRenderManager.RegisterPreviewable(x);
                 });
+
+            //Level.CollisionGeometry.ForEach(
+            //    x =>
+            //    {
+            //        PhysicsManager.RegisterChain(x);
+            //    });
         }
     }
 }
