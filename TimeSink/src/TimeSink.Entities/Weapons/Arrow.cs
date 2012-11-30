@@ -85,12 +85,13 @@ namespace TimeSink.Entities.Weapons
         //}
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Entity entity, Contact info)
+        public bool OnCollidedWith(Entity entity, Contact info)
         {
             if (!(entity is UserControlledCharacter || entity is Trigger))
             {
                 Dead = true;
             }
+            return true;
         }
 
         public override void Load(IComponentContext engineRegistrations)

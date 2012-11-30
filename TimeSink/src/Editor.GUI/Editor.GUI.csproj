@@ -207,6 +207,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ContentReference\ContentReference.csproj">
+      <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
+      <Name>ContentReference</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Editor\Editor\Editor.csproj">
       <Project>{E7F2B40C-B691-4555-8742-AB3834AB1013}</Project>
       <Name>Editor %28Editor\Editor%29</Name>

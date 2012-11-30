@@ -583,7 +583,7 @@ namespace TimeSink.Entities
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(WorldGeometry world, Contact info)
+        public bool OnCollidedWith(WorldGeometry world, Contact info)
         {
             Vector2 normal;
             FixedArray2<Vector2> points;
@@ -592,6 +592,7 @@ namespace TimeSink.Entities
             {
                 __touchingGroundFlag = true;
             }
+            return true;
         }
 
         public override IRendering Rendering

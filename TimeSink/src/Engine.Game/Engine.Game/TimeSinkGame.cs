@@ -106,8 +106,8 @@ namespace TimeSink.Engine.Game
             LevelManager.RegisterEntities(
                 new List<Entity>()
                 {
-                    character,
                     world,
+                    character,
                     dummy,
                     normalCentipede,
                     flyingCentipede,
@@ -123,13 +123,17 @@ namespace TimeSink.Engine.Game
             world.Load(Container);
             character.Load(Container);
 
-            FixtureFactory.AttachRectangle(
+            var oneWayBody = BodyFactory.CreateBody(LevelManager.PhysicsManager.World, world);
+            
+            var oneway = FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),
                 PhysicsConstants.PixelsToMeters(50),
                 1,
-                PhysicsConstants.PixelsToMeters(new Vector2(300, 400)),
-                world.Physics,
+                PhysicsConstants.PixelsToMeters(new Vector2(800, 600)),
+                oneWayBody,
                 world);
+
+            new OneWayPlatform(oneway);
 
             FixtureFactory.AttachPolygon(
                 new FarseerPhysics.Common.Vertices() {

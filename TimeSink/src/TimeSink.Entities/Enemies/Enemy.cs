@@ -103,21 +103,24 @@ namespace TimeSink.Entities.Enemies
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Arrow arrow, Contact info)
+        public bool OnCollidedWith(Arrow arrow, Contact info)
         {
             health -= 25;
+            return true;
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(Dart dart, Contact info)
+        public bool OnCollidedWith(Dart dart, Contact info)
         {
             RegisterDot(dart.dot);
+            return true;
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(UserControlledCharacter c, Contact info)
+        public bool OnCollidedWith(UserControlledCharacter c, Contact info)
         {
             c.TakeDamage(25);
+            return true;
         }
 
         public override void Update(GameTime time, EngineGame world)
