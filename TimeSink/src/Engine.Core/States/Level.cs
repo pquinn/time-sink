@@ -15,7 +15,7 @@ namespace TimeSink.Engine.Core
 {
     public class Level
     {
-        private bool isGeoDirty;
+        private bool isGeoDirty = true;
         private List<LoopShape> geoCache;
 
         public Level()

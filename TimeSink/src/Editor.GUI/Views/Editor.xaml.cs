@@ -165,7 +165,10 @@ namespace TimeSink.Editor.GUI.Views
 
                 entityWindow.ShowDialog();
 
-                entities.Remove(entityWindow.SelectedEntity);
+                if (entityWindow.SelectedEntity != null)
+                {
+                    entities.Remove(entityWindow.SelectedEntity);
+                }
                 Game.LevelManager.UnregisterEntities(entities);
 
                 ResetHandle();
@@ -188,7 +191,7 @@ namespace TimeSink.Editor.GUI.Views
                             return result.Value;
                         });
                 }
-                else
+                else if (entityWindow.SelectedEntity != null)
                 {
                     Game.LevelManager.UnregisterEntity(entityWindow.SelectedEntity);
                 }

@@ -29,7 +29,7 @@ namespace TimeSink.Engine.Core.States
             Container = container;
             Level = new Level();
 
-            Physics = BodyFactory.CreateBody(PhysicsManager.World, Level);
+            Physics = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
         }
 
         public CollisionManager CollisionManager { get; private set; }
@@ -158,10 +158,13 @@ namespace TimeSink.Engine.Core.States
                     EditorRenderManager.RegisterPreviewable(x);
                 });
 
+            // todo: this is not the right way to do this.
+            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+
             Level.CollisionGeometry.ForEach(
                 x =>
                 {
-                    Physics.CreateFixture(x);
+                    body.CreateFixture(x);
                 });
         }
 
