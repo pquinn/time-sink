@@ -20,6 +20,7 @@ namespace TimeSink.Engine.Core
 
         public Level()
         {
+            PlayerStart = new Vector2(300, -500);
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();

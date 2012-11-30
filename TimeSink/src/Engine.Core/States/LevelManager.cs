@@ -17,6 +17,8 @@ using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core.States
 {
+    public delegate void LevelLoadedEventHandler();
+
     public class LevelManager
     {
         public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager,
@@ -43,6 +45,8 @@ namespace TimeSink.Engine.Core.States
         public IComponentContext Container { get; private set; }
 
         public Level Level { get; set; }
+
+        public LevelLoadedEventHandler LevelLoaded { get; set; }
 
         public void RegisterMidground(Tile tile)
         {
@@ -122,6 +126,9 @@ namespace TimeSink.Engine.Core.States
 
                     RegisterLevelComponents();
                 }
+
+                if (LevelLoaded != null)
+                    LevelLoaded();
             }
         }
 

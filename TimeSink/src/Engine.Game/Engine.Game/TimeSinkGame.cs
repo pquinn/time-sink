@@ -25,6 +25,7 @@ using TimeSink.Entities.Enemies;
 using TimeSink.Entities.Objects;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Entities.Objects;
+using Autofac;
 #endregion
 
 namespace TimeSink.Engine.Game
@@ -179,6 +180,11 @@ namespace TimeSink.Engine.Game
         {
             base.LoadContent();
 
+            var updater = new ContainerBuilder();
+            updater.RegisterModule<EntityBootstrapper>();
+
+            updater.Update((IContainer)Container);
+
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
@@ -206,7 +212,6 @@ namespace TimeSink.Engine.Game
                 this.Exit();
 
             view = ProcessCameraInput(gameTime);
-
 
             HandleInput(gameTime);
 
@@ -247,6 +252,12 @@ namespace TimeSink.Engine.Game
             ScreenManager.Draw(gameTime);
         }
 
+        protected override void LevelLoaded()
+        {
+            base.LevelLoaded();
+
+            LevelManager.RegisterEntity(new UserControlledCharacter(LevelManager.Level.PlayerStart));
+        }
 
         #region Controller code
 

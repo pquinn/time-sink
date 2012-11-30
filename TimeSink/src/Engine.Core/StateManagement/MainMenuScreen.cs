@@ -60,6 +60,11 @@ namespace TimeSink.Engine.Core.StateManagement
 
         }
 
+        public MenuEntry PlayGameMenuEntry { get; set; }
+        public MenuEntry OptionsMenuEntry { get; set; }
+        public MenuEntry LoadMenuEntry { get; set; }
+        public MenuEntry ExitMenuEntry { get; set; }
+
         /// <summary>
         /// Loads graphics content for this screen. This uses the shared ContentManager
         /// provided by the Game class, so the content will remain loaded forever.

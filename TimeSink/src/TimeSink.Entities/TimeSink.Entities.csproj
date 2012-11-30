@@ -71,6 +71,8 @@
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
+    <Compile Include="EntityBootstrapper.cs" />
+    <Compile Include="IEntityMetadata.cs" />
     <Compile Include="IInventoryItem.cs" />
     <Compile Include="Objects\Ladder.cs" />
     <Compile Include="Objects\MovingPlatform.cs" />

@@ -72,15 +72,8 @@ namespace TimeSink.Engine.Core
             Camera = Camera.ZeroedCamera;
 
             // create default level
-            LevelManager = new LevelManager(
-                new CollisionManager(),
-                new PhysicsManager(Container),
-                new RenderManager(TextureCache),
-                new EditorRenderManager(TextureCache),
-                Container);
-
-            // create default level
             LevelManager = Container.Resolve<LevelManager>();
+            LevelManager.LevelLoaded += new LevelLoadedEventHandler(LevelLoaded);
 
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
@@ -153,6 +146,10 @@ namespace TimeSink.Engine.Core
             SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected virtual void LevelLoaded()
+        {
         }
     }
 }

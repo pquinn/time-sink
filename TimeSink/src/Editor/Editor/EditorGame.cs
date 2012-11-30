@@ -24,6 +24,7 @@ using FarseerPhysics.Dynamics;
 using XNAControl;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.DebugViews;
+using TimeSink.Entities;
 
 namespace Editor
 {
