@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -208,7 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ContentReference\ContentReference.csproj">
-      <Project>{7065ebe9-0ffa-4e0e-aeeb-216c1fda6b52}</Project>
+      <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
       <Name>ContentReference</Name>
     </ProjectReference>
     <ProjectReference Include="..\Editor\Editor\Editor.csproj">

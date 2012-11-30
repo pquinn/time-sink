@@ -74,10 +74,11 @@ namespace TimeSink.Entities
         }
 
         [OnCollidedWith.Overload]
-        public void OnCollidedWith(ICollideable obj, Contact info)
+        public bool OnCollidedWith(ICollideable obj, Contact info)
         {
             if (Triggered != null)
                 Triggered(obj);
+            return true;
         }
 
         private bool initialized;

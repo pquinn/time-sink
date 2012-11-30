@@ -19,19 +19,22 @@ namespace TimeSink.Engine.Core.Collisions
             {
                 geo.OnCollision += onCollision;
                 geo.OnSeparation += onSeparation;
-
             }
         }
 
         private static bool onCollision(Fixture f1, Fixture f2, Contact contact)
         {
-            OnCollidedWith.Invoke(f1.Body.UserData as ICollideable, f2.Body.UserData as ICollideable, contact);
-            return true;
+            return OnCollidedWith.Invoke(
+                f1.Body.UserData as ICollideable, 
+                f2.Body.UserData as ICollideable, 
+                contact);
         }
 
         private static void onSeparation(Fixture f1, Fixture f2)
         {
-            OnSeparation.Invoke(f1.Body.UserData as ICollideable, f2.Body.UserData as ICollideable);
+            OnSeparation.Invoke(
+                f1.Body.UserData as ICollideable, f1,
+                f2.Body.UserData as ICollideable, f2);
         }
 
         public void UnregisterCollideable(ICollideable coll)
