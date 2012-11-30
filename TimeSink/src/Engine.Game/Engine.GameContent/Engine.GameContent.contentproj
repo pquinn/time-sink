@@ -727,6 +727,7 @@
     </Compile>
     <Compile Include="Textures\Levels\Level 2\Level-2%4033.PNG">
       <Name>Level-2%4033</Name>
+    </Compile>
     <Compile Include="Textures\Enemies\Centipede\Neutral.png">
       <Name>Neutral</Name>
       <Importer>TextureImporter</Importer>
