@@ -40,23 +40,6 @@ namespace TimeSink.Engine.Core
         [XmlIgnore]
         public List<Entity> Entities { get; set; }
 
-        [XmlIgnore]
-        public List<LoopShape> CollisionGeometry
-        {
-            get
-            {
-                if (!isGeoDirty)
-                {
-                    return geoCache;
-                }
-                else
-                {
-                    return geoCache =
-                        GeoChains.Select(x => new LoopShape(new Vertices(x))).ToList();
-                }
-            }
-        }
-
         public void FlushEntities()
         {
             EntitySerializations = Entities.Select(
