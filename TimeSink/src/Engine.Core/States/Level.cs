@@ -16,7 +16,7 @@ namespace TimeSink.Engine.Core
     public class Level
     {
         private bool isGeoDirty = true;
-        private List<LoopShape> geoCache;
+        private List<List<EdgeShape>> geoCache;
 
         public Level()
         {
@@ -40,19 +40,11 @@ namespace TimeSink.Engine.Core
         public List<Entity> Entities { get; set; }
 
         [XmlIgnore]
-        public List<LoopShape> CollisionGeometry
+        public List<List<Vector2>> CollisionGeometry
         {
             get
             {
-                if (!isGeoDirty)
-                {
-                    return geoCache;
-                }
-                else
-                {
-                    return geoCache =
-                        GeoChains.Select(x => new LoopShape(new Vertices(x))).ToList();
-                }
+                return GeoChains;
             }
         }
 
