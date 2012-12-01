@@ -55,6 +55,7 @@ namespace Editor
 
         public override void Exit()
         {
+            stopMakingChain();
             StateMachine.Owner.ResetGeometry();
         }
 

@@ -88,7 +88,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            GameplayScreen gp = new GameplayScreen();   
+            GameplayScreen gp = new GameplayScreen(EngineGame.Instance.LevelManager);   
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                                gp);
             ScreenManager.CurrentGameplay = gp;

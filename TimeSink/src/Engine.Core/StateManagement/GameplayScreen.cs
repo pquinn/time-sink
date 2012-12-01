@@ -51,7 +51,7 @@ namespace TimeSink.Engine.Core.StateManagement
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
 
-        Level currentLevel;
+        LevelManager currentLevel;
 
 
 
@@ -80,7 +80,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(LevelManager lm)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -93,12 +93,9 @@ namespace TimeSink.Engine.Core.StateManagement
                 new Buttons[] { Buttons.A },
                 new Keys[] { Keys.Enter },
                 true);
+            currentLevel = lm;
         }
 
-        public void LoadLevel(Level level)
-        {
-            this.currentLevel = level;
-        }
 
         /// <summary>
         /// Loads graphics content for this screen. This uses the shared ContentManager
@@ -228,6 +225,11 @@ namespace TimeSink.Engine.Core.StateManagement
                     e.Update(gameTime, world);
                 }*/
                 UpdateHudElements();
+
+
+                currentLevel.PhysicsManager.Update(gameTime);
+
+                currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
             }
         }
 
@@ -326,6 +328,8 @@ namespace TimeSink.Engine.Core.StateManagement
 
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+
+            currentLevel.RenderManager.Draw(spriteBatch, EngineGame.Instance.Camera);
 
             spriteBatch.Begin();
 

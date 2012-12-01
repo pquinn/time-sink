@@ -120,14 +120,16 @@ namespace TimeSink.Engine.Core
 
             InputManager.Instance.Update();
 
-            LevelManager.PhysicsManager.Update(gameTime);
+         /* Gameplayscreen handles updating the Level 
+          * 
+          * LevelManager.PhysicsManager.Update(gameTime);
 
-            LevelManager.Level.Entities.ForEach(x => x.Update(gameTime, this));
+            LevelManager.Level.Entities.ForEach(x => x.Update(gameTime, this));*/
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            LevelManager.RenderManager.Draw(SpriteBatch, Camera);
+           // LevelManager.RenderManager.Draw(SpriteBatch, Camera);
 
             SpriteBatch.Begin();
 

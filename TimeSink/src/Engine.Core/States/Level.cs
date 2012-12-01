@@ -16,15 +16,14 @@ namespace TimeSink.Engine.Core
     public class Level
     {
         private bool isGeoDirty = true;
-        private List<LoopShape> geoCache;
+        private List<List<EdgeShape>> geoCache;
 
         public Level()
         {
-            PlayerStart = new Vector2(300, -500);
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();
-            GeoChains = new List<List<Vector2>>();
+            GeoChains = new List<List<Vector2>>() { new List<Vector2>() };
         }
 
         public Vector2 PlayerStart { get; set; }
