@@ -23,7 +23,7 @@ namespace TimeSink.Engine.Core
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();
-            GeoChains = new List<List<Vector2>>();
+            GeoChains = new List<List<Vector2>>() { new List<Vector2>() };
         }
 
         public Vector2 PlayerStart { get; set; }
