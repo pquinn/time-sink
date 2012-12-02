@@ -211,9 +211,12 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 this.Exit();
 
-            view = ProcessCameraInput(gameTime);
+            view = ProcessControllerInput(gameTime);
 
             HandleInput(gameTime);
+
+            Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(character.Position), 0) -
+                new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0); 
 
             ScreenManager.Update(gameTime, this);
 
@@ -256,7 +259,8 @@ namespace TimeSink.Engine.Game
         {
             base.LevelLoaded();
 
-            LevelManager.RegisterEntity(new UserControlledCharacter(LevelManager.Level.PlayerStart));
+            character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            LevelManager.RegisterEntity(character);
         }
 
         #region Controller code
@@ -331,7 +335,7 @@ namespace TimeSink.Engine.Game
         /// Handles controller input.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public Matrix ProcessCameraInput(GameTime gameTime)
+        public Matrix ProcessControllerInput(GameTime gameTime)
         {
             if (IsActive)
             {

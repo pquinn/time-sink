@@ -135,13 +135,20 @@ namespace TimeSink.Engine.Core
 
             if (RenderDebugGeometry)
             {
-                var projection = Matrix.CreateOrthographicOffCenter(
-                    0,
-                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
-                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
-                    0,
-                    0,
-                    1);
+                Vector3 scale;
+                Quaternion rot;
+                Vector3 tran;
+                Camera.Transform.Decompose(out scale, out rot, out tran);
+                var projection =
+                    Matrix.CreateScale(scale) *
+                    Matrix.CreateTranslation(tran / 64f) *
+                    Matrix.CreateOrthographicOffCenter(
+                        0,
+                        PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                        PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
+                        0,
+                        0,
+                        1);
                 debugView.RenderDebugData(ref projection);
             }
 

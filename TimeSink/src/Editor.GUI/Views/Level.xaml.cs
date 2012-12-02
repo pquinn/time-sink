@@ -17,34 +17,42 @@ using System.IO;
 using TimeSink.Engine.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Editor.GUI.Views
 {
     /// <summary>
     /// Interaction logic for Level.xaml
     /// </summary>
-    public partial class Level : UserControl
+    public partial class LevelProperties : UserControl
     {
         private bool isLoaded;
 
-        public Level()
+        public LevelProperties()
         {
             InitializeComponent();
-            Loaded += new RoutedEventHandler(Level_Loaded);
+            Loaded += new RoutedEventHandler(LevelProperties_Loaded);
         }
 
-        void Level_Loaded(object sender, RoutedEventArgs e)
+        public EditorGame Game { get; set; }
+
+        void LevelProperties_Loaded(object sender, RoutedEventArgs e)
         {
             if (!isLoaded)
             {
                 var mainWindow = this.TryFindParent<MainWindow>();
                 Game = mainWindow.editor.Game;
 
+                Game.LevelManager.LevelLoaded += new LevelLoadedEventHandler(Level_Loaded);
+
                 isLoaded = true;
             }
         }
 
-        public EditorGame Game { get; set; }
+        private void Level_Loaded()
+        {
+            spawn_txt.Text = Game.LevelManager.Level.PlayerStart.ToDisplayString();
+        }
 
         private void Background_Click(object sender, RoutedEventArgs e)
         {
@@ -68,6 +76,11 @@ namespace TimeSink.Editor.GUI.Views
         private void Foreground_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Apply_Click(object sender, RoutedEventArgs e)
+        {
+            Game.LevelManager.Level.PlayerStart = spawn_txt.Text.ParseVector();
         }
 
         private void LoadMidground(string path)

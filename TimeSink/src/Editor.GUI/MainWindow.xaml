@@ -58,8 +58,8 @@
                 </Core:Dialogue>
             </TabItem>
             <TabItem Header="Level" Name="tabItem8">
-                <Core:Level x:Name="levelControl">
-                </Core:Level>
+                <Core:LevelProperties x:Name="levelControl">
+                </Core:LevelProperties>
             </TabItem>
         </TabControl>
     </Grid>

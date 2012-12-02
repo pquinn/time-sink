@@ -183,7 +183,7 @@ namespace Editor
         private void startMakingNewChain()
         {
             _chainIndex = chains.Count;
-            if (chains[_chainIndex - 1].Count == 0)
+            if (_chainIndex != 0 && chains[_chainIndex - 1].Count == 0)
                 _chainIndex--;
             makingChain = true;
         }
@@ -194,8 +194,8 @@ namespace Editor
 
             makingChain = false;
 
-            StateMachine.Owner.Level.GeoChains.Clear();
-            StateMachine.Owner.Level.GeoChains.AddRange(chains);
+            //StateMachine.Owner.Level.GeoChains.Clear();
+            //StateMachine.Owner.Level.GeoChains.AddRange(chains);
 
             lastPlaced = null;
             _chainIndex = chains.Count;
