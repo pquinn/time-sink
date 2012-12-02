@@ -648,13 +648,13 @@ namespace TimeSink.Entities
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Vine vine, Contact info)
         {
-            //attachedToVine = true;
-            //vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
-            //var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-            //var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
-            //vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight/2));
-            ////Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
-            ////Physics.FixedRotation = false;
+            attachedToVine = true;
+            vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
+            var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
+            var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+            vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
+            //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
+            //Physics.FixedRotation = false;
             return true;
         }
 
