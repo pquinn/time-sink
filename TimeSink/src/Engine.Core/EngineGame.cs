@@ -159,6 +159,7 @@ namespace TimeSink.Engine.Core
 
         protected virtual void LevelLoaded()
         {
+            LevelManager.CollisionManager.Initialize();
         }
     }
 }
