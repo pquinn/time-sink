@@ -217,9 +217,6 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
-            //__touchingGroundFlag = false;
-
             touchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -242,7 +239,7 @@ namespace TimeSink.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 1;
+            var amount = 1f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -253,6 +250,11 @@ namespace TimeSink.Entities
 
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
+
+            if (touchingGround)
+                Physics.Friction = 10;
+            else
+                Physics.Friction = .01f;
 
             #region Movement
             #region gamepad
@@ -337,6 +339,11 @@ namespace TimeSink.Entities
                 if (canClimb)
                 {
                     movedirection.Y += 1.0f;
+                }
+                else if (touchingGround)
+                {
+                    Physics.Friction = .1f;
+                    Physics.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
             #endregion
@@ -534,11 +541,6 @@ namespace TimeSink.Entities
                 // Move player based on the controller direction and time scale.
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
-
-            if (touchingGround)
-                Physics.Friction = 10;
-            else
-                Physics.Friction = .01f;
 
             ClampVelocity();
 
@@ -832,7 +834,7 @@ namespace TimeSink.Entities
         {
         }
 
-        private const float X_CLAMP = 10;
+        private const float X_CLAMP = 8;
         private const float Y_CLAMP = 30;
 
         private bool initialized;
