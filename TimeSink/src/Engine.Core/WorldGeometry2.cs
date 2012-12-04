@@ -76,7 +76,7 @@ namespace TimeSink.Engine.Core
 
                 Physics = BodyFactory.CreateBody(world, this);
                 Physics.BodyType = BodyType.Static;
-                Physics.Friction = .5f;
+                Physics.Friction = 1.0f;
                 collisionGeometry = Physics.FixtureList;
 
                 Physics.CollidesWith = Category.All;
@@ -88,7 +88,9 @@ namespace TimeSink.Engine.Core
                     x =>
                     {
                         foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
+                        {
                             FixtureFactory.AttachEdge(pair.Item1, pair.Item2, Physics);
+                        }
                     });
                 }
 

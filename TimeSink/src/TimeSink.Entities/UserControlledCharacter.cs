@@ -84,7 +84,7 @@ namespace TimeSink.Entities
         private float shield;
         private bool canClimb = false;
         private World _world;
-        
+
         private bool attachedToVine = false;
         private Joint vineAttachment;
 
@@ -207,7 +207,7 @@ namespace TimeSink.Entities
 
         public void TakeDamage(float val)
         {
-            
+
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
                 Health -= val;
@@ -242,7 +242,7 @@ namespace TimeSink.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 4;
+            var amount = 1;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -407,23 +407,24 @@ namespace TimeSink.Entities
                 if (canClimb && !touchingGround && jumpToggleGuard)
                 {
                     Physics.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
                 }
                 if (jumpToggleGuard && touchingGround)
                 {
+                    jumpStarted = true;
+                    jumpSound.Play();
+                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    jumpToggleGuard = false;
+
                     if (currentState == BodyStates.WalkingRight ||
                         currentState == BodyStates.NeutralRight ||
                         currentState == BodyStates.JumpingRight) //Will be changed once we have a landing anim
                     {
                         currentState = BodyStates.JumpingRight;
                         animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
                     }
                     else if (currentState == BodyStates.WalkingLeft ||
                              currentState == BodyStates.NeutralLeft ||
@@ -431,10 +432,6 @@ namespace TimeSink.Entities
                     {
                         currentState = BodyStates.JumpingLeft;
                         animations[BodyStates.JumpingLeft].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
                     }
                 }
             }
@@ -513,13 +510,13 @@ namespace TimeSink.Entities
                 {
                     animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
                 }
-              /*  else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
-                {
-                    animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                    currentState = BodyStates.NeutralRight;
-                }*/
+                /*  else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
+                  {
+                      animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                      currentState = BodyStates.NeutralRight;
+                  }*/
 
-               // timer = 0f;
+                // timer = 0f;
             }
 
             if (movedirection != Vector2.Zero)
@@ -538,7 +535,25 @@ namespace TimeSink.Entities
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
 
+            ClampVelocity();
+
             UpdateAnimationStates();
+        }
+
+        private void ClampVelocity()
+        {
+            var v = Physics.LinearVelocity;
+            if (v.X > X_CLAMP)
+                v.X = X_CLAMP;
+            else if (v.X < -X_CLAMP)
+                v.X = -X_CLAMP;
+
+            if (v.Y > Y_CLAMP)
+                v.Y = Y_CLAMP;
+            else if (v.Y < -Y_CLAMP)
+                v.Y = -Y_CLAMP;
+
+            Physics.LinearVelocity = v;
         }
 
         protected void UpdateAnimationStates()
@@ -660,7 +675,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                 var anim = animations[currentState];
+                var anim = animations[currentState];
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 return anim;
             }
@@ -811,7 +826,10 @@ namespace TimeSink.Entities
         public void RegisterDot(DamageOverTimeEffect dot)
         {
         }
-        
+
+        private const float X_CLAMP = 10;
+        private const float Y_CLAMP = 30;
+
         private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
@@ -856,7 +874,7 @@ namespace TimeSink.Entities
 
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
-                Physics.Friction = .5f;
+                Physics.Friction = 10.0f;
 
                 initialized = true;
             }
