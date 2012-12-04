@@ -20,6 +20,8 @@ namespace Editor.States
             TextureCache = textureCache;
         }
 
+        public bool IsMouseInteractionEnabled { get; set; }
+
         protected Camera Camera { get; set; }
 
         protected IResourceCache<Texture2D> TextureCache { get; set; }

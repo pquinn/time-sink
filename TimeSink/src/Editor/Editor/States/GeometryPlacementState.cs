@@ -66,6 +66,9 @@ namespace Editor
 
         public override void Execute()
         {
+            if (!IsMouseInteractionEnabled)
+                return;
+
             highlighted = null;
 
             var mouse = InputManager.Instance.CurrentMouseState;
