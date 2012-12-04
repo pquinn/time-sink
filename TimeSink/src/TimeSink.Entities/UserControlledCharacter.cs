@@ -535,6 +535,11 @@ namespace TimeSink.Entities
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
 
+            if (touchingGround)
+                Physics.Friction = 10;
+            else
+                Physics.Friction = .01f;
+
             ClampVelocity();
 
             UpdateAnimationStates();

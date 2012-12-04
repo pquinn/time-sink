@@ -244,6 +244,17 @@ namespace TimeSink.Editor.GUI.Views
                     if (oneWayCollisionButton.IsChecked == true)
                         state.OneWay = true;
                 };
+
+                //TODO: fixme
+                xnaControl.GotFocus += delegate
+                {
+                    state.IsMouseInteractionEnabled = true;
+                };
+                xnaControl.LostFocus += delegate
+                {
+                    state.IsMouseInteractionEnabled = false;
+                };
+
                 collisionType.Visibility = Visibility.Visible;
             }
             else
