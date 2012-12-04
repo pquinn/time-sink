@@ -344,7 +344,6 @@ namespace TimeSink.Engine.Core.StateManagement
             spriteBatch.End();
         }
 
-
         #endregion
     }
 }
