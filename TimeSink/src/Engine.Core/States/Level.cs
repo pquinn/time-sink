@@ -10,6 +10,7 @@ using System.Linq;
 using FarseerPhysics.Common;
 using TimeSink.Engine.Core.States;
 using Autofac;
+using System;
 
 namespace TimeSink.Engine.Core
 {
@@ -74,13 +75,14 @@ namespace TimeSink.Engine.Core
                 {
                     var entity = entities.First(e => e.Id == x.EntityId);
                     var type = entity.GetType();
+                    var clone = Activator.CreateInstance(type) as Entity;
                     x.PropertiesMap.ForEach(
                         p =>
                         {
-                            type.GetProperty(p.Key).SetValue(entity, p.Value, null);
+                            type.GetProperty(p.Key).SetValue(clone, p.Value, null);
                         });
 
-                    Entities.Add(entity);
+                    Entities.Add(clone);
                 });
         }
     }
