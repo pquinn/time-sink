@@ -16,14 +16,8 @@ namespace TimeSink.Entities
     public class OneWayPlatform
     {
         private Shape collisionShape;
-        private bool initialized;
 
         private Dictionary<Fixture, bool> separatedDict = new Dictionary<Fixture, bool>();
-
-        public OneWayPlatform(Shape shape)
-        {
-            collisionShape = shape;
-        }
 
         public OneWayPlatform(Fixture f)
         {
@@ -32,17 +26,6 @@ namespace TimeSink.Entities
             //sensor.OnSeparation += new OnSeparationEventHandler((f1, f2) => Console.WriteLine());
             sensor.OnSeparation += new OnSeparationEventHandler(OnSeparation);
             f.UserData = this;
-            
-            initialized = true;
-        }
-
-        public void InitializePhysics(Body worldBody)
-        {
-            if (!initialized) return;
-
-            var fixture = worldBody.CreateFixture(collisionShape);
-            fixture.OnSeparation += new OnSeparationEventHandler(OnSeparation);
-            fixture.UserData = this;
         }
 
         void OnSeparation(Fixture fixtureA, Fixture fixtureB)
