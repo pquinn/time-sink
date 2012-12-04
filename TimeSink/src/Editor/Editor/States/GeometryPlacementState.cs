@@ -116,8 +116,6 @@ namespace Editor
                     }
                     else if (InputManager.Instance.Pressed(Keys.LeftControl) || InputManager.Instance.Pressed(Keys.RightControl))
                     {
-                        var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
-
                         if (makingChain)
                         {
                             selectedChain.RemoveAll(x => x.EndPoint == highlighted);
