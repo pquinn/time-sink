@@ -28,7 +28,7 @@ namespace Editor.States
         {
             base.DragStart();
 
-            center = selectedMeshes[drillIndex].Rendering.GetCenter(
+            center = selectedMeshes[drillIndex].Preview.GetCenter(
                 StateMachine.Owner.RenderManager.TextureCache, Matrix.Identity);
             dragOffset = dragPivot - center;
 

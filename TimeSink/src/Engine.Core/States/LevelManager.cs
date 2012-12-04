@@ -17,6 +17,8 @@ using FarseerPhysics.Dynamics;
 
 namespace TimeSink.Engine.Core.States
 {
+    public delegate void LevelLoadedEventHandler();
+
     public class LevelManager
     {
         public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager,
@@ -43,6 +45,8 @@ namespace TimeSink.Engine.Core.States
         public IComponentContext Container { get; private set; }
 
         public Level Level { get; set; }
+
+        public LevelLoadedEventHandler LevelLoaded { get; set; }
 
         public void RegisterMidground(Tile tile)
         {
@@ -100,6 +104,9 @@ namespace TimeSink.Engine.Core.States
         {
             using (var xmlWriter = XmlWriter.Create(fileName))
             {
+                var worldGeo = Level.Entities.FindAll(x => x is WorldGeometry2);
+                UnregisterEntities(worldGeo);
+
                 Level.FlushEntities();
 
                 var serializer = new XmlSerializer(typeof(Level));
@@ -122,6 +129,9 @@ namespace TimeSink.Engine.Core.States
 
                     RegisterLevelComponents();
                 }
+
+                if (LevelLoaded != null)
+                    LevelLoaded();
             }
         }
 
@@ -158,15 +168,7 @@ namespace TimeSink.Engine.Core.States
                     EditorRenderManager.RegisterPreviewable(x);
                 });
 
-            // todo: this is not the right way to do this.
-            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
-
-            Level.CollisionGeometry.ForEach(
-                x =>
-                {
-                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
-                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
-                });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
         }
 
         public Body Physics;
@@ -177,15 +179,10 @@ namespace TimeSink.Engine.Core.States
             fixtures.ForEach(x => x.Dispose());
             fixtures.Clear();
 
-            // todo: this is not the right way to do this.
-            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+            var worldGeo = Level.Entities.FindAll(x => x is WorldGeometry2);
+            UnregisterEntities(worldGeo);
 
-            Level.CollisionGeometry.ForEach(
-                x =>
-                {
-                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
-                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
-                });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
         }
     }
 }

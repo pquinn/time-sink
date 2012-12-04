@@ -31,8 +31,6 @@ namespace TimeSink.Entities.Weapons
 
         const float DART_SPEED = 30;
 
-        private Vector2 _initialPosition;
-
         public Dart() 
             : this(Vector2.Zero)
         {
@@ -45,7 +43,7 @@ namespace TimeSink.Entities.Weapons
             //    GravityEnabled = true
             //};
 
-            _initialPosition = position;
+            Position = position;
             dot = new DamageOverTimeEffect(4, 100);
         }
 
@@ -105,9 +103,9 @@ namespace TimeSink.Entities.Weapons
             textureCache.LoadResource(DART_TEXTURE_NAME);
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.Update(time, world);
+            base.OnUpdate(time, world);
 
             if (Dead)
             {
@@ -150,7 +148,7 @@ namespace TimeSink.Entities.Weapons
                     PhysicsConstants.PixelsToMeters(16),
                     PhysicsConstants.PixelsToMeters(8),
                     1,
-                    _initialPosition);
+                    Position);
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
                // Physics.IsSensor = true;

@@ -57,7 +57,7 @@ namespace TimeSink.Editor.GUI.Views
                     else if (type.Equals(typeof(Vector2)))
                     {
                         var vec = (Vector2)val; 
-                        var textBox = new TextBox() { Text = string.Format("{0}, {1}", vec.X, vec.Y) };
+                        var textBox = new TextBox() { Text = vec.ToDisplayString() };
                         dynamic.Children.Add(textBox);
                         Grid.SetRow(textBox, i);
                         Grid.SetColumn(textBox, 1);
@@ -92,10 +92,7 @@ namespace TimeSink.Editor.GUI.Views
                         valToSet = Guid.Parse(textBox.Text);
                     else if (type.Equals(typeof(Vector2)))
                     {
-                        var split = textBox.Text.Split(',');
-                        valToSet = new Vector2(
-                            Single.Parse(split[0].Trim()),
-                            Single.Parse(split[1].Trim()));
+                        valToSet = textBox.Text.ParseVector();
                     }
 
                     prop.SetValue(entity, valToSet, null);

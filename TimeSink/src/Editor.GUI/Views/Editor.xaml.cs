@@ -92,66 +92,58 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Pan_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!selectionButtonPressed)
             {
                 Game.PanSelected();
-            }
-            else
-            {
-                ClearButtons();
             }
         }
 
         private void Zoom_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!selectionButtonPressed)
             {
                 Game.ZoomSelected();
-            }
-            else
-            {
-                ClearButtons();
             }
         }
 
         private void Selection_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!selectionButtonPressed)
             {
                 Game.SelectionSelected();
-            }
-            else
-            {
-                ClearButtons();
             }
         }
 
         private void Rotation_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!rotationButtonPressed)
             {
                 Game.RotationSelected();
-            }
-            else
-            {
-                ClearButtons();
             }
         }
 
         private void Scaling_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!selectionButtonPressed)
             {
                 Game.ScalingSelected();
-            }
-            else
-            {
-                ClearButtons();
             }
         }
 
         private void Entities_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!entitiesButtonPressed)
             {
                 var entities = Game.Container.Resolve<IEnumerable<Entity>>().ToList();
@@ -196,14 +188,12 @@ namespace TimeSink.Editor.GUI.Views
                     Game.LevelManager.UnregisterEntity(entityWindow.SelectedEntity);
                 }
             }
-            else
-            {
-                ClearButtons();
-            }
         }
 
         private void Static_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!meshButtonPressed)
             {                
                 var selectorWindow = new StaticMeshSelector(Game.Tiles, Game.TextureCache);
@@ -218,10 +208,6 @@ namespace TimeSink.Editor.GUI.Views
                     Game.StaticMeshSelected(selectorWindow.SelectedKey);
                 }
             }
-            else
-            {
-                ClearButtons();
-            }
         }
 
         private void ResetHandle()
@@ -231,13 +217,33 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Geometry_Click(object sender, RoutedEventArgs e)
         {
+            ClearButtons();
+
             if (!geomButtonPressed)
             {
-                Game.GeometrySelected();
-            }
-            else
-            {
-                ClearButtons();
+                var state = Game.GeometrySelected();
+                standardCollisionButton.Checked += delegate
+                {
+                    if (standardCollisionButton.IsChecked == true)
+                        state.OneWay = false;
+                };
+                oneWayCollisionButton.Checked += delegate
+                {
+                    if (oneWayCollisionButton.IsChecked == true)
+                        state.OneWay = true;
+                };
+
+                //TODO: fixme
+                xnaControl.GotFocus += delegate
+                {
+                    state.IsMouseInteractionEnabled = true;
+                };
+                xnaControl.LostFocus += delegate
+                {
+                    state.IsMouseInteractionEnabled = false;
+                };
+
+                collisionType.Visibility = Visibility.Visible;
             }
         }
 
@@ -251,6 +257,7 @@ namespace TimeSink.Editor.GUI.Views
             geomButtonPressed = false;
             entitiesButtonPressed = false;
             meshButtonPressed = false;
+            collisionType.Visibility = Visibility.Collapsed;
         }
 
         internal void Open(string fileName)

@@ -23,6 +23,6 @@ namespace TimeSink.Engine.Core.States
 
         public Guid EntityId { get; set; }
 
-        public List<Pair<string, object>> PropertiesMap { get; private set; }
+        public List<Pair<string, object>> PropertiesMap { get; set; }
     }
 }

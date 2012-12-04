@@ -1,3 +1,4 @@
+
 #region Using Statements
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ using TimeSink.Entities.Enemies;
 using TimeSink.Entities.Objects;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Entities.Objects;
+using Autofac;
 #endregion
 
 namespace TimeSink.Engine.Game
@@ -83,6 +85,10 @@ namespace TimeSink.Engine.Game
                                                 PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
                                                 4f, 64, 128);
 
+            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
+            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
+                                                  PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
+
 
             RenderDebugGeometry = true;
 
@@ -129,7 +135,7 @@ namespace TimeSink.Engine.Game
                 oneWayBody,
                 world);
 
-            new OneWayPlatform(oneway);
+            //new OneWayPlatform(oneway);
 
             FixtureFactory.AttachPolygon(
                 new FarseerPhysics.Common.Vertices() {
@@ -175,6 +181,11 @@ namespace TimeSink.Engine.Game
         {
             base.LoadContent();
 
+            var updater = new ContainerBuilder();
+            updater.RegisterModule<EntityBootstrapper>();
+
+            updater.Update((IContainer)Container);
+
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
@@ -201,10 +212,12 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
                 this.Exit();
 
-            view = ProcessCameraInput(gameTime);
-
+            view = ProcessControllerInput(gameTime);
 
             HandleInput(gameTime);
+
+            Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(character.Position), 0) -
+                new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0); 
 
             ScreenManager.Update(gameTime, this);
 
@@ -238,11 +251,19 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
             ScreenManager.Draw(gameTime);
+
+            base.Draw(gameTime);
         }
 
+        protected override void LevelLoaded()
+        {
+            base.LevelLoaded();
+
+            character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            character.Load(Container);
+            LevelManager.RegisterEntity(character);
+        }
 
         #region Controller code
 
@@ -316,7 +337,7 @@ namespace TimeSink.Engine.Game
         /// Handles controller input.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public Matrix ProcessCameraInput(GameTime gameTime)
+        public Matrix ProcessControllerInput(GameTime gameTime)
         {
             if (IsActive)
             {

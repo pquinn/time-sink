@@ -20,7 +20,17 @@ namespace TimeSink.Engine.Core
     public abstract class Entity
         : ICollideable, IRenderable, IEditorPreviewable, IKeyboardControllable
     {
-        public virtual void Update(GameTime time, EngineGame world) { }
+        internal void Update(GameTime time, EngineGame world)
+        {
+            OnUpdate(time, world);
+            
+            if (Physics != null)
+            {
+                PreviousPosition = Position;
+            }
+        }
+
+        public virtual void OnUpdate(GameTime time, EngineGame world) { }
 
         [SerializableField]
         public bool Dead { get; set; }
@@ -39,12 +49,24 @@ namespace TimeSink.Engine.Core
         [SerializableField]
         public string InstanceId { get; set; }
 
+        protected Vector2 position;
+
         [EditableField("Position")]
         [SerializableField]
         public Vector2 Position
         {
-            get { return Physics.Position; }
-            set { Physics.Position = value; }
+            get 
+            {
+                if (Physics != null)
+                    return Physics.Position;
+                return position; 
+            }
+            set 
+            { 
+                position = value;
+                if (Physics != null)
+                    Physics.Position = position;
+            }
         }
         
         [XmlIgnore]
@@ -67,5 +89,8 @@ namespace TimeSink.Engine.Core
         {
             get;
         }
+
+        [XmlIgnore]
+        public Vector2? PreviousPosition { get; private set; }
     }
 }

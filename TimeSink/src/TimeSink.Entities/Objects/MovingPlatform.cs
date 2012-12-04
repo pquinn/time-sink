@@ -25,8 +25,6 @@ namespace TimeSink.Entities
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f9de-4ca3-a091-521583c6c6bf");
 
-        protected Vector2 _initialPosition;
-
         protected int textureHeight;
         protected int textureWidth;
 
@@ -47,7 +45,7 @@ namespace TimeSink.Entities
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
-            _initialPosition = startPosition;
+            Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
             Width = width > 0 ? width : 50;
@@ -114,9 +112,9 @@ namespace TimeSink.Entities
             }
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.Update(time, world);
+            base.OnUpdate(time, world);
 
             if (first)
             {
@@ -144,7 +142,7 @@ namespace TimeSink.Entities
                     PhysicsConstants.PixelsToMeters(Width),
                     PhysicsConstants.PixelsToMeters(Height),
                     1,
-                    _initialPosition);
+                    Position);
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Static;
                 Physics.Friction = .5f;

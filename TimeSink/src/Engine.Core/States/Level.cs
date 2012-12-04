@@ -10,20 +10,20 @@ using System.Linq;
 using FarseerPhysics.Common;
 using TimeSink.Engine.Core.States;
 using Autofac;
+using System;
 
 namespace TimeSink.Engine.Core
 {
     public class Level
     {
         private bool isGeoDirty = true;
-        private List<List<EdgeShape>> geoCache;
 
         public Level()
         {
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();
-            GeoChains = new List<List<Vector2>>();
+            GeoSegments = new List<List<WorldCollisionGeometrySegment>>() { new List<WorldCollisionGeometrySegment>() };
         }
 
         public Vector2 PlayerStart { get; set; }
@@ -32,21 +32,12 @@ namespace TimeSink.Engine.Core
 
         public List<Tile> Tiles { get; set; }
 
-        public List<List<Vector2>> GeoChains { get; set; }
+        public List<List<WorldCollisionGeometrySegment>> GeoSegments { get; set; }
 
         public List<EntitySerialization> EntitySerializations { get; set; }
 
         [XmlIgnore]
         public List<Entity> Entities { get; set; }
-
-        [XmlIgnore]
-        public List<List<Vector2>> CollisionGeometry
-        {
-            get
-            {
-                return GeoChains;
-            }
-        }
 
         public void FlushEntities()
         {
@@ -82,15 +73,15 @@ namespace TimeSink.Engine.Core
                 x =>
                 {
                     var entity = entities.First(e => e.Id == x.EntityId);
-                    entity.InitializePhysics(false, container);
                     var type = entity.GetType();
+                    var clone = Activator.CreateInstance(type) as Entity;
                     x.PropertiesMap.ForEach(
                         p =>
                         {
-                            type.GetProperty(p.Key).SetValue(entity, p.Value, null);
+                            type.GetProperty(p.Key).SetValue(clone, p.Value, null);
                         });
 
-                    Entities.Add(entity);
+                    Entities.Add(clone);
                 });
         }
     }

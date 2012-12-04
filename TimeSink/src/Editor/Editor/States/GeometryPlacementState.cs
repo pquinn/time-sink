@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Collisions;
 
 namespace Editor
 {
@@ -27,14 +28,18 @@ namespace Editor
         bool clickToggleGuard = true;
         bool makingChain;
 
-        List<List<Vector2>> chains = new List<List<Vector2>>() { new List<Vector2>() };
+        List<List<WorldCollisionGeometrySegment>> chains = new List<List<WorldCollisionGeometrySegment>>() 
+        { 
+            new List<WorldCollisionGeometrySegment>() 
+        };
+
         private int _chainIndex;
-        List<Vector2> selectedChain
+        List<WorldCollisionGeometrySegment> selectedChain
         {
             get
             {
                 while (_chainIndex >= chains.Count)
-                    chains.Add(new List<Vector2>());
+                    chains.Add(new List<WorldCollisionGeometrySegment>());
                 return chains[_chainIndex];
             }
         }
@@ -43,18 +48,27 @@ namespace Editor
         private Vector2? lastPlaced;
         private Vector2? dragging;
 
-        public override void Exit()
-        {
-            StateMachine.Owner.ResetGeometry();
-        }
-
         public override void Enter()
         {
-            chains = StateMachine.Owner.Level.CollisionGeometry;
+            chains = StateMachine.Owner.Level.GeoSegments;
+
+            if (!chains.Any())
+            {
+                chains.Add(new List<WorldCollisionGeometrySegment>());
+            }
+        }
+
+        public override void Exit()
+        {
+            stopMakingChain();
+            StateMachine.Owner.ResetGeometry();
         }
 
         public override void Execute()
         {
+            if (!IsMouseInteractionEnabled)
+                return;
+
             highlighted = null;
 
             var mouse = InputManager.Instance.CurrentMouseState;
@@ -62,15 +76,15 @@ namespace Editor
 
             var closestDistance = Single.PositiveInfinity;
 
-            var near = chains.Aggregate(new List<Vector2>() as IEnumerable<Vector2>, (a, x) => a.Concat(x))
-                            .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x))))
+            var near = chains.Aggregate(new List<WorldCollisionGeometrySegment>() as IEnumerable<WorldCollisionGeometrySegment>, (a, x) => a.Concat(x))
+                            .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x.EndPoint))))
                             .Where(x => x.Item2 <= 100);
 
             foreach (var nearVertex in near)
             {
                 if (nearVertex.Item2 < closestDistance)
                 {
-                    highlighted = nearVertex.Item1;
+                    highlighted = nearVertex.Item1.EndPoint;
                     closestDistance = nearVertex.Item2;
                 }
             }
@@ -96,8 +110,8 @@ namespace Editor
                             for (int i = 0; i < chain.Count; i++)
                             {
                                 var vertex = chain[i];
-                                if (vertex == dragging)
-                                    chain[i] = newPos;
+                                if (vertex.EndPoint == dragging)
+                                    chain[i] = new WorldCollisionGeometrySegment(newPos, vertex.IsOneWay);
                             }
                         }
 
@@ -105,17 +119,15 @@ namespace Editor
                     }
                     else if (InputManager.Instance.Pressed(Keys.LeftControl) || InputManager.Instance.Pressed(Keys.RightControl))
                     {
-                        var newPos = PhysicsConstants.PixelsToMeters(mousePosition);
-
                         if (makingChain)
                         {
-                            selectedChain.RemoveAll(x => x == highlighted);
+                            selectedChain.RemoveAll(x => x.EndPoint == highlighted);
                         }
                         else
                         {
                             foreach (var chain in chains)
                             {
-                                chain.RemoveAll(x => x == highlighted);
+                                chain.RemoveAll(x => x.EndPoint == highlighted);
                             }
                             chains.RemoveAll(x => !x.Any());
                         }
@@ -140,7 +152,7 @@ namespace Editor
                                                 position,
                                                 Matrix.Invert(Camera.Transform)));
 
-                            selectedChain.Add(vertex);
+                            selectedChain.Add(new WorldCollisionGeometrySegment(vertex, OneWay));
                             lastPlaced = vertex;
                         }
                         else if (highlighted != lastPlaced)
@@ -149,9 +161,9 @@ namespace Editor
                             if (newChain)
                                 startMakingNewChain();
 
-                            var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
+                            var inCurrentChain = selectedChain.Select(x => x.EndPoint).Contains(highlighted ?? Vector2.Zero);
 
-                            selectedChain.Add(highlighted ?? Vector2.Zero);
+                            selectedChain.Add(new WorldCollisionGeometrySegment(highlighted ?? Vector2.Zero, OneWay));
                             lastPlaced = highlighted;
 
                             if (!newChain && inCurrentChain)
@@ -177,7 +189,7 @@ namespace Editor
         private void startMakingNewChain()
         {
             _chainIndex = chains.Count;
-            if (chains[_chainIndex - 1].Count == 0)
+            if (_chainIndex != 0 && chains[_chainIndex - 1].Count == 0)
                 _chainIndex--;
             makingChain = true;
         }
@@ -188,8 +200,8 @@ namespace Editor
 
             makingChain = false;
 
-            StateMachine.Owner.Level.GeoChains.Clear();
-            StateMachine.Owner.Level.GeoChains.AddRange(chains);
+            //StateMachine.Owner.Level.GeoChains.Clear();
+            //StateMachine.Owner.Level.GeoChains.AddRange(chains);
 
             lastPlaced = null;
             _chainIndex = chains.Count;
@@ -211,23 +223,33 @@ namespace Editor
             var cnt = 0;
             foreach (var chain in chains)
             {
-                var color = cnt == _chainIndex
-                    ? Color.LightBlue
-                    : Color.LightGreen;
+                var thickness = cnt == _chainIndex
+                    ? 4 
+                    : 2;
 
-                var chainPixels = chain.Select(PhysicsConstants.MetersToPixels);
+                var chainPixels = chain.Select(
+                    delegate (WorldCollisionGeometrySegment x)
+                    {
+                        x.EndPoint = PhysicsConstants.MetersToPixels(x.EndPoint);
+                        return x;
+                    });
 
                 foreach (var link in chainPixels.Take(chain.Count - 1).Zip(chainPixels.Skip(1), Tuple.Create))
                 {
+                    var color = link.Item2.IsOneWay
+                        ? Color.Red
+                        : Color.Orange;
+
                     spriteBatch.DrawLine(
                         TextureCache.GetResource("blank"),
-                        link.Item1,
-                        link.Item2,
-                        2,
+                        link.Item1.EndPoint,
+                        link.Item2.EndPoint,
+                        thickness,
                         color);
                 }
 
-                chainPixels.Where(x => x != highlighted).ForEach(x => spriteBatch.DrawCircle(TextureCache, x, new Vector2(6, 6), Color.White));
+                chainPixels.Where(x => x.EndPoint != highlighted)
+                    .ForEach(x => spriteBatch.DrawCircle(TextureCache, x.EndPoint, new Vector2(6, 6), Color.White));
                 
                 cnt++;
             }
@@ -237,5 +259,7 @@ namespace Editor
 
             spriteBatch.End();
         }
+
+        public bool OneWay { get; set; }
     }
 }

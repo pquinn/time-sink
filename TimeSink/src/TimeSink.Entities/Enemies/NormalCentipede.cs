@@ -64,7 +64,7 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override IRendering Preview
         {
             get
             {
@@ -73,14 +73,14 @@ namespace TimeSink.Entities.Enemies
                   CENTIPEDE_TEXTURE,
                   PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
-                  new Vector2(.5f,.5f),
+                  Vector2.One,
                   new Color(255f, tint, tint, 255f));
             }
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.Update(time, world);
+            base.OnUpdate(time, world);
 
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 

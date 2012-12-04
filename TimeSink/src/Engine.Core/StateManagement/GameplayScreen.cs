@@ -21,6 +21,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.StateManagement.HUD;
 using DialoguePrototype;
 using FarseerPhysics.Collision.Shapes;
+using TimeSink.Engine.Core.Physics;
 #endregion
 
 namespace TimeSink.Engine.Core.StateManagement
@@ -226,10 +227,9 @@ namespace TimeSink.Engine.Core.StateManagement
                 }*/
                 UpdateHudElements();
 
-
                 currentLevel.PhysicsManager.Update(gameTime);
 
-                currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
+                currentLevel.Level.Entities.ForEach(x => x.OnUpdate(gameTime, EngineGame.Instance));
             }
         }
 
@@ -330,7 +330,7 @@ namespace TimeSink.Engine.Core.StateManagement
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
             currentLevel.RenderManager.Draw(spriteBatch, EngineGame.Instance.Camera);
-
+            
             spriteBatch.Begin();
 
             // Draw each weaponSlot in turn.

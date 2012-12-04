@@ -24,6 +24,7 @@ using FarseerPhysics.Dynamics;
 using XNAControl;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.DebugViews;
+using TimeSink.Entities;
 
 namespace Editor
 {
@@ -33,7 +34,7 @@ namespace Editor
     public class EditorGame : XNAControlGame
     {
         SpriteBatch spriteBatch;
-        
+
         Camera camera;
 
         StateMachine<LevelManager> stateMachine;
@@ -41,6 +42,7 @@ namespace Editor
         private bool showCollisionGeometry;
 
         private DebugViewXNA debugView;
+        private SpriteFont spriteFont;
 
         public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
@@ -102,6 +104,8 @@ namespace Editor
         /// </summary>
         protected override void LoadContent()
         {
+            spriteFont = Content.Load<SpriteFont>("font");
+
             // instantiate the container
             var builder = new ContainerBuilder();
             builder.RegisterModule<EntityBootstrapper>();
@@ -130,7 +134,7 @@ namespace Editor
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
-            
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
@@ -163,7 +167,7 @@ namespace Editor
                 this.Exit();
 
             // TODO: Add your update logic here
-            InputManager.Instance.Update();                     
+            InputManager.Instance.Update();
 
             if (InputManager.Instance.IsNewKey(Keys.C))
             {
@@ -173,6 +177,14 @@ namespace Editor
             LevelManager.PhysicsManager.World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             stateMachine.Update();
+
+            var mouseInWorld = Vector2.Transform(new Vector2(
+                InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y), Matrix.Invert(camera.Transform));
+            Console.WriteLine(string.Format(
+                    "X: {0},  Y: {1}",
+                    mouseInWorld.X,
+                    mouseInWorld.Y));
 
             base.Update(gameTime);
         }
@@ -204,6 +216,14 @@ namespace Editor
                         1, new Color(0, 0, 0, 50));
                 }
             }
+
+            var text = string.Format(
+                    "X: {0},  Y: {1}",
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y);
+            spriteBatch.DrawString(spriteFont, text,
+                new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) - spriteFont.MeasureString(text),
+                Color.White);
 
             spriteBatch.End();
 
@@ -280,11 +300,11 @@ namespace Editor
                 true, true);
         }
 
-        public void GeometrySelected()
+        public GeometryPlacementState GeometrySelected()
         {
-            stateMachine.ChangeState(
-                new GeometryPlacementState(camera, TextureCache),
-                true, true);
+            var s = new GeometryPlacementState(camera, TextureCache);
+            stateMachine.ChangeState(s, true, true);
+            return s;
         }
 
         public void SaveAs(string fileName)

@@ -93,9 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityBootstrapper.cs" />
     <Compile Include="States\GeometryPlacementState.cs" />
-    <Compile Include="IEntityMetadata.cs" />
     <Compile Include="PreviewGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EditorGame.cs" />

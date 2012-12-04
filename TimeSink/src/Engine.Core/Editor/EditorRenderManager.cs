@@ -41,7 +41,7 @@ namespace TimeSink.Engine.Core.Editor
         {
             foreach (var previewable in previewables)
             {
-                previewable.Rendering.Draw(
+                previewable.Preview.Draw(
                     spriteBatch,
                     TextureCache,
                     camera.Transform

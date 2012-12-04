@@ -72,15 +72,8 @@ namespace TimeSink.Engine.Core
             Camera = Camera.ZeroedCamera;
 
             // create default level
-            LevelManager = new LevelManager(
-                new CollisionManager(),
-                new PhysicsManager(Container),
-                new RenderManager(TextureCache),
-                new EditorRenderManager(TextureCache),
-                Container);
-
-            // create default level
             LevelManager = Container.Resolve<LevelManager>();
+            LevelManager.LevelLoaded += new LevelLoadedEventHandler(LevelLoaded);
 
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
@@ -136,25 +129,35 @@ namespace TimeSink.Engine.Core
 
         protected override void Draw(GameTime gameTime)
         {
-           // LevelManager.RenderManager.Draw(SpriteBatch, Camera);
-
             SpriteBatch.Begin();
 
             if (RenderDebugGeometry)
             {
-                var projection = Matrix.CreateOrthographicOffCenter(
-                    0,
-                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
-                    PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
-                    0,
-                    0,
-                    1);
+                Vector3 scale;
+                Quaternion rot;
+                Vector3 tran;
+                Camera.Transform.Decompose(out scale, out rot, out tran);
+                var projection =
+                    Matrix.CreateScale(scale) *
+                    Matrix.CreateTranslation(tran / 64f) *
+                    Matrix.CreateOrthographicOffCenter(
+                        0,
+                        PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
+                        PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Height),
+                        0,
+                        0,
+                        1);
                 debugView.RenderDebugData(ref projection);
             }
 
             SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        protected virtual void LevelLoaded()
+        {
+            LevelManager.CollisionManager.Initialize();
         }
     }
 }

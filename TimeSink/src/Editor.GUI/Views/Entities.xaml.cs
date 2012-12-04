@@ -66,7 +66,7 @@ namespace TimeSink.Editor.GUI.Views
             if (entityIds.SelectedItem != null)
             {
                 var entity = Game.LevelManager.Level.Entities.First(
-                    x => x.InstanceId.Equals(entityIds.SelectedItem.ToString()));
+                    x => x.InstanceId != null && x.InstanceId.Equals(entityIds.SelectedItem.ToString()));
 
                 entityEdit.InitGrid(entity);
             }
@@ -75,7 +75,7 @@ namespace TimeSink.Editor.GUI.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var entity = Game.LevelManager.Level.Entities.First(
-                x => x.InstanceId.Equals(entityIds.SelectedItem.ToString()));
+                x => x.InstanceId != null && x.InstanceId.Equals(entityIds.SelectedItem.ToString()));
             entityEdit.PopulateEntity(entity);
         }
     }

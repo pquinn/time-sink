@@ -84,7 +84,7 @@ namespace TimeSink.Entities
         private float shield;
         private Ladder canClimb = null;
         private World _world;
-        
+
         private bool attachedToVine = false;
         private Joint vineAttachment;
 
@@ -164,10 +164,8 @@ namespace TimeSink.Entities
         float interval = 200f;
         float jumpInterval = 100f;
         int currentFrame = 0;
-        int spriteWidth = 130;
-        int spriteHeight = 242;
-
-        private Vector2 _initialPosition;
+        int spriteWidth = 35;
+        int spriteHeight = 130;
 
         public override List<Fixture> CollisionGeometry
         {
@@ -188,7 +186,7 @@ namespace TimeSink.Entities
             //{
             //    GravityEnabled = true
             //};
-            _initialPosition = position;
+            Position = position;
             health = 100;
             direction = new Vector2(1, 0);
 
@@ -209,7 +207,7 @@ namespace TimeSink.Entities
 
         public void TakeDamage(float val)
         {
-            
+
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
                 Health -= val;
@@ -217,11 +215,8 @@ namespace TimeSink.Entities
             }
         }
 
-        public override void Update(GameTime gameTime, EngineGame game)
+        public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
-            //__touchingGroundFlag = false;
-
             touchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -249,7 +244,7 @@ namespace TimeSink.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 4;
+            var amount = 1f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -260,6 +255,11 @@ namespace TimeSink.Entities
 
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
+
+            if (touchingGround)
+                Physics.Friction = 10;
+            else
+                Physics.Friction = .01f;
 
             #region Movement
             #region gamepad
@@ -345,6 +345,11 @@ namespace TimeSink.Entities
                 {
                     Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
                 }
+                else if (touchingGround)
+                {
+                    Physics.Friction = .1f;
+                    Physics.ApplyLinearImpulse(new Vector2(0, 20));
+                }
             }
             #endregion
 
@@ -414,23 +419,24 @@ namespace TimeSink.Entities
                 if ((canClimb != null) && !touchingGround && jumpToggleGuard)
                 {
                     Physics.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -100));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
                 }
                 if (jumpToggleGuard && touchingGround)
                 {
+                    jumpStarted = true;
+                    jumpSound.Play();
+                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    jumpToggleGuard = false;
+
                     if (currentState == BodyStates.WalkingRight ||
                         currentState == BodyStates.NeutralRight ||
                         currentState == BodyStates.JumpingRight) //Will be changed once we have a landing anim
                     {
                         currentState = BodyStates.JumpingRight;
                         animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
                     }
                     else if (currentState == BodyStates.WalkingLeft ||
                              currentState == BodyStates.NeutralLeft ||
@@ -438,10 +444,6 @@ namespace TimeSink.Entities
                     {
                         currentState = BodyStates.JumpingLeft;
                         animations[BodyStates.JumpingLeft].CurrentFrame = 0;
-                        jumpStarted = true;
-                        jumpSound.Play();
-                        Physics.ApplyLinearImpulse(new Vector2(0, -100));
-                        jumpToggleGuard = false;
                     }
                 }
             }
@@ -521,13 +523,13 @@ namespace TimeSink.Entities
                 {
                     animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
                 }
-              /*  else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
-                {
-                    animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                    currentState = BodyStates.NeutralRight;
-                }*/
+                /*  else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
+                  {
+                      animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                      currentState = BodyStates.NeutralRight;
+                  }*/
 
-               // timer = 0f;
+                // timer = 0f;
             }
 
             if (movedirection != Vector2.Zero)
@@ -546,7 +548,25 @@ namespace TimeSink.Entities
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
 
+            ClampVelocity();
+
             UpdateAnimationStates();
+        }
+
+        private void ClampVelocity()
+        {
+            var v = Physics.LinearVelocity;
+            if (v.X > X_CLAMP)
+                v.X = X_CLAMP;
+            else if (v.X < -X_CLAMP)
+                v.X = -X_CLAMP;
+
+            if (v.Y > Y_CLAMP)
+                v.Y = Y_CLAMP;
+            else if (v.Y < -Y_CLAMP)
+                v.Y = -Y_CLAMP;
+
+            Physics.LinearVelocity = v;
         }
 
         protected void UpdateAnimationStates()
@@ -658,7 +678,7 @@ namespace TimeSink.Entities
             vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
             var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
             var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
-            vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight/2));
+            vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
             //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
             //Physics.FixedRotation = false;
             return true;
@@ -668,7 +688,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                 var anim = animations[currentState];
+                var anim = animations[currentState];
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 return anim;
             }
@@ -684,7 +704,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralRight,
                 new NewAnimationRendering(
                     NEUTRAL_RIGHT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -694,7 +714,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralLeft,
                  new NewAnimationRendering(
                     NEUTRAL_LEFT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -707,7 +727,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightOpen,
                 new NewAnimationRendering(
                         IDLE_OPEN_HAND,
-                        new Vector2(128, 256),
+                        new Vector2(76.8f, 153.6f),
                         5,
                         Vector2.Zero,
                         0,
@@ -716,7 +736,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
                         IDLE_CLOSED_HAND,
-                        new Vector2(128, 256),
+                        new Vector2(76.8f, 153.6f),
                         5,
                         Vector2.Zero,
                         0,
@@ -729,7 +749,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -738,7 +758,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     5,
                     Vector2.Zero,
                     0,
@@ -747,7 +767,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -756,7 +776,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -765,7 +785,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     5,
                     Vector2.Zero,
                     0,
@@ -774,7 +794,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -786,7 +806,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingRight,
                 new NewAnimationRendering(
                     JUMPING_RIGHT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     4,
                     Vector2.Zero,
                     0,
@@ -795,7 +815,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
                     JUMPING_LEFT,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     4,
                     Vector2.Zero,
                     0,
@@ -805,7 +825,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.Climbing,
                 new NewAnimationRendering(
                     FACING_BACK,
-                    new Vector2(128, 256),
+                    new Vector2(76.8f, 153.6f),
                     4,
                     Vector2.Zero,
                     0,
@@ -819,7 +839,10 @@ namespace TimeSink.Entities
         public void RegisterDot(DamageOverTimeEffect dot)
         {
         }
-        
+
+        private const float X_CLAMP = 8;
+        private const float Y_CLAMP = 30;
+
         private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
@@ -827,7 +850,7 @@ namespace TimeSink.Entities
             {
                 var world = engineRegistrations.Resolve<World>();
                 _world = world;
-                Physics = BodyFactory.CreateBody(world, _initialPosition, this);
+                Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
@@ -864,7 +887,7 @@ namespace TimeSink.Entities
 
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
-                Physics.Friction = .5f;
+                Physics.Friction = 10.0f;
 
                 initialized = true;
             }
