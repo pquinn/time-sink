@@ -234,6 +234,7 @@ namespace TimeSink.Editor.GUI.Views
             if (!geomButtonPressed)
             {
                 Game.GeometrySelected();
+                collisionType.Visibility = Visibility.Visible;
             }
             else
             {
@@ -251,6 +252,8 @@ namespace TimeSink.Editor.GUI.Views
             geomButtonPressed = false;
             entitiesButtonPressed = false;
             meshButtonPressed = false;
+
+            collisionType.Visibility = Visibility.Collapsed;
         }
 
         internal void Open(string fileName)
