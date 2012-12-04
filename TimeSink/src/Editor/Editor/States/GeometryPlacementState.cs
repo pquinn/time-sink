@@ -151,7 +151,7 @@ namespace Editor
                                                 position,
                                                 Matrix.Invert(Camera.Transform)));
 
-                            selectedChain.Add(new WorldCollisionGeometrySegment(vertex, false));
+                            selectedChain.Add(new WorldCollisionGeometrySegment(vertex, OneWay));
                             lastPlaced = vertex;
                         }
                         else if (highlighted != lastPlaced)
@@ -162,7 +162,7 @@ namespace Editor
 
                             var inCurrentChain = selectedChain.Select(x => x.EndPoint).Contains(highlighted ?? Vector2.Zero);
 
-                            selectedChain.Add(new WorldCollisionGeometrySegment(highlighted ?? Vector2.Zero, false));
+                            selectedChain.Add(new WorldCollisionGeometrySegment(highlighted ?? Vector2.Zero, OneWay));
                             lastPlaced = highlighted;
 
                             if (!newChain && inCurrentChain)
@@ -222,23 +222,33 @@ namespace Editor
             var cnt = 0;
             foreach (var chain in chains)
             {
-                var color = cnt == _chainIndex
-                    ? Color.LightBlue
-                    : Color.LightGreen;
+                var thickness = cnt == _chainIndex
+                    ? 4 
+                    : 2;
 
-                var chainPixels = chain.Select(x => PhysicsConstants.MetersToPixels(x.EndPoint));
+                var chainPixels = chain.Select(
+                    delegate (WorldCollisionGeometrySegment x)
+                    {
+                        x.EndPoint = PhysicsConstants.MetersToPixels(x.EndPoint);
+                        return x;
+                    });
 
                 foreach (var link in chainPixels.Take(chain.Count - 1).Zip(chainPixels.Skip(1), Tuple.Create))
                 {
+                    var color = link.Item2.IsOneWay
+                        ? Color.Red
+                        : Color.Green;
+
                     spriteBatch.DrawLine(
                         TextureCache.GetResource("blank"),
-                        link.Item1,
-                        link.Item2,
-                        2,
+                        link.Item1.EndPoint,
+                        link.Item2.EndPoint,
+                        thickness,
                         color);
                 }
 
-                chainPixels.Where(x => x != highlighted).ForEach(x => spriteBatch.DrawCircle(TextureCache, x, new Vector2(6, 6), Color.White));
+                chainPixels.Where(x => x.EndPoint != highlighted)
+                    .ForEach(x => spriteBatch.DrawCircle(TextureCache, x.EndPoint, new Vector2(6, 6), Color.White));
                 
                 cnt++;
             }
@@ -248,5 +258,7 @@ namespace Editor
 
             spriteBatch.End();
         }
+
+        public bool OneWay { get; set; }
     }
 }

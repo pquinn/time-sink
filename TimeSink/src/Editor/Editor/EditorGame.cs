@@ -34,7 +34,7 @@ namespace Editor
     public class EditorGame : XNAControlGame
     {
         SpriteBatch spriteBatch;
-        
+
         Camera camera;
 
         StateMachine<LevelManager> stateMachine;
@@ -105,7 +105,7 @@ namespace Editor
         protected override void LoadContent()
         {
             spriteFont = Content.Load<SpriteFont>("font");
-            
+
             // instantiate the container
             var builder = new ContainerBuilder();
             builder.RegisterModule<EntityBootstrapper>();
@@ -134,7 +134,7 @@ namespace Editor
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
-            
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
 
@@ -167,7 +167,7 @@ namespace Editor
                 this.Exit();
 
             // TODO: Add your update logic here
-            InputManager.Instance.Update();                     
+            InputManager.Instance.Update();
 
             if (InputManager.Instance.IsNewKey(Keys.C))
             {
@@ -218,10 +218,10 @@ namespace Editor
             }
 
             var text = string.Format(
-                    "X: {0},  Y: {1}", 
+                    "X: {0},  Y: {1}",
                     InputManager.Instance.CurrentMouseState.X,
                     InputManager.Instance.CurrentMouseState.Y);
-            spriteBatch.DrawString(spriteFont, text, 
+            spriteBatch.DrawString(spriteFont, text,
                 new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) - spriteFont.MeasureString(text),
                 Color.White);
 
@@ -300,11 +300,11 @@ namespace Editor
                 true, true);
         }
 
-        public void GeometrySelected()
+        public GeometryPlacementState GeometrySelected()
         {
-            stateMachine.ChangeState(
-                new GeometryPlacementState(camera, TextureCache),
-                true, true);
+            var s = new GeometryPlacementState(camera, TextureCache);
+            stateMachine.ChangeState(s, true, true);
+            return s;
         }
 
         public void SaveAs(string fileName)

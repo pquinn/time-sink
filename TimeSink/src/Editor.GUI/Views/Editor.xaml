@@ -50,8 +50,8 @@
             </Border>
             <StackPanel FlowDirection="RightToLeft" DockPanel.Dock="Bottom">
                 <StackPanel x:Name="collisionType" Orientation="Horizontal" FlowDirection="LeftToRight" Visibility="Collapsed">
-                    <RadioButton GroupName="collisiontype" Content="Standard" Margin="5" IsChecked="True" />
-                    <RadioButton GroupName="collisiontype" Content="One-way" Margin="0,5,5,5" />
+                    <RadioButton Name="standardCollisionButton" GroupName="collisiontype" Content="Standard" Margin="5" IsChecked="True" />
+                    <RadioButton Name="oneWayCollisionButton" GroupName="collisiontype" Content="One-way" Margin="0,5,5,5" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                     <TextBlock Text="X: " Margin="5" />
