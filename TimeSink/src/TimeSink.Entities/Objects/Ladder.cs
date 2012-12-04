@@ -104,14 +104,14 @@ namespace TimeSink.Entities.Objects
         public bool OnCollidedWith(UserControlledCharacter c, Contact info)
         {
             //Enable the character to enter a climbing state thus effecting her input handling
-            c.CanClimb = true;
+            c.CanClimb = this;
             return true;
         }
 
         [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            c.CanClimb = false;
+            c.CanClimb = null;
             c.Physics.IgnoreGravity = false;
         }
 

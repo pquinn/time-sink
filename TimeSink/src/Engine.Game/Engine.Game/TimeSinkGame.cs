@@ -83,10 +83,6 @@ namespace TimeSink.Engine.Game
                                                 PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
                                                 4f, 64, 128);
 
-            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
-            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
-
 
             RenderDebugGeometry = true;
 

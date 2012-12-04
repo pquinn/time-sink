@@ -32,7 +32,6 @@ namespace TimeSink.Entities
         const string EDITOR_NAME = "User Controlled Character";
 
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
-
         enum BodyStates
         {
             NeutralRight, NeutralLeft,
@@ -44,6 +43,7 @@ namespace TimeSink.Entities
             DuckingRight, DuckingLeft,
             Climbing,
         };
+
 
         BodyStates currentState;
 
@@ -82,13 +82,13 @@ namespace TimeSink.Entities
         private float health;
         private float mana;
         private float shield;
-        private bool canClimb = false;
+        private Ladder canClimb = null;
         private World _world;
         
         private bool attachedToVine = false;
         private Joint vineAttachment;
 
-        public bool CanClimb { get { return canClimb; } set { canClimb = value; } }
+        public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
 
         private List<IInventoryItem> inventory;
         private int activeItem;
@@ -229,8 +229,13 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    touchingGround = true;
-                    return 0;
+                    if (fixture.Body.UserData is WorldGeometry)
+                    {
+                        touchingGround = true;
+                        return 0;
+                    }
+                    else
+                        return -1;
                 },
                 start,
                 start + new Vector2(0, .1f));
@@ -336,9 +341,9 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.S))
             {
-                if (canClimb)
+                if (canClimb != null)
                 {
-                    movedirection.Y += 1.0f;
+                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
                 }
             }
             #endregion
@@ -406,7 +411,7 @@ namespace TimeSink.Entities
             if (keyboard.IsKeyDown(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if (canClimb && !touchingGround && jumpToggleGuard)
+                if ((canClimb != null) && !touchingGround && jumpToggleGuard)
                 {
                     Physics.IgnoreGravity = false;
                     Physics.ApplyLinearImpulse(new Vector2(0, -100));
@@ -447,21 +452,22 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.W))
             {
-                if (canClimb && touchingGround)
+                if ((canClimb != null) && touchingGround)
                 {
                     //Insert anim state change here for climbing anim
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    Physics.Position = new Vector2(canClimb.Position.X , 
+                                                   Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     currentState = BodyStates.Climbing;
                 }
-                else if (canClimb)
+                else if (canClimb != null)
                 {
 
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
                     jumpToggleGuard = true;
-                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     currentState = BodyStates.Climbing;
                 }
             }
