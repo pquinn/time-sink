@@ -16,15 +16,12 @@ namespace TimeSink.Entities
 {
     public class OneWayPlatform
     {
-        private Shape collisionShape;
-
         private Dictionary<Fixture, bool> separatedDict = new Dictionary<Fixture, bool>();
 
         public OneWayPlatform(Fixture f)
         {
             var sensor = f.Clone(f.Body);
             sensor.IsSensor = true;
-            //sensor.OnSeparation += new OnSeparationEventHandler((f1, f2) => Console.WriteLine());
             sensor.OnSeparation += new OnSeparationEventHandler(OnSeparation);
             f.UserData = this;
         }
@@ -77,6 +74,7 @@ namespace TimeSink.Entities
 
             foreach (var fix in f.Body.FixtureList)
                 separatedDict[fix] = false;
+            //separatedDict[f] = false;
 
             return result;
         }

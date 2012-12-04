@@ -27,10 +27,6 @@ namespace TimeSink.Engine.Core.Collisions
             return OnCollidedWith.Invoke(
                     f1.Body.UserData as ICollideable,
                     f2.Body.UserData as ICollideable,
-                    contact)
-                && OnCollidedWith.Invoke(
-                    f2.Body.UserData as ICollideable,
-                    f1.Body.UserData as ICollideable,
                     contact);
         }
 
