@@ -242,7 +242,7 @@ namespace TimeSink.Entities
 
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var amount = 1;
+            var amount = 1f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -832,7 +832,7 @@ namespace TimeSink.Entities
         {
         }
 
-        private const float X_CLAMP = 10;
+        private const float X_CLAMP = 8;
         private const float Y_CLAMP = 30;
 
         private bool initialized;
