@@ -17,7 +17,6 @@ namespace TimeSink.Engine.Core
     public class Level
     {
         private bool isGeoDirty = true;
-        private List<List<EdgeShape>> geoCache;
 
         public Level()
         {
@@ -34,16 +33,6 @@ namespace TimeSink.Engine.Core
         public List<Tile> Tiles { get; set; }
 
         public List<List<WorldCollisionGeometrySegment>> GeoSegments { get; set; }
-
-        public List<List<Vector2>> GeoChains 
-        {
-            set
-            {
-                GeoSegments = value.Select(
-                    x => x.Select(
-                        y => new WorldCollisionGeometrySegment(y, false)).ToList()).ToList();
-            }
-        }
 
         public List<EntitySerialization> EntitySerializations { get; set; }
 

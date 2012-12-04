@@ -237,7 +237,7 @@ namespace Editor
                 {
                     var color = link.Item2.IsOneWay
                         ? Color.Red
-                        : Color.Green;
+                        : Color.Orange;
 
                     spriteBatch.DrawLine(
                         TextureCache.GetResource("blank"),
