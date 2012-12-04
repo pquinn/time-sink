@@ -217,9 +217,6 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
-            //__touchingGroundFlag = false;
-
             touchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -253,6 +250,11 @@ namespace TimeSink.Entities
 
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
+
+            if (touchingGround)
+                Physics.Friction = 10;
+            else
+                Physics.Friction = .01f;
 
             #region Movement
             #region gamepad
@@ -337,6 +339,11 @@ namespace TimeSink.Entities
                 if (canClimb)
                 {
                     movedirection.Y += 1.0f;
+                }
+                else if (touchingGround)
+                {
+                    Physics.Friction = .1f;
+                    Physics.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
             #endregion
@@ -534,11 +541,6 @@ namespace TimeSink.Entities
                 // Move player based on the controller direction and time scale.
                 Physics.ApplyLinearImpulse(movedirection * amount);
             }
-
-            if (touchingGround)
-                Physics.Friction = 10;
-            else
-                Physics.Friction = .01f;
 
             ClampVelocity();
 
