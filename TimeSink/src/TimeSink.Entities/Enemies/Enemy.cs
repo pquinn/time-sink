@@ -121,7 +121,7 @@ namespace TimeSink.Entities.Enemies
             return true;
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
             if (health <= 0)
             {

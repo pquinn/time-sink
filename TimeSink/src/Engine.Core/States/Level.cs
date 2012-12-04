@@ -24,7 +24,7 @@ namespace TimeSink.Engine.Core
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();
-            GeoChains = new List<List<Vector2>>() { new List<Vector2>() };
+            GeoSegments = new List<List<WorldCollisionGeometrySegment>>() { new List<WorldCollisionGeometrySegment>() };
         }
 
         public Vector2 PlayerStart { get; set; }
@@ -33,7 +33,17 @@ namespace TimeSink.Engine.Core
 
         public List<Tile> Tiles { get; set; }
 
-        public List<List<Vector2>> GeoChains { get; set; }
+        public List<List<WorldCollisionGeometrySegment>> GeoSegments { get; set; }
+
+        public List<List<Vector2>> GeoChains 
+        {
+            set
+            {
+                GeoSegments = value.Select(
+                    x => x.Select(
+                        y => new WorldCollisionGeometrySegment(y, false)).ToList()).ToList();
+            }
+        }
 
         public List<EntitySerialization> EntitySerializations { get; set; }
 

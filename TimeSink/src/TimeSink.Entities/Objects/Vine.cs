@@ -203,10 +203,10 @@ namespace TimeSink.Entities.Objects
             get { return Physics.FixtureList; }
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
             //interpolate the rotation like a line
-            base.Update(time, world);
+            base.OnUpdate(time, world);
 
 
 

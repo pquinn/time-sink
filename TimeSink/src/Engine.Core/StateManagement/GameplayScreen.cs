@@ -227,10 +227,9 @@ namespace TimeSink.Engine.Core.StateManagement
                 }*/
                 UpdateHudElements();
 
-
                 currentLevel.PhysicsManager.Update(gameTime);
 
-                currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
+                currentLevel.Level.Entities.ForEach(x => x.OnUpdate(gameTime, EngineGame.Instance));
             }
         }
 

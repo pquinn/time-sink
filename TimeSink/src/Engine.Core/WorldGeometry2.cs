@@ -17,6 +17,7 @@ using Autofac;
 using TimeSink.Engine.Core.Caching;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using TimeSink.Entities;
 
 namespace TimeSink.Engine.Core
 {
@@ -44,7 +45,7 @@ namespace TimeSink.Engine.Core
         [SerializableField]
         public float Sticktion { get; set; }
 
-        public List<List<Vector2>> GeoChains { get; set; }
+        public List<List<WorldCollisionGeometrySegment>> GeoChains { get; set; }
 
         private Texture2D geoTexture;
 
@@ -89,7 +90,9 @@ namespace TimeSink.Engine.Core
                     {
                         foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
                         {
-                            FixtureFactory.AttachEdge(pair.Item1, pair.Item2, Physics);
+                            var f = FixtureFactory.AttachEdge(pair.Item1.EndPoint, pair.Item2.EndPoint, Physics);
+                            if (pair.Item2.IsOneWay)
+                                new OneWayPlatform(f);
                         }
                     });
                 }

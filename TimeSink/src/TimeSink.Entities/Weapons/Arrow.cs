@@ -99,9 +99,9 @@ namespace TimeSink.Entities.Weapons
             textureCache.LoadResource(ARROW_TEXTURE_NAME);
         }
 
-        public override void Update(GameTime time, EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.Update(time, world);
+            base.OnUpdate(time, world);
 
             if (Dead)
             {

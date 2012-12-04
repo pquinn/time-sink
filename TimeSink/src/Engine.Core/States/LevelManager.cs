@@ -168,7 +168,7 @@ namespace TimeSink.Engine.Core.States
                     EditorRenderManager.RegisterPreviewable(x);
                 });
 
-            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoChains });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
         }
 
         public Body Physics;
@@ -182,7 +182,7 @@ namespace TimeSink.Engine.Core.States
             var worldGeo = Level.Entities.FindAll(x => x is WorldGeometry2);
             UnregisterEntities(worldGeo);
 
-            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoChains });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
         }
     }
 }

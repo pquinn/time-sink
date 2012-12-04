@@ -134,7 +134,7 @@ namespace TimeSink.Engine.Game
                 oneWayBody,
                 world);
 
-            new OneWayPlatform(oneway);
+            //new OneWayPlatform(oneway);
 
             FixtureFactory.AttachPolygon(
                 new FarseerPhysics.Common.Vertices() {

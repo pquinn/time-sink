@@ -215,7 +215,7 @@ namespace TimeSink.Entities
             }
         }
 
-        public override void Update(GameTime gameTime, EngineGame game)
+        public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
             //touchingGround = (!Physics.Awake && __touchingGroundFlag) || __touchingGroundFlag;
             //__touchingGroundFlag = false;

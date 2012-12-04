@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Collisions;
 
 namespace Editor
 {
@@ -27,14 +28,18 @@ namespace Editor
         bool clickToggleGuard = true;
         bool makingChain;
 
-        List<List<Vector2>> chains = new List<List<Vector2>>() { new List<Vector2>() };
+        List<List<WorldCollisionGeometrySegment>> chains = new List<List<WorldCollisionGeometrySegment>>() 
+        { 
+            new List<WorldCollisionGeometrySegment>() 
+        };
+
         private int _chainIndex;
-        List<Vector2> selectedChain
+        List<WorldCollisionGeometrySegment> selectedChain
         {
             get
             {
                 while (_chainIndex >= chains.Count)
-                    chains.Add(new List<Vector2>());
+                    chains.Add(new List<WorldCollisionGeometrySegment>());
                 return chains[_chainIndex];
             }
         }
@@ -45,11 +50,11 @@ namespace Editor
 
         public override void Enter()
         {
-            chains = StateMachine.Owner.Level.GeoChains;
+            chains = StateMachine.Owner.Level.GeoSegments;
 
             if (!chains.Any())
             {
-                chains.Add(new List<Vector2>());
+                chains.Add(new List<WorldCollisionGeometrySegment>());
             }
         }
 
@@ -68,15 +73,15 @@ namespace Editor
 
             var closestDistance = Single.PositiveInfinity;
 
-            var near = chains.Aggregate(new List<Vector2>() as IEnumerable<Vector2>, (a, x) => a.Concat(x))
-                            .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x))))
+            var near = chains.Aggregate(new List<WorldCollisionGeometrySegment>() as IEnumerable<WorldCollisionGeometrySegment>, (a, x) => a.Concat(x))
+                            .Select(x => Tuple.Create(x, Vector2.DistanceSquared(mousePosition, PhysicsConstants.MetersToPixels(x.EndPoint))))
                             .Where(x => x.Item2 <= 100);
 
             foreach (var nearVertex in near)
             {
                 if (nearVertex.Item2 < closestDistance)
                 {
-                    highlighted = nearVertex.Item1;
+                    highlighted = nearVertex.Item1.EndPoint;
                     closestDistance = nearVertex.Item2;
                 }
             }
@@ -102,8 +107,8 @@ namespace Editor
                             for (int i = 0; i < chain.Count; i++)
                             {
                                 var vertex = chain[i];
-                                if (vertex == dragging)
-                                    chain[i] = newPos;
+                                if (vertex.EndPoint == dragging)
+                                    chain[i] = new WorldCollisionGeometrySegment(newPos, vertex.IsOneWay);
                             }
                         }
 
@@ -115,13 +120,13 @@ namespace Editor
 
                         if (makingChain)
                         {
-                            selectedChain.RemoveAll(x => x == highlighted);
+                            selectedChain.RemoveAll(x => x.EndPoint == highlighted);
                         }
                         else
                         {
                             foreach (var chain in chains)
                             {
-                                chain.RemoveAll(x => x == highlighted);
+                                chain.RemoveAll(x => x.EndPoint == highlighted);
                             }
                             chains.RemoveAll(x => !x.Any());
                         }
@@ -146,7 +151,7 @@ namespace Editor
                                                 position,
                                                 Matrix.Invert(Camera.Transform)));
 
-                            selectedChain.Add(vertex);
+                            selectedChain.Add(new WorldCollisionGeometrySegment(vertex, false));
                             lastPlaced = vertex;
                         }
                         else if (highlighted != lastPlaced)
@@ -155,9 +160,9 @@ namespace Editor
                             if (newChain)
                                 startMakingNewChain();
 
-                            var inCurrentChain = selectedChain.Contains(highlighted ?? Vector2.Zero);
+                            var inCurrentChain = selectedChain.Select(x => x.EndPoint).Contains(highlighted ?? Vector2.Zero);
 
-                            selectedChain.Add(highlighted ?? Vector2.Zero);
+                            selectedChain.Add(new WorldCollisionGeometrySegment(highlighted ?? Vector2.Zero, false));
                             lastPlaced = highlighted;
 
                             if (!newChain && inCurrentChain)
@@ -221,7 +226,7 @@ namespace Editor
                     ? Color.LightBlue
                     : Color.LightGreen;
 
-                var chainPixels = chain.Select(PhysicsConstants.MetersToPixels);
+                var chainPixels = chain.Select(x => PhysicsConstants.MetersToPixels(x.EndPoint));
 
                 foreach (var link in chainPixels.Take(chain.Count - 1).Zip(chainPixels.Skip(1), Tuple.Create))
                 {

@@ -135,9 +135,11 @@
     <Compile Include="Collisions\CollisionManager.cs" />
     <Compile Include="Collisions\Multimethods\OnCollidedWith.cs" />
     <Compile Include="Collisions\Multimethods\OnSeparation.cs" />
+    <Compile Include="Collisions\OneWayPlatform.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\IPolygon.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\PolygonCollision.cs" />
     <Compile Include="Collisions\Separating Axis Theorem\SeparatingAxisTheorem.cs" />
+    <Compile Include="Collisions\WorldCollisionSegment.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DamageOverTimeEffect.cs" />
     <Compile Include="DB\SQLiteDatabase.cs" />
