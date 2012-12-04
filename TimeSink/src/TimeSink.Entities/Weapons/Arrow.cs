@@ -32,8 +32,6 @@ namespace TimeSink.Entities.Weapons
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
-        private Vector2 _initialPosition;
-
         public Arrow()
             : this(Vector2.Zero)
         {
@@ -41,7 +39,7 @@ namespace TimeSink.Entities.Weapons
 
         public Arrow(Vector2 position)
         {
-            _initialPosition = position;
+            Position = position;
         }
 
         [SerializableField]
@@ -150,7 +148,7 @@ namespace TimeSink.Entities.Weapons
                     PhysicsConstants.PixelsToMeters(64),
                     PhysicsConstants.PixelsToMeters(32),
                     1,
-                    _initialPosition);
+                    Position);
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
                 Physics.UserData = this;

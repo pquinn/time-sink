@@ -39,12 +39,24 @@ namespace TimeSink.Engine.Core
         [SerializableField]
         public string InstanceId { get; set; }
 
+        protected Vector2 position;
+
         [EditableField("Position")]
         [SerializableField]
         public Vector2 Position
         {
-            get { return Physics.Position; }
-            set { Physics.Position = value; }
+            get 
+            {
+                if (Physics != null)
+                    return Physics.Position;
+                return position; 
+            }
+            set 
+            { 
+                position = value;
+                if (Physics != null)
+                    Physics.Position = position;
+            }
         }
         
         [XmlIgnore]

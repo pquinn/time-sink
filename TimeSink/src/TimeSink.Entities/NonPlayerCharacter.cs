@@ -28,13 +28,11 @@ namespace TimeSink.Entities
         protected int textureHeight;
         protected int textureWidth;
 
-        protected Vector2 _initialPosition;
-
         public NonPlayerCharacter() : this(Vector2.Zero) { }
 
         public NonPlayerCharacter(Vector2 position)
         {
-            _initialPosition = position;
+            Position = position;
         }
 
         [SerializableField]
@@ -72,7 +70,7 @@ namespace TimeSink.Entities
                     PhysicsConstants.PixelsToMeters(texture.Width),
                     PhysicsConstants.PixelsToMeters(texture.Height),
                     1,
-                    _initialPosition);
+                    Position);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;

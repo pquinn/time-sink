@@ -104,6 +104,9 @@ namespace TimeSink.Engine.Core.States
         {
             using (var xmlWriter = XmlWriter.Create(fileName))
             {
+                var worldGeo = Level.Entities.FindAll(x => x is WorldGeometry2);
+                UnregisterEntities(worldGeo);
+
                 Level.FlushEntities();
 
                 var serializer = new XmlSerializer(typeof(Level));
@@ -165,15 +168,7 @@ namespace TimeSink.Engine.Core.States
                     EditorRenderManager.RegisterPreviewable(x);
                 });
 
-            // todo: this is not the right way to do this.
-            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
-
-            Level.GeoChains.ForEach(
-                x =>
-                {
-                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
-                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
-                });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoChains });
         }
 
         public Body Physics;
@@ -184,15 +179,10 @@ namespace TimeSink.Engine.Core.States
             fixtures.ForEach(x => x.Dispose());
             fixtures.Clear();
 
-            // todo: this is not the right way to do this.
-            var body = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+            var worldGeo = Level.Entities.FindAll(x => x is WorldGeometry2);
+            UnregisterEntities(worldGeo);
 
-            Level.GeoChains.ForEach(
-                x =>
-                {
-                    foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
-                        FixtureFactory.AttachEdge(pair.Item1, pair.Item2, body);
-                });
+            RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoChains });
         }
     }
 }

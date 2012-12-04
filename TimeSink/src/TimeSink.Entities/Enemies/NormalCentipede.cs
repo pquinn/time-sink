@@ -64,7 +64,7 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override IRendering Preview
         {
             get
             {

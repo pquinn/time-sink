@@ -25,8 +25,6 @@ namespace TimeSink.Entities
 
         private static readonly Guid GUID = new Guid("f3722310-9db5-478f-9e37-608cbcbf92f9");
 
-        private Vector2 _position;
-
         public event TriggerDelegate Triggered;
 
         private List<Fixture> _geom;
@@ -42,7 +40,7 @@ namespace TimeSink.Entities
 
         public Trigger(Vector2 position)
         {
-            _position = position;
+            Position = position;
         }
 
         [SerializableField]
@@ -60,7 +58,7 @@ namespace TimeSink.Entities
 
         public override IRendering Rendering
         {
-            get { return null; }
+            get { return new NullRendering(); }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -88,7 +86,7 @@ namespace TimeSink.Entities
             {
                 var world = engineRegistrations.Resolve<World>();
 
-                Physics = BodyFactory.CreateBody(world, _position, this);
+                Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 _geom = Physics.FixtureList;

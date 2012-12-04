@@ -42,6 +42,7 @@ namespace Editor
         private bool showCollisionGeometry;
 
         private DebugViewXNA debugView;
+        private SpriteFont spriteFont;
 
         public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
@@ -103,6 +104,8 @@ namespace Editor
         /// </summary>
         protected override void LoadContent()
         {
+            spriteFont = Content.Load<SpriteFont>("font");
+            
             // instantiate the container
             var builder = new ContainerBuilder();
             builder.RegisterModule<EntityBootstrapper>();
@@ -175,6 +178,14 @@ namespace Editor
 
             stateMachine.Update();
 
+            var mouseInWorld = Vector2.Transform(new Vector2(
+                InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y), Matrix.Invert(camera.Transform));
+            Console.WriteLine(string.Format(
+                    "X: {0},  Y: {1}",
+                    mouseInWorld.X,
+                    mouseInWorld.Y));
+
             base.Update(gameTime);
         }
 
@@ -205,6 +216,14 @@ namespace Editor
                         1, new Color(0, 0, 0, 50));
                 }
             }
+
+            var text = string.Format(
+                    "X: {0},  Y: {1}", 
+                    InputManager.Instance.CurrentMouseState.X,
+                    InputManager.Instance.CurrentMouseState.Y);
+            spriteBatch.DrawString(spriteFont, text, 
+                new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) - spriteFont.MeasureString(text),
+                Color.White);
 
             spriteBatch.End();
 

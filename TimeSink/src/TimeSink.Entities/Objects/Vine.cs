@@ -35,7 +35,6 @@ namespace TimeSink.Entities.Objects
         private bool first;
         private float tZero;
 
-        protected Vector2 _initialPosition;
         public Body VineAnchor { get; set; }
         public Body VineEndAffector { get; set; }
 
@@ -45,7 +44,7 @@ namespace TimeSink.Entities.Objects
 
         public Vine(Vector2 position, float timeSpan)
         {
-            _initialPosition = position;
+            Position = position;
             scale = .5f;
 
             /*
@@ -127,7 +126,7 @@ namespace TimeSink.Entities.Objects
                 TextureHeight = PhysicsConstants.PixelsToMeters((int)(texture.Height * scale));
 
                 //anchor point
-                Physics = BodyFactory.CreateBody(world, _initialPosition, this);
+                Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
 
@@ -136,7 +135,7 @@ namespace TimeSink.Entities.Objects
                     TextureWidth,
                     TextureHeight,
                     1,
-                    _initialPosition);
+                    Position);
                 VineAnchor.BodyType = BodyType.Dynamic;
                 VineAnchor.UserData = this;
 

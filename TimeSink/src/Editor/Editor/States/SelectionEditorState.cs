@@ -124,7 +124,7 @@ namespace Editor.States
 
             for (int i = 0; i < selectedMeshes.Count; i++)
             {
-                var box = selectedMeshes[i].Rendering.GetNonAxisAlignedBoundingBox(
+                var box = selectedMeshes[i].Preview.GetNonAxisAlignedBoundingBox(
                         StateMachine.Owner.RenderManager.TextureCache,
                         Camera.Transform);
 
@@ -182,7 +182,7 @@ namespace Editor.States
             var selected = new List<Tile>();
             foreach (var tile in levelManager.Level.Tiles)
             {
-                if (tile.Rendering.Contains(
+                if (tile.Preview.Contains(
                         GetMousePosition(),
                         levelManager.RenderManager.TextureCache,
                         Camera.Transform))

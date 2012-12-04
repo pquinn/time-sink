@@ -222,6 +222,7 @@
     <Compile Include="States\StateMachine.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="VectorExtensions.cs" />
+    <Compile Include="WorldGeometry2.cs" />
     <Compile Include="XNAExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

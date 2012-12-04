@@ -129,8 +129,6 @@ namespace TimeSink.Engine.Core
 
         protected override void Draw(GameTime gameTime)
         {
-           // LevelManager.RenderManager.Draw(SpriteBatch, Camera);
-
             SpriteBatch.Begin();
 
             if (RenderDebugGeometry)

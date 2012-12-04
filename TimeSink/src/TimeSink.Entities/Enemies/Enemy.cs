@@ -38,8 +38,6 @@ namespace TimeSink.Entities.Enemies
         private List<DamageOverTimeEffect> dots;
         protected float health;
 
-        protected Vector2 _initialPosition;
-
         #endregion
 
         public Enemy()
@@ -50,7 +48,7 @@ namespace TimeSink.Entities.Enemies
         public Enemy(Vector2 position)
         {
             health = 100;
-            _initialPosition = position;
+            Position = position;
 
             dots = new List<DamageOverTimeEffect>();
         }
@@ -179,7 +177,7 @@ namespace TimeSink.Entities.Enemies
                     PhysicsConstants.PixelsToMeters(texture.Width),
                     PhysicsConstants.PixelsToMeters(texture.Height),
                     1,
-                    _initialPosition);
+                    Position);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;

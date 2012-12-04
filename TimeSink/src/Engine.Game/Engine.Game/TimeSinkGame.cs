@@ -250,9 +250,9 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
-
             ScreenManager.Draw(gameTime);
+
+            base.Draw(gameTime);
         }
 
         protected override void LevelLoaded()
@@ -260,6 +260,7 @@ namespace TimeSink.Engine.Game
             base.LevelLoaded();
 
             character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            character.Load(Container);
             LevelManager.RegisterEntity(character);
         }
 

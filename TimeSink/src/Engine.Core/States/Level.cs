@@ -73,7 +73,6 @@ namespace TimeSink.Engine.Core
                 x =>
                 {
                     var entity = entities.First(e => e.Id == x.EntityId);
-                    entity.InitializePhysics(false, container);
                     var type = entity.GetType();
                     x.PropertiesMap.ForEach(
                         p =>
