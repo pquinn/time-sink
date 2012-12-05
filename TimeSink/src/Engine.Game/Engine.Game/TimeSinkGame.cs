@@ -47,7 +47,7 @@ namespace TimeSink.Engine.Game
         Enemy dummy;
         NormalCentipede normalCentipede;
         FlyingCentipede flyingCentipede;
-        WorldGeometry world;
+        WorldGeometry2 world;
         Trigger trigger;
         MovingPlatform movingPlatform;
         NonPlayerCharacter npc;
@@ -70,14 +70,13 @@ namespace TimeSink.Engine.Game
             character = character = new UserControlledCharacter(playerStart);
 
             dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
-            world = new WorldGeometry();
+            world = new WorldGeometry2();
 
             flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
                                                   PhysicsConstants.PixelsToMeters(new Vector2(40, 0)));
             npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
-            world = new WorldGeometry();
-
+            
             vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(950, 200)));
             ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
 
@@ -124,40 +123,6 @@ namespace TimeSink.Engine.Game
             // perform level-based loading eventually
             world.Load(Container);
             character.Load(Container);
-
-            var oneWayBody = BodyFactory.CreateBody(LevelManager.PhysicsManager.World, world);
-            
-            var oneway = FixtureFactory.AttachRectangle(
-                PhysicsConstants.PixelsToMeters(100),
-                PhysicsConstants.PixelsToMeters(50),
-                1,
-                PhysicsConstants.PixelsToMeters(new Vector2(800, 600)),
-                oneWayBody,
-                world);
-
-            //new OneWayPlatform(oneway);
-
-            FixtureFactory.AttachPolygon(
-                new FarseerPhysics.Common.Vertices() {
-                    PhysicsConstants.PixelsToMeters(new Vector2(500, 300)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(600, 280)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(620, 340)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(520, 360))
-                },
-                1,
-                world.Physics,
-                world);
-
-            FixtureFactory.AttachRectangle(
-                PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
-                PhysicsConstants.PixelsToMeters(10),
-                1,
-                PhysicsConstants.PixelsToMeters(
-                    new Vector2(
-                        GraphicsDevice.Viewport.Width / 2, 
-                        GraphicsDevice.Viewport.Height)),
-                world.Physics,
-                world);
         }
 
         private void AddInitialScreens()

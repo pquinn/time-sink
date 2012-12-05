@@ -1,27 +1,24 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Autofac;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Entities.Weapons;
-using TimeSink.Engine.Core.Editor;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Common;
-using Autofac;
-using TimeSink.Engine.Core.Caching;
-using Microsoft.Xna.Framework.Graphics;
-using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
-using FarseerPhysics.Dynamics.Joints;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities
 {
@@ -167,11 +164,13 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
 
+        Body wheelBody;
+
         public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return Physics.FixtureList;
+                return Physics.FixtureList.Concat(wheelBody.FixtureList).ToList();
             }
         }
 
@@ -224,7 +223,7 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry)
+                    if (fixture.Body.UserData is WorldGeometry2)
                     {
                         touchingGround = true;
                         return 0;
@@ -257,9 +256,13 @@ namespace TimeSink.Entities
             timer += (timeframe * 1000);
 
             if (touchingGround)
-                Physics.Friction = 10;
+            {
+                Physics.Friction = wheelBody.Friction = 10;
+            }
             else
-                Physics.Friction = .01f;
+            {
+                Physics.Friction = wheelBody.Friction = .01f;
+            }
 
             #region Movement
             #region gamepad
@@ -343,11 +346,13 @@ namespace TimeSink.Entities
             {
                 if (canClimb != null)
                 {
-                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
+                    var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
+                    Physics.Position += v;
+                    wheelBody.Position += v; 
                 }
                 else if (touchingGround)
                 {
-                    Physics.Friction = .1f;
+                    Physics.Friction = wheelBody.Friction = .1f;
                     Physics.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
@@ -418,8 +423,8 @@ namespace TimeSink.Entities
             {
                 if ((canClimb != null) && !touchingGround && jumpToggleGuard)
                 {
-                    Physics.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = false;
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
@@ -457,19 +462,22 @@ namespace TimeSink.Entities
                 if ((canClimb != null) && touchingGround)
                 {
                     //Insert anim state change here for climbing anim
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(canClimb.Position.X , 
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
+                    Physics.Position = new Vector2(canClimb.Position.X, 
                                                    Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    wheelBody.Position = new Vector2(canClimb.Position.X,
+                                                   wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     currentState = BodyStates.Climbing;
                 }
                 else if (canClimb != null)
                 {
 
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
                     jumpToggleGuard = true;
                     Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    wheelBody.Position = new Vector2(canClimb.Position.X, wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     currentState = BodyStates.Climbing;
                 }
             }
@@ -567,6 +575,19 @@ namespace TimeSink.Entities
                 v.Y = -Y_CLAMP;
 
             Physics.LinearVelocity = v;
+
+            v = wheelBody.LinearVelocity;
+            if (v.X > X_CLAMP)
+                v.X = X_CLAMP;
+            else if (v.X < -X_CLAMP)
+                v.X = -X_CLAMP;
+
+            if (v.Y > Y_CLAMP)
+                v.Y = Y_CLAMP;
+            else if (v.Y < -Y_CLAMP)
+                v.Y = -Y_CLAMP;
+
+            wheelBody.LinearVelocity = v;
         }
 
         protected void UpdateAnimationStates()
@@ -659,7 +680,7 @@ namespace TimeSink.Entities
         }
 
         [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry world, Contact info)
+        public bool OnCollidedWith(WorldGeometry2 world, Contact info)
         {
             Vector2 normal;
             FixedArray2<Vector2> points;
@@ -844,6 +865,7 @@ namespace TimeSink.Entities
         private const float Y_CLAMP = 30;
 
         private bool initialized;
+        private RevoluteJoint MotorJoint;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -861,22 +883,32 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
+
+                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                wheelBody = BodyFactory.CreateBody(
+                    world, 
+                    wPos, 
+                    this);
+
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
-                    Physics,
-                    new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+                    wheelBody);
 
                 r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1;
                 c.CollisionCategories = Category.Cat3;
 
-                var rSens = r.Clone(Physics);
+                var rSens = r.Clone(r.Body);
+                var cSens = c.Clone(c.Body);
+
+                MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, wheelBody, Vector2.Zero);
+                MotorJoint.MotorEnabled = true;
+                MotorJoint.MaxMotorTorque = 10;
+
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;
-
-                var cSens = c.Clone(Physics);
                 cSens.IsSensor = true;
                 cSens.Shape.Density = 0;
 
@@ -888,6 +920,8 @@ namespace TimeSink.Entities
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
                 Physics.Friction = 10.0f;
+                wheelBody.BodyType = BodyType.Dynamic;
+                wheelBody.Friction = 10.0f;
 
                 initialized = true;
             }

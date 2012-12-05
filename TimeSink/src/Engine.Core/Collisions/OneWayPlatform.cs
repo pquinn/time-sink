@@ -36,7 +36,8 @@ namespace TimeSink.Entities
             else
                 return;
 
-            separatedDict[f] = true;
+            if (!f.IsSensor)
+                separatedDict[f] = true;
         }
 
         [OnCollidedWith.Overload]
@@ -54,11 +55,11 @@ namespace TimeSink.Entities
                 return true;
 
             if (f.UserData is OneWayPlatform)
-                return (f.UserData as OneWayPlatform).OnCollision(fixtureA == f ? fixtureB : fixtureA);
+                return (f.UserData as OneWayPlatform).OnCollision(player, fixtureA == f ? fixtureB : fixtureA);
             return true;
         }
 
-        private bool OnCollision(Fixture f)
+        private bool OnCollision(Entity e, Fixture f)
         {
             bool result = false;
 
@@ -68,13 +69,12 @@ namespace TimeSink.Entities
 
             if (separatedAFrame)
             {
-                if ((f.Body.UserData as Entity).Physics.LinearVelocity.Y > .01f)
+                if (e.Physics.LinearVelocity.Y > .01f)
                     result = true;
             }
 
-            foreach (var fix in f.Body.FixtureList)
+            foreach (var fix in e.CollisionGeometry.Where(x => !x.IsSensor))
                 separatedDict[fix] = false;
-            //separatedDict[f] = false;
 
             return result;
         }
