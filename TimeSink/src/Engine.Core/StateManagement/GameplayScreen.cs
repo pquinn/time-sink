@@ -9,6 +9,7 @@
 
 #region Using Statements
 using System;
+using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -185,7 +186,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// </summary>
         public override void Unload()
         {
-            content.Unload();
+           // content.Unload();
 
 #if WINDOWS_PHONE
             Microsoft.Phone.Shell.PhoneApplicationService.Current.State.Remove("PlayerPosition");
@@ -221,15 +222,14 @@ namespace TimeSink.Engine.Core.StateManagement
 
             if (IsActive)
             {
-                /*foreach (Entity e in currentLevel.Entities)
-                {
-                    e.Update(gameTime, world);
-                }*/
                 UpdateHudElements();
 
                 currentLevel.PhysicsManager.Update(gameTime);
 
+                var entity = currentLevel.Level.Entities[0];
+
                 currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
+                //Console.WriteLine(string.Format("Upd: {0:D6}, {1:D6}", entity.PreviousPosition, entity.Position));
             }
         }
 
@@ -307,6 +307,7 @@ namespace TimeSink.Engine.Core.StateManagement
 #if WINDOWS_PHONE
                 ScreenManager.AddScreen(new PhonePauseScreen(), ControllingPlayer);
 #else
+                this.Deactivate();
                 ScreenManager.AddScreen(new PauseMenuScreen(hudElements), ControllingPlayer);
 #endif
             }

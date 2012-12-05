@@ -46,7 +46,6 @@ namespace TimeSink.Engine.Core.StateManagement
         InputAction menuSelect;
         InputAction menuCancel;
 
-        Texture2D blank;
 
 
         #endregion
@@ -74,10 +73,6 @@ namespace TimeSink.Engine.Core.StateManagement
             set { hudElements = value; }
         }
 
-        protected Texture2D Blank
-        {
-            get { return blank; }
-        }
 
         #endregion
 
@@ -178,6 +173,11 @@ namespace TimeSink.Engine.Core.StateManagement
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
             ExitScreen();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
         }
 
 
@@ -339,7 +339,7 @@ namespace TimeSink.Engine.Core.StateManagement
             titlePosition.Y -= transitionOffset * 100;
 
             spriteBatch.DrawString(font, menuTitle, titlePosition, titleColor, 0,
-                                   titleOrigin, titleScale, SpriteEffects.None, 0);
+                titleOrigin, titleScale, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }

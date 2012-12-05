@@ -41,7 +41,8 @@ namespace TimeSink.Entities
             JumpingRight, JumpingLeft,
             ShootingRight, ShootingLeft,
             DuckingRight, DuckingLeft,
-            Climbing,
+            ClimbingBack,
+            ClimbingLeft, ClimbingRight
         };
 
 
@@ -75,9 +76,6 @@ namespace TimeSink.Entities
 
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;
-        private bool __touchingGroundFlag = false;
-        private bool touchingGround = false;
-        private bool jumpStarted = false;
         private Rectangle sourceRect;
         private float health;
         private float mana;
@@ -85,7 +83,6 @@ namespace TimeSink.Entities
         private Ladder canClimb = null;
         private World _world;
 
-        private bool attachedToVine = false;
         private Joint vineAttachment;
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
@@ -217,7 +214,8 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            touchingGround = false;
+            //if (canClimb == null)
+            //    TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
@@ -226,7 +224,8 @@ namespace TimeSink.Entities
                 {
                     if (fixture.Body.UserData is WorldGeometry2)
                     {
-                        touchingGround = true;
+                        jumpToggleGuard = true;
+                        TouchingGround = true;
                         return 0;
                     }
                     else
@@ -256,7 +255,7 @@ namespace TimeSink.Entities
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
 
-            if (touchingGround)
+            if (TouchingGround)
                 Physics.Friction = 10;
             else
                 Physics.Friction = .01f;
@@ -266,7 +265,7 @@ namespace TimeSink.Entities
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
                 movedirection.X -= 1.0f;
-                if (touchingGround)
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
@@ -274,7 +273,7 @@ namespace TimeSink.Entities
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
                 movedirection.X += 1.0f;
-                if (touchingGround)
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
@@ -282,7 +281,7 @@ namespace TimeSink.Entities
             if (gamepad.ThumbSticks.Left.X != 0)
             {
                 movedirection.X += gamepad.ThumbSticks.Left.X;
-                if (touchingGround)
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
@@ -291,11 +290,22 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                if (!(currentState == BodyStates.Climbing && !touchingGround))
+                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                {
+                    Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                }
+                else if (canClimb != null && canClimb.Sideways && !TouchingGround) //change to sideways climbing state check
+                {
+                    if (jumpToggleGuard)
+                        currentState = BodyStates.NeutralLeft;
+                    else
+                        movedirection.X -= 1.0f;
+                }
+                else
                 {
                     movedirection.X -= 1.0f;
 
-                    if (touchingGround)
+                    if (TouchingGround)
                     {
                         if (currentState != BodyStates.WalkingLeft)
                         {
@@ -316,11 +326,22 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                if (!(currentState == BodyStates.Climbing && !touchingGround))
+                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                {
+                    Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                }
+                else if (canClimb != null && canClimb.Sideways && !TouchingGround) //change to sideways climbing state check
+                {
+                    if (jumpToggleGuard)
+                        currentState = BodyStates.NeutralRight;
+                    else
+                        movedirection.X += 1.0f;
+                }
+                else
                 {
                     movedirection.X += 1.0f;
 
-                    if (touchingGround)
+                    if (TouchingGround)
                     {
                         if (currentState != BodyStates.WalkingRight)
                         {
@@ -343,9 +364,12 @@ namespace TimeSink.Entities
             {
                 if (canClimb != null)
                 {
+                    TouchingGround = false;
+                    canClimb.Physics.IsSensor = true;
+                    Physics.IgnoreGravity = true;
                     Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
                     Physics.Friction = .1f;
                     Physics.ApplyLinearImpulse(new Vector2(0, 20));
@@ -416,7 +440,7 @@ namespace TimeSink.Entities
             if (keyboard.IsKeyDown(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if ((canClimb != null) && !touchingGround && jumpToggleGuard)
+                if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
                     Physics.IgnoreGravity = false;
                     Physics.ApplyLinearImpulse(new Vector2(0, -15));
@@ -424,9 +448,8 @@ namespace TimeSink.Entities
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
                 }
-                if (jumpToggleGuard && touchingGround)
+                if (jumpToggleGuard && TouchingGround)
                 {
-                    jumpStarted = true;
                     jumpSound.Play();
                     Physics.ApplyLinearImpulse(new Vector2(0, -15));
                     jumpToggleGuard = false;
@@ -447,31 +470,46 @@ namespace TimeSink.Entities
                     }
                 }
             }
-            else if (touchingGround)
+            else if (TouchingGround)
             {
-                jumpToggleGuard = true;
+               // jumpToggleGuard = true;
             }
 
             if (keyboard.IsKeyDown(Keys.W))
             {
-                if ((canClimb != null) && touchingGround)
+                if ((canClimb != null))
                 {
                     //Insert anim state change here for climbing anim
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(canClimb.Position.X , 
-                                                   Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                    currentState = BodyStates.Climbing;
+                    TouchingGround = false;
+                    jumpToggleGuard = true;
+                    if (!canClimb.VineWall && !canClimb.Sideways)
+                    {                       
+                        currentState = BodyStates.ClimbingBack;
+                        Physics.Position = new Vector2(canClimb.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }
+                    else
+                    {
+                        if (canClimb.VineWall)
+                            currentState = BodyStates.ClimbingBack;
+                        else if (canClimb.Sideways)
+                            currentState = BodyStates.NeutralRight; //TODO -- Change to sideways climb state
+                        Physics.Position = new Vector2(Physics.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }
                 }
-                else if (canClimb != null)
+             /*   else if (canClimb != null)
                 {
 
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
                     jumpToggleGuard = true;
                     Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                    currentState = BodyStates.Climbing;
-                }
+                    if (!canClimb.Sideways)
+                        currentState = BodyStates.Climbing;
+                }*/ //Dont need this because it's duplicate code -- check jumptoggle though
             }
             #endregion
 
@@ -503,7 +541,7 @@ namespace TimeSink.Entities
             #endregion
 
             //No keys are pressed and we're on the ground, we're neutral
-            if (keyboard.GetPressedKeys().GetLength(0) == 0 && touchingGround && timer >= interval)
+            if (keyboard.GetPressedKeys().GetLength(0) == 0 && TouchingGround && timer >= interval)
             {
                 if (currentState == BodyStates.WalkingRight)
                 {
@@ -623,15 +661,15 @@ namespace TimeSink.Entities
 
             if (currentState == BodyStates.JumpingRight && timer >= interval)
             {
-                if (!touchingGround && Physics.LinearVelocity.Y < 0)
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 1;
                 }
-                else if (!touchingGround && Physics.LinearVelocity.Y > 0)
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 2;
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 3;
                 }
@@ -641,15 +679,15 @@ namespace TimeSink.Entities
 
             if (currentState == BodyStates.JumpingLeft && timer >= interval)
             {
-                if (!touchingGround && Physics.LinearVelocity.Y < 0)
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 1;
                 }
-                else if (!touchingGround && Physics.LinearVelocity.Y > 0)
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 2;
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 3;
                 }
@@ -664,32 +702,19 @@ namespace TimeSink.Entities
             Vector2 normal;
             FixedArray2<Vector2> points;
             info.GetWorldManifold(out normal, out points);
-            if (normal.Y > 0)
-            {
-                __touchingGroundFlag = true;
-            }
+
             return true;
         }
 
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Vine vine, Contact info)
         {
-            attachedToVine = true;
             vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
             var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
             var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
             vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
             //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
             //Physics.FixedRotation = false;
-            return true;
-        }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(MovingPlatform platform, Contact info)
-        {
-            var offset = platform.Position - platform.PreviousPosition.Value;
-            Position += offset;
-
             return true;
         }
 
@@ -831,7 +856,7 @@ namespace TimeSink.Entities
                     Vector2.One));
             #endregion
             #region Climbing
-            dictionary.Add(BodyStates.Climbing,
+            dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
                     FACING_BACK,
                     new Vector2(76.8f, 153.6f),
@@ -861,8 +886,10 @@ namespace TimeSink.Entities
                 _world = world;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
-                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+                Width = spriteWidth;
+                Height = spriteHeight;
+                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
@@ -880,6 +907,7 @@ namespace TimeSink.Entities
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1;
                 c.CollisionCategories = Category.Cat3;
+                c.UserData = true;
 
                 var rSens = r.Clone(Physics);
                 rSens.IsSensor = true;

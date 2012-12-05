@@ -30,15 +30,17 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
         public Ladder()
-            : this(Vector2.Zero, 50, 50)
+            : this(Vector2.Zero, 50, 50, true, false)
         {
         }
 
-        public Ladder(Vector2 position, int width, int height)
+        public Ladder(Vector2 position, int width, int height, bool sideways, bool vinewall)
         {
             Position = position;
             this.Width = width;
             this.Height = height;
+            this.Sideways = sideways;
+            this.VineWall = vinewall;
         }
 
         public override string EditorName
@@ -51,11 +53,19 @@ namespace TimeSink.Entities.Objects
 
         [SerializableField]
         [EditableField("Width")]
-        public int Width { get; set; }
+        public override int Width { get; set; }
 
         [SerializableField]
         [EditableField("Height")]
-        public int Height { get; set; }
+        public override int Height { get; set; }
+
+        [SerializableField]
+        [EditableField("Sideways")]
+        public bool Sideways { get; set; }
+
+        [SerializableField]
+        [EditableField("VineWall")]
+        public bool VineWall { get; set; }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
@@ -86,7 +96,7 @@ namespace TimeSink.Entities.Objects
                     Vector2.Zero,
                     Physics);
 
-                Physics.Friction = 0;
+                Physics.Friction = .2f;
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
 
@@ -103,6 +113,16 @@ namespace TimeSink.Entities.Objects
         public bool OnCollidedWith(UserControlledCharacter c, Contact info)
         {
             //Enable the character to enter a climbing state thus effecting her input handling
+            if (info.FixtureA.UserData == null && info.FixtureB.UserData == null)
+            {
+
+                Physics.IsSensor = true;
+            }
+            else
+            {
+                c.TouchingGround = true;
+            }
+
             c.CanClimb = this;
             return true;
         }
@@ -110,8 +130,12 @@ namespace TimeSink.Entities.Objects
         [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            c.CanClimb = null;
-            c.Physics.IgnoreGravity = false;
+            if (f2.UserData != null && f2.UserData.Equals(true))
+            {
+                c.CanClimb = null;
+                Physics.IsSensor = false;
+                c.Physics.IgnoreGravity = false;
+            }
         }
 
         public override IRendering Preview
