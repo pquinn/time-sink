@@ -55,7 +55,7 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Preview
+        public override IRendering Rendering
         {
             get
             {
@@ -66,6 +66,14 @@ namespace TimeSink.Entities.Enemies
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));
+            }
+        }
+
+        public override IRendering Preview
+        {
+            get
+            {
+                return Rendering;
             }
         }
 

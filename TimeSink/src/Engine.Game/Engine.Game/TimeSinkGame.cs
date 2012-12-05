@@ -77,7 +77,7 @@ namespace TimeSink.Engine.Game
             npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
             world = new WorldGeometry();
 
-            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(950, 200)));
+            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(1050, 450)));
             ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
 
             movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
@@ -130,7 +130,7 @@ namespace TimeSink.Engine.Game
                 PhysicsConstants.PixelsToMeters(100),
                 PhysicsConstants.PixelsToMeters(50),
                 1,
-                PhysicsConstants.PixelsToMeters(new Vector2(800, 600)),
+                PhysicsConstants.PixelsToMeters(new Vector2(800, 650)),
                 oneWayBody,
                 world);
 

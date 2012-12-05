@@ -180,8 +180,7 @@ namespace TimeSink.Entities.Objects
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(UserControlledCharacter character, Contact info)
         {
-            Console.WriteLine("FORCE APPLIED");
-            VineAnchor.ApplyLinearImpulse(new Vector2(100, 0));
+            //this don't do shit yet
             return true;
         }
 
