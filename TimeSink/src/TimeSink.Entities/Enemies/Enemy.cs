@@ -172,10 +172,12 @@ namespace TimeSink.Entities.Enemies
                 var world = engineRegistrations.Resolve<World>();
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var texture = GetTexture(textureCache);
+                Width = texture.Width;
+                Height = texture.Height;
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(texture.Width),
-                    PhysicsConstants.PixelsToMeters(texture.Height),
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
                     1,
                     Position);
                 Physics.FixedRotation = true;
