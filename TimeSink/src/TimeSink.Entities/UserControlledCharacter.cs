@@ -216,16 +216,16 @@ namespace TimeSink.Entities
             //Console.WriteLine("Character Position: {0}", Position);
             //Console.WriteLine("Previous Position: {0}", PreviousPosition);
             //Console.WriteLine();
-            
-            //if (canClimb == null)
-            //    TouchingGround = false;
+
+            if (canClimb == null)
+                TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2)
+                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                     {
                         jumpToggleGuard = true;
                         TouchingGround = true;
@@ -247,7 +247,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
-            var movedirection = new Vector2();
+            var movedirection = 1;//new Vector2();
 
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
@@ -302,11 +302,11 @@ namespace TimeSink.Entities
                     if (jumpToggleGuard)
                         currentState = BodyStates.NeutralLeft;
                     else
-                        movedirection.X -= 1.0f;
+                        movedirection = -1;
                 }
                 else
                 {
-                    movedirection.X -= 1.0f;
+                    movedirection = -1;
 
                     if (TouchingGround)
                     {
@@ -338,11 +338,11 @@ namespace TimeSink.Entities
                     if (jumpToggleGuard)
                         currentState = BodyStates.NeutralRight;
                     else
-                        movedirection.X += 1.0f;
+                        movedirection = 1;
                 }
                 else
                 {
-                    movedirection.X += 1.0f;
+                    movedirection = 1;
 
                     if (TouchingGround)
                     {
@@ -378,7 +378,7 @@ namespace TimeSink.Entities
                 else if (TouchingGround)
                 {
                     Physics.Friction = wheelBody.Friction = .1f;
-                    Physics.ApplyLinearImpulse(new Vector2(0, 20));
+                    wheelBody.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
             #endregion
@@ -443,7 +443,7 @@ namespace TimeSink.Entities
             #endregion
 
             #region Jumping
-            if (keyboard.IsKeyDown(Keys.Space)
+            if (InputManager.Instance.IsNewKey(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
                 if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
@@ -582,21 +582,22 @@ namespace TimeSink.Entities
                 // timer = 0f;
             }
 
-            if (movedirection != Vector2.Zero)
-            {
-                // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-                movedirection.Normalize();
-            }
+            //if (movedirection != Vector2.Zero)
+            //{
+            //    // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
+            //    movedirection.Normalize();
+            //}
 
             // Increment animation unless idle.
-            if (amount != 0.0f)
-            {
-                // Rotate the player towards the controller direction.
-                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
+            //if (amount != 0.0f)
+            //{
+            //    // Rotate the player towards the controller direction.
+            //    playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
-                // Move player based on the controller direction and time scale.
-                Physics.ApplyLinearImpulse(movedirection * amount);
-            }
+            //    // Move player based on the controller direction and time scale.
+            //    Physics.ApplyLinearImpulse(movedirection * amount);
+            //}
+            MotorJoint.MotorSpeed = amount * movedirection;
 
             ClampVelocity();
 
