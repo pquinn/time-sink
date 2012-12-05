@@ -79,7 +79,7 @@ namespace TimeSink.Engine.Game
             world = new WorldGeometry();
 
             vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(950, 200)));
-            ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
+            ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000, false, true);
 
             movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
                                                 PhysicsConstants.PixelsToMeters(new Vector2(50, 100)), 4f, 64, 128);

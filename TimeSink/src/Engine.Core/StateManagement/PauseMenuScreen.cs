@@ -25,11 +25,6 @@ namespace TimeSink.Engine.Core.StateManagement
     {
         #region Initialization
 
-        ContentManager content;
-
-
-
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -39,7 +34,7 @@ namespace TimeSink.Engine.Core.StateManagement
             // Create our menu entries.
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");
             MenuEntry quitGameMenuEntry = new MenuEntry("Quit Game");
-            
+
             // Hook up menu event handlers.
             resumeGameMenuEntry.Selected += OnCancel;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
@@ -70,7 +65,6 @@ namespace TimeSink.Engine.Core.StateManagement
             ScreenManager.AddScreen(confirmQuitMessageBox, ControllingPlayer);
         }
 
-
         /// <summary>
         /// Event handler for when the user selects ok on the "are you sure
         /// you want to quit" message box. This uses the loading screen to
@@ -78,8 +72,8 @@ namespace TimeSink.Engine.Core.StateManagement
         /// </summary>
         void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new MainMenuScreen());
+            LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new BackgroundScreen(),
+                                                                    new MainMenuScreen());
         }
 
 

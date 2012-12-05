@@ -185,7 +185,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// </summary>
         public override void Unload()
         {
-            content.Unload();
+           // content.Unload();
 
 #if WINDOWS_PHONE
             Microsoft.Phone.Shell.PhoneApplicationService.Current.State.Remove("PlayerPosition");
@@ -307,6 +307,7 @@ namespace TimeSink.Engine.Core.StateManagement
 #if WINDOWS_PHONE
                 ScreenManager.AddScreen(new PhonePauseScreen(), ControllingPlayer);
 #else
+                this.Deactivate();
                 ScreenManager.AddScreen(new PauseMenuScreen(hudElements), ControllingPlayer);
 #endif
             }
