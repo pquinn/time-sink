@@ -68,7 +68,10 @@ namespace TimeSink.Engine.Core
                     Physics.Position = position;
             }
         }
-        
+
+        [XmlIgnore]
+        public bool TouchingGround { get; set; }
+
         [XmlIgnore]
         public Body Physics { get; protected set; }
 

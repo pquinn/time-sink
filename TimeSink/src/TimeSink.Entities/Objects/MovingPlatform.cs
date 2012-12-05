@@ -147,6 +147,7 @@ namespace TimeSink.Entities
                         if (fixture.Body.UserData.Equals(this))
                         {
                             entity.Position += (Position - PreviousPosition.Value);
+                            entity.TouchingGround = true;
                             return 0;
                         }
 
