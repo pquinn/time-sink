@@ -1,27 +1,24 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Autofac;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Entities.Weapons;
-using TimeSink.Engine.Core.Editor;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Common;
-using Autofac;
-using TimeSink.Engine.Core.Caching;
-using Microsoft.Xna.Framework.Graphics;
-using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
-using FarseerPhysics.Dynamics.Joints;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities
 {
@@ -164,11 +161,13 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
 
+        Body wheelBody;
+
         public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return Physics.FixtureList;
+                return Physics.FixtureList.Concat(wheelBody.FixtureList).ToList();
             }
         }
 
@@ -214,15 +213,19 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            //if (canClimb == null)
-            //    TouchingGround = false;
+            //Console.WriteLine("Character Position: {0}", Position);
+            //Console.WriteLine("Previous Position: {0}", PreviousPosition);
+            //Console.WriteLine();
+
+            if (canClimb == null)
+                TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2)
+                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                     {
                         jumpToggleGuard = true;
                         TouchingGround = true;
@@ -258,9 +261,9 @@ namespace TimeSink.Entities
             timer += (timeframe * 1000);
 
             if (TouchingGround)
-                Physics.Friction = 10;
+                Physics.Friction = wheelBody.Friction = 10;
             else
-                Physics.Friction = .01f;
+                Physics.Friction = wheelBody.Friction = .01f;
 
             #region Movement
             #region gamepad
@@ -368,12 +371,15 @@ namespace TimeSink.Entities
                 {
                     TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
-                    Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
+                    
+                    var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
+                    Physics.Position += v;
+                    wheelBody.Position += v;
                 }
                 else if (TouchingGround)
                 {
-                    Physics.Friction = .1f;
+                    Physics.Friction = wheelBody.Friction = .1f;
                     Physics.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
@@ -444,8 +450,8 @@ namespace TimeSink.Entities
             {
                 if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
-                    Physics.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = false;
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
@@ -453,7 +459,7 @@ namespace TimeSink.Entities
                 if (jumpToggleGuard && TouchingGround)
                 {
                     jumpSound.Play();
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
 
                     if (currentState == BodyStates.WalkingRight ||
@@ -482,8 +488,8 @@ namespace TimeSink.Entities
                 if ((canClimb != null))
                 {
                     //Insert anim state change here for climbing anim
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
                     TouchingGround = false;
                     jumpToggleGuard = true;
                     if (!canClimb.VineWall && !canClimb.Sideways)
@@ -491,6 +497,8 @@ namespace TimeSink.Entities
                         currentState = BodyStates.ClimbingBack;
                         Physics.Position = new Vector2(canClimb.Position.X,
                                                        Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                        wheelBody.Position = new Vector2(canClimb.Position.X,
+                                                        wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     }
                     else
                     {
@@ -498,17 +506,21 @@ namespace TimeSink.Entities
                             currentState = BodyStates.ClimbingBack;
                         else if (canClimb.Sideways)
                             currentState = BodyStates.NeutralRight; //TODO -- Change to sideways climb state
+                        
                         Physics.Position = new Vector2(Physics.Position.X,
                                                        Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                        wheelBody.Position = new Vector2(canClimb.Position.X,
+                                                       wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     }
                 }
              /*   else if (canClimb != null)
                 {
 
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
                     jumpToggleGuard = true;
                     Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    wheelBody.Position = new Vector2(canClimb.Position.X, wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     if (!canClimb.Sideways)
                         currentState = BodyStates.Climbing;
                 }*/ //Dont need this because it's duplicate code -- check jumptoggle though
@@ -607,6 +619,19 @@ namespace TimeSink.Entities
                 v.Y = -Y_CLAMP;
 
             Physics.LinearVelocity = v;
+
+            v = wheelBody.LinearVelocity;
+            if (v.X > X_CLAMP)
+                v.X = X_CLAMP;
+            else if (v.X < -X_CLAMP)
+                v.X = -X_CLAMP;
+
+            if (v.Y > Y_CLAMP)
+                v.Y = Y_CLAMP;
+            else if (v.Y < -Y_CLAMP)
+                v.Y = -Y_CLAMP;
+
+            wheelBody.LinearVelocity = v;
         }
 
         protected void UpdateAnimationStates()
@@ -699,7 +724,7 @@ namespace TimeSink.Entities
         }
 
         [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry world, Contact info)
+        public bool OnCollidedWith(WorldGeometry2 world, Contact info)
         {
             Vector2 normal;
             FixedArray2<Vector2> points;
@@ -880,6 +905,7 @@ namespace TimeSink.Entities
         private const float Y_CLAMP = 30;
 
         private bool initialized;
+        private RevoluteJoint MotorJoint;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -899,11 +925,17 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
+
+                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                wheelBody = BodyFactory.CreateBody(
+                    world,
+                    wPos,
+                    this);
+
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
-                    Physics,
-                    new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+                    wheelBody);
 
                 r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
@@ -911,11 +943,15 @@ namespace TimeSink.Entities
                 c.CollisionCategories = Category.Cat3;
                 c.UserData = true;
 
-                var rSens = r.Clone(Physics);
+                var rSens = r.Clone(r.Body);
+                var cSens = c.Clone(c.Body);
+
+                MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, wheelBody, Vector2.Zero);
+                MotorJoint.MotorEnabled = true;
+                MotorJoint.MaxMotorTorque = 10;
+
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;
-
-                var cSens = c.Clone(Physics);
                 cSens.IsSensor = true;
                 cSens.Shape.Density = 0;
 
@@ -927,6 +963,8 @@ namespace TimeSink.Entities
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
                 Physics.Friction = 10.0f;
+                wheelBody.BodyType = BodyType.Dynamic;
+                wheelBody.Friction = 10.0f;
 
                 initialized = true;
             }

@@ -32,6 +32,7 @@ namespace TimeSink.Engine.Core.Physics
 
         internal void UnregisterPhysicsBody(Entity entity)
         {
+            //TODO: fix for multiple bodies (ex: UserControlledCharacter)
             entity.Physics.Dispose();
         }
 

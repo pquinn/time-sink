@@ -11,6 +11,8 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 
 namespace TimeSink.Entities
 {
@@ -20,24 +22,25 @@ namespace TimeSink.Entities
 
         public OneWayPlatform(Fixture f)
         {
-            var sensor = f.Clone(f.Body);
-            sensor.IsSensor = true;
-            sensor.OnSeparation += new OnSeparationEventHandler(OnSeparation);
+            //var sensor = f.Clone(f.Body);
+            //sensor.IsSensor = true;
+            //sensor.OnSeparation += new OnSeparationEventHandler(OnSeparation);
             f.UserData = this;
         }
 
-        void OnSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            Fixture f;
-            if (fixtureB.Body.UserData is Entity)
-                f = fixtureB;
-            else if (fixtureA.Body.UserData is Entity)
-                f = fixtureA;
-            else
-                return;
+        //void OnSeparation(Fixture fixtureA, Fixture fixtureB)
+        //{
+        //    Fixture f;
+        //    if (fixtureB.Body.UserData is Entity)
+        //        f = fixtureB;
+        //    else if (fixtureA.Body.UserData is Entity)
+        //        f = fixtureA;
+        //    else
+        //        return;
 
-            separatedDict[f] = true;
-        }
+        //    if (!f.IsSensor)
+        //        separatedDict[f] = true;
+        //}
 
         [OnCollidedWith.Overload]
         public static bool OnCollidedWith(Entity player, WorldGeometry2 world, Contact contact)
@@ -54,29 +57,56 @@ namespace TimeSink.Entities
                 return true;
 
             if (f.UserData is OneWayPlatform)
-                return (f.UserData as OneWayPlatform).OnCollision(fixtureA == f ? fixtureB : fixtureA);
+            {
+                if (fixtureA == f)
+                    return (f.UserData as OneWayPlatform).OnCollision(player, fixtureB, fixtureA, contact);
+                else
+                    return (f.UserData as OneWayPlatform).OnCollision(player, fixtureA, fixtureB, contact);
+            }
             return true;
         }
 
-        private bool OnCollision(Fixture f)
+        private bool OnCollision(Entity e, Fixture entityFixture, Fixture platformFixture, Contact contact)
         {
-            bool result = false;
+            //bool result = false;
 
-            bool separatedAFrame = false;
-            bool found = separatedDict.TryGetValue(f, out separatedAFrame);
-            separatedAFrame = !found || separatedAFrame;
+            //bool separatedAFrame = false;
+            //bool found = separatedDict.TryGetValue(entityFixture, out separatedAFrame);
+            //separatedAFrame = !found || separatedAFrame;
 
-            if (separatedAFrame)
+            //if (separatedAFrame)
+            //{
+            //    if (e.Physics.LinearVelocity.Y > .1f)
+            //        result = true;
+            //}
+
+            //foreach (var fix in e.CollisionGeometry.Where(x => !x.IsSensor))
+            //    separatedDict[fix] = false;
+
+            //return result;
+
+            if (e.PreviousPosition != null && e.Physics.LinearVelocity.Y > .1f)
             {
-                if ((f.Body.UserData as Entity).Physics.LinearVelocity.Y > .01f)
-                    result = true;
+                Vector2 normal;
+                FixedArray2<Vector2> points;
+                contact.GetWorldManifold(out normal, out points);
+
+                var offset = (e.PreviousPosition ?? Vector2.Zero) - e.Position;
+
+                var edgeShape = platformFixture.Shape as EdgeShape;
+                var platformVector = edgeShape.Vertex1.X < edgeShape.Vertex2.X
+                    ? edgeShape.Vertex2 - edgeShape.Vertex1
+                    : edgeShape.Vertex1 - edgeShape.Vertex2;
+
+                var entityVector = points[0] + offset - edgeShape.Vertex1;
+
+                var cross = Vector3.Cross(new Vector3(entityVector, 0), new Vector3(platformVector, 0));
+                
+                if (cross.Z < 0)
+                    return true;
             }
 
-            foreach (var fix in f.Body.FixtureList)
-                separatedDict[fix] = false;
-            //separatedDict[f] = false;
-
-            return result;
+            return false;
         }
     }
 }

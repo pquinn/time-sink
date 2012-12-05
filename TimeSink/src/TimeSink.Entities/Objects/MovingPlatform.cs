@@ -130,36 +130,22 @@ namespace TimeSink.Entities
 
             if (first)
             {
-                tZero = (float)time.ElapsedGameTime.TotalSeconds;
+                tZero = (float)time.TotalGameTime.TotalSeconds;
                 first = false;
             }
 
-            Physics.Position = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
-
-            var entitiesNotOnTop = new List<Entity>();
-            foreach (var entity in collidedEntities)
-            {
-                var start = entity.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(entity.Height) / 2);
-
-                world.LevelManager.PhysicsManager.World.RayCast(
-                    delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
-                    {
-                        if (fixture.Body.UserData.Equals(this))
-                        {
-                            entity.Position += (Position - PreviousPosition.Value);
-                            entity.TouchingGround = true;
-                            return 0;
-                        }
-
-                        entitiesNotOnTop.Add(entity);
-
-                        return -1;
-                    },
-                    start,
-                    start + new Vector2(0, .1f));
-            }
-
-            entitiesNotOnTop.ForEach(x => collidedEntities.Remove(x));
+            float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
+            var stepAmt = currentStep / TimeSpan;
+            var dir = Math.Sin(stepAmt * 2 * Math.PI);
+            var offset = EndPosition - StartPosition;
+            var len = offset.Length();
+            offset.Normalize();
+            if (dir > 0)
+                Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            else if (dir < 0)
+                Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            else
+                Physics.LinearVelocity = Vector2.Zero;
         }
 
         [OnCollidedWith.Overload]
@@ -187,16 +173,15 @@ namespace TimeSink.Entities
                     1,
                     Position);
                 Physics.UserData = this;
-                Physics.BodyType = BodyType.Static;
-                Physics.Friction = .2f;
+                Physics.BodyType = BodyType.Kinematic;
+                Physics.Friction = 5f;
+                Physics.IgnoreGravity = true;
                 Physics.CollidesWith = Category.All | ~Category.Cat1;
                 Physics.CollisionCategories = Category.Cat1;
 
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat1;
                 fix.CollidesWith = Category.All | ~Category.Cat1;
-
-                //fix.Shape.Density = Single.PositiveInfinity;
 
                 initialized = true;
             }

@@ -19,7 +19,7 @@ namespace TimeSink.Entities
         {
             base.Load(builder);
 
-            var assembly = typeof(WorldGeometry).Assembly;
+            var assembly = typeof(EntityBootstrapper).Assembly;
             assembly.GetTypes().ForEach(
                 t =>
                 {
