@@ -35,7 +35,7 @@ namespace TimeSink.Entities
         private bool first;
         private float tZero;
 
-        private List<Entity> collidedEntities;
+        private HashSet<Entity> collidedEntities;
 
         public MovingPlatform() : this(Vector2.Zero, Vector2.Zero, 0, 0, 0) { }
 
@@ -43,7 +43,7 @@ namespace TimeSink.Entities
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
-            collidedEntities = new List<Entity>();
+            collidedEntities = new HashSet<Entity>();
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
@@ -137,7 +137,7 @@ namespace TimeSink.Entities
             var prev = Physics.Position;
             Physics.Position = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
 
-            var entitiesNotOnTop = new List<Entity>();
+            var entitiesNotOnTop = new HashSet<Entity>(collidedEntities);
             foreach (var entity in collidedEntities)
             {
                 var start = entity.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(entity.Height) / 2);
@@ -149,18 +149,16 @@ namespace TimeSink.Entities
                         {
                             entity.Position += (Position - prev);
                             entity.TouchingGround = true;
+                            entitiesNotOnTop.Remove(entity);
                             return 0;
                         }
-
-                        entitiesNotOnTop.Add(entity);
-
                         return -1;
                     },
                     start,
                     start + new Vector2(0, .1f));
             }
 
-            entitiesNotOnTop.ForEach(x => collidedEntities.Remove(x));
+            collidedEntities.RemoveWhere(entitiesNotOnTop.Contains);
         }
 
         [OnCollidedWith.Overload]
