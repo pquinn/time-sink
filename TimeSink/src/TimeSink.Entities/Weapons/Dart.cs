@@ -29,7 +29,7 @@ namespace TimeSink.Entities.Weapons
         public GravityPhysics physics { get; private set; }
         public DamageOverTimeEffect dot { get; private set; }
 
-        const float DART_SPEED = 30;
+        const float DART_SPEED = 2000;
 
         public Dart() 
             : this(Vector2.Zero)
@@ -127,7 +127,7 @@ namespace TimeSink.Entities.Weapons
             world.LevelManager.RegisterEntity(dart);
 
             character.InHold = false;
-            Vector2 initialVelocity = character.Direction * DART_SPEED;
+            Vector2 initialVelocity = PhysicsConstants.PixelsToMeters(character.Direction * DART_SPEED);
             dart.Physics.LinearVelocity += initialVelocity;
         }
 
@@ -151,7 +151,7 @@ namespace TimeSink.Entities.Weapons
                     Position);
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
-               // Physics.IsSensor = true;
+                Physics.IsSensor = true;
                 Physics.UserData = this;
 
                 initialized = true;
