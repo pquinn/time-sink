@@ -22,13 +22,13 @@ namespace TimeSink.Entities.Weapons
     [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
     public class Arrow : Entity, IWeapon
     {
-        const float ARROW_MASS = 1f;
+        const float ARROW_MASS = .1f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
         const string EDITOR_NAME = "Arrow";
 
         const float MAX_ARROW_HOLD = 1;
-        const float MIN_ARROW_INIT_SPEED = 50;
-        const float MAX_ARROW_INIT_SPEED = 150;
+        const float MIN_ARROW_INIT_SPEED = 1000;
+        const float MAX_ARROW_INIT_SPEED = 2000;
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -127,7 +127,7 @@ namespace TimeSink.Entities.Weapons
                                        MAX_ARROW_HOLD *
                                        (float)elapsedTime;
 
-            Vector2 initialVelocity = speed * character.Direction;
+            Vector2 initialVelocity = PhysicsConstants.PixelsToMeters(speed * character.Direction);
             arrow.Physics.LinearVelocity += initialVelocity;
         }
 
@@ -152,6 +152,7 @@ namespace TimeSink.Entities.Weapons
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
                 Physics.UserData = this;
+                Physics.IsSensor = true;
 
                 initialized = true;
             }
