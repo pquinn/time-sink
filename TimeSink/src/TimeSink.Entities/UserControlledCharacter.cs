@@ -224,7 +224,7 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry)
+                    if (fixture.Body.UserData is WorldGeometry2)
                     {
                         touchingGround = true;
                         return 0;
