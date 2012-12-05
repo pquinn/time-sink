@@ -216,6 +216,10 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
+            //Console.WriteLine("Character Position: {0}", Position);
+            //Console.WriteLine("Previous Position: {0}", PreviousPosition);
+            //Console.WriteLine();
+
             touchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -424,7 +428,7 @@ namespace TimeSink.Entities
                 if ((canClimb != null) && !touchingGround && jumpToggleGuard)
                 {
                     Physics.IgnoreGravity = wheelBody.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -12));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
@@ -433,7 +437,7 @@ namespace TimeSink.Entities
                 {
                     jumpStarted = true;
                     jumpSound.Play();
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
 
                     if (currentState == BodyStates.WalkingRight ||
@@ -702,6 +706,15 @@ namespace TimeSink.Entities
             vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
             //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
             //Physics.FixedRotation = false;
+            return true;
+        }
+
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(MovingPlatform platform, Contact info)
+        {
+            var offset = platform.Position - platform.PreviousPosition.Value;
+            Position += offset;
+
             return true;
         }
 
