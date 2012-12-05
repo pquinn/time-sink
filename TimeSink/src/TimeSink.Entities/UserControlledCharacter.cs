@@ -247,7 +247,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
-            var movedirection = 1;//new Vector2();
+            var movedirection = new Vector2();
 
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
@@ -302,11 +302,11 @@ namespace TimeSink.Entities
                     if (jumpToggleGuard)
                         currentState = BodyStates.NeutralLeft;
                     else
-                        movedirection = -1;
+                        movedirection.X -= 1.0f;
                 }
                 else
                 {
-                    movedirection = -1;
+                    movedirection.X -= 1.0f;
 
                     if (TouchingGround)
                     {
@@ -338,11 +338,11 @@ namespace TimeSink.Entities
                     if (jumpToggleGuard)
                         currentState = BodyStates.NeutralRight;
                     else
-                        movedirection = 1;
+                        movedirection.X += 1.0f;
                 }
                 else
                 {
-                    movedirection = 1;
+                    movedirection.X += 1.0f;
 
                     if (TouchingGround)
                     {
@@ -582,22 +582,21 @@ namespace TimeSink.Entities
                 // timer = 0f;
             }
 
-            //if (movedirection != Vector2.Zero)
-            //{
-            //    // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-            //    movedirection.Normalize();
-            //}
+            if (movedirection != Vector2.Zero)
+            {
+                // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
+                movedirection.Normalize();
+            }
 
             // Increment animation unless idle.
-            //if (amount != 0.0f)
-            //{
-            //    // Rotate the player towards the controller direction.
-            //    playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
+            if (amount != 0.0f)
+            {
+                // Rotate the player towards the controller direction.
+                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
-            //    // Move player based on the controller direction and time scale.
-            //    Physics.ApplyLinearImpulse(movedirection * amount);
-            //}
-            MotorJoint.MotorSpeed = amount * movedirection;
+                // Move player based on the controller direction and time scale.
+                Physics.ApplyLinearImpulse(movedirection * amount);
+            }
 
             ClampVelocity();
 
