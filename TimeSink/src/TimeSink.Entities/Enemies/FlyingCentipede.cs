@@ -13,7 +13,6 @@ using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
-using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 
 namespace TimeSink.Entities.Enemies

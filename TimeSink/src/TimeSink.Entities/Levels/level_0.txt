@@ -1,1 +1,102 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><PlayerStart><X>1.171875</X><Y>4.6875</Y></PlayerStart><Midground /><Tiles /><GeoSegments><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>0.015625</X><Y>6.1875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>13.375</X><Y>6.296875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.921875</X><Y>3.828125</Y></EndPoint><IsOneWay>true</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>11.21875</X><Y>3.875</Y></EndPoint><IsOneWay>true</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>5.640625</X><Y>5</Y></EndPoint><IsOneWay>true</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>7.828125</X><Y>5.046875</Y></EndPoint><IsOneWay>true</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment></GeoSegments><EntitySerializations /></Level>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<PlayerStart>
+		<X>1.171875</X><Y>3.125</Y>
+	</PlayerStart>
+	<Midground />
+	<Tiles />
+	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>0.015625</X><Y>6.1875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>13.375</X><Y>6.296875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.921875</X><Y>3.828125</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>11.21875</X><Y>3.875</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>5.640625</X><Y>5</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>7.828125</X><Y>5.046875</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+	</GeoSegments>
+	<EntitySerializations>
+		<EntitySerialization>
+			<EntityId>c31fb7ad-f9de-4ca3-a091-521583c6c6bf</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>StartPosition</Key>
+					<Value xsi:type="Vector2">
+						<X>1.171875</X><Y>5.59375</Y>
+					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>EndPosition</Key>
+					<Value xsi:type="Vector2">
+						<X>2.34375</X><Y>5.59375</Y>
+					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>TimeSpan</Key>
+					<Value xsi:type="xsd:float">3</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">c31fb7ad-f9de-4ca3-a091-521583c6c6bf</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">plat</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>1.171875</X><Y>5.59375</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+	</EntitySerializations>
+</Level>

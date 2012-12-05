@@ -65,10 +65,12 @@ namespace TimeSink.Entities
             {
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(NPC_TEXTURE);
                 var world = engineRegistrations.Resolve<World>();
+                Width = texture.Width;
+                Height = texture.Height;
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(texture.Width),
-                    PhysicsConstants.PixelsToMeters(texture.Height),
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
                     1,
                     Position);
                 Physics.FixedRotation = true;

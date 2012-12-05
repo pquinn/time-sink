@@ -1,27 +1,24 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Autofac;
+using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Entities.Weapons;
-using TimeSink.Engine.Core.Editor;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Common;
-using Autofac;
-using TimeSink.Engine.Core.Caching;
-using Microsoft.Xna.Framework.Graphics;
-using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
-using FarseerPhysics.Dynamics.Joints;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities
 {
@@ -76,9 +73,6 @@ namespace TimeSink.Entities
 
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;
-        private bool __touchingGroundFlag = false;
-        private bool touchingGround = false;
-        private bool jumpStarted = false;
         private Rectangle sourceRect;
         private float health;
         private float mana;
@@ -86,7 +80,6 @@ namespace TimeSink.Entities
         private Ladder canClimb = null;
         private World _world;
 
-        private bool attachedToVine = false;
         private Joint vineAttachment;
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
@@ -160,12 +153,6 @@ namespace TimeSink.Entities
             set { inHold = value; }
         }
 
-        public bool TouchingGround
-        {
-            get { return touchingGround; }
-            set { touchingGround = value; }
-        }
-
         float timer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
@@ -174,11 +161,13 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
 
+        Body wheelBody;
+
         public override List<Fixture> CollisionGeometry
         {
             get
             {
-                return Physics.FixtureList;
+                return Physics.FixtureList.Concat(wheelBody.FixtureList).ToList();
             }
         }
 
@@ -224,18 +213,22 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
+            //Console.WriteLine("Character Position: {0}", Position);
+            //Console.WriteLine("Previous Position: {0}", PreviousPosition);
+            //Console.WriteLine();
+
             if (canClimb == null)
-                touchingGround = false;
+                TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2)
+                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                     {
                         jumpToggleGuard = true;
-                        touchingGround = true;
+                        TouchingGround = true;
                         return 0;
                     }
                     else
@@ -254,7 +247,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
-            var movedirection = new Vector2();
+            var movedirection = 1;//new Vector2();
 
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
@@ -265,33 +258,33 @@ namespace TimeSink.Entities
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
 
-            if (touchingGround)
-                Physics.Friction = 10;
+            if (TouchingGround)
+                Physics.Friction = wheelBody.Friction = 10;
             else
-                Physics.Friction = .01f;
+                Physics.Friction = wheelBody.Friction = .01f;
 
             #region Movement
             #region gamepad
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
-                movedirection.X -= 1.0f;
-                if (touchingGround)
+                movedirection -= 1;
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
-                movedirection.X += 1.0f;
-                if (touchingGround)
+                movedirection += 1;
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
             }
             if (gamepad.ThumbSticks.Left.X != 0)
             {
-                movedirection.X += gamepad.ThumbSticks.Left.X;
-                if (touchingGround)
+                movedirection += (int)gamepad.ThumbSticks.Left.X;
+                if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
                 }
@@ -304,6 +297,7 @@ namespace TimeSink.Entities
                 {
                     Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
                 }
+
                 else if (currentState == BodyStates.ClimbingBack)
                 {
                     // Do Nothing
@@ -317,9 +311,9 @@ namespace TimeSink.Entities
                 }
                 else
                 {
-                    movedirection.X -= 1.0f;
+                    movedirection = -1;
 
-                    if (touchingGround)
+                    if (TouchingGround)
                     {
                         if (currentState != BodyStates.WalkingLeft)
                         {
@@ -357,9 +351,9 @@ namespace TimeSink.Entities
                 }
                 else
                 {
-                    movedirection.X += 1.0f;
+                    movedirection = 1;
 
-                    if (touchingGround)
+                    if (TouchingGround)
                     {
                         if (currentState != BodyStates.WalkingRight)
                         {
@@ -382,15 +376,18 @@ namespace TimeSink.Entities
             {
                 if (canClimb != null)
                 {
-                    touchingGround = false;
+                    TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
-                    Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
+                    
+                    var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
+                    Physics.Position += v;
+                    wheelBody.Position += v;
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
-                    Physics.Friction = .1f;
-                    Physics.ApplyLinearImpulse(new Vector2(0, 20));
+                    Physics.Friction = wheelBody.Friction = .1f;
+                    wheelBody.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
             #endregion
@@ -455,22 +452,21 @@ namespace TimeSink.Entities
             #endregion
 
             #region Jumping
-            if (keyboard.IsKeyDown(Keys.Space)
+            if (InputManager.Instance.IsNewKey(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if ((canClimb != null) && !touchingGround && jumpToggleGuard)
+                if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
-                    Physics.IgnoreGravity = false;
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = false;
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
                     //canClimb = false;
                     currentState = BodyStates.JumpingRight;
                 }
-                if (jumpToggleGuard && touchingGround)
+                if (jumpToggleGuard && TouchingGround)
                 {
-                    jumpStarted = true;
                     jumpSound.Play();
-                    Physics.ApplyLinearImpulse(new Vector2(0, -15));
+                    Physics.ApplyLinearImpulse(new Vector2(0, -12f));
                     jumpToggleGuard = false;
 
                     if (currentState == BodyStates.WalkingRight ||
@@ -489,7 +485,7 @@ namespace TimeSink.Entities
                     }
                 }
             }
-            else if (touchingGround)
+            else if (TouchingGround)
             {
                // jumpToggleGuard = true;
             }
@@ -499,9 +495,9 @@ namespace TimeSink.Entities
                 if ((canClimb != null))
                 {
                     //Insert anim state change here for climbing anim
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
-                    touchingGround = false;
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
+                    TouchingGround = false;
                     jumpToggleGuard = true;
                     if (!canClimb.VineWall)
                     {
@@ -517,11 +513,15 @@ namespace TimeSink.Entities
                             {
                                 Physics.Position = new Vector2(Physics.Position.X - ((Physics.Position.X - canClimb.Position.X) / 2),
                                                                Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                wheelBody.Position = new Vector2(wheelBody.Position.X - ((wheelBody.Position.X - canClimb.Position.X) / 2),
+                                                               wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
                                 Physics.Position = new Vector2(Physics.Position.X + ((canClimb.Position.X - Physics.Position.X) / 2),
                                                                Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                wheelBody.Position = new Vector2(wheelBody.Position.X + ((canClimb.Position.X - wheelBody.Position.X) / 2),
+                                                               wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                             }
                         }
                         else
@@ -529,24 +529,20 @@ namespace TimeSink.Entities
                             currentState = BodyStates.ClimbingBack;
                             Physics.Position = new Vector2(canClimb.Position.X,
                                                            Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                            
+                            wheelBody.Position = new Vector2(canClimb.Position.X,
+                                                           wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                         }
-                    }
-                    else
-                    {
-                        if (canClimb.VineWall)
-                            currentState = BodyStates.ClimbingBack;
-
-                        Physics.Position = new Vector2(Physics.Position.X,
-                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     }
                 }
              /*   else if (canClimb != null)
                 {
 
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.IgnoreGravity = true;
+                    Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
+                    Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
                     jumpToggleGuard = true;
                     Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    wheelBody.Position = new Vector2(canClimb.Position.X, wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                     if (!canClimb.Sideways)
                         currentState = BodyStates.Climbing;
                 }*/ //Dont need this because it's duplicate code -- check jumptoggle though
@@ -581,7 +577,7 @@ namespace TimeSink.Entities
             #endregion
 
             //No keys are pressed and we're on the ground, we're neutral
-            if (keyboard.GetPressedKeys().GetLength(0) == 0 && touchingGround && timer >= interval)
+            if (keyboard.GetPressedKeys().GetLength(0) == 0 && TouchingGround && timer >= interval)
             {
                 if (currentState == BodyStates.WalkingRight)
                 {
@@ -610,21 +606,22 @@ namespace TimeSink.Entities
                 // timer = 0f;
             }
 
-            if (movedirection != Vector2.Zero)
-            {
-                // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-                movedirection.Normalize();
-            }
+            //if (movedirection != Vector2.Zero)
+            //{
+            //    // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
+            //    movedirection.Normalize();
+            //}
 
             // Increment animation unless idle.
-            if (amount != 0.0f)
-            {
-                // Rotate the player towards the controller direction.
-                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
+            //if (amount != 0.0f)
+            //{
+            //    // Rotate the player towards the controller direction.
+            //    playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
-                // Move player based on the controller direction and time scale.
-                Physics.ApplyLinearImpulse(movedirection * amount);
-            }
+            //    // Move player based on the controller direction and time scale.
+            //    Physics.ApplyLinearImpulse(movedirection * amount);
+            //}
+            MotorJoint.MotorSpeed = amount * movedirection;
 
             ClampVelocity();
 
@@ -645,6 +642,19 @@ namespace TimeSink.Entities
                 v.Y = -Y_CLAMP;
 
             Physics.LinearVelocity = v;
+
+            v = wheelBody.LinearVelocity;
+            if (v.X > X_CLAMP)
+                v.X = X_CLAMP;
+            else if (v.X < -X_CLAMP)
+                v.X = -X_CLAMP;
+
+            if (v.Y > Y_CLAMP)
+                v.Y = Y_CLAMP;
+            else if (v.Y < -Y_CLAMP)
+                v.Y = -Y_CLAMP;
+
+            wheelBody.LinearVelocity = v;
         }
 
         protected void UpdateAnimationStates()
@@ -701,15 +711,15 @@ namespace TimeSink.Entities
 
             if (currentState == BodyStates.JumpingRight && timer >= interval)
             {
-                if (!touchingGround && Physics.LinearVelocity.Y < 0)
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 1;
                 }
-                else if (!touchingGround && Physics.LinearVelocity.Y > 0)
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 2;
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 3;
                 }
@@ -719,15 +729,15 @@ namespace TimeSink.Entities
 
             if (currentState == BodyStates.JumpingLeft && timer >= interval)
             {
-                if (!touchingGround && Physics.LinearVelocity.Y < 0)
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 1;
                 }
-                else if (!touchingGround && Physics.LinearVelocity.Y > 0)
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 2;
                 }
-                else if (touchingGround)
+                else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 3;
                 }
@@ -737,37 +747,24 @@ namespace TimeSink.Entities
         }
 
         [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry world, Contact info)
+        public bool OnCollidedWith(WorldGeometry2 world, Contact info)
         {
             Vector2 normal;
             FixedArray2<Vector2> points;
             info.GetWorldManifold(out normal, out points);
-            if (normal.Y > 0)
-            {
-                __touchingGroundFlag = true;
-            }
+
             return true;
         }
 
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Vine vine, Contact info)
         {
-            attachedToVine = true;
             vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
             var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
             var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
             vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
             //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
             //Physics.FixedRotation = false;
-            return true;
-        }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(MovingPlatform platform, Contact info)
-        {
-            var offset = platform.Position - platform.PreviousPosition.Value;
-            Position += offset;
-
             return true;
         }
 
@@ -989,6 +986,7 @@ namespace TimeSink.Entities
         private const float Y_CLAMP = 30;
 
         private bool initialized;
+        private RevoluteJoint MotorJoint;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -997,8 +995,10 @@ namespace TimeSink.Entities
                 _world = world;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
-                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+                Width = spriteWidth;
+                Height = spriteHeight;
+                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
@@ -1006,11 +1006,17 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
+
+                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                wheelBody = BodyFactory.CreateBody(
+                    world,
+                    wPos,
+                    this);
+
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
-                    Physics,
-                    new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2));
+                    wheelBody);
 
                 r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
@@ -1018,11 +1024,15 @@ namespace TimeSink.Entities
                 c.CollisionCategories = Category.Cat3;
                 c.UserData = true;
 
-                var rSens = r.Clone(Physics);
+                var rSens = r.Clone(r.Body);
+                var cSens = c.Clone(c.Body);
+
+                MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, wheelBody, Vector2.Zero);
+                MotorJoint.MotorEnabled = true;
+                MotorJoint.MaxMotorTorque = 10;
+
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;
-
-                var cSens = c.Clone(Physics);
                 cSens.IsSensor = true;
                 cSens.Shape.Density = 0;
 
@@ -1034,6 +1044,8 @@ namespace TimeSink.Entities
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
                 Physics.Friction = 10.0f;
+                wheelBody.BodyType = BodyType.Dynamic;
+                wheelBody.Friction = 10.0f;
 
                 initialized = true;
             }
