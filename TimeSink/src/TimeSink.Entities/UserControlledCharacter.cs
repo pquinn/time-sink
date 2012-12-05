@@ -224,7 +224,7 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry)
+                    if (fixture.Body.UserData is WorldGeometry2)
                     {
                         touchingGround = true;
                         return 0;
@@ -681,6 +681,15 @@ namespace TimeSink.Entities
             vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
             //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
             //Physics.FixedRotation = false;
+            return true;
+        }
+
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(MovingPlatform platform, Contact info)
+        {
+            var offset = platform.Position - platform.PreviousPosition.Value;
+            Position += offset;
+
             return true;
         }
 

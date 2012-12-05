@@ -30,12 +30,6 @@ namespace TimeSink.Entities
 
         private Func<float, Vector2> PatrolFunction { get; set; }
         private int direction;
-        [SerializableField]
-        [EditableField("Start Position")]
-        public Vector2 StartPosition { get; set; }
-        [SerializableField]
-        [EditableField("End Position")]
-        public Vector2 EndPosition { get; set; }
         private bool first;
         private float tZero;
 
@@ -48,22 +42,23 @@ namespace TimeSink.Entities
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
+            TimeSpan = timeSpan;
             Width = width > 0 ? width : 50;
             Height = height > 0 ? width : 50;
             direction = 1;
             first = true;
             PatrolFunction = delegate(float time)
             {
-                float currentStep = time % timeSpan;
+                float currentStep = time % TimeSpan;
                 Vector2 newPosition = new Vector2();
-                if (currentStep >= 0 && currentStep < (timeSpan / 2))
+                if (currentStep >= 0 && currentStep < (TimeSpan / 2f))
                 {
-                    var stepAmt = currentStep / timeSpan * 2;
-                    newPosition = startPosition + (stepAmt * (endPosition - startPosition));
+                    var stepAmt = currentStep / TimeSpan * 2;
+                    newPosition = StartPosition + (stepAmt * (EndPosition - StartPosition));
                 }
                 else
                 {
-                    newPosition = endPosition + ((currentStep - timeSpan / 2) / timeSpan * 2 * (startPosition - endPosition));
+                    newPosition = EndPosition + ((currentStep - TimeSpan / 2) / TimeSpan * 2 * (StartPosition - EndPosition));
                 }
                 return newPosition;
             };
@@ -76,6 +71,18 @@ namespace TimeSink.Entities
         [SerializableField]
         [EditableField("Height")]
         public int Height { get; set; }
+
+        [SerializableField]
+        [EditableField("Start Position")]
+        public Vector2 StartPosition { get; set; }
+
+        [SerializableField]
+        [EditableField("End Position")]
+        public Vector2 EndPosition { get; set; }
+
+        [SerializableField]
+        [EditableField("Time Span")]
+        public float TimeSpan { get; set; }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -145,7 +152,7 @@ namespace TimeSink.Entities
                     Position);
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Static;
-                Physics.Friction = .5f;
+                Physics.Friction = .7f;
                 Physics.CollidesWith = Category.All | ~Category.Cat1;
                 Physics.CollisionCategories = Category.Cat1;
 

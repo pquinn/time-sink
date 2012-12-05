@@ -29,8 +29,6 @@ namespace TimeSink.Entities.Objects
 
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
-        private Vector2 initialPosition;
-
         public Ladder()
             : this(Vector2.Zero, 50, 50)
         {
@@ -38,7 +36,7 @@ namespace TimeSink.Entities.Objects
 
         public Ladder(Vector2 position, int width, int height)
         {
-            this.initialPosition = position;
+            Position = position;
             this.Width = width;
             this.Height = height;
         }
@@ -75,7 +73,7 @@ namespace TimeSink.Entities.Objects
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
-                Physics = BodyFactory.CreateBody(world, initialPosition, this);
+                Physics = BodyFactory.CreateBody(world, Position, this);
 
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
