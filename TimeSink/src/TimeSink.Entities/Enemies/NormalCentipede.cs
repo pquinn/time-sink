@@ -32,24 +32,23 @@ namespace TimeSink.Entities.Enemies
         new private static int textureHeight;
         new private static int textureWidth;
 
-        private bool first;
-        private float tZero;
-
         public Func<float, Vector2> PatrolFunction { get; private set; }
-
-        [EditableField("Patrol Direction")]
-        public Vector2 PatrolDirection { get; set; }
 
         public NormalCentipede()
             : this(Vector2.Zero, Vector2.Zero)
         {
         }
 
-        public NormalCentipede(Vector2 position, Vector2 direction) : base(position)
+        public NormalCentipede(Vector2 position, Vector2 direction)
+            : base(position)
         {
             health = 150;
             PatrolDirection = direction;
         }
+
+        [EditableField("Patrol Direction")]
+        [SerializableField]
+        public Vector2 PatrolDirection { get; set; }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -86,6 +85,12 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(WorldGeometry2 wg, Contact info)
+        {
+            Physics.IgnoreGravity = true; 
+            return true;
+        }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
@@ -93,22 +98,46 @@ namespace TimeSink.Entities.Enemies
 
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 
-            var start = Physics.Position + new Vector2(
+            var forwardBottom = Physics.Position + new Vector2(
                 PatrolDirection.X >= 0 ? PhysicsConstants.PixelsToMeters(textureWidth) / 2 : -PhysicsConstants.PixelsToMeters(textureWidth) / 2, 
                 PhysicsConstants.PixelsToMeters(textureHeight) / 2);
 
-            var collided = false;
 
+            var forwardTop = Physics.Position + new Vector2(
+                PatrolDirection.X >= 0 ? PhysicsConstants.PixelsToMeters(textureWidth) / 2 : -PhysicsConstants.PixelsToMeters(textureWidth) / 2,
+                -PhysicsConstants.PixelsToMeters(textureHeight) / 2);
+
+            var collidedDownward = false;
+            var collidedAhead = false;
+
+            //cast a ray downward from bottom front corner
             world.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    collided = true;
+                    // do what it do here
+                    Console.WriteLine("Front Top Forward Ray Cast Callback");
+                    collidedAhead = true;
                     return 0;
                 },
-                start,
-                start + new Vector2(0, .1f));
+                forwardBottom,
+                forwardBottom + new Vector2(0, .1f));
 
-            if (!collided)
+            //cast a ray downward from bottom front corner
+            world.LevelManager.PhysicsManager.World.RayCast(
+                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                {
+                    // do what it do here
+                    Console.WriteLine("Front Bottom Downward Ray Cast Callback");
+                    collidedDownward = true;
+                    return 0;
+                },
+                forwardBottom,
+                forwardBottom + new Vector2(0, .1f));
+
+            var anyCollision = collidedDownward || collidedAhead;
+
+            // handle collided logic here
+            if (anyCollision)
             {
                 PatrolDirection *= -Vector2.UnitX;
             }
@@ -126,5 +155,12 @@ namespace TimeSink.Entities.Enemies
         {
             return textureCache.GetResource(CENTIPEDE_TEXTURE);
         }
+
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+        {
+            base.InitializePhysics(force, engineRegistrations);
+
+            //Physics.IgnoreGravity = true;
+        } 
     }
 }
