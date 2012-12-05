@@ -26,7 +26,7 @@ namespace TimeSink.Engine.Core
             
             if (Physics != null)
             {
-                PreviousPosition = Position;
+                PreviousPosition = new Vector2(Position.X, Position.Y);
             }
         }
 
@@ -71,6 +71,12 @@ namespace TimeSink.Engine.Core
         
         [XmlIgnore]
         public Body Physics { get; protected set; }
+
+        [XmlIgnore]
+        public virtual int Width { get; set; }
+
+        [XmlIgnore]
+        public virtual int Height { get; set; }
 
         [XmlIgnore]
         public abstract IRendering Preview

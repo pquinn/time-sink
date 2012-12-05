@@ -13,6 +13,8 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
 using Autofac;
 using TimeSink.Engine.Core.Caching;
+using FarseerPhysics.Dynamics.Contacts;
+using TimeSink.Engine.Core.Collisions;
 
 namespace TimeSink.Entities
 {
@@ -33,12 +35,15 @@ namespace TimeSink.Entities
         private bool first;
         private float tZero;
 
+        private List<Entity> collidedEntities;
+
         public MovingPlatform() : this(Vector2.Zero, Vector2.Zero, 0, 0, 0) { }
 
         //define discrete start and end for platforms
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
+            collidedEntities = new List<Entity>();
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
@@ -66,11 +71,11 @@ namespace TimeSink.Entities
 
         [SerializableField]
         [EditableField("Width")]
-        public int Width { get; set; }
+        public override int Width { get; set; }
 
         [SerializableField]
         [EditableField("Height")]
-        public int Height { get; set; }
+        public override int Height { get; set; }
 
         [SerializableField]
         [EditableField("Start Position")]
@@ -130,8 +135,38 @@ namespace TimeSink.Entities
             }
 
             Physics.Position = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
-            // should return a vector that represents how much the body moves each tick
-            // that way, if it's supposed to reverse, that vector can just be negated
+
+            var entitiesNotOnTop = new List<Entity>();
+            foreach (var entity in collidedEntities)
+            {
+                var start = entity.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(entity.Height) / 2);
+
+                world.LevelManager.PhysicsManager.World.RayCast(
+                    delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                    {
+                        if (fixture.Body.UserData.Equals(this))
+                        {
+                            entity.Position += (Position - PreviousPosition.Value);
+                            return 0;
+                        }
+
+                        entitiesNotOnTop.Add(entity);
+
+                        return -1;
+                    },
+                    start,
+                    start + new Vector2(0, .1f));
+            }
+
+            entitiesNotOnTop.ForEach(x => collidedEntities.Remove(x));
+        }
+
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(Entity character, Contact info)
+        {
+            collidedEntities.Add(character);
+
+            return true;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

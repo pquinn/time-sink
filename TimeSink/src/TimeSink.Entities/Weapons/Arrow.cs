@@ -143,10 +143,12 @@ namespace TimeSink.Entities.Weapons
             {
                 var world = engineRegistrations.Resolve<World>();
 
+                Width = 64;
+                Height = 32;
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(64),
-                    PhysicsConstants.PixelsToMeters(32),
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
                     1,
                     Position);
                 Physics.BodyType = BodyType.Dynamic;

@@ -51,11 +51,11 @@ namespace TimeSink.Entities.Objects
 
         [SerializableField]
         [EditableField("Width")]
-        public int Width { get; set; }
+        public override int Width { get; set; }
 
         [SerializableField]
         [EditableField("Height")]
-        public int Height { get; set; }
+        public override int Height { get; set; }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {

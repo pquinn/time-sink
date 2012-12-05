@@ -93,6 +93,8 @@ namespace TimeSink.Entities
         private List<IInventoryItem> inventory;
         private int activeItem;
 
+        private MovingPlatform collidingPlatform;
+
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
 
@@ -684,15 +686,6 @@ namespace TimeSink.Entities
             return true;
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(MovingPlatform platform, Contact info)
-        {
-            var offset = platform.Position - platform.PreviousPosition.Value;
-            Position += offset;
-
-            return true;
-        }
-
         public override IRendering Rendering
         {
             get
@@ -861,8 +854,10 @@ namespace TimeSink.Entities
                 _world = world;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
-                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
+                Width = spriteWidth;
+                Height = spriteHeight;
+                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,

@@ -122,8 +122,10 @@ namespace TimeSink.Entities.Objects
                 var world = engineRegistrations.Resolve<World>();
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
-                TextureWidth = PhysicsConstants.PixelsToMeters((int)(texture.Width * scale));
-                TextureHeight = PhysicsConstants.PixelsToMeters((int)(texture.Height * scale));
+                Width = (int)(texture.Width * scale);
+                Height = (int)(texture.Height * scale);
+                TextureWidth = PhysicsConstants.PixelsToMeters(Width);
+                TextureHeight = PhysicsConstants.PixelsToMeters(Height);
 
                 //anchor point
                 Physics = BodyFactory.CreateBody(world, Position, this);
