@@ -35,7 +35,7 @@ namespace TimeSink.Entities
         private bool first;
         private float tZero;
 
-        private List<Entity> collidedEntities;
+        private HashSet<Entity> collidedEntities;
 
         public MovingPlatform() : this(Vector2.Zero, Vector2.Zero, 0, 0, 0) { }
 
@@ -43,7 +43,7 @@ namespace TimeSink.Entities
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
-            collidedEntities = new List<Entity>();
+            collidedEntities = new HashSet<Entity>();
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
@@ -188,7 +188,7 @@ namespace TimeSink.Entities
                     Position);
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Static;
-                Physics.Friction = .7f;
+                Physics.Friction = .2f;
                 Physics.CollidesWith = Category.All | ~Category.Cat1;
                 Physics.CollisionCategories = Category.Cat1;
 

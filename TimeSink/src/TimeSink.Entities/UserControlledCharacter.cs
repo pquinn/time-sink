@@ -229,7 +229,9 @@ namespace TimeSink.Entities
                         return 0;
                     }
                     else
+                    {
                         return -1;
+                    }
                 },
                 start,
                 start + new Vector2(0, .1f));
