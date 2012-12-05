@@ -64,7 +64,7 @@ namespace TimeSink.Entities.Enemies
                   CENTIPEDE_TEXTURE,
                   PhysicsConstants.MetersToPixels(Physics.Position),
                   0,
-                  Vector2.One,
+                  new Vector2(.5f,.5f),
                   new Color(255f, tint, tint, 255f));
             }
         }
