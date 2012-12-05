@@ -41,52 +41,18 @@ namespace TimeSink.Engine.Game
         // Controller related.
         const float moveScale = 100.0f;
 
-        UserControlledCharacter character;
-        Vector2 playerStart;
-
-        Enemy dummy;
-        NormalCentipede normalCentipede;
-        FlyingCentipede flyingCentipede;
-        WorldGeometry world;
-        Trigger trigger;
-        MovingPlatform movingPlatform;
-        NonPlayerCharacter npc;
-        Ladder ladder;
-
-        Vine vine;
-
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
         public UserControlledCharacter Character
         {
-            get { return character; }
+            get;
+            set;
         }
 
         public TimeSinkGame()
             : base(1280, 720)
         {
-            playerStart = PhysicsConstants.PixelsToMeters(new Vector2(100, 0));
-            character = character = new UserControlledCharacter(playerStart);
-
-            dummy = new Enemy(PhysicsConstants.PixelsToMeters(new Vector2(620, 350)));
-            world = new WorldGeometry();
-
-            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
-            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(40, 0)));
-            npc = new NonPlayerCharacter(PhysicsConstants.PixelsToMeters(new Vector2(750, 300)));
-            world = new WorldGeometry();
-
-            vine = new Vine(PhysicsConstants.PixelsToMeters(new Vector2(950, 200)));
-            ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
-
-            movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
-                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 100)), 4f, 64, 128);
-
-            flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
-            normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
-                                                  PhysicsConstants.PixelsToMeters(new Vector2(20, 0)));
 
 
             RenderDebugGeometry = true;
@@ -104,59 +70,7 @@ namespace TimeSink.Engine.Game
         {
             base.Initialize();
 
-            LevelManager.RegisterEntities(
-                new List<Entity>()
-                {
-                    world,
-                    character,
-                    dummy,
-                    normalCentipede,
-                    flyingCentipede,
-                    vine,
-                    npc,
-                    ladder
-                });
-
-            LevelManager.Level.PlayerStart = playerStart;
-
-            // todo: this is a hack to fix a bug.  We need to 
-            // perform level-based loading eventually
-            world.Load(Container);
-            character.Load(Container);
-
-            var oneWayBody = BodyFactory.CreateBody(LevelManager.PhysicsManager.World, world);
-
-            var oneway = FixtureFactory.AttachRectangle(
-                PhysicsConstants.PixelsToMeters(100),
-                PhysicsConstants.PixelsToMeters(50),
-                1,
-                PhysicsConstants.PixelsToMeters(new Vector2(800, 600)),
-                oneWayBody,
-                world);
-
-            //new OneWayPlatform(oneway);
-
-            FixtureFactory.AttachPolygon(
-                new FarseerPhysics.Common.Vertices() {
-                    PhysicsConstants.PixelsToMeters(new Vector2(500, 300)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(600, 280)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(620, 340)),
-                    PhysicsConstants.PixelsToMeters(new Vector2(520, 360))
-                },
-                1,
-                world.Physics,
-                world);
-
-            FixtureFactory.AttachRectangle(
-                PhysicsConstants.PixelsToMeters(GraphicsDevice.Viewport.Width),
-                PhysicsConstants.PixelsToMeters(10),
-                1,
-                PhysicsConstants.PixelsToMeters(
-                    new Vector2(
-                        GraphicsDevice.Viewport.Width / 2,
-                        GraphicsDevice.Viewport.Height)),
-                world.Physics,
-                world);
+            LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\level_0.txt");
         }
 
         private void AddInitialScreens()
@@ -188,7 +102,6 @@ namespace TimeSink.Engine.Game
             backHolder = Content.Load<SoundEffect>("Audio/Music/Four");
             backgroundTrack = new SoundObject(backHolder);
             backgroundTrack.Dynamic.IsLooped = true;
-            // backgroundTrack.PlaySound();
         }
 
         /// <summary>
@@ -215,7 +128,8 @@ namespace TimeSink.Engine.Game
 
             HandleInput(gameTime);
 
-            Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(character.Position), 0) -
+            var pos = Character != null ? Character.Position : Vector2.Zero;
+            Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
                 new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
 
             ScreenManager.Update(gameTime, this);
@@ -240,8 +154,8 @@ namespace TimeSink.Engine.Game
                 showCollisionGeometry = !showCollisionGeometry;
             }
 
-            character.HandleKeyboardInput(gametime, this);
-
+            if (Character != null)
+                Character.HandleKeyboardInput(gametime, this);
         }
 
         /// <summary>
@@ -259,9 +173,9 @@ namespace TimeSink.Engine.Game
         {
             base.LevelLoaded();
 
-            character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
-            character.Load(Container);
-            LevelManager.RegisterEntity(character);
+            Character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            Character.Load(Container);
+            LevelManager.RegisterEntity(Character);
         }
 
         #region Controller code
