@@ -41,7 +41,8 @@ namespace TimeSink.Entities
             JumpingRight, JumpingLeft,
             ShootingRight, ShootingLeft,
             DuckingRight, DuckingLeft,
-            Climbing,
+            ClimbingBack,
+            ClimbingLeft, ClimbingRight
         };
 
 
@@ -161,6 +162,12 @@ namespace TimeSink.Entities
             set { inHold = value; }
         }
 
+        public bool TouchingGround
+        {
+            get { return touchingGround; }
+            set { touchingGround = value; }
+        }
+
         float timer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
@@ -219,7 +226,8 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            touchingGround = false;
+            if (canClimb == null)
+                touchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
 
@@ -228,6 +236,7 @@ namespace TimeSink.Entities
                 {
                     if (fixture.Body.UserData is WorldGeometry2)
                     {
+                        jumpToggleGuard = true;
                         touchingGround = true;
                         return 0;
                     }
@@ -293,7 +302,18 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                if (!(currentState == BodyStates.Climbing && !touchingGround))
+                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                {
+                    Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                }
+                else if (canClimb != null && canClimb.Sideways && !touchingGround) //change to sideways climbing state check
+                {
+                    if (jumpToggleGuard)
+                        currentState = BodyStates.NeutralLeft;
+                    else
+                        movedirection.X -= 1.0f;
+                }
+                else
                 {
                     movedirection.X -= 1.0f;
 
@@ -318,7 +338,18 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                if (!(currentState == BodyStates.Climbing && !touchingGround))
+                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                {
+                    Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                }
+                else if (canClimb != null && canClimb.Sideways && !touchingGround) //change to sideways climbing state check
+                {
+                    if (jumpToggleGuard)
+                        currentState = BodyStates.NeutralRight;
+                    else
+                        movedirection.X += 1.0f;
+                }
+                else
                 {
                     movedirection.X += 1.0f;
 
@@ -345,6 +376,9 @@ namespace TimeSink.Entities
             {
                 if (canClimb != null)
                 {
+                    touchingGround = false;
+                    canClimb.Physics.IsSensor = true;
+                    Physics.IgnoreGravity = true;
                     Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y + PhysicsConstants.PixelsToMeters(5));
                 }
                 else if (touchingGround)
@@ -451,29 +485,44 @@ namespace TimeSink.Entities
             }
             else if (touchingGround)
             {
-                jumpToggleGuard = true;
+               // jumpToggleGuard = true;
             }
 
             if (keyboard.IsKeyDown(Keys.W))
             {
-                if ((canClimb != null) && touchingGround)
+                if ((canClimb != null))
                 {
                     //Insert anim state change here for climbing anim
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
-                    Physics.Position = new Vector2(canClimb.Position.X , 
-                                                   Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                    currentState = BodyStates.Climbing;
+                    touchingGround = false;
+                    jumpToggleGuard = true;
+                    if (!canClimb.VineWall && !canClimb.Sideways)
+                    {                       
+                        currentState = BodyStates.ClimbingBack;
+                        Physics.Position = new Vector2(canClimb.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }
+                    else
+                    {
+                        if (canClimb.VineWall)
+                            currentState = BodyStates.ClimbingBack;
+                        else if (canClimb.Sideways)
+                            currentState = BodyStates.NeutralRight; //TODO -- Change to sideways climb state
+                        Physics.Position = new Vector2(Physics.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }
                 }
-                else if (canClimb != null)
+             /*   else if (canClimb != null)
                 {
 
                     Physics.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = true;
                     jumpToggleGuard = true;
                     Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                    currentState = BodyStates.Climbing;
-                }
+                    if (!canClimb.Sideways)
+                        currentState = BodyStates.Climbing;
+                }*/ //Dont need this because it's duplicate code -- check jumptoggle though
             }
             #endregion
 
@@ -824,7 +873,7 @@ namespace TimeSink.Entities
                     Vector2.One));
             #endregion
             #region Climbing
-            dictionary.Add(BodyStates.Climbing,
+            dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
                     FACING_BACK,
                     new Vector2(76.8f, 153.6f),
@@ -875,6 +924,7 @@ namespace TimeSink.Entities
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1;
                 c.CollisionCategories = Category.Cat3;
+                c.UserData = true;
 
                 var rSens = r.Clone(Physics);
                 rSens.IsSensor = true;

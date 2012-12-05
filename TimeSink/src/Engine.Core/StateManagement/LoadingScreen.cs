@@ -111,7 +111,10 @@ namespace TimeSink.Engine.Core.StateManagement
                 ScreenManager.Game.ResetElapsedTime();
             }
         }
-
+        public override void Unload()
+        {
+            base.Unload();
+        }
 
         /// <summary>
         /// Draws the loading screen.

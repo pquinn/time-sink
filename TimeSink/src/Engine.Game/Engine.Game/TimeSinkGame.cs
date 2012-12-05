@@ -53,8 +53,6 @@ namespace TimeSink.Engine.Game
         public TimeSinkGame()
             : base(1280, 720)
         {
-
-
             RenderDebugGeometry = true;
 
             AddInitialScreens();
@@ -69,7 +67,6 @@ namespace TimeSink.Engine.Game
         protected override void Initialize()
         {
             base.Initialize();
-
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\level_0.txt");
         }
 
