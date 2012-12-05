@@ -678,6 +678,15 @@ namespace TimeSink.Entities
             return true;
         }
 
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(MovingPlatform platform, Contact info)
+        {
+            var offset = platform.Position - platform.PreviousPosition.Value;
+            Position += offset;
+
+            return true;
+        }
+
         public override IRendering Rendering
         {
             get

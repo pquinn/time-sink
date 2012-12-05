@@ -81,8 +81,7 @@ namespace TimeSink.Engine.Game
             ladder = new Ladder(PhysicsConstants.PixelsToMeters(new Vector2(300, 500)), 200, 1000);
 
             movingPlatform = new MovingPlatform(PhysicsConstants.PixelsToMeters(new Vector2(750, 100)),
-                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 100)),
-                                                4f, 64, 128);
+                                                PhysicsConstants.PixelsToMeters(new Vector2(50, 100)), 4f, 64, 128);
 
             flyingCentipede = new FlyingCentipede(PhysicsConstants.PixelsToMeters(new Vector2(100, 300)));
             normalCentipede = new NormalCentipede(PhysicsConstants.PixelsToMeters(new Vector2(200, 400)),
@@ -125,7 +124,7 @@ namespace TimeSink.Engine.Game
             character.Load(Container);
 
             var oneWayBody = BodyFactory.CreateBody(LevelManager.PhysicsManager.World, world);
-            
+
             var oneway = FixtureFactory.AttachRectangle(
                 PhysicsConstants.PixelsToMeters(100),
                 PhysicsConstants.PixelsToMeters(50),
@@ -153,7 +152,7 @@ namespace TimeSink.Engine.Game
                 1,
                 PhysicsConstants.PixelsToMeters(
                     new Vector2(
-                        GraphicsDevice.Viewport.Width / 2, 
+                        GraphicsDevice.Viewport.Width / 2,
                         GraphicsDevice.Viewport.Height)),
                 world.Physics,
                 world);
@@ -208,7 +207,7 @@ namespace TimeSink.Engine.Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed )
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             view = ProcessControllerInput(gameTime);
@@ -216,7 +215,7 @@ namespace TimeSink.Engine.Game
             HandleInput(gameTime);
 
             Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(character.Position), 0) -
-                new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0); 
+                new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
 
             ScreenManager.Update(gameTime, this);
 
