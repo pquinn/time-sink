@@ -1,3 +1,4 @@
+
 ﻿using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using System;
@@ -28,6 +29,8 @@ namespace TimeSink.Entities.Objects
 
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
+        private Vector2 initialPosition;
+
         public Ladder()
             : this(Vector2.Zero, 50, 50)
         {
@@ -35,7 +38,7 @@ namespace TimeSink.Entities.Objects
 
         public Ladder(Vector2 position, int width, int height)
         {
-            Position= position;
+            this.initialPosition = position;
             this.Width = width;
             this.Height = height;
         }
@@ -72,11 +75,15 @@ namespace TimeSink.Entities.Objects
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
-                Physics = BodyFactory.CreateBody(world, Position, this);
+                Physics = BodyFactory.CreateBody(world, initialPosition, this);
+
+
+                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 var rect = FixtureFactory.AttachRectangle(
-                    PhysicsConstants.PixelsToMeters(Width), 
-                    PhysicsConstants.PixelsToMeters(Height),
+                    spriteWidthMeters,
+                    spriteHeightMeters,
                     1.4f,
                     Vector2.Zero,
                     Physics);
@@ -98,24 +105,20 @@ namespace TimeSink.Entities.Objects
         public bool OnCollidedWith(UserControlledCharacter c, Contact info)
         {
             //Enable the character to enter a climbing state thus effecting her input handling
-            c.CanClimb = true;
+            c.CanClimb = this;
             return true;
         }
 
         [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            c.CanClimb = false;
+            c.CanClimb = null;
             c.Physics.IgnoreGravity = false;
         }
 
         public override IRendering Preview
         {
-            get 
-            {
-                var scale = new Vector2(Width / 234f, Height / 596f);
-                return new TintedRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, scale, Color.White); 
-            }
+            get { return new BasicRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, new Vector2(200,1000)); }
         }
 
         public override IRendering Rendering
