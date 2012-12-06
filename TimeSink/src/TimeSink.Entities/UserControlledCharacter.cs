@@ -39,7 +39,9 @@ namespace TimeSink.Entities
             ShootingRight, ShootingLeft,
             DuckingRight, DuckingLeft,
             ClimbingBack,
-            ClimbingLeft, ClimbingRight
+            ClimbingLeft, ClimbingRight,
+            ClimbingLeftNeutral, ClimbingRightNeutral,
+            ClimbingLookRight, ClimbingLookLeft
         };
 
 
@@ -61,6 +63,12 @@ namespace TimeSink.Entities
         const string WALKING_LEFT = "Textures/Sprites/SpriteSheets/BodyWalkLeft";
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
+        const string CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRight";
+        const string CLIMBING_NEUTRAL_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeftNeut";
+        const string CLIMBING_NEUTRAL_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRightNeut";
+        const string CLIMBING_LOOKING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingLeftLookRight";
+        const string CLIMBING_LOOKING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingRightLookLeft";
 
 
         private Dictionary<BodyStates, NewAnimationRendering> animations;
@@ -315,14 +323,15 @@ namespace TimeSink.Entities
 
                 else if (currentState == BodyStates.ClimbingBack)
                 {
-                    // Do Nothing
+                    // Do Nothing -- Normal Ladder
                 }
-                else if (currentState == BodyStates.ClimbingLeft || currentState == BodyStates.ClimbingRight) //change to sideways climbing state check
+                else if (RightFacingBodyState() && ClimbingState())
                 {
-                    // if (jumpToggleGuard)
-                    currentState = BodyStates.ClimbingLeft;
-                    /* else
-                         movedirection.X += 1.0f;*/
+                    currentState = BodyStates.ClimbingLookLeft;
+                }
+                else if (LeftFacingBodyState() && ClimbingState())
+                {
+                    currentState = BodyStates.ClimbingLeftNeutral;
                 }
                 else
                 {
@@ -359,12 +368,13 @@ namespace TimeSink.Entities
                 {
                     // Do Nothing
                 }
-                else if (currentState == BodyStates.ClimbingLeft || currentState == BodyStates.ClimbingRight) //change to sideways climbing state check
+                else if (LeftFacingBodyState() && ClimbingState())
                 {
-                    // if (jumpToggleGuard)
-                    currentState = BodyStates.ClimbingRight;
-                    /* else
-                         movedirection.X += 1.0f;*/
+                    currentState = BodyStates.ClimbingLookRight;
+                }
+                else if (RightFacingBodyState() && ClimbingState())
+                {
+                    currentState = BodyStates.ClimbingRightNeutral;
                 }
                 else
                 {
@@ -397,6 +407,13 @@ namespace TimeSink.Entities
                     canClimb.Physics.IsSensor = true;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
 
+                    if (!canClimb.Sideways)
+                        currentState = BodyStates.ClimbingBack;
+                    else if (RightFacingBodyState())
+                        currentState = BodyStates.ClimbingRight;
+                    else
+                        currentState = BodyStates.ClimbingLeft;
+                   
                     var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
                     Physics.Position += v;
                     WheelBody.Position += v;
@@ -525,6 +542,7 @@ namespace TimeSink.Entities
                                                                WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                             }
                         }
+
                         else
                         {
                             currentState = BodyStates.ClimbingBack;
@@ -535,19 +553,16 @@ namespace TimeSink.Entities
                                                            WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                         }
                     }
-                }
-                /*   else if (canClimb != null)
-                   {
+                    else
+                    {
+                        currentState = BodyStates.ClimbingBack;
+                        Physics.Position = new Vector2(Physics.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
 
-                       Physics.LinearVelocity = wheelBody.LinearVelocity = Vector2.Zero;
-                       Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
-                       jumpToggleGuard = true;
-                       Physics.Position = new Vector2(canClimb.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                       wheelBody.Position = new Vector2(canClimb.Position.X, wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                       if (!canClimb.Sideways)
-                           currentState = BodyStates.Climbing;
-                   }*/
-                //Dont need this because it's duplicate code -- check jumptoggle though
+                        WheelBody.Position = new Vector2(WheelBody.Position.X,
+                                                       WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }                    
+                }
             }
             #endregion
 
@@ -579,33 +594,37 @@ namespace TimeSink.Entities
             #endregion
 
             //No keys are pressed and we're on the ground, we're neutral
-            if (keyboard.GetPressedKeys().GetLength(0) == 0 && TouchingGround && timer >= interval)
+            if(keyboard.GetPressedKeys().GetLength(0) == 0)
             {
-                if (currentState == BodyStates.WalkingRight)
+                if (TouchingGround && timer >= interval)
                 {
-                    currentState = BodyStates.WalkingEndRight;
-                    timer = 0f;
+                    if (currentState == BodyStates.WalkingRight)
+                    {
+                        currentState = BodyStates.WalkingEndRight;
+                        timer = 0f;
+                    }
+                    else if (currentState == BodyStates.WalkingLeft)
+                    {
+                        currentState = BodyStates.WalkingEndLeft;
+                        timer = 0f;
+                    }
+                    else if (currentState == BodyStates.NeutralLeft)
+                    {
+                        animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                    }
+                    else if (currentState == BodyStates.NeutralRight)
+                    {
+                        animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                    }
                 }
-                else if (currentState == BodyStates.WalkingLeft)
+                if (LeftFacingBodyState() && ClimbingState())
                 {
-                    currentState = BodyStates.WalkingEndLeft;
-                    timer = 0f;
+                    currentState = BodyStates.ClimbingLeftNeutral;
                 }
-                else if (currentState == BodyStates.NeutralLeft)
+                else if (RightFacingBodyState() && ClimbingState())
                 {
-                    animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                    currentState = BodyStates.ClimbingRightNeutral;
                 }
-                else if (currentState == BodyStates.NeutralRight)
-                {
-                    animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                }
-                /*  else if (currentState != BodyStates.IdleRightOpen && currentState != BodyStates.WalkingEndRight)
-                  {
-                      animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                      currentState = BodyStates.NeutralRight;
-                  }*/
-
-                // timer = 0f;
             }
 
             if (movedirection != Vector2.Zero)
@@ -622,6 +641,8 @@ namespace TimeSink.Entities
 
                 // Move player based on the controller direction and time scale.
                 Physics.ApplyLinearImpulse(movedirection * amount);
+
+                MotorJoint.MotorSpeed = movedirection.X * 10;
             }
 
             ClampVelocity();
@@ -738,6 +759,10 @@ namespace TimeSink.Entities
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 2;
                 }
+                else if (animations[BodyStates.JumpingRight].CurrentFrame == 3)
+                {
+                    currentState = BodyStates.NeutralRight;
+                }
                 else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingRight].CurrentFrame = 3;
@@ -756,11 +781,28 @@ namespace TimeSink.Entities
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 2;
                 }
+                else if (animations[BodyStates.JumpingLeft].CurrentFrame == 3)
+                {
+                    currentState = BodyStates.NeutralLeft;
+                }
                 else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 3;
                 }
 
+                timer = 0f;
+            }
+            if (currentState == BodyStates.ClimbingLeft && timer >= interval)
+            {
+                var climbing = animations[BodyStates.ClimbingLeft];
+                climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
+                facing = -1;
+                timer = 0f;
+            }
+            if (currentState == BodyStates.ClimbingRight && timer >= interval)
+            {
+                var climbing = animations[BodyStates.ClimbingRight];
+                climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
                 timer = 0f;
             }
         }
@@ -949,17 +991,49 @@ namespace TimeSink.Entities
 
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
-                    NEUTRAL_LEFT,
+                    CLIMBING_LEFT,
                     new Vector2(76.8f, 153.6f),
-                    4,
+                    2,
                     Vector2.Zero,
                     0,
                     Vector2.One));
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
-                    NEUTRAL_RIGHT,
+                    CLIMBING_RIGHT,
                     new Vector2(76.8f, 153.6f),
-                    4,
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.ClimbingRightNeutral,
+               new NewAnimationRendering(
+                    CLIMBING_NEUTRAL_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.ClimbingLeftNeutral,
+               new NewAnimationRendering(
+                    CLIMBING_NEUTRAL_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.ClimbingLookRight,
+               new NewAnimationRendering(
+                    CLIMBING_LOOKING_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.ClimbingLookLeft,
+               new NewAnimationRendering(
+                    CLIMBING_LOOKING_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
                     Vector2.Zero,
                     0,
                     Vector2.One));
@@ -992,6 +1066,8 @@ namespace TimeSink.Entities
         public bool RightFacingBodyState()
         {
             return (currentState == BodyStates.ClimbingRight ||
+                    currentState == BodyStates.ClimbingRightNeutral ||
+                    currentState == BodyStates.ClimbingLookLeft ||
                     currentState == BodyStates.WalkingEndRight ||
                     currentState == BodyStates.WalkingStartRight ||
                     currentState == BodyStates.WalkingRight ||
@@ -1006,6 +1082,8 @@ namespace TimeSink.Entities
         public bool LeftFacingBodyState()
         {
             return (currentState == BodyStates.ClimbingLeft ||
+                    currentState == BodyStates.ClimbingLeftNeutral ||
+                    currentState == BodyStates.ClimbingLookRight ||
                     currentState == BodyStates.WalkingEndLeft ||
                     currentState == BodyStates.WalkingStartLeft ||
                     currentState == BodyStates.WalkingLeft ||
@@ -1016,6 +1094,16 @@ namespace TimeSink.Entities
                     currentState == BodyStates.IdleLeftClosed ||
                     currentState == BodyStates.DuckingLeft ||
                     currentState == BodyStates.JumpingLeft);
+        }
+        public bool ClimbingState()
+        {
+            return (currentState == BodyStates.ClimbingBack ||
+                    currentState == BodyStates.ClimbingLeft ||
+                    currentState == BodyStates.ClimbingRight ||
+                    currentState == BodyStates.ClimbingLeftNeutral ||
+                    currentState == BodyStates.ClimbingRightNeutral ||
+                    currentState == BodyStates.ClimbingLookLeft ||
+                    currentState == BodyStates.ClimbingLookRight);
         }
 
         public void DismountLadder()

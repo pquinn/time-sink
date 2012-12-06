@@ -682,6 +682,9 @@
   <ItemGroup>
     <Compile Include="Textures\Objects\HorizontalVine.png">
       <Name>HorizontalVine</Name>
+    </Compile>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingLeft.PNG">
+      <Name>ClimbingLeft</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -764,6 +767,39 @@
     </Compile>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4033.PNG">
       <Name>Hub_East%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingRight.PNG">
+      <Name>ClimbingRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingLeftLookRight.png">
+      <Name>ClimbingLeftLookRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingRightLookLeft.png">
+      <Name>ClimbingRightLookLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingLeftNeut.png">
+      <Name>ClimbingLeftNeut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingRightNeut.png">
+      <Name>ClimbingRightNeut</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
