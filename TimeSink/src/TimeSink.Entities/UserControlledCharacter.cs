@@ -381,6 +381,12 @@ namespace TimeSink.Entities
                     TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
                     Physics.IgnoreGravity = wheelBody.IgnoreGravity = true;
+                    if (!canClimb.Sideways)
+                        currentState = BodyStates.ClimbingBack;
+                    else if (RightFacingBodyState())
+                        currentState = BodyStates.ClimbingRight;
+                    else
+                        currentState = BodyStates.ClimbingLeft;
                     
                     var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
                     Physics.Position += v;
@@ -526,16 +532,27 @@ namespace TimeSink.Entities
                                                                wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                             }
                         }
+
                         else
                         {
                             currentState = BodyStates.ClimbingBack;
                             Physics.Position = new Vector2(canClimb.Position.X,
                                                            Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
-                            
+
                             wheelBody.Position = new Vector2(canClimb.Position.X,
                                                            wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
                         }
                     }
+                    else
+                    {
+                        currentState = BodyStates.ClimbingBack;
+                        Physics.Position = new Vector2(Physics.Position.X,
+                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+
+                        wheelBody.Position = new Vector2(wheelBody.Position.X,
+                                                       wheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                    }
+                    
                 }
              /*   else if (canClimb != null)
                 {
