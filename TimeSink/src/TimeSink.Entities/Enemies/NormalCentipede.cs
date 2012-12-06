@@ -97,8 +97,8 @@ namespace TimeSink.Entities.Enemies
         private bool needToTurn = false;
         private bool needToTransformCW = false;
         private bool needToTransformCCW = false;
-        private Vector2 forwardTop = Vector2.Zero;
-        private Vector2 forwardBottom = Vector2.Zero;
+        private Vector2 rayTopOffset = Vector2.Zero;
+        private Vector2 rayBottomOffset = Vector2.Zero;
         private Vector2 xDirectionCast = Vector2.Zero;
         private Vector2 yDirectionCast = Vector2.Zero;
         private bool initialized = false;
@@ -117,7 +117,7 @@ namespace TimeSink.Entities.Enemies
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 
             var xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
-            var yDirection = (int)PatrolDirection.Y >= 0 ? -1 : 1;
+            var yDirection = (int)PatrolDirection.Y >= 0 ? 1 : -1;
 
             var totalRotationMatrix = Matrix.CreateRotationZ(Physics.Rotation);
             var quarterTurnCWMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
@@ -125,50 +125,46 @@ namespace TimeSink.Entities.Enemies
 
             if (!initialized)
             {
-                forwardTop = Physics.Position + new Vector2(
+                rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    -PhysicsConstants.PixelsToMeters(Height) / 2);
-                forwardBottom = Physics.Position + new Vector2(
+                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
+                rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    PhysicsConstants.PixelsToMeters(Height) / 2);
+                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
 
-            xDirectionCast = new Vector2(xDirection * .1f, 0);
-            yDirectionCast = new Vector2(0, yDirection * .1f);
+                xDirectionCast = new Vector2(xDirection * .1f, 0);
+                yDirectionCast = new Vector2(0, yDirection * .1f);
 
                 initialized = true;
             }
 
             if (needToTurn)
             {
-                var topOffset = new Vector2(
+                rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
-                    -PhysicsConstants.PixelsToMeters(Height) / 2);
-                forwardTop = Physics.Position + topOffset;
+                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
 
-                var botOffset = new Vector2(
+                rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
-                    PhysicsConstants.PixelsToMeters(Height) / 2);
-                forwardBottom = Physics.Position + botOffset;
+                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
             }
             else
             {
-                var topOffset = new Vector2(
+                rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    -PhysicsConstants.PixelsToMeters(Height) / 2);
-                forwardTop = Physics.Position + topOffset;
+                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
 
-                var botOffset = new Vector2(
+                rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    PhysicsConstants.PixelsToMeters(Height) / 2);
-                forwardBottom = Physics.Position + botOffset;
+                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
             }
 
             if (needToTransformCW)
             {
                 Physics.Rotation += MathHelper.PiOver2;
                 PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
-                forwardTop = Vector2.Transform(forwardTop, quarterTurnCWMatrix);
-                forwardBottom = Vector2.Transform(forwardBottom, quarterTurnCWMatrix);
+                rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCWMatrix);
+                rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCWMatrix);
                 xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
                 yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
                 //forwardTop.Y *= -1;
@@ -180,8 +176,8 @@ namespace TimeSink.Entities.Enemies
             {
                 Physics.Rotation -= MathHelper.PiOver2;
                 PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
-                forwardTop = Vector2.Transform(forwardTop, quarterTurnCCWMatrix);
-                forwardBottom = Vector2.Transform(forwardBottom, quarterTurnCCWMatrix);
+                rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCCWMatrix);
+                rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCCWMatrix);
                 xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCCWMatrix);
                 yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCCWMatrix);
                 //forwardTop.Y *= -1;
@@ -205,12 +201,12 @@ namespace TimeSink.Entities.Enemies
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     // do what it do here
-                    //Console.WriteLine("Front Top Forward Ray Cast Callback");
+                    Console.WriteLine("Front Top Forward Ray Cast Callback");
                     collidedAhead = true;
                     return 0;
                 },
-                forwardTop,
-                forwardTop + xDirectionCast);
+                Physics.Position + rayTopOffset,
+                Physics.Position + rayTopOffset + xDirectionCast);
 
             //var temp1 = Vector2.Transform(forwardTop + xDirectionCast, totalRotationMatrix);
             //var temp2 = Vector2.Transform(xDirectionCast, totalRotationMatrix);
@@ -224,8 +220,8 @@ namespace TimeSink.Entities.Enemies
                     collidedDownward = true;
                     return 0;
                 },
-                forwardBottom,
-                forwardBottom + yDirectionCast);
+                Physics.Position + rayBottomOffset,
+                Physics.Position + rayBottomOffset + yDirectionCast);
 
             if (collidedAhead)
             {
