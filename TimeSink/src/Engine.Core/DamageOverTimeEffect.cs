@@ -37,10 +37,10 @@ namespace TimeSink.Engine.Core
             float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeApplied += time;
             float damage = (totalDamage * time / timeSpan);
-            Console.WriteLine(String.Format("dot applied! time applied: {0}, total time: {1}, for damage: {2}", 
+           /* Console.WriteLine(String.Format("dot applied! time applied: {0}, total time: {1}, for damage: {2}", 
                 timeApplied,
                 timeSpan,
-                damage));
+                damage));*/
             return damage;   
         }
     }

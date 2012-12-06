@@ -22,7 +22,7 @@ namespace DialoguePrototype
 
             if (!executed)
             {
-                Console.WriteLine("Played Animation!: " + path);
+               // Console.WriteLine("Played Animation!: " + path);
             }
         }
     }

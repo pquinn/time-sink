@@ -203,7 +203,7 @@ namespace TimeSink.Entities.Enemies
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     // do what it do here
-                    Console.WriteLine("Front Bottom Downward Ray Cast Callback");
+                   // Console.WriteLine("Front Bottom Downward Ray Cast Callback");
                     collidedDownward = true;
                     return 0;
                 },
