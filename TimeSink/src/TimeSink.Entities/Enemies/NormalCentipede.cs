@@ -32,24 +32,25 @@ namespace TimeSink.Entities.Enemies
         new private static int textureHeight;
         new private static int textureWidth;
 
-        private bool first;
-        private float tZero;
+        private int xDirection;
 
         public Func<float, Vector2> PatrolFunction { get; private set; }
-
-        [EditableField("Patrol Direction")]
-        public Vector2 PatrolDirection { get; set; }
 
         public NormalCentipede()
             : this(Vector2.Zero, Vector2.Zero)
         {
         }
 
-        public NormalCentipede(Vector2 position, Vector2 direction) : base(position)
+        public NormalCentipede(Vector2 position, Vector2 direction)
+            : base(position)
         {
             health = 150;
             PatrolDirection = direction;
         }
+
+        [EditableField("Patrol Direction")]
+        [SerializableField]
+        public Vector2 PatrolDirection { get; set; }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -72,7 +73,7 @@ namespace TimeSink.Entities.Enemies
                 return new TintedRendering(
                   CENTIPEDE_TEXTURE,
                   PhysicsConstants.MetersToPixels(Physics.Position),
-                  0,
+                  Physics.Rotation,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));
             }
@@ -86,45 +87,178 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(WorldGeometry2 wg, Contact info)
+        {
+            Physics.IgnoreGravity = true;
+            return true;
+        }
 
+        private bool collidedAhead = false;
+        private bool collidedDownward = false;
+        private bool needToTurn = false;
+        private bool needToTransformCW = false;
+        private bool needToTransformCCW = false;
+        private Vector2 rayTopOffset = Vector2.Zero;
+        private Vector2 rayBottomOffset = Vector2.Zero;
+        private Vector2 xDirectionCast = new Vector2(.1f, 0);
+        private Vector2 yDirectionCast = new Vector2(0, .1f);
+        private bool initialized = false;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
 
+            //if (Physics.IgnoreGravity == false)
+            //{
+            //    return;
+            //}
+
+            //var widthMeters = PhysicsConstants.PixelsToMeters(Width);
+            //var heightMeters = PhysicsConstants.PixelsToMeters(Height);
+
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 
-            var start = Physics.Position + new Vector2(
-                PatrolDirection.X >= 0 ? PhysicsConstants.PixelsToMeters(textureWidth) / 2 : -PhysicsConstants.PixelsToMeters(textureWidth) / 2, 
-                PhysicsConstants.PixelsToMeters(textureHeight) / 2);
+            //var xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
+            //var yDirection = (int)PatrolDirection.Y > 0 ? 1 : -1;
 
-            var collided = false;
+            var totalRotationMatrix = Matrix.CreateRotationZ(Physics.Rotation);
+            var quarterTurnCWMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
+            var quarterTurnCCWMatrix = Matrix.CreateRotationZ(-MathHelper.PiOver2);
 
+            if (!initialized)
+            {
+                rayTopOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
+                rayBottomOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
+
+                xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
+
+                initialized = true;
+            }
+
+            if (needToTurn)
+            {
+                rayTopOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
+
+                rayBottomOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
+            }
+            else
+            {
+                rayTopOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
+
+                rayBottomOffset = new Vector2(
+                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
+            }
+
+            //if (needToTransformCW)
+            //{
+            //    Physics.Rotation += MathHelper.PiOver2;
+            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
+            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCWMatrix);
+            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCWMatrix);
+            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
+            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
+            //    //forwardTop.Y *= -1;
+            //    //forwardBottom.Y *= -1;
+            //    needToTransformCW = false;
+            //}
+
+            //if (needToTransformCCW)
+            //{
+            //    Physics.Rotation -= MathHelper.PiOver2;
+            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
+            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCCWMatrix);
+            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCCWMatrix);
+            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCCWMatrix);
+            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCCWMatrix);
+            //    //forwardTop.Y *= -1;
+            //    //forwardBottom.Y *= -1;
+            //    needToTransformCCW = false;
+            //}
+
+            //cast a ray forward from top front corner
             world.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    collided = true;
+                    // do what it do here
+                    //Console.WriteLine("Front Top Forward Ray Cast Callback");
+                    collidedAhead = true;
                     return 0;
                 },
-                start,
-                start + new Vector2(0, .1f));
+                Physics.Position + Vector2.Transform(rayTopOffset, totalRotationMatrix),
+                Physics.Position + Vector2.Transform(rayTopOffset + xDirectionCast, totalRotationMatrix));
 
-            if (!collided)
+            //cast a ray downward from bottom front corner 
+            world.LevelManager.PhysicsManager.World.RayCast(
+                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+                {
+                    // do what it do here
+                    Console.WriteLine("Front Bottom Downward Ray Cast Callback");
+                    collidedDownward = true;
+                    return 0;
+                },
+                Physics.Position + rayBottomOffset,
+                Physics.Position + rayBottomOffset + yDirectionCast);
+
+            if (collidedAhead)
             {
-                PatrolDirection *= -Vector2.UnitX;
+                if (needToTurn)
+                {
+                    var rotation = MathHelper.PiOver2 * xDirection;
+                    Physics.Rotation += rotation;
+                    PatrolDirection = Vector2.Transform(PatrolDirection, Matrix.CreateRotationZ(rotation));
+                    needToTurn = false;
+                }
+                else
+                {
+                    needToTurn = true;
+                }
+
+                collidedAhead = false;
             }
+
+            //if (!collidedDownward && Physics.IgnoreGravity == true)
+            //{
+            //    if (needToTurn)
+            //    {
+            //        Physics.Rotation -= MathHelper.PiOver2;
+            //        PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
+            //        needToTransformCCW = true;
+            //        needToTurn = false;
+            //    }
+            //    else
+            //    {
+            //        needToTurn = true;
+            //    }
+            //    collidedDownward = true;
+            //}
         }
 
         public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             var texture = textureCache.LoadResource(CENTIPEDE_TEXTURE);
-            textureWidth = texture.Width;
-            textureHeight = texture.Height;
         }
 
         protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
         {
             return textureCache.GetResource(CENTIPEDE_TEXTURE);
+        }
+
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+        {
+            base.InitializePhysics(force, engineRegistrations);
+            //Physics.IgnoreGravity = true;
         }
     }
 }

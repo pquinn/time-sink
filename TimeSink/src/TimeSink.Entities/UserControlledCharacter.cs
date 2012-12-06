@@ -639,6 +639,8 @@ namespace TimeSink.Entities
 
                 // Move player based on the controller direction and time scale.
                 Physics.ApplyLinearImpulse(movedirection * amount);
+
+                MotorJoint.MotorSpeed = movedirection.X * 10;
             }
 
             ClampVelocity();

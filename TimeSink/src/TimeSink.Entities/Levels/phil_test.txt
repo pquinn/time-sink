@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<PlayerStart>
+		<X>7</X><Y>21</Y>
+	</PlayerStart>
+	<Midground />
+	<Tiles />
+	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>6.66666842</X><Y>21.14584</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>38.0729256</X><Y>21.0937557</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>38.0729256</X><Y>6.145835</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.25001</X><Y>5.989585</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.04168</X><Y>0.6770835</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>6.302085</X><Y>0.9895836</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>6.66666842</X><Y>21.14584</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+	</GeoSegments>
+	<EntitySerializations>
+		<EntitySerialization>
+			<EntityId>849aaec2-7155-4c37-aa71-42d0c1611881</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>PatrolDirection</Key>
+					<Value xsi:type="Vector2">
+						<X>-1</X><Y>0</Y>
+					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">849aaec2-7155-4c37-aa71-42d0c1611881</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Health</Key>
+					<Value xsi:type="xsd:float">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">normal_centipede_1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>29.46875</X><Y>20.46875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+	</EntitySerializations>
+</Level>
