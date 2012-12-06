@@ -679,7 +679,13 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Textures\Objects\HorizontalVine.png">
+      <Name>HorizontalVine</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4000.PNG">
       <Name>Hub_East%4000</Name>

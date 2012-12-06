@@ -10,18 +10,22 @@ using TimeSink.Engine.Core.Input;
 
 namespace TimeSink.Engine.Core.Rendering
 {
-    public class EmptyPreviewRendering : BasicRendering
+    public class SizedRendering : BasicRendering
     {
-        public EmptyPreviewRendering(Vector2 position, int rot, int width, int height)
-            : base("blank", position, rot, new Vector2(width, height))
+        public SizedRendering(string texture, Vector2 position, int rot, int width, int height)
+            : base(texture, position, rot, Vector2.One)
         {
+            Size = new Vector2(width, height);
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
+        public Vector2 Size { get; set; }
+
+        public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var texture = cache.GetResource(textureKey);
 
-            Vector2 origin = new Vector2(scale.X, scale.Y);
+            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            var newScale = Size / new Vector2(texture.Width, texture.Height);
 
             if (InputManager.Instance.Pressed(Keys.B))
             {
@@ -44,7 +48,7 @@ namespace TimeSink.Engine.Core.Rendering
                 Color.White,
                 (float)rotation,
                 origin,
-                scale,
+                newScale,
                 SpriteEffects.None,
                 0
             );

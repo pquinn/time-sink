@@ -32,7 +32,7 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
         public Ladder()
-            : this(Vector2.Zero, 50, 50, true, false)
+            : this(Vector2.Zero, 75, 200, true, false)
         {
         }
 
@@ -86,8 +86,7 @@ namespace TimeSink.Entities.Objects
             {
                 var world = engineRegistrations.Resolve<World>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
-
-
+                
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
@@ -150,7 +149,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return new BasicRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, new Vector2(200,1000)); }
+            get { return new SizedRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height); }
         }
 
         public override IRendering Rendering
@@ -165,6 +164,5 @@ namespace TimeSink.Entities.Objects
         {
             get { return Physics.FixtureList; }
         }
-
     }
 }
