@@ -98,12 +98,17 @@ namespace TimeSink.Entities
                     ? edgeShape.Vertex2 - edgeShape.Vertex1
                     : edgeShape.Vertex1 - edgeShape.Vertex2;
 
-                var entityVector = points[0] + offset - edgeShape.Vertex1;
+                for (int i = 0; i < contact.Manifold.PointCount; i++)
+                {
+                    var entityVector = points[i] + offset - edgeShape.Vertex1;
 
-                var cross = Vector3.Cross(new Vector3(entityVector, 0), new Vector3(platformVector, 0));
-                
-                if (cross.Z < 0)
-                    return true;
+                    var cross = Vector3.Cross(
+                        new Vector3(entityVector, 0), 
+                        new Vector3(platformVector, 0));
+
+                    if (cross.Z < 0)
+                        return true;
+                }
             }
 
             return false;
