@@ -32,6 +32,8 @@ namespace TimeSink.Entities.Enemies
         new private static int textureHeight;
         new private static int textureWidth;
 
+        private int xDirection;
+
         public Func<float, Vector2> PatrolFunction { get; private set; }
 
         public NormalCentipede()
@@ -99,8 +101,8 @@ namespace TimeSink.Entities.Enemies
         private bool needToTransformCCW = false;
         private Vector2 rayTopOffset = Vector2.Zero;
         private Vector2 rayBottomOffset = Vector2.Zero;
-        private Vector2 xDirectionCast = Vector2.Zero;
-        private Vector2 yDirectionCast = Vector2.Zero;
+        private Vector2 xDirectionCast = new Vector2(.1f, 0);
+        private Vector2 yDirectionCast = new Vector2(0, .1f);
         private bool initialized = false;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
@@ -111,13 +113,13 @@ namespace TimeSink.Entities.Enemies
             //    return;
             //}
 
-            var widthMeters = PhysicsConstants.PixelsToMeters(Width);
-            var heightMeters = PhysicsConstants.PixelsToMeters(Height);
+            //var widthMeters = PhysicsConstants.PixelsToMeters(Width);
+            //var heightMeters = PhysicsConstants.PixelsToMeters(Height);
 
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
 
-            var xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
-            var yDirection = (int)PatrolDirection.Y >= 0 ? 1 : -1;
+            //var xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
+            //var yDirection = (int)PatrolDirection.Y > 0 ? 1 : -1;
 
             var totalRotationMatrix = Matrix.CreateRotationZ(Physics.Rotation);
             var quarterTurnCWMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
@@ -127,13 +129,12 @@ namespace TimeSink.Entities.Enemies
             {
                 rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
                 rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
 
-                xDirectionCast = new Vector2(xDirection * .1f, 0);
-                yDirectionCast = new Vector2(0, yDirection * .1f);
+                xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
 
                 initialized = true;
             }
@@ -142,74 +143,60 @@ namespace TimeSink.Entities.Enemies
             {
                 rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
-                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
 
                 rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
-                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
             }
             else
             {
                 rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    yDirection * -PhysicsConstants.PixelsToMeters(Height) / 2);
+                    -PhysicsConstants.PixelsToMeters(Height) / 2);
 
                 rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
-                    yDirection * PhysicsConstants.PixelsToMeters(Height) / 2);
+                    PhysicsConstants.PixelsToMeters(Height) / 2);
             }
 
-            if (needToTransformCW)
-            {
-                Physics.Rotation += MathHelper.PiOver2;
-                PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
-                rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCWMatrix);
-                rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCWMatrix);
-                xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
-                yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
-                //forwardTop.Y *= -1;
-                //forwardBottom.Y *= -1;
-                needToTransformCW = false;
-            }
+            //if (needToTransformCW)
+            //{
+            //    Physics.Rotation += MathHelper.PiOver2;
+            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
+            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCWMatrix);
+            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCWMatrix);
+            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
+            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
+            //    //forwardTop.Y *= -1;
+            //    //forwardBottom.Y *= -1;
+            //    needToTransformCW = false;
+            //}
 
-            if (needToTransformCCW)
-            {
-                Physics.Rotation -= MathHelper.PiOver2;
-                PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
-                rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCCWMatrix);
-                rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCCWMatrix);
-                xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCCWMatrix);
-                yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCCWMatrix);
-                //forwardTop.Y *= -1;
-                //forwardBottom.Y *= -1;
-                needToTransformCCW = false;
-            }
+            //if (needToTransformCCW)
+            //{
+            //    Physics.Rotation -= MathHelper.PiOver2;
+            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
+            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCCWMatrix);
+            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCCWMatrix);
+            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCCWMatrix);
+            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCCWMatrix);
+            //    //forwardTop.Y *= -1;
+            //    //forwardBottom.Y *= -1;
+            //    needToTransformCCW = false;
+            //}
 
-            ////cast a ray forward from top front corner
-            //world.LevelManager.PhysicsManager.World.RayCast(
-            //    delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
-            //    {
-            //        // do what it do here
-            //        //Console.WriteLine("Front Top Forward Ray Cast Callback");
-            //        collidedAhead = true;
-            //        return 0;
-            //    },
-            //    Vector2.Transform(forwardTop, totalRotationMatrix),
-            //    Vector2.Transform(forwardTop + xDirectionCast, totalRotationMatrix));
-
+            //cast a ray forward from top front corner
             world.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     // do what it do here
-                    Console.WriteLine("Front Top Forward Ray Cast Callback");
+                    //Console.WriteLine("Front Top Forward Ray Cast Callback");
                     collidedAhead = true;
                     return 0;
                 },
-                Physics.Position + rayTopOffset,
-                Physics.Position + rayTopOffset + xDirectionCast);
-
-            //var temp1 = Vector2.Transform(forwardTop + xDirectionCast, totalRotationMatrix);
-            //var temp2 = Vector2.Transform(xDirectionCast, totalRotationMatrix);
+                Physics.Position + Vector2.Transform(rayTopOffset, totalRotationMatrix),
+                Physics.Position + Vector2.Transform(rayTopOffset + xDirectionCast, totalRotationMatrix));
 
             //cast a ray downward from bottom front corner 
             world.LevelManager.PhysicsManager.World.RayCast(
@@ -227,18 +214,10 @@ namespace TimeSink.Entities.Enemies
             {
                 if (needToTurn)
                 {
-                    //Physics.Rotation += MathHelper.PiOver2;
-                    //PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
-                    needToTransformCW = true;
+                    var rotation = MathHelper.PiOver2 * xDirection;
+                    Physics.Rotation += rotation;
+                    PatrolDirection = Vector2.Transform(PatrolDirection, Matrix.CreateRotationZ(rotation));
                     needToTurn = false;
-
-                    //Physics.Rotation += MathHelper.PiOver2;
-                    //PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
-                    //forwardTop = Vector2.Transform(forwardTop, quarterTurnCWMatrix);
-                    //forwardBottom = Vector2.Transform(forwardBottom, quarterTurnCWMatrix);
-                    //xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
-                    //yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
-                    //needToTurn = false;
                 }
                 else
                 {

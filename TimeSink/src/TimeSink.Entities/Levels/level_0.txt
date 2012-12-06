@@ -56,7 +56,7 @@
 			<PropertiesMap>
 				<PairOfStringObject>
 					<Key>Width</Key>
-					<Value xsi:type="xsd:int">50</Value>
+					<Value xsi:type="xsd:int">150</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>

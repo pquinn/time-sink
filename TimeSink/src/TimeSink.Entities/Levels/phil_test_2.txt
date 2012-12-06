@@ -46,7 +46,7 @@
 				<PairOfStringObject>
 					<Key>PatrolDirection</Key>
 					<Value xsi:type="Vector2">
-						<X>-1</X><Y>0</Y>
+						<X>2</X><Y>0</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>

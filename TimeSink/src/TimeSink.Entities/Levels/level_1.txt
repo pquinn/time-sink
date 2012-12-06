@@ -3,202 +3,11 @@
 	<PlayerStart>
 		<X>-9.09375</X><Y>10.34375</Y>
 	</PlayerStart>
-	<Midground>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>0</X><Y>0</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@00</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>1280</X><Y>0</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@01</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>2560</X><Y>0</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@02</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>3840</X><Y>0</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@03</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>0</X><Y>720</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@10</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>1280</X><Y>720</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@11</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>2560</X><Y>720</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@12</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>3840</X><Y>720</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@13</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>0</X><Y>1440</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@20</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>1280</X><Y>1440</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@21</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>2560</X><Y>1440</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@22</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>3840</X><Y>1440</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@23</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>0</X><Y>2160</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@30</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>1280</X><Y>2160</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@31</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>2560</X><Y>2160</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@32</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-		<Tile>
-			<Dead>false</Dead>
-			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
-			<Position>
-				<X>3840</X><Y>2160</Y>
-			</Position>
-			<Texture>Textures\Levels\Heroes_Entrance/Heroes_Entrance@33</Texture>
-			<Rotation>0</Rotation>
-			<Scale>
-				<X>1</X><Y>1</Y>
-			</Scale>
-		</Tile>
-	</Midground>
+	<Midground />
 	<Tiles />
 	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
@@ -1542,6 +1351,14 @@
 						<X>-8.96875</X><Y>15.625</Y>
 					</Value>
 				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
 		<EntitySerialization>
@@ -1572,6 +1389,14 @@
 					<Value xsi:type="Vector2">
 						<X>3.578125</X><Y>10.703125</Y>
 					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
@@ -1604,6 +1429,14 @@
 						<X>21.796875</X><Y>4.6875</Y>
 					</Value>
 				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
 		<EntitySerialization>
@@ -1634,6 +1467,14 @@
 					<Value xsi:type="Vector2">
 						<X>27.1875</X><Y>8.125</Y>
 					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
@@ -1666,6 +1507,14 @@
 						<X>49.3125</X><Y>3.90625</Y>
 					</Value>
 				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
 		<EntitySerialization>
@@ -1674,13 +1523,13 @@
 				<PairOfStringObject>
 					<Key>EndPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>7</X><Y>9.4375</Y>
+						<X>13.28125</X><Y>9.4375</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>StartPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>13.28125</X><Y>9.4375</Y>
+						<X>7</X><Y>9.4375</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
@@ -1711,7 +1560,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>TimeSpan</Key>
-					<Value xsi:type="xsd:int">5</Value>
+					<Value xsi:type="xsd:float">5</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
@@ -1719,13 +1568,13 @@
 			<EntityId>c31fb7ad-f9de-4ca3-a091-521583c6c6bf</EntityId>
 			<PropertiesMap>
 				<PairOfStringObject>
-					<Key>StartPosition</Key>
+					<Key>EndPosition</Key>
 					<Value xsi:type="Vector2">
 						<X>16.40625</X><Y>9.453125</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
-					<Key>EndPosition</Key>
+					<Key>StartPosition</Key>
 					<Value xsi:type="Vector2">
 						<X>16.40625</X><Y>5.46875</Y>
 					</Value>
@@ -1753,12 +1602,12 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>16.40625</X><Y>9.453125</Y>
+						<X>16.40625</X><Y>5.46875</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>TimeSpan</Key>
-					<Value xsi:type="xsd:int">5</Value>
+					<Value xsi:type="xsd:float">5</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>

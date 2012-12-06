@@ -41,6 +41,7 @@ namespace TimeSink.Editor.GUI.Views
 
                     var val = prop.GetValue(entity, null) ?? string.Empty;
                     var textBlock = new TextBlock() { Text = ((EditableFieldAttribute)attr[0]).Display };
+                    UIElement elementToAdd = null;
                     dynamic.Children.Add(textBlock);
                     Grid.SetRow(textBlock, i);
                     Grid.SetColumn(textBlock, 0);
@@ -49,19 +50,25 @@ namespace TimeSink.Editor.GUI.Views
                     if (type.Equals(typeof(int)) || type.Equals(typeof(float)) || 
                         type.Equals(typeof(string)) || type.Equals(typeof(Guid)))
                     {
-                        var textBox = new TextBox() { Text = val.ToString() };
-                        dynamic.Children.Add(textBox);
-                        Grid.SetRow(textBox, i);
-                        Grid.SetColumn(textBox, 1);
+                        elementToAdd = new TextBox() { Text = val.ToString() };
+                    }
+                    else if (type.Equals(typeof(bool)))
+                    {
+                        elementToAdd = new CheckBox() { IsChecked = (bool)val };
                     }
                     else if (type.Equals(typeof(Vector2)))
                     {
-                        var vec = (Vector2)val; 
-                        var textBox = new TextBox() { Text = vec.ToDisplayString() };
-                        dynamic.Children.Add(textBox);
-                        Grid.SetRow(textBox, i);
-                        Grid.SetColumn(textBox, 1);
-                    }                    
+                        var vec = (Vector2)val;
+                        elementToAdd = new TextBox() { Text = vec.ToDisplayString() };
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Unhandled property type in entity editor.");
+                    }
+
+                    dynamic.Children.Add(elementToAdd);
+                    Grid.SetRow(elementToAdd, i);
+                    Grid.SetColumn(elementToAdd, 1);            
 
                     i++;
                 }
@@ -76,23 +83,27 @@ namespace TimeSink.Editor.GUI.Views
                 var attr = prop.GetCustomAttributes(typeof(EditableFieldAttribute), false);
                 if (attr.Any())
                 {
-                    var textBox = dynamic.Children
+                    var element = dynamic.Children
                       .Cast<UIElement>()
-                      .First(e => Grid.GetRow(e) == i && Grid.GetColumn(e) == 1) as TextBox;
+                      .First(e => Grid.GetRow(e) == i && Grid.GetColumn(e) == 1);
 
                     object valToSet = null;
                     var type = prop.PropertyType;
                     if (type.Equals(typeof(int)))
-                        valToSet = Int32.Parse(textBox.Text);
+                        valToSet = Int32.Parse(((TextBox)element).Text);
                     else if (type.Equals(typeof(float)))
-                        valToSet = Single.Parse(textBox.Text);
+                        valToSet = Single.Parse(((TextBox)element).Text);
                     else if (type.Equals(typeof(string)))
-                        valToSet = textBox.Text;
+                        valToSet = ((TextBox)element).Text;
                     else if (type.Equals(typeof(Guid)))
-                        valToSet = Guid.Parse(textBox.Text);
+                        valToSet = Guid.Parse(((TextBox)element).Text);
+                    else if (type.Equals(typeof(bool)))
+                    {
+                        valToSet = ((CheckBox)element).IsChecked;
+                    }
                     else if (type.Equals(typeof(Vector2)))
                     {
-                        valToSet = textBox.Text.ParseVector();
+                        valToSet = ((TextBox)element).Text.ParseVector();
                     }
 
                     prop.SetValue(entity, valToSet, null);

@@ -76,7 +76,7 @@ namespace LevelSplitter
 
                     g.DrawImage(fullImage, -frame.X, -frame.Y);
 
-                    currentFrame.Save(currentDir + "/" + FileName.Text + "_" + y + x + ".PNG", System.Drawing.Imaging.ImageFormat.Png);
+                    currentFrame.Save(currentDir + "/" + FileName.Text + "@" + y + x + ".PNG", System.Drawing.Imaging.ImageFormat.Png);
                     fileNumber++;
                 }
             }

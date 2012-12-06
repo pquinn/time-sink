@@ -27,6 +27,8 @@ namespace TimeSink.Entities.Objects
         const string TEXTURE = "Materials/blank";
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
 
+        private bool feetTouching = false;
+
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
         public Ladder()
@@ -117,9 +119,11 @@ namespace TimeSink.Entities.Objects
             {
 
                 Physics.IsSensor = true;
+                feetTouching = false;
             }
             else
             {
+                feetTouching = true;
                 c.TouchingGround = true;
             }
 
@@ -133,7 +137,13 @@ namespace TimeSink.Entities.Objects
             if (f2.UserData != null && f2.UserData.Equals(true))
             {
                 c.CanClimb = null;
+                c.DismountLadder();
                 Physics.IsSensor = false;
+                c.Physics.IgnoreGravity = false;
+            }
+            else if (feetTouching == false)
+            {
+                c.CanClimb = null;
                 c.Physics.IgnoreGravity = false;
             }
         }
