@@ -164,7 +164,6 @@ namespace TimeSink.Entities
         float timer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
-        float jumpInterval = 100f;
         int currentFrame = 0;
         int spriteWidth = 35;
         int spriteHeight = 130;
