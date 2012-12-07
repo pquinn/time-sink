@@ -17,14 +17,17 @@ namespace TimeSink.Entities
     {
         private World world;
 
-        private Joint joint;
+        private PrismaticJoint joint;
         private Joint joint2;
+        private float origLinearDamping;
 
         public void CreateFixtures(World world, UserControlledCharacter character)
         {
             this.world = world;
             Fixture = FixtureFactory.AttachCircle(
-                .1f, 0, character.Physics, new Vector2(0, -(PhysicsConstants.PixelsToMeters(character.Height) / 4)));
+                .1f, 5, character.Physics, new Vector2(0, -(PhysicsConstants.PixelsToMeters(character.Height) / 4)));
+            Fixture.Friction = 5f;
+            Fixture.Restitution = 1f;
             Fixture.UserData = character;
             Fixture.IsSensor = true;
             Fixture.CollidesWith = Category.Cat4;
@@ -53,15 +56,13 @@ namespace TimeSink.Entities
                             character.WheelBody.Position, 
                     Vector2.Zero,
                     new Vector2(1, 0));
+                //joint.MotorEnabled = true;
+                //joint.MaxMotorForce = 50;
+                //joint.MotorSpeed = 0;
                 world.AddJoint(joint);
 
-                //joint2 = new PrismaticJoint(
-                //    character.Physics,
-                //    bridge.Physics,
-                //    Vector2.Zero,
-                //    character.Physics.Position - character.WheelBody.Position,
-                //    new Vector2(1, 0));
-                //world.AddJoint(joint2);
+                origLinearDamping = character.Physics.LinearDamping;
+                character.Physics.LinearDamping = 10;
 
                 Hanging = true;
             }
@@ -77,8 +78,8 @@ namespace TimeSink.Entities
 
         public void ForceSeperation(UserControlledCharacter character)
         {
+            character.Physics.LinearDamping = origLinearDamping;
             world.RemoveJoint(joint);
-            //world.RemoveJoint(joint2);
             Hanging = false;
         }
     }
