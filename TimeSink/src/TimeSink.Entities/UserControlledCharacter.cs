@@ -1166,7 +1166,7 @@ namespace TimeSink.Entities
 
                 r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
-                c.CollidesWith = Category.Cat1;
+                c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
                 c.UserData = true;
 
