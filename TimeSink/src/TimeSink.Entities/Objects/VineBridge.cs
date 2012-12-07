@@ -66,10 +66,51 @@ namespace TimeSink.Entities.Objects
         [EditableField("NumLinks")]
         public int NumLinks { get; set; }
 
+        public bool Hanging { get; private set; }
+        private PrismaticJoint joint;
+        private float origLinearDamping;
+        private World world;
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(UserControlledCharacter character, Contact info)
         {
+            // Todo:this method gets called twice for some reason and I don't know why.
+            // This check is so the second call doesn't override things and create two joints.
+            if (!Hanging && character.Physics.LinearVelocity.Y > 0)
+            {
+                joint = new PrismaticJoint(
+                    character.WheelBody,
+                    Physics,
+                    character.Position +
+                        new Vector2(0, -(PhysicsConstants.PixelsToMeters(character.Height) / 4)) -
+                            character.WheelBody.Position,
+                    Vector2.Zero,
+                    new Vector2(1, 0));
+                //joint.MotorEnabled = true;
+                //joint.MaxMotorForce = 50;
+                //joint.MotorSpeed = 0;
+                world.AddJoint(joint);
+
+                origLinearDamping = character.Physics.LinearDamping;
+                character.Physics.LinearDamping = 10;
+
+                Hanging = true;
+            }
+
             return true;
+        }
+
+        [OnSeparation.Overload]
+        public void OnSeparation(Fixture f1, UserControlledCharacter character, Fixture f2)
+        {
+            if (Hanging)
+                ForceSeperation(character);
+        }
+
+        public void ForceSeperation(UserControlledCharacter character)
+        {
+            character.Physics.LinearDamping = origLinearDamping;
+            world.RemoveJoint(joint);
+            Hanging = false;
         }
 
         public override void HandleKeyboardInput(Microsoft.Xna.Framework.GameTime gameTime, EngineGame world)
@@ -85,9 +126,9 @@ namespace TimeSink.Entities.Objects
         {
             if (!initialized || force)
             {
-                var world = engineRegistrations.Resolve<World>();
+                world = engineRegistrations.Resolve<World>();
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height / 2);
 
                 Physics = BodyFactory.CreateRectangle(
                     world,
