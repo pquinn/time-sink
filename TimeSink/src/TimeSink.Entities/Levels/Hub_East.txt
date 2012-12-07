@@ -204,6 +204,10 @@
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
@@ -738,44 +742,6 @@
 					<X>64.60945</X><Y>2.01165676E-07</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
-			</WorldCollisionGeometrySegment>
-		</ArrayOfWorldCollisionGeometrySegment>
-		<ArrayOfWorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>0.0155463051</X><Y>17.8688374</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>0.6218429</X><Y>17.7134571</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>1.01049459</X><Y>17.6668415</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>1.3991462</X><Y>17.7911472</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>1.834436</X><Y>18.0552959</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>2.020989</X><Y>18.2572918</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
 			</WorldCollisionGeometrySegment>
 		</ArrayOfWorldCollisionGeometrySegment>
 		<ArrayOfWorldCollisionGeometrySegment>
@@ -1433,26 +1399,6 @@
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>12.8565969</X><Y>14.9942856</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>14.1313753</X><Y>14.9165955</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>14.4733887</X><Y>15.025362</Y>
-				</EndPoint>
-				<IsOneWay>true</IsOneWay>
-			</WorldCollisionGeometrySegment>
-		</ArrayOfWorldCollisionGeometrySegment>
-		<ArrayOfWorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
 					<X>12.6078606</X><Y>11.3117514</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
@@ -1673,7 +1619,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Width</Key>
-					<Value xsi:type="xsd:int">100</Value>
+					<Value xsi:type="xsd:int">130</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>
@@ -1698,7 +1644,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>0.78125</X><Y>21.25</Y>
+						<X>1.015625</X><Y>21.40625</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -1949,6 +1895,115 @@
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
 						<X>26.2728539</X><Y>11.0320654</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>b330a111-f01f-4106-b4ce-b400ae2b2ef6</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q8="http://microsoft.com/wsdl/types/" xsi:type="q8:guid">b330a111-f01f-4106-b4ce-b400ae2b2ef6</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">700</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>NumLinks</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">vine_bridge</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>46.5625</X><Y>2.96875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q9="http://microsoft.com/wsdl/types/" xsi:type="q9:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">125</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">620</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">bot_ladder</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>8</X><Y>29.53125</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>b330a111-f01f-4106-b4ce-b400ae2b2ef6</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q10="http://microsoft.com/wsdl/types/" xsi:type="q10:guid">b330a111-f01f-4106-b4ce-b400ae2b2ef6</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">800</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>NumLinks</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string"/>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>50</X><Y>9.859375</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

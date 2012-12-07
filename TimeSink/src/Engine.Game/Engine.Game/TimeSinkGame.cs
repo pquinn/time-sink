@@ -148,7 +148,7 @@ namespace TimeSink.Engine.Game
 
             if (InputManager.Instance.IsNewKey(Keys.C))
             {
-                showCollisionGeometry = !showCollisionGeometry;
+                RenderDebugGeometry = !RenderDebugGeometry;
             }
 
             if (Character != null)

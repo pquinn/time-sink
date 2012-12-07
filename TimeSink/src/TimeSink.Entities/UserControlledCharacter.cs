@@ -95,7 +95,6 @@ namespace TimeSink.Entities
         private Joint vineAttachment;
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
-        private VineBridgeInteraction vineBridgeInteraction;
 
         private List<IInventoryItem> inventory;
         private int activeItem;
@@ -169,7 +168,6 @@ namespace TimeSink.Entities
         float timer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
-        float jumpInterval = 100f;
         int currentFrame = 0;
         int spriteWidth = 35;
         int spriteHeight = 130;
@@ -180,14 +178,9 @@ namespace TimeSink.Entities
         {
             get
             {
-                var list = Physics.FixtureList
+                return Physics.FixtureList
                     .Concat(WheelBody.FixtureList)
                     .ToList();
-
-                if (vineBridgeInteraction.Fixture != null)
-                    list.Add(vineBridgeInteraction.Fixture);
-
-                return list;
             }
         }
 
@@ -211,8 +204,6 @@ namespace TimeSink.Entities
             inventory = new List<IInventoryItem>();
             inventory.Add(new Arrow());
             inventory.Add(new Dart());
-
-            vineBridgeInteraction = new VineBridgeInteraction();
 
             animations = CreateAnimations();
         }
@@ -239,7 +230,7 @@ namespace TimeSink.Entities
             //Console.WriteLine("Previous Position: {0}", PreviousPosition);
             //Console.WriteLine();
 
-            if (canClimb == null && !vineBridgeInteraction.Hanging)
+            if (canClimb == null && !Hanging())
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -506,9 +497,9 @@ namespace TimeSink.Entities
             if (InputManager.Instance.IsNewKey(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if (vineBridgeInteraction.Hanging)
+                if (Hanging())
                 {
-                    vineBridgeInteraction.ForceSeperation(this);
+                    vineBridge.ForceSeperation(this);
                     if (!InputManager.Instance.Pressed(Keys.S))
                         PerformJump();
                 }
@@ -681,6 +672,11 @@ namespace TimeSink.Entities
             ClampVelocity();
 
             UpdateAnimationStates();
+        }
+
+        private bool Hanging()
+        {
+            return vineBridge != null && vineBridge.Hanging;
         }
 
         private void PerformJump()
@@ -863,6 +859,7 @@ namespace TimeSink.Entities
             return true;
         }
 
+        private VineBridge vineBridge;
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(VineBridge bridge, Contact info)
         {
@@ -870,7 +867,10 @@ namespace TimeSink.Entities
                 currentState = BodyStates.HorizontalClimbLeft;
             else
                 currentState = BodyStates.HorizontalClimbRight;
-            return vineBridgeInteraction.OnCollidedWith(this, bridge, info);
+
+            vineBridge = bridge;
+
+            return true;
         }
 
         [OnSeparation.Overload]
@@ -880,7 +880,6 @@ namespace TimeSink.Entities
                 currentState = BodyStates.JumpingLeft;
             else
                 currentState = BodyStates.JumpingRight;
-            vineBridgeInteraction.OnSeperation(this, bridge);
         }
 
         [OnCollidedWith.Overload]
@@ -1246,7 +1245,7 @@ namespace TimeSink.Entities
 
                 r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
-                c.CollidesWith = Category.Cat1;
+                c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
                 c.UserData = true;
 
@@ -1273,7 +1272,15 @@ namespace TimeSink.Entities
                 WheelBody.BodyType = BodyType.Dynamic;
                 WheelBody.Friction = 10.0f;
 
-                vineBridgeInteraction.CreateFixtures(world, this);
+                var fixture = FixtureFactory.AttachCircle(
+                .1f, 5, Physics, new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)));
+                fixture.Friction = 5f;
+                fixture.Restitution = 1f;
+                fixture.UserData = this;
+                fixture.IsSensor = true;
+                fixture.CollidesWith = Category.Cat4;
+                fixture.CollisionCategories = Category.Cat4;
+                fixture.CollisionGroup = 1;
 
                 initialized = true;
             }
