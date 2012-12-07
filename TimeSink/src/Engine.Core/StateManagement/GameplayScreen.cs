@@ -60,6 +60,8 @@ namespace TimeSink.Engine.Core.StateManagement
         List<IHudElement> hudElements = new List<IHudElement>();
         List<Rectangle> transparencies = new List<Rectangle>();
         HealthBar hudHealth;
+        WeaponSlot primary;
+        WeaponSlot secondary;
 
         Random random = new Random();
 
