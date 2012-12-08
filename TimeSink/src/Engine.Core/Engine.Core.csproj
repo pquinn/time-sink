@@ -155,6 +155,7 @@
     <Compile Include="IHaveHealth.cs" />
     <Compile Include="IHaveMana.cs" />
     <Compile Include="IHaveShield.cs" />
+    <Compile Include="IInventoryItem.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />

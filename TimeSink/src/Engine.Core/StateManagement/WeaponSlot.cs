@@ -78,8 +78,8 @@ namespace TimeSink.Engine.Core.StateManagement
             GraphicsDevice graphics = screenManager.GraphicsDevice;
 
             outline.Location = position;
-            outline.Width = (graphics.Viewport.Width / 15);
-            outline.Height = (graphics.Viewport.Width / 15);
+            outline.Width = (graphics.Viewport.Width / 15 / 2);
+            outline.Height = (graphics.Viewport.Width / 15 / 2);
 
             if (item.IsPrimary)
             {

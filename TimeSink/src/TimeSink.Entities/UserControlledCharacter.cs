@@ -97,6 +97,7 @@ namespace TimeSink.Entities
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
 
         private List<IInventoryItem> inventory;
+        public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
         private int activeItem;
 
         [SerializableField]
@@ -145,10 +146,10 @@ namespace TimeSink.Entities
         // not sure if these should be public
         private Vector2 direction;
         [SerializableField]
-        public Vector2 Direction
+        public  Vector2 Direction
         {
             get { return direction; }
-            private set { direction = value; }
+             set { direction = value; }
         }
         private double holdTime;
         [SerializableField]
@@ -159,7 +160,7 @@ namespace TimeSink.Entities
         }
         private bool inHold;
         [SerializableField]
-        public bool InHold
+        public  bool InHold
         {
             get { return inHold; }
             set { inHold = value; }
@@ -234,6 +235,7 @@ namespace TimeSink.Entities
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
@@ -604,6 +606,7 @@ namespace TimeSink.Entities
                 {
                     activeItem++;
                 }
+                EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
             }
 
             #endregion
