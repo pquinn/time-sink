@@ -176,11 +176,12 @@ namespace TimeSink.Entities.Objects
                 endHitsensor.CollidesWith = Category.All;
                  * */
 
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter character, Contact info)
+        bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture cFix, Contact info)
         {
             //this don't do shit yet
             return true;

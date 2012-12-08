@@ -849,19 +849,17 @@ namespace TimeSink.Entities
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry2 world, Contact info)
-        {
-            Vector2 normal;
-            FixedArray2<Vector2> points;
-            info.GetWorldManifold(out normal, out points);
+        //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
+        //{
+        //    Vector2 normal;
+        //    FixedArray2<Vector2> points;
+        //    info.GetWorldManifold(out normal, out points);
 
-            return true;
-        }
+        //    return true;
+        //}
 
         private VineBridge vineBridge;
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(VineBridge bridge, Contact info)
+        bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
         {
             if (LeftFacingBodyState())
                 currentState = BodyStates.HorizontalClimbLeft;
@@ -873,8 +871,7 @@ namespace TimeSink.Entities
             return true;
         }
 
-        [OnSeparation.Overload]
-        public void OnSeparation(Fixture f1, VineBridge bridge, Fixture f2)
+        void OnSeparation(Fixture f1, VineBridge bridge, Fixture f2)
         {
             if (LeftFacingBodyState())
                 currentState = BodyStates.JumpingLeft;
@@ -882,8 +879,7 @@ namespace TimeSink.Entities
                 currentState = BodyStates.JumpingRight;
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Vine vine, Contact info)
+        bool OnCollidedWith(Fixture f, Vine vine, Fixture vf, Contact info)
         {
             vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
             var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
@@ -1218,12 +1214,16 @@ namespace TimeSink.Entities
             {
                 var world = engineRegistrations.Resolve<World>();
                 _world = world;
-                Physics = BodyFactory.CreateBody(world, Position, this);
 
                 Width = spriteWidth;
                 Height = spriteHeight;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                Physics = BodyFactory.CreateBody(world, Position, this);
+
+                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                WheelBody = BodyFactory.CreateBody(world, wPos, this);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
@@ -1231,19 +1231,24 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
-
-                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
-                WheelBody = BodyFactory.CreateBody(
-                    world,
-                    wPos,
-                    this);
-
+                
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
                     WheelBody);
 
-                r.CollidesWith = Category.Cat1;
+                //Physics.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
+                //WheelBody.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
+                
+                Physics.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+                Physics.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+                WheelBody.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+                WheelBody.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+                
+                Physics.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+                WheelBody.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+
+                r.CollidesWith = Category.Cat1 | ~Category.Cat31;
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;

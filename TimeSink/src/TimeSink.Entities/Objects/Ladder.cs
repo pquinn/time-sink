@@ -81,7 +81,6 @@ namespace TimeSink.Entities.Objects
 
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
-
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
@@ -106,17 +105,18 @@ namespace TimeSink.Entities.Objects
                 // Possible logic for passthrough collision detection
                 Physics.IsSensor = true;
 
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+
                 initialized = true;
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter c, Contact info)
+        bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             //Enable the character to enter a climbing state thus effecting her input handling
             if (info.FixtureA.UserData == null && info.FixtureB.UserData == null)
             {
-
                 Physics.IsSensor = true;
                 feetTouching = false;
             }
@@ -130,8 +130,7 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        [OnSeparation.Overload]
-        public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
+        void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             if (f2.UserData != null && f2.UserData.Equals(true))
             {

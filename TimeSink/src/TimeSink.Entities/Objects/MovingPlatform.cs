@@ -35,15 +35,12 @@ namespace TimeSink.Entities
         private bool first;
         private float tZero;
 
-        private HashSet<Entity> collidedEntities;
-
         public MovingPlatform() : this(Vector2.Zero, Vector2.Zero, 0, 0, 0) { }
 
         //define discrete start and end for platforms
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
-            collidedEntities = new HashSet<Entity>();
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
@@ -146,14 +143,6 @@ namespace TimeSink.Entities
                 Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
             else
                 Physics.LinearVelocity = Vector2.Zero;
-        }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Entity character, Contact info)
-        {
-            collidedEntities.Add(character);
-
-            return true;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

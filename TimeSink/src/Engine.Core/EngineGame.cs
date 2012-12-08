@@ -79,8 +79,6 @@ namespace TimeSink.Engine.Core
             debugView.LoadContent(GraphicsDevice, Content);
             
             ScreenManager.Initialize();
-
-            LevelManager.CollisionManager.Initialize();
         }
 
         protected override void LoadContent()
@@ -105,7 +103,6 @@ namespace TimeSink.Engine.Core
 
             builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
 
-            builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
@@ -155,9 +152,6 @@ namespace TimeSink.Engine.Core
             base.Draw(gameTime);
         }
 
-        protected virtual void LevelLoaded()
-        {
-            LevelManager.CollisionManager.Initialize();
-        }
+        protected virtual void LevelLoaded() { }
     }
 }

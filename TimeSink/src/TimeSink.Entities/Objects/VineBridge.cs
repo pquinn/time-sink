@@ -70,8 +70,8 @@ namespace TimeSink.Entities.Objects
         private PrismaticJoint joint;
         private float origLinearDamping;
         private World world;
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter character, Contact info)
+
+        public bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
         {
             // Todo:this method gets called twice for some reason and I don't know why.
             // This check is so the second call doesn't override things and create two joints.
@@ -99,7 +99,6 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter character, Fixture f2)
         {
             if (Hanging)
@@ -142,6 +141,9 @@ namespace TimeSink.Entities.Objects
                 Physics.CollidesWith = Category.Cat4;
                 Physics.CollisionCategories = Category.Cat4;
                 Physics.CollisionGroup = 1;
+
+                Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
 
                 initialized = true;
             }

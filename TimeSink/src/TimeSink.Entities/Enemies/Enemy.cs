@@ -100,22 +100,19 @@ namespace TimeSink.Entities.Enemies
         {
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Arrow arrow, Contact info)
+        bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
         {
             health -= 25;
             return true;
         }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Dart dart, Contact info)
+        
+        bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
         {
             RegisterDot(dart.dot);
             return true;
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter c, Contact info)
+        bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             c.TakeDamage(25);
             return true;
@@ -140,7 +137,6 @@ namespace TimeSink.Entities.Enemies
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.CollisionManager.UnregisterCollideable(this);
             }
         }
 
@@ -183,6 +179,10 @@ namespace TimeSink.Entities.Enemies
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
+
+                Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
 
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat3;

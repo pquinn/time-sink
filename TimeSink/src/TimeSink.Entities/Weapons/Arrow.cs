@@ -77,14 +77,7 @@ namespace TimeSink.Entities.Weapons
         {
         }
 
-        //[OnCollidedWith.Overload]
-        //public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
-        //{
-        //    Dead = true;
-        //}
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Entity entity, Contact info)
+        public bool OnCollidedWith(Fixture f, Entity entity, Fixture eFix, Contact info)
         {
             if (!(entity is UserControlledCharacter || entity is Trigger || entity is Ladder))
             {
@@ -106,7 +99,6 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.CollisionManager.UnregisterCollideable(this);
             }
         }
 
@@ -155,6 +147,8 @@ namespace TimeSink.Entities.Weapons
                 Physics.IsBullet = true;
                 Physics.UserData = this;
                 Physics.IsSensor = true;
+
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
                 initialized = true;
             }

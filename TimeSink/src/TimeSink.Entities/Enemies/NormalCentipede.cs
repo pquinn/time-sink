@@ -87,8 +87,7 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry2 wg, Contact info)
+        bool OnCollidedWith(Fixture f, WorldGeometry2 wg, Fixture wF, Contact info)
         {
             Physics.IgnoreGravity = true;
             return true;
@@ -259,6 +258,7 @@ namespace TimeSink.Entities.Enemies
         {
             base.InitializePhysics(force, engineRegistrations);
             //Physics.IgnoreGravity = true;
+            Physics.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
         }
     }
 }
