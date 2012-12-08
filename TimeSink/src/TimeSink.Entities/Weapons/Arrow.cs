@@ -45,6 +45,10 @@ namespace TimeSink.Entities.Weapons
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
 
+        public string Texture
+        {
+            get { return ARROW_TEXTURE_NAME; }
+        }
         public override string EditorName
         {
             get { return EDITOR_NAME; }

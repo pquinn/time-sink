@@ -243,9 +243,9 @@ namespace TimeSink.Engine.Core.StateManagement
             {
                 IHudElement hudElement = HudElements[i];
 
-                if (hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
+                if (hudElement is HealthBar)
                 {
-                    posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30;
+                    posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30 / 2;
                 }
 
                 else if (ScreenState == ScreenState.TransitionOn)
@@ -260,7 +260,7 @@ namespace TimeSink.Engine.Core.StateManagement
 
                 hudElement.Position = posn;
 
-                if (!hudElement.GetType().IsAssignableFrom(new HealthBar(null).GetType()))
+                if (!(hudElement is HealthBar))
                     posn.X += hudElement.GetWidth();
 
                 posn.Y = 0;

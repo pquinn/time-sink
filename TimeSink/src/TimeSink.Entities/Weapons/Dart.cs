@@ -61,6 +61,10 @@ namespace TimeSink.Entities.Weapons
         {
             get { return EDITOR_NAME; }
         }
+        public string Texture
+        {
+            get { return DART_TEXTURE_NAME; }
+        }
         
         public override IRendering Preview
         {

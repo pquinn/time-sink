@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using Autofac;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
+using TimeSink.Entities;
 
 namespace TimeSink.Engine.Core
 {
@@ -73,6 +74,9 @@ namespace TimeSink.Engine.Core
         public bool TouchingGround { get; set; }
 
         [XmlIgnore]
+        public virtual IMenuItem InventoryItem { get; set; }
+
+        [XmlIgnore]
         public Body Physics { get; protected set; }
 
         [XmlIgnore]
@@ -80,6 +84,12 @@ namespace TimeSink.Engine.Core
 
         [XmlIgnore]
         public virtual int Height { get; set; }
+
+      //  [XmlIgnore]
+      ////  public virtual bool InHold { get; set; }
+
+      //  [XmlIgnore]
+      //  public virtual Vector2 Direction { get; set; }
 
         [XmlIgnore]
         public abstract IRendering Preview

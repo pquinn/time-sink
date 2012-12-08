@@ -33,8 +33,8 @@ namespace TimeSink.Engine.Core.StateManagement.HUD
 
 
             outline.Location = position;
-            outline.Width = (graphics.Viewport.Width / 45);
-            outline.Height = (graphics.Viewport.Width / 10);
+            outline.Width = (graphics.Viewport.Width / 45 / 2);
+            outline.Height = (graphics.Viewport.Width / 10 / 2);
 
             spriteBatch.Draw(icon, outline, Color.White);
         }

@@ -46,27 +46,6 @@ namespace TimeSink.Entities.Objects
         {
             Position = position;
             scale = .5f;
-
-            /*
-            float startRotation = -MathHelper.PiOver4;
-            float endRotation = MathHelper.PiOver4;
-
-            PatrolFunction = delegate(float time)
-            {
-                float currentStep = time % timeSpan;
-                float newRotation = startRotation;
-                if (currentStep >= 0 && currentStep < (timeSpan / 2))
-                {
-                    var stepAmt = currentStep / timeSpan * 2;
-                    newRotation = startRotation + (stepAmt * (endRotation - startRotation));
-                }
-                else
-                {
-                    newRotation = endRotation + ((currentStep - timeSpan / 2) / timeSpan * 2 * (startRotation - endRotation));
-                }
-                return newRotation;
-            };
-             * */
         }
 
         [SerializableField]
@@ -96,33 +75,10 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                /*
-                Physics = BodyFactory.CreateRectangle(
-                    world,
-                    PhysicsConstants.PixelsToMeters((int)(texture.Width * scale)),
-                    PhysicsConstants.PixelsToMeters((int)(texture.Height * scale)),
-                    1,
-                    _initialPosition);
-                Physics.FixedRotation = true;
-                Physics.BodyType = BodyType.Static;
-                Physics.UserData = this;
-
-                var fix = Physics.FixtureList[0];
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollidesWith = Category.Cat1;
-
-                var hitsensor = fix.Clone(Physics);
-                hitsensor.IsSensor = true;
-                hitsensor.CollisionCategories = Category.Cat2;
-                hitsensor.CollidesWith = Category.Cat2;
-
-                initialized = true;
-                 * */
-
                 var world = engineRegistrations.Resolve<World>();
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
-                Width = (int)(texture.Width * scale);
+                Width = (int)(texture.Width / 2 * scale);
                 Height = (int)(texture.Height * scale);
                 TextureWidth = PhysicsConstants.PixelsToMeters(Width);
                 TextureHeight = PhysicsConstants.PixelsToMeters(Height);
@@ -140,41 +96,12 @@ namespace TimeSink.Entities.Objects
                     Position);
                 VineAnchor.BodyType = BodyType.Dynamic;
                 VineAnchor.UserData = this;
-
-                var joint1 = JointFactory.CreateRevoluteJoint(world, Physics, VineAnchor, new Vector2(0, -TextureHeight / 2));
-
-                /*
-                VineEndAffector = BodyFactory.CreateRectangle(
-                    world,
-                    vineWidth,
-                    vineWidth,
-                    1,
-                    _initialPosition + new Vector2(0, vineHeight)
-                    );
-                VineEndAffector.BodyType = BodyType.Dynamic;
-
-                var joint2 = JointFactory.CreateRevoluteJoint(world, VineAnchor, VineEndAffector, new Vector2(0, 0));
-                 * */
-
-                var fix = VineAnchor.FixtureList[0];
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollidesWith = Category.Cat2;
-
-                var hitsensor = fix.Clone(VineAnchor);
-                hitsensor.IsSensor = true;
-                hitsensor.CollisionCategories = Category.Cat2;
-                hitsensor.CollidesWith = Category.All;
-
-                /*
-                var endFix = VineEndAffector.FixtureList[0];
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollidesWith = Category.Cat1;
-
-                var endHitsensor = fix.Clone(VineEndAffector);
-                endHitsensor.IsSensor = true;
-                endHitsensor.CollisionCategories = Category.Cat2;
-                endHitsensor.CollidesWith = Category.All;
-                 * */
+                VineAnchor.CollidesWith = Category.Cat5;
+                VineAnchor.CollisionCategories = Category.Cat5;
+                VineAnchor.CollisionGroup = 2;
+                VineAnchor.LinearDamping = 2;
+                
+                RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, VineAnchor, new Vector2(0, -TextureHeight / 2));
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
@@ -183,7 +110,6 @@ namespace TimeSink.Entities.Objects
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture cFix, Contact info)
         {
-            //this don't do shit yet
             return true;
         }
 
@@ -209,19 +135,8 @@ namespace TimeSink.Entities.Objects
         {
             //interpolate the rotation like a line
             base.OnUpdate(time, world);
-
-
-
-            /*
-            if (first)
-            {
-                tZero = (float)time.ElapsedGameTime.TotalSeconds;
-                first = false;
-            }
-
-            Rotation = PatrolFunction.Invoke((float)time.TotalGameTime.TotalSeconds - tZero);
-            Physics.Rotation = Rotation;
-            */
         }
+
+        public FarseerPhysics.Dynamics.Joints.RevoluteJoint RevJoint { get; set; }
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="EntityBootstrapper.cs" />
     <Compile Include="IEntityMetadata.cs" />
     <Compile Include="IInventoryItem.cs" />
+    <Compile Include="Objects\Bramble.cs" />
     <Compile Include="Objects\Ladder.cs" />
     <Compile Include="Objects\MovingPlatform.cs" />
     <Compile Include="NonPlayerCharacter.cs" />

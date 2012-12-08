@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities
 {
-    public interface IInventoryItem : IMenuItem
+    public interface IMenuItem
     {
-        void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime);
+        string Texture { get; }
     }
 }
