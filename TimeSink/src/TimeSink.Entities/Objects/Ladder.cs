@@ -86,7 +86,6 @@ namespace TimeSink.Entities.Objects
 
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
-
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();

@@ -970,11 +970,13 @@ namespace TimeSink.Entities
         {
             if (!swinging && leftVine)
             {
-                var pointOnPlayer = Position + new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)) - WheelBody.Position;
+                var pointOnVine = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(vine.Height * .4)));
+
+                Position = vine.VineAnchor.GetWorldPoint(pointOnVine);
                 vineJoint = JointFactory.CreateWeldJoint(
                     vine.VineAnchor,
                     Physics,
-                    pointOnPlayer);
+                    Vector2.Zero);
                 Physics.FixedRotation = false;
                 vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity, Physics.Position);
 
