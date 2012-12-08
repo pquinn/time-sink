@@ -234,7 +234,8 @@ namespace TimeSink.Entities
             //Console.WriteLine("Previous Position: {0}", PreviousPosition);
             //Console.WriteLine();
 
-            if (/*canClimb == null && */!Hanging())
+
+            if (!BridgeHanging())
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -349,7 +350,8 @@ namespace TimeSink.Entities
                 }
                 else
                 {
-                    movedirection.X -= 1.0f;
+                    if (!swinging || Physics.LinearVelocity.X <= 0)
+                        movedirection.X -= 1.0f;
 
                     if (TouchingGround)
                     {
@@ -403,7 +405,8 @@ namespace TimeSink.Entities
                 }
                 else
                 {
-                    movedirection.X += 1.0f;
+                    if (!swinging || Physics.LinearVelocity.X >= 0)
+                        movedirection.X += 1.0f;
 
                     if (TouchingGround)
                     {
@@ -530,11 +533,15 @@ namespace TimeSink.Entities
             if (InputManager.Instance.IsNewKey(Keys.Space)
                 || gamepad.Buttons.A.Equals(ButtonState.Pressed))
             {
-                if (Hanging())
+                if (BridgeHanging())
                 {
                     vineBridge.ForceSeperation(this);
                     if (!InputManager.Instance.Pressed(Keys.S))
                         PerformJump();
+                }
+                else if (swinging)
+                {
+                    ForceVineSeperate();
                 }
                 else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
@@ -724,7 +731,7 @@ namespace TimeSink.Entities
             UpdateAnimationStates();
         }
 
-        private bool Hanging()
+        private bool BridgeHanging()
         {
             return vineBridge != null && vineBridge.Hanging;
         }
@@ -932,16 +939,44 @@ namespace TimeSink.Entities
                 currentState = BodyStates.JumpingRight;
         }
 
+        private WeldJoint vineJoint;
+        private bool swinging;
+        private bool leftVine = true;
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(Vine vine, Contact info)
         {
-            vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity);
-            var spriteWidthMeters = PhysicsConstants.PixelsToMeters(spriteWidth);
-            var spriteHeightMeters = PhysicsConstants.PixelsToMeters(spriteHeight);
-            vineAttachment = JointFactory.CreateRevoluteJoint(_world, Physics, vine.VineAnchor, new Vector2(0, vine.TextureHeight / 2));
-            //Physics.Position = vine.Position + new Vector2(0, PhysicsConstants.PixelsToMeters((int)vine.TextureHeight));
-            //Physics.FixedRotation = false;
+            if (!swinging && leftVine)
+            {
+                var pointOnPlayer = Position + new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)) - WheelBody.Position;
+                vineJoint = JointFactory.CreateWeldJoint(
+                    vine.VineAnchor,
+                    Physics,
+                    pointOnPlayer);
+                Physics.FixedRotation = false;
+                vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity, Physics.Position);
+
+                _world.AddJoint(vineJoint);
+                swinging = true;
+                leftVine = false;
+            }
+
             return true;
+        }
+
+        [OnSeparation.Overload]
+        public void OnSeparation(Fixture f1, Vine vine, Fixture f2)
+        {
+            leftVine = true;
+        }
+
+        private void ForceVineSeperate()
+        {
+            Physics.AngularVelocity = 0;
+            Physics.Rotation = 0;
+            Physics.FixedRotation = true;
+            Physics.ApplyLinearImpulse(vineJoint.BodyA.LinearVelocity);
+            _world.RemoveJoint(vineJoint);
+            swinging = false;
         }
 
         public override IRendering Rendering
@@ -950,6 +985,7 @@ namespace TimeSink.Entities
             {
                 var anim = animations[currentState];
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                anim.Rotation = Physics.Rotation;
                 return anim;
             }
         }
@@ -1323,15 +1359,22 @@ namespace TimeSink.Entities
                 WheelBody.BodyType = BodyType.Dynamic;
                 WheelBody.Friction = 10.0f;
 
-                var fixture = FixtureFactory.AttachCircle(
+                var ropeSensor = FixtureFactory.AttachCircle(
                 .1f, 5, Physics, new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)));
-                fixture.Friction = 5f;
-                fixture.Restitution = 1f;
-                fixture.UserData = this;
-                fixture.IsSensor = true;
-                fixture.CollidesWith = Category.Cat4;
-                fixture.CollisionCategories = Category.Cat4;
-                fixture.CollisionGroup = 1;
+                ropeSensor.Friction = 5f;
+                ropeSensor.Restitution = 1f;
+                ropeSensor.UserData = this;
+                ropeSensor.IsSensor = true;
+                ropeSensor.CollidesWith = Category.Cat4;
+                ropeSensor.CollisionCategories = Category.Cat4;
+
+                var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Position);
+                vineSensor.Friction = 5f;
+                vineSensor.Restitution = 1f;
+                vineSensor.UserData = this;
+                vineSensor.IsSensor = true;
+                vineSensor.CollidesWith = Category.Cat5;
+                vineSensor.CollisionCategories = Category.Cat5;
 
                 initialized = true;
             }
