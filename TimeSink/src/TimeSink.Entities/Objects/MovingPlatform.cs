@@ -22,7 +22,7 @@ namespace TimeSink.Entities
     [SerializableEntity("c31fb7ad-f9de-4ca3-a091-521583c6c6bf")]
     public class MovingPlatform : Entity
     {
-        const string WORLD_TEXTURE_NAME = "Textures/giroux";
+        const string WORLD_TEXTURE_NAME = "Textures/Tiles/MovingPlatform";
         const string EDITOR_NAME = "Moving Geometry";
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f9de-4ca3-a091-521583c6c6bf");
@@ -111,13 +111,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                var tint = Math.Min(100, 2.55f * 100);
-                return new TintedRendering(
-                  WORLD_TEXTURE_NAME,
-                  PhysicsConstants.MetersToPixels(Physics.Position),
-                  0,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));
+                return new SizedRendering(WORLD_TEXTURE_NAME, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height);
             }
         }
 
