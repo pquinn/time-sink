@@ -280,7 +280,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
-            var climbAmount = 4f;
+            var climbAmount = 6f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -502,56 +502,57 @@ namespace TimeSink.Entities
             var down = InputManager.Instance.Pressed(Keys.Down);
             var right = InputManager.Instance.Pressed(Keys.Right);
             var left = InputManager.Instance.Pressed(Keys.Left);
-
-            if (up && right)
+            if (!ClimbingState() && !swinging && !VineBridgeState())
             {
-                direction = new Vector2(0.707106769f, -0.707106769f);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
+                if (up && right)
+                {
+                    direction = new Vector2(0.707106769f, -0.707106769f);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (up && left)
+                {
+                    direction = new Vector2(-0.707106769f, -0.707106769f);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else if (down && right)
+                {
+                    direction = new Vector2(0.707106769f, 0.707106769f);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (down && left)
+                {
+                    direction = new Vector2(-0.707106769f, 0.707106769f);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else if (up)
+                {
+                    direction = new Vector2(0, -1);
+                }
+                else if (down)
+                {
+                    direction = new Vector2(0, 1);
+                }
+                else if (right)
+                {
+                    direction = new Vector2(1, 0);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (left)
+                {
+                    direction = new Vector2(-1, 0);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else
+                {
+                    direction = new Vector2(1, 0) * facing;
+                }
             }
-            else if (up && left)
-            {
-                direction = new Vector2(-0.707106769f, -0.707106769f);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else if (down && right)
-            {
-                direction = new Vector2(0.707106769f, 0.707106769f);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
-            }
-            else if (down && left)
-            {
-                direction = new Vector2(-0.707106769f, 0.707106769f);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else if (up)
-            {
-                direction = new Vector2(0, -1);
-            }
-            else if (down)
-            {
-                direction = new Vector2(0, 1);
-            }
-            else if (right)
-            {
-                direction = new Vector2(1, 0);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
-            }
-            else if (left)
-            {
-                direction = new Vector2(-1, 0);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else
-            {
-                direction = new Vector2(1, 0) * facing;
-            }
-
 
             #endregion
 
@@ -611,9 +612,10 @@ namespace TimeSink.Entities
                                 currentState = BodyStates.ClimbingLeft;
 
 
-                            if (Physics.Position.X > canClimb.Position.X) //We are to the right of the ladder
+                            if (Physics.Position.X >= canClimb.Position.X) //We are to the right of the ladder
                             {
-                                Physics.Position = new Vector2(Physics.Position.X - ((Physics.Position.X - canClimb.Position.X) / 2),
+                                Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) + 
+                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
 
                                 WheelBody.Position = new Vector2(WheelBody.Position.X - ((WheelBody.Position.X - canClimb.Position.X) / 2),
@@ -623,7 +625,8 @@ namespace TimeSink.Entities
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
-                                Physics.Position = new Vector2(Physics.Position.X + ((canClimb.Position.X - Physics.Position.X) / 2),
+                                Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) - 
+                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
                                 WheelBody.Position = new Vector2(WheelBody.Position.X + ((canClimb.Position.X - WheelBody.Position.X) / 2),
                                                                WheelBody.Position.Y);
@@ -669,7 +672,8 @@ namespace TimeSink.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                inventory[activeItem].Use(this, world, gameTime, holdTime);
+                if (!ClimbingState() && !swinging && !VineBridgeState())
+                    inventory[activeItem].Use(this, world, gameTime, holdTime);
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
@@ -1411,6 +1415,13 @@ namespace TimeSink.Entities
                     currentState == BodyStates.ClimbingRightNeutral ||
                     currentState == BodyStates.ClimbingLookLeft ||
                     currentState == BodyStates.ClimbingLookRight);
+        }
+        public bool VineBridgeState()
+        {
+            return (currentState == BodyStates.HorizontalClimbLeft ||
+                    currentState == BodyStates.HorizontalClimbRight ||
+                    currentState == BodyStates.HorizontalClimbLeftNeut ||
+                    currentState == BodyStates.HorizontalClimbRightNeut);
         }
 
         public void DismountLadder()
