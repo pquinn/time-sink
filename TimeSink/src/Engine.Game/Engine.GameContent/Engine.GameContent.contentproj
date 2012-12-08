@@ -805,6 +805,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\HorizClimbLeft.PNG">
+      <Name>HorizClimbLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\HorizClimbRight.PNG">
+      <Name>HorizClimbRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4000.PNG">
       <Name>Centipede_Nests%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -954,6 +968,20 @@
     </Compile>
     <Compile Include="Textures\Levels\Centipede_Hill\Centipede_Hill%4022.PNG">
       <Name>Centipede_Hill%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\HorizontalClimbLeftNeut.png">
+      <Name>HorizontalClimbLeftNeut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\HorizontalClimbRightNeut.png">
+      <Name>HorizontalClimbRightNeut</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

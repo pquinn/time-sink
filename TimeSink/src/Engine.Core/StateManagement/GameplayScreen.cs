@@ -23,6 +23,7 @@ using TimeSink.Engine.Core.StateManagement.HUD;
 using DialoguePrototype;
 using FarseerPhysics.Collision.Shapes;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Entities;
 #endregion
 
 namespace TimeSink.Engine.Core.StateManagement
@@ -60,6 +61,10 @@ namespace TimeSink.Engine.Core.StateManagement
         List<IHudElement> hudElements = new List<IHudElement>();
         List<Rectangle> transparencies = new List<Rectangle>();
         HealthBar hudHealth;
+        WeaponSlot primary;
+        WeaponSlot secondary;
+
+        SlotItem arrowItem;
 
         Random random = new Random();
 
@@ -131,13 +136,31 @@ namespace TimeSink.Engine.Core.StateManagement
             }
         }
 
-        public void AddWeaponSlot(SlotItem item)
+        public WeaponSlot AddWeaponSlot(SlotItem item)
         {
             WeaponSlot slot = new WeaponSlot(item, outline);
 
             HudElements.Add(slot);
 
             currentSlots++;
+
+            return slot;
+        }
+
+        public int FindPrimary()
+        {
+            for (int i = 0; i < hudElements.Count; i++)
+            {
+                IHudElement x = hudElements[i];
+                if (x is WeaponSlot)
+                {
+                    if (((WeaponSlot)x).IsPrimary())
+                    {
+                        return i;
+                    }
+                }
+            }
+            return 999;
         }
 
         public void CreateMenuItems()
@@ -158,7 +181,7 @@ namespace TimeSink.Engine.Core.StateManagement
             hudElements.Add(mBar);
             hudElements.Add(hBar);
             hudElements.Add(sBar);
-            AddWeaponSlot(grenadeItem);
+            primary = AddWeaponSlot(grenadeItem);
             AddWeaponSlot(grenadeItemBackup);
             AddWeaponSlot(grenadeItemBackup2);
             for (int i = currentSlots; i <= MAX_WEAPON_SLOTS; i++)
@@ -247,7 +270,7 @@ namespace TimeSink.Engine.Core.StateManagement
                         {
                             hudHealth = (HealthBar)hudElement;
                         }*/
-                      posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30;
+                      posn.Y += ScreenManager.GraphicsDevice.Viewport.Width / 30 / 2;
                     }
                     
                     if (ScreenState == ScreenState.TransitionOn)
@@ -277,7 +300,14 @@ namespace TimeSink.Engine.Core.StateManagement
                 hudHealth.TakeDamage(val, 100);
             }
         }
+        public void UpdatePrimaryItems(Entity character)
+        {
+            IMenuItem item = (IMenuItem)character.InventoryItem;
 
+            arrowItem = new Grenade(currentLevel.RenderManager.TextureCache.GetResource(item.Texture));
+            arrowItem.IsPrimary = true;
+            hudElements[FindPrimary()] = new WeaponSlot(arrowItem, blank);
+        }
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.

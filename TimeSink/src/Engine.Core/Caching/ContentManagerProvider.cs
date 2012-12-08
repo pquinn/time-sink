@@ -18,7 +18,7 @@ namespace TimeSink.Engine.Core.Caching
 
         public T GetResource(string key)
         {
-            return contentManager.Load<T>(key);
+             return contentManager.Load<T>(key);
         }
 
         public IEnumerable<Tuple<string,T>> GetResources()

@@ -74,6 +74,7 @@ namespace TimeSink.Engine.Core
                 {
                     var entity = entities.First(e => e.Id == x.EntityId);
                     var type = entity.GetType();
+                    
                     var clone = Activator.CreateInstance(type) as Entity;
                     x.PropertiesMap.ForEach(
                         p =>

@@ -41,7 +41,8 @@ namespace TimeSink.Entities
             ClimbingBack,
             ClimbingLeft, ClimbingRight,
             ClimbingLeftNeutral, ClimbingRightNeutral,
-            ClimbingLookRight, ClimbingLookLeft
+            ClimbingLookRight, ClimbingLookLeft,
+            HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut 
         };
 
 
@@ -69,7 +70,10 @@ namespace TimeSink.Entities
         const string CLIMBING_NEUTRAL_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRightNeut";
         const string CLIMBING_LOOKING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingLeftLookRight";
         const string CLIMBING_LOOKING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingRightLookLeft";
-
+        const string HORIZ_CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/HorizClimbLeft";
+        const string HORIZ_CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/HorizClimbRight";
+        const string HORIZ_CLIMBING_LEFT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbLeftNeut";
+        const string HORIZ_CLIMBING_RIGHT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbRightNeut";
 
         private Dictionary<BodyStates, NewAnimationRendering> animations;
 
@@ -93,6 +97,7 @@ namespace TimeSink.Entities
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
 
         private List<IInventoryItem> inventory;
+        public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
         private int activeItem;
 
         [SerializableField]
@@ -141,10 +146,10 @@ namespace TimeSink.Entities
         // not sure if these should be public
         private Vector2 direction;
         [SerializableField]
-        public Vector2 Direction
+        public  Vector2 Direction
         {
             get { return direction; }
-            private set { direction = value; }
+             set { direction = value; }
         }
         private double holdTime;
         [SerializableField]
@@ -155,7 +160,7 @@ namespace TimeSink.Entities
         }
         private bool inHold;
         [SerializableField]
-        public bool InHold
+        public  bool InHold
         {
             get { return inHold; }
             set { inHold = value; }
@@ -230,6 +235,7 @@ namespace TimeSink.Entities
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
@@ -341,6 +347,11 @@ namespace TimeSink.Entities
                             currentState = BodyStates.WalkingLeft;
                         }
                     }
+                    else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
+                            currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
+                    {
+                        currentState = BodyStates.HorizontalClimbLeft;
+                    }
                     else
                     {
                         currentState = BodyStates.JumpingLeft;
@@ -385,6 +396,11 @@ namespace TimeSink.Entities
                             currentState = BodyStates.WalkingRight;
                         }
                     }
+                    else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
+                            currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
+                    {
+                        currentState = BodyStates.HorizontalClimbRight;
+                    }
                     else
                     {
                         currentState = BodyStates.JumpingRight;
@@ -394,6 +410,7 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.S))
             {
+                #region Climbing
                 if (canClimb != null)
                 {
                     TouchingGround = false;
@@ -411,6 +428,8 @@ namespace TimeSink.Entities
                     Physics.Position += v;
                     WheelBody.Position += v;
                 }
+                #endregion
+                //Sliding
                 else if (TouchingGround)
                 {
                     Physics.Friction = WheelBody.Friction = .1f;
@@ -593,6 +612,7 @@ namespace TimeSink.Entities
                 {
                     activeItem++;
                 }
+                EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
             }
 
             #endregion
@@ -621,6 +641,7 @@ namespace TimeSink.Entities
                         animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
                     }
                 }
+                //Set to climbing neutral states
                 if (LeftFacingBodyState() && ClimbingState())
                 {
                     currentState = BodyStates.ClimbingLeftNeutral;
@@ -628,6 +649,14 @@ namespace TimeSink.Entities
                 else if (RightFacingBodyState() && ClimbingState())
                 {
                     currentState = BodyStates.ClimbingRightNeutral;
+                }
+                else if (currentState == BodyStates.HorizontalClimbRight)
+                {
+                    currentState = BodyStates.HorizontalClimbRightNeut;
+                }
+                else if (currentState == BodyStates.HorizontalClimbLeft)
+                {
+                    currentState = BodyStates.HorizontalClimbLeftNeut;
                 }
             }
 
@@ -814,6 +843,19 @@ namespace TimeSink.Entities
                 climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
                 timer = 0f;
             }
+            if (currentState == BodyStates.HorizontalClimbLeft && timer >= interval)
+            {
+                var climbing = animations[BodyStates.HorizontalClimbLeft];
+                climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
+                facing = -1;
+                timer = 0f;
+            }
+            if (currentState == BodyStates.HorizontalClimbRight && timer >= interval)
+            {
+                var climbing = animations[BodyStates.HorizontalClimbRight];
+                climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
+                timer = 0f;
+            }
         }
 
         [OnCollidedWith.Overload]
@@ -830,6 +872,11 @@ namespace TimeSink.Entities
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(VineBridge bridge, Contact info)
         {
+            if (LeftFacingBodyState())
+                currentState = BodyStates.HorizontalClimbLeft;
+            else
+                currentState = BodyStates.HorizontalClimbRight;
+
             vineBridge = bridge;
 
             return true;
@@ -838,6 +885,10 @@ namespace TimeSink.Entities
         [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, VineBridge bridge, Fixture f2)
         {
+            if (LeftFacingBodyState())
+                currentState = BodyStates.JumpingLeft;
+            else
+                currentState = BodyStates.JumpingRight;
         }
 
         private WeldJoint vineJoint;
@@ -1072,6 +1123,39 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.HorizontalClimbLeft,
+               new NewAnimationRendering(
+                    HORIZ_CLIMBING_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.HorizontalClimbRight,
+               new NewAnimationRendering(
+                    HORIZ_CLIMBING_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.HorizontalClimbRightNeut,
+               new NewAnimationRendering(
+                    HORIZ_CLIMBING_RIGHT_NEUT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
+               new NewAnimationRendering(
+                    HORIZ_CLIMBING_LEFT_NEUT,
                     new Vector2(76.8f, 153.6f),
                     1,
                     Vector2.Zero,

@@ -31,8 +31,8 @@ namespace TimeSink.Engine.Core.StateManagement.HUD
 
 
             outline.Location = position;
-            outline.Width = (int)((float)((graphics.Viewport.Width / 45) * 14 ) * (float)(currentHealth / maxHealth));
-            outline.Height = (graphics.Viewport.Width / 15);
+            outline.Width = (int)((float)((graphics.Viewport.Width / 45) * 14 ) * (float)(currentHealth / maxHealth) / 2);
+            outline.Height = (graphics.Viewport.Width / 15 / 2);
 
             sourceRect.Width = 200;
             sourceRect.Height = outline.Height;
