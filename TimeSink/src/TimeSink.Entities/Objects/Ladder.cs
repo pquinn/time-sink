@@ -1,21 +1,23 @@
-
-﻿using FarseerPhysics.Factories;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using Autofac;
-using TimeSink.Engine.Core;
+
 using FarseerPhysics.Dynamics;
-using TimeSink.Engine.Core.Physics;
-using TimeSink.Engine.Core.States;
-using TimeSink.Engine.Core.Editor;
-using TimeSink.Engine.Core.Collisions;
 using FarseerPhysics.Dynamics.Contacts;
-using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Core.Caching;
+using FarseerPhysics.Factories;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Objects
 {
@@ -90,7 +92,7 @@ namespace TimeSink.Entities.Objects
             {
                 var world = engineRegistrations.Resolve<World>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
-                
+
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
@@ -127,7 +129,8 @@ namespace TimeSink.Entities.Objects
             {
                 feetTouching = false;
             }
-            else if((info.FixtureA.UserData != null && info.FixtureA.UserData.Equals(false)) || (info.FixtureB.UserData != null && info.FixtureB.UserData.Equals(false)))
+            else if ((info.FixtureA.UserData != null && info.FixtureA.UserData.Equals(false))
+                || (info.FixtureB.UserData != null && info.FixtureB.UserData.Equals(false)))
             {
                 Physics.IsSensor = true;
                 feetTouching = true;
@@ -180,7 +183,13 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return new SizedRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height); }
+            get
+            {
+                return new SizedRendering(
+                    EDITOR_PREVIEW,
+                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    0, Width, Height);
+            }
         }
 
         public override IRendering Rendering
