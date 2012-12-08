@@ -90,11 +90,14 @@ namespace TimeSink.Entities
         private float mana;
         private float shield;
         private Ladder canClimb = null;
+        private bool climbing = false;
         private World _world;
+        private float origDamping;
 
         private Joint vineAttachment;
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
+        public bool Climbing {get {return climbing;} set {climbing = value;}}
 
         private List<IInventoryItem> inventory;
         public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
@@ -231,7 +234,8 @@ namespace TimeSink.Entities
             //Console.WriteLine("Previous Position: {0}", PreviousPosition);
             //Console.WriteLine();
 
-            if (canClimb == null && !BridgeHanging())
+
+            if (!BridgeHanging())
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
@@ -244,6 +248,14 @@ namespace TimeSink.Entities
                     {
                         jumpToggleGuard = true;
                         TouchingGround = true;
+                        return 0;
+                    }
+                    else if (fixture.Body.UserData is Ladder)
+                    {
+                        TouchingGround = true;
+                        jumpToggleGuard = true;
+                        Climbing = true;
+                        fixture.Body.IsSensor = false;
                         return 0;
                     }
                     else
@@ -264,6 +276,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
+            var climbAmount = 4f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -316,10 +329,15 @@ namespace TimeSink.Entities
             if (keyboard.IsKeyDown(Keys.A))
             {
                 facing = -1;
+                if (ClimbingState())
+                {
+                    Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                }
 
                 if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
                 {
-                    Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    movedirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    Physics.LinearDamping = 5f;
                 }
 
                 else if (currentState == BodyStates.ClimbingBack)
@@ -367,9 +385,15 @@ namespace TimeSink.Entities
             {
                 facing = 1;
 
+                if (ClimbingState())
+                {
+                    Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                }
+
                 if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
                 {
-                    Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    movedirection.X += 1.0f;// Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    Physics.LinearDamping = 5f;
                 }
                 else if (currentState == BodyStates.ClimbingBack)
                 {
@@ -415,6 +439,11 @@ namespace TimeSink.Entities
             if (keyboard.IsKeyDown(Keys.S))
             {
                 #region Climbing
+
+                if (ClimbingState())
+                {
+                    Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                }
                 if (canClimb != null)
                 {
                     TouchingGround = false;
@@ -427,10 +456,13 @@ namespace TimeSink.Entities
                         currentState = BodyStates.ClimbingRight;
                     else
                         currentState = BodyStates.ClimbingLeft;
-                   
+                   /*
                     var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
                     Physics.Position += v;
                     WheelBody.Position += v;
+                    */
+                    movedirection.Y += 1.0f;
+                    Physics.LinearDamping = 5f;
                 }
                 #endregion
                 //Sliding
@@ -518,6 +550,7 @@ namespace TimeSink.Entities
                 }
                 else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
+                    Physics.LinearDamping = canClimb.LinearDamping;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = false;
                     PerformJump();
                 }
@@ -540,6 +573,7 @@ namespace TimeSink.Entities
             {
                 if ((canClimb != null))
                 {
+                    Climbing = true;
                     //Insert anim state change here for climbing anim
                     Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
@@ -558,16 +592,21 @@ namespace TimeSink.Entities
                             if (Physics.Position.X > canClimb.Position.X) //We are to the right of the ladder
                             {
                                 Physics.Position = new Vector2(Physics.Position.X - ((Physics.Position.X - canClimb.Position.X) / 2),
-                                                               Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                               Physics.Position.Y);
+
                                 WheelBody.Position = new Vector2(WheelBody.Position.X - ((WheelBody.Position.X - canClimb.Position.X) / 2),
-                                                               WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                               WheelBody.Position.Y);
+                                movedirection.Y -= 1.0f;
+                                Physics.LinearDamping = 5f;
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
                                 Physics.Position = new Vector2(Physics.Position.X + ((canClimb.Position.X - Physics.Position.X) / 2),
-                                                               Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                               Physics.Position.Y);
                                 WheelBody.Position = new Vector2(WheelBody.Position.X + ((canClimb.Position.X - WheelBody.Position.X) / 2),
-                                                               WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                               WheelBody.Position.Y);
+                                movedirection.Y -= 1.0f;
+                                Physics.LinearDamping = 5f;
                             }
                         }
 
@@ -575,20 +614,24 @@ namespace TimeSink.Entities
                         {
                             currentState = BodyStates.ClimbingBack;
                             Physics.Position = new Vector2(canClimb.Position.X,
-                                                           Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                           Physics.Position.Y);
 
                             WheelBody.Position = new Vector2(canClimb.Position.X,
-                                                           WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                           WheelBody.Position.Y);
+                            movedirection.Y -= 1.0f;
+                            Physics.LinearDamping = 5f;
                         }
                     }
                     else
                     {
                         currentState = BodyStates.ClimbingBack;
                         Physics.Position = new Vector2(Physics.Position.X,
-                                                       Physics.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                       Physics.Position.Y);
 
                         WheelBody.Position = new Vector2(WheelBody.Position.X,
-                                                       WheelBody.Position.Y - PhysicsConstants.PixelsToMeters(5));
+                                                       WheelBody.Position.Y);
+                        movedirection.Y -= 1.0f;
+                        Physics.LinearDamping = 5f;
                     }                    
                 }
             }
@@ -677,8 +720,13 @@ namespace TimeSink.Entities
                 // Rotate the player towards the controller direction.
                 playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
 
-                // Move player based on the controller direction and time scale.
-                Physics.ApplyLinearImpulse(movedirection * amount);
+                if (!ClimbingState())
+                {
+                    // Move player based on the controller direction and time scale.
+                    Physics.ApplyLinearImpulse(movedirection * amount);
+                }
+                else
+                    Physics.ApplyLinearImpulse(movedirection * climbAmount);
 
                 MotorJoint.MotorSpeed = movedirection.X * 10;
             }
@@ -1306,6 +1354,7 @@ namespace TimeSink.Entities
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
                 c.UserData = true;
+                r.UserData = false;
 
                 var rSens = r.Clone(r.Body);
                 var cSens = c.Clone(c.Body);
