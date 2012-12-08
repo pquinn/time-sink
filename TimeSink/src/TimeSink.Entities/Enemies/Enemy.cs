@@ -34,9 +34,9 @@ namespace TimeSink.Entities.Enemies
 
         private static int textureHeight;
         private static int textureWidth;
-
-        private List<DamageOverTimeEffect> dots;
         protected float health;
+
+        public HashSet<DamageOverTimeEffect> Dots { get; set; }
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace TimeSink.Entities.Enemies
             health = 100;
             Position = position;
 
-            dots = new List<DamageOverTimeEffect>();
+            Dots = new HashSet<DamageOverTimeEffect>();
         }
 
         [SerializableField]
@@ -125,13 +125,12 @@ namespace TimeSink.Entities.Enemies
         {
             if (health <= 0)
             {
-                Console.WriteLine("dummy dead");
                 Dead = true;
             }
 
             RemoveInactiveDots();
 
-            foreach (DamageOverTimeEffect dot in dots)
+            foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active)
                     health -= dot.Tick(time);
@@ -146,7 +145,7 @@ namespace TimeSink.Entities.Enemies
 
         private void RemoveInactiveDots()
         {
-            dots.RemoveAll(x => x.Finished);
+            Dots.RemoveWhere(x => x.Finished);
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -159,7 +158,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (!dot.Active)
             {
-                dots.Add(dot);
+                Dots.Add(dot);
                 dot.Active = true;
             }
         }

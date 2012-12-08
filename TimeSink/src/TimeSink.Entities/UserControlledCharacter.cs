@@ -97,6 +97,7 @@ namespace TimeSink.Entities
         private bool climbing = false;
         private World _world;
         private float origDamping;
+        public HashSet<DamageOverTimeEffect> Dots { get; set; }
 
         private Joint vineAttachment;
 
@@ -214,6 +215,8 @@ namespace TimeSink.Entities
             inventory.Add(new Dart());
 
             animations = CreateAnimations();
+
+            Dots = new HashSet<DamageOverTimeEffect>();
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -224,7 +227,6 @@ namespace TimeSink.Entities
 
         public void TakeDamage(float val)
         {
-
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
                 Health -= val;
@@ -238,6 +240,7 @@ namespace TimeSink.Entities
             //Console.WriteLine("Previous Position: {0}", PreviousPosition);
             //Console.WriteLine();
 
+            RemoveInactiveDots();
 
             if (!BridgeHanging())
                 TouchingGround = false;
@@ -269,6 +272,17 @@ namespace TimeSink.Entities
                 },
                 start,
                 start + new Vector2(0, .1f));
+
+            foreach (DamageOverTimeEffect dot in Dots)
+            {
+                if (dot.Active)
+                    TakeDamage(dot.Tick(gameTime));
+            }
+        }
+
+        private void RemoveInactiveDots()
+        {
+            Dots.RemoveWhere(x => x.Finished);
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -1020,6 +1034,20 @@ namespace TimeSink.Entities
                 currentState = BodyStates.JumpingRight;
         }
 
+        [OnCollidedWith.Overload]
+        public bool OnCollidedWith(Bramble bramble, Contact info)
+        {
+            this.RegisterDot(bramble.dot);
+            bramble.dot.Active = true;
+            return true;
+        }
+
+        [OnSeparation.Overload]
+        public void OnSeparation(Fixture f1, Bramble bramble, Fixture f2)
+        {
+            bramble.dot.Active = false;
+        }
+
         private WeldJoint vineJoint;
         private bool swinging;
         private bool leftVine = true;
@@ -1426,6 +1454,7 @@ namespace TimeSink.Entities
 
         public void RegisterDot(DamageOverTimeEffect dot)
         {
+            Dots.Add(dot);
         }
 
         private bool initialized;

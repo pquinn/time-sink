@@ -16,11 +16,16 @@ namespace TimeSink.Engine.Core
 
         public bool Active { get; set; }
 
+        private bool finished;
         public bool Finished
         {
             get
             {
-                return timeApplied >= timeSpan;
+                return timeApplied >= timeSpan || finished;
+            }
+            set
+            {
+                finished = value;
             }
         }
 
@@ -32,16 +37,19 @@ namespace TimeSink.Engine.Core
             this.Active = false;
         }
 
+        public DamageOverTimeEffect(float timeSpan, int damagePerTick)
+        {
+            this.timeSpan = timeSpan;
+            this.totalDamage = timeSpan * damagePerTick;
+            this.timeApplied = 0f;
+            this.Active = false;
+        }
+
         public float Tick(GameTime gameTime)
         {
             float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
             timeApplied += time;
-            float damage = (totalDamage * time / timeSpan);
-           /* Console.WriteLine(String.Format("dot applied! time applied: {0}, total time: {1}, for damage: {2}", 
-                timeApplied,
-                timeSpan,
-                damage));*/
-            return damage;   
+            return totalDamage * time / timeSpan;
         }
     }
 }

@@ -29,7 +29,6 @@ namespace TimeSink.Entities.Objects
 
         public float TextureHeight { get; set; }
         public float TextureWidth { get; set; }
-        protected float scale;
 
         //private Func<float, float> PatrolFunction { get; set; }
         private bool first;
@@ -45,11 +44,15 @@ namespace TimeSink.Entities.Objects
         public Vine(Vector2 position, float timeSpan)
         {
             Position = position;
-            scale = .5f;
+            Scale = .5f;
         }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
+
+        [SerializableField]
+        [EditableField("Scale")]
+        public float Scale { get; set; }
 
         public override string EditorName
         {
@@ -78,10 +81,11 @@ namespace TimeSink.Entities.Objects
                 var world = engineRegistrations.Resolve<World>();
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
-                Width = (int)(texture.Width / 2 * scale);
-                Height = (int)(texture.Height * scale);
+                Width = (int)(texture.Width / 2 * Scale);
+                Height = (int)(texture.Height * Scale);
                 TextureWidth = PhysicsConstants.PixelsToMeters(Width);
                 TextureHeight = PhysicsConstants.PixelsToMeters(Height);
+
 
                 //anchor point
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -120,7 +124,7 @@ namespace TimeSink.Entities.Objects
                     PhysicsConstants.MetersToPixels(Physics.Position),
                     //Need to translate rotation
                     VineAnchor == null ? 0 : VineAnchor.Rotation,
-                    new Vector2(scale, scale));
+                    new Vector2(Scale, Scale));
             }
         }
 
