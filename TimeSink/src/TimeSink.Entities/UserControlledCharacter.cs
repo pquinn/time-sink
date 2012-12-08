@@ -25,7 +25,7 @@ namespace TimeSink.Entities
     [SerializableEntity("defb4f64-1021-420d-8069-e24acebf70bb")]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
-        const float PLAYER_MASS = 100f;
+        const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
 
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
@@ -179,7 +179,7 @@ namespace TimeSink.Entities
         int currentFrame = 0;
         int spriteWidth = 35;
         int spriteHeight = 130;
-
+        bool isRunning;
         public Body WheelBody { get; set; }
 
         public override List<Fixture> CollisionGeometry
@@ -269,7 +269,6 @@ namespace TimeSink.Entities
                 },
                 start,
                 start + new Vector2(0, .1f));
-
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -325,6 +324,11 @@ namespace TimeSink.Entities
                 }
             }
             #endregion
+
+            if (InputManager.Instance.Pressed(Keys.LeftShift))
+                isRunning = true;
+            else
+                isRunning = false;
 
             if (keyboard.IsKeyDown(Keys.A))
             {
@@ -546,6 +550,7 @@ namespace TimeSink.Entities
                 else if (swinging)
                 {
                     ForceVineSeperate();
+                    PerformJump(.5f);
                 }
                 else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {
@@ -750,10 +755,10 @@ namespace TimeSink.Entities
             return vineBridge != null && vineBridge.Hanging;
         }
 
-        private void PerformJump()
+        private void PerformJump(float percentOfMax = 1)
         {
             jumpSound.Play();
-            Physics.ApplyLinearImpulse(new Vector2(0, -12f));
+            Physics.ApplyLinearImpulse(new Vector2(0, -23.5f * percentOfMax));
             jumpToggleGuard = false;
 
             if (facing > 0)
@@ -768,31 +773,49 @@ namespace TimeSink.Entities
             }
         }
 
+        private const float WALK_X_CLAMP = 4;
+        private const float WALK_Y_CLAMP = 15;
+        private const float RUN_X_CLAMP = 10;
+        private const float SWING_X_CLAMP = 8;
+
         private void ClampVelocity()
         {
-            var v = Physics.LinearVelocity;
-            if (v.X > X_CLAMP)
-                v.X = X_CLAMP;
-            else if (v.X < -X_CLAMP)
-                v.X = -X_CLAMP;
+            float x_vel = WALK_X_CLAMP;
 
-            if (v.Y > Y_CLAMP)
-                v.Y = Y_CLAMP;
-            else if (v.Y < -Y_CLAMP)
-                v.Y = -Y_CLAMP;
+            if (swinging)
+                x_vel = SWING_X_CLAMP;
+            else if (isRunning)
+            {
+                x_vel = RUN_X_CLAMP;
+                if (!TouchingGround)
+                {
+                    x_vel = x_vel * .8f;
+                }
+            }
+
+            var v = Physics.LinearVelocity;
+            if (v.X > x_vel)
+                v.X = x_vel;
+            else if (v.X < -x_vel)
+                v.X = -x_vel;
+
+            if (v.Y > WALK_Y_CLAMP)
+                v.Y = WALK_Y_CLAMP;
+            else if (v.Y < -WALK_Y_CLAMP)
+                v.Y = -WALK_Y_CLAMP;
 
             Physics.LinearVelocity = v;
 
             v = WheelBody.LinearVelocity;
-            if (v.X > X_CLAMP)
-                v.X = X_CLAMP;
-            else if (v.X < -X_CLAMP)
-                v.X = -X_CLAMP;
+            if (v.X > x_vel)
+                v.X = x_vel;
+            else if (v.X < -x_vel)
+                v.X = -x_vel;
 
-            if (v.Y > Y_CLAMP)
-                v.Y = Y_CLAMP;
-            else if (v.Y < -Y_CLAMP)
-                v.Y = -Y_CLAMP;
+            if (v.Y > WALK_Y_CLAMP)
+                v.Y = WALK_Y_CLAMP;
+            else if (v.Y < -WALK_Y_CLAMP)
+                v.Y = -WALK_Y_CLAMP;
 
             WheelBody.LinearVelocity = v;
         }
@@ -987,11 +1010,13 @@ namespace TimeSink.Entities
         {
             if (!swinging && leftVine)
             {
-                var pointOnPlayer = Position + new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)) - WheelBody.Position;
+                var pointOnVine = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(vine.Height * .4)));
+
+                Position = vine.VineAnchor.GetWorldPoint(pointOnVine);
                 vineJoint = JointFactory.CreateWeldJoint(
                     vine.VineAnchor,
                     Physics,
-                    pointOnPlayer);
+                    Vector2.Zero);
                 Physics.FixedRotation = false;
                 vine.VineAnchor.ApplyLinearImpulse(Physics.LinearVelocity, Physics.Position);
 
@@ -1014,7 +1039,7 @@ namespace TimeSink.Entities
             Physics.AngularVelocity = 0;
             Physics.Rotation = 0;
             Physics.FixedRotation = true;
-            Physics.ApplyLinearImpulse(vineJoint.BodyA.LinearVelocity);
+            //Physics.ApplyLinearImpulse(vineJoint.BodyA.LinearVelocity);
             _world.RemoveJoint(vineJoint);
             swinging = false;
         }
@@ -1385,9 +1410,6 @@ namespace TimeSink.Entities
         {
         }
 
-        private const float X_CLAMP = 8;
-        private const float Y_CLAMP = 30;
-
         private bool initialized;
         private RevoluteJoint MotorJoint;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
@@ -1460,13 +1482,25 @@ namespace TimeSink.Entities
                 ropeSensor.CollidesWith = Category.Cat4;
                 ropeSensor.CollisionCategories = Category.Cat4;
 
-                var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Position);
+                var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
                 vineSensor.Friction = 5f;
                 vineSensor.Restitution = 1f;
                 vineSensor.UserData = this;
                 vineSensor.IsSensor = true;
                 vineSensor.CollidesWith = Category.Cat5;
                 vineSensor.CollisionCategories = Category.Cat5;
+
+                //var vineSensor = BodyFactory.CreateCircle(
+                //    world, .1f, 5,
+                //    Physics.Position, this);
+                //vineSensor.Friction = 5f;
+                //vineSensor.Restitution = 1f;
+                //vineSensor.UserData = this;
+                //vineSensor.IsSensor = true;
+                //vineSensor.CollidesWith = Category.Cat5;
+                //vineSensor.CollisionCategories = Category.Cat5;
+
+                //var vineSensorJoint = JointFactory.CreateWeldJoint(world, vineSensor, Physics, new Vector2(0, Height / 2));
 
                 initialized = true;
             }
