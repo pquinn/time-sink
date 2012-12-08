@@ -8,7 +8,7 @@ namespace TimeSink.Engine.Core.Physics
 {
     public static class PhysicsConstants
     {
-        public static Vector2 Gravity = new Vector2(0, 20);
+        public static Vector2 Gravity = new Vector2(0, 27.5f);
         public const float PhysicsTick = 1f / 60f;
 
         public static float PixelsPerMeter = 64f;
