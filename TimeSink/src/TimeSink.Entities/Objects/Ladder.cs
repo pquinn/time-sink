@@ -154,7 +154,6 @@ namespace TimeSink.Entities.Objects
                         wheelExit = true;
                     else
                         wheelExit1 = true;
-                    c.Climbing = false;
                 }
                 else if (f2.UserData.Equals(false))
                 {

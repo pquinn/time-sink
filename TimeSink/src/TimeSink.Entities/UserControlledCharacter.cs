@@ -326,7 +326,9 @@ namespace TimeSink.Entities
             #endregion
 
             if (InputManager.Instance.Pressed(Keys.LeftShift))
+            {
                 isRunning = true;
+            }
             else
                 isRunning = false;
 
@@ -363,7 +365,15 @@ namespace TimeSink.Entities
 
                     if (TouchingGround)
                     {
-                        if (currentState != BodyStates.WalkingLeft)
+                        if (isRunning)
+                        {
+                            if (currentState != BodyStates.RunningLeft)
+                            {
+                                animations[BodyStates.RunningLeft].CurrentFrame = 0;
+                                currentState = BodyStates.RunningStartLeft;
+                            }
+                        }
+                        else if (currentState != BodyStates.WalkingLeft)
                         {
                             animations[BodyStates.WalkingLeft].CurrentFrame = 0;
                             currentState = BodyStates.WalkingStartLeft;
@@ -418,7 +428,15 @@ namespace TimeSink.Entities
 
                     if (TouchingGround)
                     {
-                        if (currentState != BodyStates.WalkingRight)
+                        if (isRunning)
+                        {
+                            if (currentState != BodyStates.RunningRight)
+                            {
+                                animations[BodyStates.RunningRight].CurrentFrame = 0;
+                                currentState = BodyStates.RunningStartRight;
+                            }
+                        }
+                        else if (currentState != BodyStates.WalkingRight)
                         {
                             animations[BodyStates.WalkingRight].CurrentFrame = 0;
                             currentState = BodyStates.WalkingStartRight;
@@ -1166,7 +1184,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1175,7 +1193,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1184,7 +1202,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1193,7 +1211,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1201,7 +1219,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     8,
                     Vector2.Zero,
                     0,
@@ -1209,7 +1227,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(153.6f, 153.6f),
                     8,
                     Vector2.Zero,
                     0,
