@@ -28,6 +28,11 @@ namespace TimeSink.Entities.Objects
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
 
         private bool feetTouching = false;
+        private float linearDamping = 0;
+        private bool rectExit = false;
+        private bool wheelExit1 = false;
+        private bool wheelExit = false;
+        public float LinearDamping { get { return linearDamping; } set { linearDamping = value; } }
 
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
@@ -113,19 +118,24 @@ namespace TimeSink.Entities.Objects
         [OnCollidedWith.Overload]
         public bool OnCollidedWith(UserControlledCharacter c, Contact info)
         {
+            rectExit = false;
+            wheelExit = false;
+            wheelExit1 = false;
             //Enable the character to enter a climbing state thus effecting her input handling
             if (info.FixtureA.UserData == null && info.FixtureB.UserData == null)
             {
-
-                Physics.IsSensor = true;
                 feetTouching = false;
             }
-            else
+            else if((info.FixtureA.UserData != null && info.FixtureA.UserData.Equals(false)) || (info.FixtureB.UserData != null && info.FixtureB.UserData.Equals(false)))
             {
+                Physics.IsSensor = true;
                 feetTouching = true;
-                c.TouchingGround = true;
             }
 
+            if (!c.Climbing)
+            {
+                linearDamping = c.Physics.LinearDamping;
+            }
             c.CanClimb = this;
             return true;
         }
@@ -133,18 +143,40 @@ namespace TimeSink.Entities.Objects
         [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            if (f2.UserData != null && f2.UserData.Equals(true))
+            if (f2.UserData != null)
             {
-                c.CanClimb = null;
-                c.DismountLadder();
-                Physics.IsSensor = false;
-                c.Physics.IgnoreGravity = false;
+                if (f2.UserData.Equals(true))
+                {
+                    c.CanClimb = null;
+                    c.DismountLadder();
+                    c.Physics.IgnoreGravity = false;
+                    c.Physics.LinearDamping = linearDamping;
+                    if (wheelExit1)
+                        wheelExit = true;
+                    else
+                        wheelExit1 = true;
+                    c.Climbing = false;
+                }
+                else if (f2.UserData.Equals(false))
+                {
+                    rectExit = true;
+                }
+                if (rectExit && wheelExit)
+                {
+                    c.CanClimb = null;
+                    c.DismountLadder();
+                    c.Physics.IgnoreGravity = false;
+                    c.Physics.LinearDamping = linearDamping;
+                    c.Climbing = false;
+                }
             }
             else if (feetTouching == false)
             {
                 c.CanClimb = null;
+                c.Physics.LinearDamping = linearDamping;
                 c.Physics.IgnoreGravity = false;
             }
+
         }
 
         public override IRendering Preview
