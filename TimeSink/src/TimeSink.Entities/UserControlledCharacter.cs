@@ -34,7 +34,7 @@ namespace TimeSink.Entities
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
-            RunningIntermediateRight, RunningRight, RunningIntermediateLeft, RunningLeft,
+            RunningStartRight, RunningRight, RunningStopRight, RunningStartLeft, RunningLeft, RunningStopLeft,
             JumpingRight, JumpingLeft,
             ShootingRight, ShootingLeft,
             DuckingRight, DuckingLeft,
@@ -62,6 +62,10 @@ namespace TimeSink.Entities
         const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
         const string WALKING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Intermediate_Left";
         const string WALKING_LEFT = "Textures/Sprites/SpriteSheets/BodyWalkLeft";
+        const string RUNNING_RIGHT = "Textures/Sprites/SpriteSheets/RunningRight";
+        const string RUNNING_LEFT = "Textures/Sprites/SpriteSheets/RunningLeft";
+        const string RUNNING_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Right";
+        const string RUNNING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Left";
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
         const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
@@ -683,6 +687,16 @@ namespace TimeSink.Entities
                     {
                         animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
                     }
+                    if (currentState == BodyStates.RunningLeft)
+                    {
+                        currentState = BodyStates.RunningStopLeft;
+                        timer = 0f;
+                    }
+                    if (currentState == BodyStates.RunningRight)
+                    {
+                        currentState = BodyStates.RunningStopRight;
+                        timer = 0f;
+                    }
                 }
                 //Set to climbing neutral states
                 if (LeftFacingBodyState() && ClimbingState())
@@ -809,13 +823,15 @@ namespace TimeSink.Entities
                 currentState = BodyStates.WalkingRight;
                 timer = 0f;
             }
-            else if (currentState == BodyStates.WalkingEndRight && timer >= interval)
+            else if ((currentState == BodyStates.WalkingEndRight ||
+                      currentState == BodyStates.RunningStopRight) && timer >= interval)
             {
                 currentState = BodyStates.NeutralRight;
                 timer = 0f;
             }
 
-            else if (currentState == BodyStates.WalkingLeft && timer >= interval)
+            else if ((currentState == BodyStates.WalkingEndLeft ||
+                      currentState == BodyStates.RunningStopLeft) && timer >= interval)
             {
                 var walking = animations[BodyStates.WalkingLeft];
                 walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
@@ -835,6 +851,30 @@ namespace TimeSink.Entities
                 timer = 0f;
             }
 
+            else if (currentState == BodyStates.RunningStartRight && timer >= interval)
+            {
+                var walking = animations[BodyStates.RunningRight].CurrentFrame = 0;
+                currentState = BodyStates.RunningRight;
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.RunningStartLeft && timer >= interval)
+            {
+                var walking = animations[BodyStates.RunningLeft].CurrentFrame = 0;
+                currentState = BodyStates.RunningLeft;
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.RunningRight && timer >= interval)
+            {
+                var walking = animations[BodyStates.RunningRight];
+                walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.RunningLeft && timer >= interval)
+            {
+                var walking = animations[BodyStates.RunningLeft];
+                walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
+                timer = 0f;
+            }
             if (currentState == BodyStates.JumpingRight && timer >= interval)
             {
                 if (!TouchingGround && Physics.LinearVelocity.Y < 0)
@@ -1097,6 +1137,59 @@ namespace TimeSink.Entities
                     Vector2.One));
             #endregion
 
+            #region Running
+            dictionary.Add(BodyStates.RunningStopLeft,
+                new NewAnimationRendering(
+                    RUNNING_LEFT_INTERMEDIATE,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.RunningStopRight,
+                new NewAnimationRendering(
+                    RUNNING_RIGHT_INTERMEDIATE,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.RunningStartLeft,
+                new NewAnimationRendering(
+                    RUNNING_LEFT_INTERMEDIATE,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(BodyStates.RunningStartRight,
+                new NewAnimationRendering(
+                    RUNNING_RIGHT_INTERMEDIATE,
+                    new Vector2(76.8f, 153.6f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.RunningLeft,
+                new NewAnimationRendering(
+                    RUNNING_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    8,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            dictionary.Add(BodyStates.RunningRight,
+                new NewAnimationRendering(
+                    RUNNING_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    8,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            #endregion
             #region Jumping
 
             dictionary.Add(BodyStates.JumpingRight,
@@ -1224,7 +1317,6 @@ namespace TimeSink.Entities
             float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
             float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
-            Body newBody;
 
             #region Neutral
 
