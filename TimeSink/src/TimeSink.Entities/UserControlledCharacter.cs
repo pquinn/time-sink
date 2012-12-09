@@ -294,7 +294,7 @@ namespace TimeSink.Entities
             // Get the time scale since the last update call.
             var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var amount = 1f;
-            var climbAmount = 4f;
+            var climbAmount = 6f;
             var movedirection = new Vector2();
 
             // Grab the keyboard state.
@@ -516,56 +516,57 @@ namespace TimeSink.Entities
             var down = InputManager.Instance.Pressed(Keys.Down);
             var right = InputManager.Instance.Pressed(Keys.Right);
             var left = InputManager.Instance.Pressed(Keys.Left);
-
-            if (up && right)
+            if (!ClimbingState() && !swinging && !VineBridgeState())
             {
-                direction = new Vector2(0.707106769f, -0.707106769f);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
+                if (up && right)
+                {
+                    direction = new Vector2(0.707106769f, -0.707106769f);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (up && left)
+                {
+                    direction = new Vector2(-0.707106769f, -0.707106769f);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else if (down && right)
+                {
+                    direction = new Vector2(0.707106769f, 0.707106769f);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (down && left)
+                {
+                    direction = new Vector2(-0.707106769f, 0.707106769f);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else if (up)
+                {
+                    direction = new Vector2(0, -1);
+                }
+                else if (down)
+                {
+                    direction = new Vector2(0, 1);
+                }
+                else if (right)
+                {
+                    direction = new Vector2(1, 0);
+                    currentState = BodyStates.NeutralRight;
+                    facing = 1;
+                }
+                else if (left)
+                {
+                    direction = new Vector2(-1, 0);
+                    currentState = BodyStates.NeutralLeft;
+                    facing = -1;
+                }
+                else
+                {
+                    direction = new Vector2(1, 0) * facing;
+                }
             }
-            else if (up && left)
-            {
-                direction = new Vector2(-0.707106769f, -0.707106769f);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else if (down && right)
-            {
-                direction = new Vector2(0.707106769f, 0.707106769f);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
-            }
-            else if (down && left)
-            {
-                direction = new Vector2(-0.707106769f, 0.707106769f);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else if (up)
-            {
-                direction = new Vector2(0, -1);
-            }
-            else if (down)
-            {
-                direction = new Vector2(0, 1);
-            }
-            else if (right)
-            {
-                direction = new Vector2(1, 0);
-                currentState = BodyStates.NeutralRight;
-                facing = 1;
-            }
-            else if (left)
-            {
-                direction = new Vector2(-1, 0);
-                currentState = BodyStates.NeutralLeft;
-                facing = -1;
-            }
-            else
-            {
-                direction = new Vector2(1, 0) * facing;
-            }
-
 
             #endregion
 
@@ -625,9 +626,10 @@ namespace TimeSink.Entities
                                 currentState = BodyStates.ClimbingLeft;
 
 
-                            if (Physics.Position.X > canClimb.Position.X) //We are to the right of the ladder
+                            if (Physics.Position.X >= canClimb.Position.X) //We are to the right of the ladder
                             {
-                                Physics.Position = new Vector2(Physics.Position.X - ((Physics.Position.X - canClimb.Position.X) / 2),
+                                Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) + 
+                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
 
                                 WheelBody.Position = new Vector2(WheelBody.Position.X - ((WheelBody.Position.X - canClimb.Position.X) / 2),
@@ -637,7 +639,8 @@ namespace TimeSink.Entities
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
-                                Physics.Position = new Vector2(Physics.Position.X + ((canClimb.Position.X - Physics.Position.X) / 2),
+                                Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) - 
+                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
                                 WheelBody.Position = new Vector2(WheelBody.Position.X + ((canClimb.Position.X - WheelBody.Position.X) / 2),
                                                                WheelBody.Position.Y);
@@ -683,7 +686,8 @@ namespace TimeSink.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                inventory[activeItem].Use(this, world, gameTime, holdTime);
+                if (!ClimbingState() && !swinging && !VineBridgeState())
+                    inventory[activeItem].Use(this, world, gameTime, holdTime);
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
@@ -1001,19 +1005,17 @@ namespace TimeSink.Entities
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(WorldGeometry2 world, Contact info)
-        {
-            Vector2 normal;
-            FixedArray2<Vector2> points;
-            info.GetWorldManifold(out normal, out points);
+        //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
+        //{
+        //    Vector2 normal;
+        //    FixedArray2<Vector2> points;
+        //    info.GetWorldManifold(out normal, out points);
 
-            return true;
-        }
+        //    return true;
+        //}
 
         private VineBridge vineBridge;
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(VineBridge bridge, Contact info)
+        bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
         {
             if (LeftFacingBodyState())
                 currentState = BodyStates.HorizontalClimbLeft;
@@ -1025,8 +1027,7 @@ namespace TimeSink.Entities
             return true;
         }
 
-        [OnSeparation.Overload]
-        public void OnSeparation(Fixture f1, VineBridge bridge, Fixture f2)
+        void OnSeparation(Fixture f1, VineBridge bridge, Fixture f2)
         {
             if (LeftFacingBodyState())
                 currentState = BodyStates.JumpingLeft;
@@ -1034,15 +1035,13 @@ namespace TimeSink.Entities
                 currentState = BodyStates.JumpingRight;
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Bramble bramble, Contact info)
+        public bool OnCollidedWith(Fixture f1, Bramble bramble, Fixture f2, Contact info)
         {
             this.RegisterDot(bramble.dot);
             bramble.dot.Active = true;
             return true;
         }
 
-        [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, Bramble bramble, Fixture f2)
         {
             bramble.dot.Active = false;
@@ -1051,8 +1050,7 @@ namespace TimeSink.Entities
         private WeldJoint vineJoint;
         private bool swinging;
         private bool leftVine = true;
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Vine vine, Contact info)
+        bool OnCollidedWith(Fixture f, Vine vine, Fixture vf, Contact info)
         {
             if (!swinging && leftVine)
             {
@@ -1074,8 +1072,7 @@ namespace TimeSink.Entities
             return true;
         }
 
-        [OnSeparation.Overload]
-        public void OnSeparation(Fixture f1, Vine vine, Fixture f2)
+        void OnSeparation(Fixture f1, Vine vine, Fixture f2)
         {
             leftVine = true;
         }
@@ -1440,6 +1437,13 @@ namespace TimeSink.Entities
                     currentState == BodyStates.ClimbingLookLeft ||
                     currentState == BodyStates.ClimbingLookRight);
         }
+        public bool VineBridgeState()
+        {
+            return (currentState == BodyStates.HorizontalClimbLeft ||
+                    currentState == BodyStates.HorizontalClimbRight ||
+                    currentState == BodyStates.HorizontalClimbLeftNeut ||
+                    currentState == BodyStates.HorizontalClimbRightNeut);
+        }
 
         public void DismountLadder()
         {
@@ -1465,12 +1469,16 @@ namespace TimeSink.Entities
             {
                 var world = engineRegistrations.Resolve<World>();
                 _world = world;
-                Physics = BodyFactory.CreateBody(world, Position, this);
 
                 Width = spriteWidth;
                 Height = spriteHeight;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                Physics = BodyFactory.CreateBody(world, Position, this);
+
+                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                WheelBody = BodyFactory.CreateBody(world, wPos, this);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
@@ -1478,19 +1486,13 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
-
-                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
-                WheelBody = BodyFactory.CreateBody(
-                    world,
-                    wPos,
-                    this);
-
+                
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
                     WheelBody);
 
-                r.CollidesWith = Category.Cat1;
+                r.CollidesWith = Category.Cat1 | ~Category.Cat31;
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
@@ -1529,6 +1531,9 @@ namespace TimeSink.Entities
                 ropeSensor.CollidesWith = Category.Cat4;
                 ropeSensor.CollisionCategories = Category.Cat4;
 
+                ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+                ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+
                 var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
                 vineSensor.Friction = 5f;
                 vineSensor.Restitution = 1f;
@@ -1537,6 +1542,11 @@ namespace TimeSink.Entities
                 vineSensor.CollidesWith = Category.Cat5;
                 vineSensor.CollisionCategories = Category.Cat5;
 
+                vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+                vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
+
+                Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
+                Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
                 //var vineSensor = BodyFactory.CreateCircle(
                 //    world, .1f, 5,
                 //    Physics.Position, this);

@@ -104,13 +104,15 @@ namespace TimeSink.Entities.Objects
                 VineAnchor.CollisionCategories = Category.Cat5;
                 VineAnchor.CollisionGroup = 2;
                 VineAnchor.LinearDamping = 2;
-
+                
                 RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, VineAnchor, new Vector2(0, -TextureHeight / 2));
+
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter character, Contact info)
+        bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture cFix, Contact info)
         {
             return true;
         }

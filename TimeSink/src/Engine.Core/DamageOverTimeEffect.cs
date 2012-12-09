@@ -13,6 +13,7 @@ namespace TimeSink.Engine.Core
         private float timeSpan { get; set; }
         private float totalDamage { get; set; }
         private float timeApplied { get; set; }
+        private float damagePerTick { get; set; }
 
         public bool Active { get; set; }
 
@@ -33,23 +34,32 @@ namespace TimeSink.Engine.Core
         {
             this.timeSpan = timeSpan;
             this.totalDamage = totalDamage;
+            this.damagePerTick = (int)(totalDamage / timeSpan);
             this.timeApplied = 0f;
             this.Active = false;
         }
 
-        public DamageOverTimeEffect(float timeSpan, int damagePerTick)
+        public DamageOverTimeEffect(float damagePerTick)
         {
-            this.timeSpan = timeSpan;
+            this.timeSpan = Single.PositiveInfinity;
             this.totalDamage = timeSpan * damagePerTick;
+            this.damagePerTick = damagePerTick;
             this.timeApplied = 0f;
             this.Active = false;
         }
 
         public float Tick(GameTime gameTime)
         {
-            float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            timeApplied += time;
-            return totalDamage * time / timeSpan;
+            if (Single.IsPositiveInfinity(timeSpan))
+            {
+                return damagePerTick;
+            }
+            else
+            {
+                float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                timeApplied += time;
+                return totalDamage * time / timeSpan;
+            }
         }
     }
 }

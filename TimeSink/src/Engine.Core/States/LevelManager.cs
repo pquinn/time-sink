@@ -21,10 +21,8 @@ namespace TimeSink.Engine.Core.States
 
     public class LevelManager
     {
-        public LevelManager(CollisionManager collisionsManager, PhysicsManager physicsManager,
-            RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
+        public LevelManager(PhysicsManager physicsManager, RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
         {
-            CollisionManager = collisionsManager;
             PhysicsManager = physicsManager;
             RenderManager = renderManager;
             EditorRenderManager = editorRenderManager;
@@ -33,8 +31,6 @@ namespace TimeSink.Engine.Core.States
 
             Physics = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
         }
-
-        public CollisionManager CollisionManager { get; private set; }
 
         public PhysicsManager PhysicsManager { get; private set; }
 
@@ -76,7 +72,6 @@ namespace TimeSink.Engine.Core.States
         {
             Level.Entities.Add(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
-            CollisionManager.RegisterCollideable(entity);
             RenderManager.RegisterRenderable(entity);
             EditorRenderManager.RegisterPreviewable(entity);
         }
@@ -90,7 +85,6 @@ namespace TimeSink.Engine.Core.States
         {
             Level.Entities.Remove(entity);
             PhysicsManager.UnregisterPhysicsBody(entity);
-            CollisionManager.UnregisterCollideable(entity);
             RenderManager.UnregisterRenderable(entity);
             EditorRenderManager.UnregisterPreviewable(entity);
         }
@@ -172,7 +166,6 @@ namespace TimeSink.Engine.Core.States
                 x =>
                 {
                     PhysicsManager.RegisterPhysicsBody(x);
-                    CollisionManager.RegisterCollideable(x);
                     RenderManager.RegisterRenderable(x);
                     EditorRenderManager.RegisterPreviewable(x);
                 });

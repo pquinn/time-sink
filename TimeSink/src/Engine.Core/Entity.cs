@@ -19,7 +19,7 @@ using TimeSink.Entities;
 namespace TimeSink.Engine.Core
 {
     public abstract class Entity
-        : ICollideable, IRenderable, IEditorPreviewable, IKeyboardControllable
+        : IPhysicsEnabledBody, IRenderable, IEditorPreviewable, IKeyboardControllable
     {
         internal void Update(GameTime time, EngineGame world)
         {

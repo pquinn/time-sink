@@ -129,7 +129,6 @@ namespace Editor
 
             builder.RegisterInstance(new World(Vector2.Zero)).AsSelf();
 
-            builder.RegisterType<CollisionManager>().AsSelf().SingleInstance();
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
