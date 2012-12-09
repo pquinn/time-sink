@@ -37,11 +37,6 @@ namespace TimeSink.Entities.Weapons
 
         public Dart(Vector2 position)
         {
-            //Physics = new GravityPhysics(position, DART_MASS)
-            //{
-            //    GravityEnabled = true
-            //};
-
             Position = position;
             dot = new DamageOverTimeEffect(4, 100);
         }
@@ -96,7 +91,7 @@ namespace TimeSink.Entities.Weapons
             {
                 Dead = true;
             }
-            return true;
+            return info.Enabled;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -112,7 +107,7 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-               // Physics.Dispose();
+                Physics.Dispose();
             }
             else
             {

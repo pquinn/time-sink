@@ -51,7 +51,9 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Level_Loaded()
         {
-            spawn_txt.Text = Game.LevelManager.Level.PlayerStart.ToDisplayString();
+            midground_txt.Text = Game.LevelManager.Level.MidgroundPath;
+            spawn_txt.Text = Game.LevelManager.Level.DefaultStart.ToDisplayString();
+            spawns_txt.Text = string.Join(";", Game.LevelManager.Level.SpawnPoints.Select(x => x.ToDisplayString()));
         }
 
         private void Background_Click(object sender, RoutedEventArgs e)
@@ -80,7 +82,16 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            Game.LevelManager.Level.PlayerStart = spawn_txt.Text.ParseVector();
+            Game.LevelManager.Level.DefaultStart = spawn_txt.Text.ParseVector();
+            Game.LevelManager.Level.SpawnPoints = ExtractSpawnPoints();
+        }
+
+        private List<Vector2> ExtractSpawnPoints()
+        {
+            var text = spawns_txt.Text;
+            var points = text.Split(';');
+
+            return points.Select(x => x.ParseVector()).ToList();
         }
 
         private void LoadMidground(string path)
@@ -99,6 +110,7 @@ namespace TimeSink.Editor.GUI.Views
                     var x = Int32.Parse(location[1].ToString());
                     var y = Int32.Parse(location[0].ToString());
 
+                    Game.LevelManager.Level.MidgroundPath = path;
                     Game.LevelManager.RegisterMidground(
                         new Tile(
                             texture.Key,

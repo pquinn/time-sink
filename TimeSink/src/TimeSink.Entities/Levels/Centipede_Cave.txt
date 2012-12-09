@@ -1,8 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<PlayerStart>
+	<DefaultStart>
 		<X>62.9375</X><Y>32.984375</Y>
-	</PlayerStart>
+	</DefaultStart>
+	<SpawnPoints>
+		<Vector2>
+			<X>62.9375</X><Y>1.95</Y>
+		</Vector2>
+		<Vector2>
+			<X>16.875</X><Y></Y>
+		</Vector2>
+	</SpawnPoints>
 	<Midground>
 		<Tile>
 			<Dead>false</Dead>

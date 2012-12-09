@@ -68,7 +68,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\Door.cs" />
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Enemies\EnemySpawner.cs" />
     <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
     <Compile Include="EntityBootstrapper.cs" />

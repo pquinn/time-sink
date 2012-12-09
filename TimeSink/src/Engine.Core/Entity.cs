@@ -36,13 +36,13 @@ namespace TimeSink.Engine.Core
         [SerializableField]
         public bool Dead { get; set; }
 
-        public abstract void HandleKeyboardInput(GameTime gameTime, EngineGame world);
+        public virtual void HandleKeyboardInput(GameTime gameTime, EngineGame world) { }
 
         public abstract void Load(IComponentContext engineRegistrations);
 
         public abstract string EditorName { get; }
 
-        public abstract void InitializePhysics(bool force, IComponentContext engineRegistrations);
+        public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) { }
 
         public abstract Guid Id { get; set; }
 
