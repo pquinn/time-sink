@@ -78,6 +78,8 @@
     <Compile Include="Objects\Ladder.cs" />
     <Compile Include="Objects\MovingPlatform.cs" />
     <Compile Include="NonPlayerCharacter.cs" />
+    <Compile Include="Objects\Torch.cs" />
+    <Compile Include="Objects\TorchGround.cs" />
     <Compile Include="Objects\Vine.cs" />
     <Compile Include="Objects\VineBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

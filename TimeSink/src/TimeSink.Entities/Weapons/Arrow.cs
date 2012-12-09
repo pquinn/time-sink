@@ -29,6 +29,7 @@ namespace TimeSink.Entities.Weapons
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 1000;
         const float MAX_ARROW_INIT_SPEED = 2000;
+        public bool OnFire { get; set; }
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -87,6 +88,11 @@ namespace TimeSink.Entities.Weapons
             {
                 Dead = true;
             }
+            return true;
+        }
+        public bool OnCollidedWith(Fixture f, Torch torch, Fixture fb, Contact info)
+        {
+            this.OnFire = true;
             return true;
         }
 
@@ -155,6 +161,7 @@ namespace TimeSink.Entities.Weapons
                 Physics.IsSensor = true;
 
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Torch>(OnCollidedWith);
 
                 initialized = true;
             }
