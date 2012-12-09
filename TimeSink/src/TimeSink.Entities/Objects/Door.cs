@@ -75,8 +75,7 @@ namespace TimeSink.Entities.Objects
         [EditableField("LevelPath")]
         public string LevelPath { get; set; }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter c, Contact info)
+        public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             if (DoorType == DoorType.Side)
                 ChangeLevel();
@@ -86,7 +85,6 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        [OnSeparation.Overload]
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             collided = false;
@@ -113,6 +111,9 @@ namespace TimeSink.Entities.Objects
 
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
+
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
                 initialized = true;
             }
