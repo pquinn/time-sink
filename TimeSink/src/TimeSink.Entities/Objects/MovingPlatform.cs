@@ -29,9 +29,7 @@ namespace TimeSink.Entities
 
         protected int textureHeight;
         protected int textureWidth;
-
-        private Func<float, Vector2> PatrolFunction { get; set; }
-        private int direction;
+        
         private bool first;
         private float tZero;
 
@@ -47,23 +45,7 @@ namespace TimeSink.Entities
             TimeSpan = timeSpan;
             Width = width > 0 ? width : 50;
             Height = height > 0 ? width : 50;
-            direction = 1;
             first = true;
-            PatrolFunction = delegate(float time)
-            {
-                float currentStep = time % TimeSpan;
-                Vector2 newPosition = new Vector2();
-                if (currentStep >= 0 && currentStep < (TimeSpan / 2f))
-                {
-                    var stepAmt = currentStep / TimeSpan * 2;
-                    newPosition = StartPosition + (stepAmt * (EndPosition - StartPosition));
-                }
-                else
-                {
-                    newPosition = EndPosition + ((currentStep - TimeSpan / 2) / TimeSpan * 2 * (StartPosition - EndPosition));
-                }
-                return newPosition;
-            };
         }
 
         [SerializableField]
