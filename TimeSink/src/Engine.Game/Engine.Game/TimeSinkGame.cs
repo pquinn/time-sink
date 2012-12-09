@@ -121,6 +121,9 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            if (!string.IsNullOrEmpty(loadLevel))
+                LoadLevel();
+
             view = ProcessControllerInput(gameTime);
 
             var pos = Character != null ? Character.Position : Vector2.Zero;
@@ -166,11 +169,25 @@ namespace TimeSink.Engine.Game
             base.Draw(gameTime);
         }
 
+        private string loadLevel;
+        public override void MarkAsLoadLevel(string levelPath)
+        {
+            loadLevel = levelPath;
+        }
+
+        private void LoadLevel()
+        {
+            LevelManager.Clear();
+            var path = "..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\" + loadLevel + ".txt";
+            LevelManager.DeserializeLevel(path);
+            loadLevel = null;
+        }
+
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
 
-            Character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            Character = new UserControlledCharacter(LevelManager.Level.DefaultStart);
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
         }

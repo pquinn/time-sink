@@ -32,7 +32,7 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid guid = new Guid("66c116cc-60bf-4808-a4c0-f5bb8cad053b");
 
         private bool collided;
-        private LevelManager levelManager;
+        private EngineGame engine;
 
         public Door()
             : this(Vector2.Zero, 50, 50, DoorType.Up, string.Empty)
@@ -96,7 +96,7 @@ namespace TimeSink.Entities.Objects
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
-                levelManager = engineRegistrations.Resolve<LevelManager>();
+                engine = engineRegistrations.Resolve<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
@@ -134,9 +134,7 @@ namespace TimeSink.Entities.Objects
 
         private void ChangeLevel()
         {
-            levelManager.Clear();
-            var path = "..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\" + LevelPath + ".txt";
-            levelManager.DeserializeLevel(path);
+            engine.MarkAsLoadLevel(LevelPath);
         }
 
         public override void Load(IComponentContext engineRegistrations)
