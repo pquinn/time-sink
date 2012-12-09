@@ -45,6 +45,11 @@ namespace TimeSink.Engine.Core
 
         private DebugViewXNA debugView;
 
+        // todo: used for hacking door in the editor
+        public EngineGame()
+        {
+        }
+
         public EngineGame(int width, int height)
             : base()
         {
@@ -108,6 +113,8 @@ namespace TimeSink.Engine.Core
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
 
+            builder.RegisterInstance(this).As<EngineGame>();
+
             Container = builder.Build();
         }
 
@@ -153,5 +160,8 @@ namespace TimeSink.Engine.Core
         }
 
         protected virtual void LevelLoaded() { }
+
+
+        public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
     }
 }

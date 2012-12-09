@@ -95,8 +95,11 @@ namespace TimeSink.Entities
         private float shield;
         private Ladder canClimb = null;
         private bool climbing = false;
+        private TorchGround onTorchGround;
+        private IInventoryItem holdingTorch;
         private World _world;
-        private float origDamping;
+        private IInventoryItem onPickup;
+        public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
         public HashSet<DamageOverTimeEffect> Dots { get; set; }
 
         private Joint vineAttachment;
@@ -107,6 +110,7 @@ namespace TimeSink.Entities
         private List<IInventoryItem> inventory;
         public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
         private int activeItem;
+        private ItemPopup currentItemPrompt;
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -709,6 +713,29 @@ namespace TimeSink.Entities
 
             #endregion
 
+            if (InputManager.Instance.IsNewKey(Keys.E))
+            {
+                if (onPickup != null)
+                {
+                    if (onPickup is Torch)
+                    {
+                        inventory.Add(onPickup);
+                        ((Torch)onPickup).WeldToPlayer(this);
+                        holdingTorch = onPickup;
+                        onPickup = null;
+                        EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
+                        
+                    }
+                }
+                else if (onTorchGround != null && holdingTorch != null)
+                {
+                    ((Torch)holdingTorch).PlaceTorch(this, onTorchGround);
+                    inventory.Remove(holdingTorch);
+                    activeItem = 0;
+                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+
+                }
+            }
             //No keys are pressed and we're on the ground, we're neutral
             if(keyboard.GetPressedKeys().GetLength(0) == 0)
             {
@@ -1021,6 +1048,32 @@ namespace TimeSink.Entities
 
         //    return true;
         //}
+
+        bool OnCollidedWith(Fixture f, TorchGround torchGround, Fixture c, Contact info)
+        {
+            onTorchGround = torchGround;
+            return true;
+        }
+        void OnSeparation(Fixture f1, TorchGround torchGround, Fixture f2)
+        {
+            onTorchGround = null;
+        }
+
+        bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
+        {
+            OnPickup = torch;
+            currentItemPrompt = new ItemPopup("Textures/Keys/e-Key", torch.Physics.Position - 
+                                              new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2));
+
+            EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
+            
+            return true;
+        }
+        void OnSeparation(Fixture f1, Torch torch, Fixture f2)
+        {
+            OnPickup = null;
+            EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
+        }
 
         private VineBridge vineBridge;
         bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
@@ -1555,6 +1608,10 @@ namespace TimeSink.Entities
 
                 Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
+                r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
+                r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+                c.RegisterOnCollidedListener<TorchGround>(OnCollidedWith);
+                c.RegisterOnSeparatedListener<TorchGround>(OnSeparation);
                 //var vineSensor = BodyFactory.CreateCircle(
                 //    world, .1f, 5,
                 //    Physics.Position, this);
@@ -1569,6 +1626,15 @@ namespace TimeSink.Entities
 
                 initialized = true;
             }
+        }
+
+        public void Reset(Vector2 newPos, IComponentContext engineRegistrations)
+        {
+            //Physics.Dispose();
+            //WheelBody.Dispose();
+            //InitializePhysics(true, engineRegistrations);
+
+            //Physics.Position = newPos;
         }
     }
 }

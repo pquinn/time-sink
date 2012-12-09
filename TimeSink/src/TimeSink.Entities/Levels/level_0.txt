@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<PlayerStart>
+	<DefaultStart>
 		<X>1.171875</X><Y>3.125</Y>
-	</PlayerStart>
+	</DefaultStart>
 	<Midground />
 	<Tiles />
 	<GeoSegments>

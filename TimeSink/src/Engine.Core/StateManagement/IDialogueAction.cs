@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DialoguePrototype
+namespace TimeSink.Engine.Core.StateManagement
 {
-    interface IDialogueAction
+    public interface IDialogueAction
     {
         /// <summary>
         /// Repsonsible for handling the action.

@@ -26,7 +26,13 @@ namespace TimeSink.Engine.Core
             GeoSegments = new List<List<WorldCollisionGeometrySegment>>() { new List<WorldCollisionGeometrySegment>() };
         }
 
-        public Vector2 PlayerStart { get; set; }
+        public string ForegroundPath { get; set; }
+        public string MidgroundPath { get; set; }
+        public string BackgroundPath { get; set; }
+
+        public Vector2 DefaultStart { get; set; }
+
+        public List<Vector2> SpawnPoints { get; set; }
 
         public List<Tile> Midground { get; set; }
 

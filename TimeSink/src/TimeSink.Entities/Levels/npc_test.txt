@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<DefaultStart>
-		<X>0.78125</X><Y>0.78125</Y>
-	</DefaultStart>
+	<PlayerStart>
+		<X>3.34375</X><Y>6.25</Y>
+	</PlayerStart>
 	<Midground />
 	<Tiles />
 	<GeoSegments>
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>0.015625</X><Y>3.765625</Y>
+					<X>1.328125</X><Y>7.640625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>13.375</X><Y>3.796875</Y>
+					<X>13.296875</X><Y>7.75</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
@@ -23,23 +23,15 @@
 	</GeoSegments>
 	<EntitySerializations>
 		<EntitySerialization>
-			<EntityId>b330a111-f01f-4106-b4ce-b400ae2b2ef6</EntityId>
+			<EntityId>57eb5766-5ce2-4694-ad4b-e019d4817985</EntityId>
 			<PropertiesMap>
 				<PairOfStringObject>
 					<Key>Id</Key>
-					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">b330a111-f01f-4106-b4ce-b400ae2b2ef6</Value>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">57eb5766-5ce2-4694-ad4b-e019d4817985</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
-					<Key>Width</Key>
-					<Value xsi:type="xsd:int">600</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Height</Key>
-					<Value xsi:type="xsd:int">25</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>NumLinks</Key>
-					<Value xsi:type="xsd:int">0</Value>
+					<Key>TextureName</Key>
+					<Value xsi:type="xsd:string">Textures/Enemies/Dummy</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Dead</Key>
@@ -47,12 +39,12 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>InstanceId</Key>
-					<Value xsi:type="xsd:string">vine</Value>
+					<Value xsi:type="xsd:string">npc_1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>6.6875</X><Y>1.5625</Y>
+						<X>10.890625</X><Y>6.640625</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

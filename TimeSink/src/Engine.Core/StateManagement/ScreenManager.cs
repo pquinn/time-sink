@@ -353,6 +353,11 @@ namespace TimeSink.Engine.Core.StateManagement
             spriteBatch.End();
         }
 
+        public bool IsInDialogueState()
+        {
+            return screens.Find(x => x is DialogueScreen) != null;
+        }
+
         /// <summary>
         /// Informs the screen manager to serialize its state to disk.
         /// </summary>

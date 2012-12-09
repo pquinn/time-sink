@@ -121,15 +121,18 @@ namespace TimeSink.Engine.Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            view = ProcessControllerInput(gameTime);
+            if (!string.IsNullOrEmpty(loadLevel))
+                LoadLevel();
 
-            HandleInput(gameTime);
+            view = ProcessControllerInput(gameTime);
 
             var pos = Character != null ? Character.Position : Vector2.Zero;
             Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
                 new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
 
             ScreenManager.Update(gameTime, this);
+
+            HandleInput(gameTime);
 
             base.Update(gameTime);
         }
@@ -151,8 +154,8 @@ namespace TimeSink.Engine.Game
                 RenderDebugGeometry = !RenderDebugGeometry;
             }
 
-            if (Character != null)
-                Character.HandleKeyboardInput(gametime, this);
+            LevelManager.Level.Entities.ForEach(
+                x => x.HandleKeyboardInput(gametime, this));
         }
 
         /// <summary>
@@ -166,13 +169,33 @@ namespace TimeSink.Engine.Game
             base.Draw(gameTime);
         }
 
+        private string loadLevel;
+        private int spawnPoint = -1;
+        public override void MarkAsLoadLevel(string levelPath, int spawnPoint)
+        {
+            loadLevel = levelPath;
+            this.spawnPoint = spawnPoint;
+        }
+
+        private void LoadLevel()
+        {
+            LevelManager.Clear();
+            var path = "..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\" + loadLevel + ".txt";
+            LevelManager.DeserializeLevel(path);
+            loadLevel = null;
+        }
+
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
-
-            Character = new UserControlledCharacter(LevelManager.Level.PlayerStart);
+            
+            Character = new UserControlledCharacter(
+                spawnPoint >= 0 ? 
+                    LevelManager.Level.SpawnPoints[spawnPoint] : 
+                    LevelManager.Level.DefaultStart);
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
+            spawnPoint = -1;
         }
 
         #region Controller code
