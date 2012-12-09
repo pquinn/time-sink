@@ -53,20 +53,6 @@ namespace TimeSink.Entities.Objects
             DoorType = doorType;
             LevelPath = levelPath;
             SpawnPoint = spawnPoint;
-
-
-            if (DoorType == DoorType.Up)
-            {
-                popup = new ItemPopup(UP_POPUP, position);
-            }
-            else if (DoorType == DoorType.Down)
-            {
-                popup = new ItemPopup(DOWN_POPUP, position);
-            }
-            else
-            {
-                popup = null;
-            }
         }
 
         public override string EditorName
@@ -100,6 +86,7 @@ namespace TimeSink.Entities.Objects
         [EditableField("SpawnPoint")]
         public int SpawnPoint { get; set; }
 
+        private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             if (DoorType == DoorType.Side)
@@ -107,21 +94,11 @@ namespace TimeSink.Entities.Objects
 
             collided = true;
 
-            if (DoorType == DoorType.Up)
+            if (popup != null && !registered)
             {
-                popup = new ItemPopup(UP_POPUP, Physics.Position);
-            }
-            else if (DoorType == DoorType.Down)
-            {
-                popup = new ItemPopup(DOWN_POPUP, Physics.Position);
-            }
-            else
-            {
-                popup = null;
-            }
-
-            if (popup != null)
                 engine.LevelManager.RenderManager.RegisterRenderable(popup);
+                registered = true;
+            }
 
             return true;
         }
@@ -129,7 +106,10 @@ namespace TimeSink.Entities.Objects
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             if (popup != null)
-                engine.LevelManager.RenderManager.UnregisterRenderable(popup);
+            {
+                var temp = engine.LevelManager.RenderManager.UnregisterRenderable(popup);
+                registered = false;
+            }
 
             collided = false;
         }
@@ -158,6 +138,19 @@ namespace TimeSink.Entities.Objects
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+
+                if (DoorType == DoorType.Up)
+                {
+                    popup = new ItemPopup(UP_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                }
+                else if (DoorType == DoorType.Down)
+                {
+                    popup = new ItemPopup(DOWN_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                }
+                else
+                {
+                    popup = null;
+                }
 
                 initialized = true;
             }
