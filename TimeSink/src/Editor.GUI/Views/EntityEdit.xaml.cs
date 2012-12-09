@@ -47,7 +47,11 @@ namespace TimeSink.Editor.GUI.Views
                     Grid.SetColumn(textBlock, 0);
 
                     var type = prop.PropertyType;
-                    if (type.Equals(typeof(int)) || type.Equals(typeof(float)) || 
+                    if (type.IsEnum)
+                    {
+                        elementToAdd = new TextBox() { Text = ((int)val).ToString() };
+                    }
+                    else if (type.Equals(typeof(int)) || type.Equals(typeof(float)) || 
                         type.Equals(typeof(string)) || type.Equals(typeof(Guid)))
                     {
                         elementToAdd = new TextBox() { Text = val.ToString() };
@@ -89,7 +93,9 @@ namespace TimeSink.Editor.GUI.Views
 
                     object valToSet = null;
                     var type = prop.PropertyType;
-                    if (type.Equals(typeof(int)))
+                    if (type.IsEnum)
+                        valToSet = Int32.Parse(((TextBox)element).Text);
+                    else if (type.Equals(typeof(int)))
                         valToSet = Int32.Parse(((TextBox)element).Text);
                     else if (type.Equals(typeof(float)))
                         valToSet = Single.Parse(((TextBox)element).Text);

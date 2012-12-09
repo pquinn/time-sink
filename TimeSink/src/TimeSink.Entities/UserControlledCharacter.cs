@@ -1413,5 +1413,14 @@ namespace TimeSink.Entities
                 initialized = true;
             }
         }
+
+        public void Reset(Vector2 newPos, IComponentContext engineRegistrations)
+        {
+            //Physics.Dispose();
+            //WheelBody.Dispose();
+            //InitializePhysics(true, engineRegistrations);
+
+            //Physics.Position = newPos;
+        }
     }
 }

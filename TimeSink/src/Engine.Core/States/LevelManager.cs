@@ -133,6 +133,9 @@ namespace TimeSink.Engine.Core.States
                 if (LevelLoaded != null)
                     LevelLoaded();
             }
+            else
+                throw new FileNotFoundException(
+                    string.Format("Could not deserialize level '{0}'", fileName));
         }
 
         public void Clear()

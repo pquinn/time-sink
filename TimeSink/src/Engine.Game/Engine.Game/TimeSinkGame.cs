@@ -123,13 +123,13 @@ namespace TimeSink.Engine.Game
 
             view = ProcessControllerInput(gameTime);
 
-            HandleInput(gameTime);
-
             var pos = Character != null ? Character.Position : Vector2.Zero;
             Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
                 new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
 
             ScreenManager.Update(gameTime, this);
+
+            HandleInput(gameTime);
 
             base.Update(gameTime);
         }
@@ -151,8 +151,8 @@ namespace TimeSink.Engine.Game
                 RenderDebugGeometry = !RenderDebugGeometry;
             }
 
-            if (Character != null)
-                Character.HandleKeyboardInput(gametime, this);
+            LevelManager.Level.Entities.ForEach(
+                x => x.HandleKeyboardInput(gametime, this));
         }
 
         /// <summary>
