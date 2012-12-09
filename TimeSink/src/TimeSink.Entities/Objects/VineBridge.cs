@@ -77,15 +77,12 @@ namespace TimeSink.Entities.Objects
             // This check is so the second call doesn't override things and create two joints.
             if (!Hanging && character.Physics.LinearVelocity.Y > 0)
             {
-                joint = new PrismaticJoint(
+                joint = JointFactory.CreatePrismaticJoint(
+                    world,
                     Physics,
-                    character.WheelBody,                    
+                    character.WheelBody,
                     Vector2.Zero,
-                    character.Position +
-                        new Vector2(0, -(PhysicsConstants.PixelsToMeters(character.Height) / 4)) -
-                            character.WheelBody.Position,
-                    new Vector2(1, 0));
-                world.AddJoint(joint);
+                    Vector2.UnitX);
 
                 origLinearDamping = character.Physics.LinearDamping;
                 character.Physics.LinearDamping = 10;
