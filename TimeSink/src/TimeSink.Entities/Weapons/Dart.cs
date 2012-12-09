@@ -37,11 +37,6 @@ namespace TimeSink.Entities.Weapons
 
         public Dart(Vector2 position)
         {
-            //Physics = new GravityPhysics(position, DART_MASS)
-            //{
-            //    GravityEnabled = true
-            //};
-
             Position = position;
             dot = new DamageOverTimeEffect(4, 100);
         }

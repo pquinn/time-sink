@@ -88,11 +88,22 @@ namespace TimeSink.Engine.Core
                     GeoChains.ForEach(
                     x =>
                     {
+                        //Fixture old = null;
                         foreach (var pair in x.Take(x.Count - 1).Zip(x.Skip(1), Tuple.Create))
                         {
                             var f = FixtureFactory.AttachEdge(pair.Item1.EndPoint, pair.Item2.EndPoint, Physics);
-                            if (pair.Item2.IsOneWay)
+                            //if (old != null)
+                            //{
+                            //    var oldShape = old.Shape as EdgeShape;
+                            //    var fShape = f.Shape as EdgeShape;
+                            //    //fShape.Vertex0 = oldShape.Vertex2;
+                            //    //fShape.HasVertex0 = true;
+                            //    //oldShape.Vertex3 = fShape.Vertex1;
+                            //    //oldShape.HasVertex3 = true;
+                            //}
+                           if (pair.Item2.IsOneWay)
                                 new OneWayPlatform(f);
+                           //old = f;
                         }
                     });
                 }

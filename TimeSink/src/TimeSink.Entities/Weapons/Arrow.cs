@@ -105,8 +105,8 @@ namespace TimeSink.Entities.Weapons
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
                 Physics.Dispose();
             }
-
-            Physics.Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X);
+            else
+                Physics.Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X);
         }
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
