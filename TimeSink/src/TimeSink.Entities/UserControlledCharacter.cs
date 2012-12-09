@@ -96,7 +96,7 @@ namespace TimeSink.Entities
         private Ladder canClimb = null;
         private bool climbing = false;
         private TorchGround onTorchGround;
-        private IInventoryItem holdingTorch;
+        private Torch holdingTorch;
         private World _world;
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
@@ -721,7 +721,7 @@ namespace TimeSink.Entities
                     {
                         inventory.Add(onPickup);
                         ((Torch)onPickup).WeldToPlayer(this);
-                        holdingTorch = onPickup;
+                        holdingTorch = (Torch)onPickup;
                         onPickup = null;
                         EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
                         
@@ -733,6 +733,7 @@ namespace TimeSink.Entities
                     inventory.Remove(holdingTorch);
                     activeItem = 0;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+                    holdingTorch = null;
 
                 }
             }
@@ -1051,11 +1052,20 @@ namespace TimeSink.Entities
 
         bool OnCollidedWith(Fixture f, TorchGround torchGround, Fixture c, Contact info)
         {
+            if (holdingTorch != null)
+            {
+                currentItemPrompt = new ItemPopup("Textures/Keys/e-Key",
+                                                    torchGround.Physics.Position);
+
+                EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
+            }
+
             onTorchGround = torchGround;
             return true;
         }
         void OnSeparation(Fixture f1, TorchGround torchGround, Fixture f2)
         {
+            EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
             onTorchGround = null;
         }
 

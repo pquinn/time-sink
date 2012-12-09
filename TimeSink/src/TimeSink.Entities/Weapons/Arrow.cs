@@ -84,7 +84,7 @@ namespace TimeSink.Entities.Weapons
 
         public bool OnCollidedWith(Fixture f, Entity entity, Fixture eFix, Contact info)
         {
-            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder))
+            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder || entity is Torch))
             {
                 Dead = true;
             }
