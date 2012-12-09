@@ -1,25 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<PlayerStart>
-		<X>1</X><Y>0</Y>
-	</PlayerStart>
+	<DefaultStart>
+		<X>0</X><Y>0</Y>
+	</DefaultStart>
 	<Midground />
 	<Tiles />
 	<GeoSegments>
-		<ArrayOfWorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>13.375</X><Y>5.828125</Y>
-				</EndPoint>
-				<IsOneWay>false</IsOneWay>
-			</WorldCollisionGeometrySegment>
-			<WorldCollisionGeometrySegment>
-				<EndPoint>
-					<X>0.015625</X><Y>5.75</Y>
-				</EndPoint>
-				<IsOneWay>false</IsOneWay>
-			</WorldCollisionGeometrySegment>
-		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment />
 	</GeoSegments>
 	<EntitySerializations>
 		<EntitySerialization>

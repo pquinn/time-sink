@@ -45,6 +45,11 @@ namespace TimeSink.Engine.Core
 
         private DebugViewXNA debugView;
 
+        // todo: used for hacking door in the editor
+        public EngineGame()
+        {
+        }
+
         public EngineGame(int width, int height)
             : base()
         {

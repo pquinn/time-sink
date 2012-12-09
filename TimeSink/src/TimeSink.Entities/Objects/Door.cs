@@ -96,7 +96,7 @@ namespace TimeSink.Entities.Objects
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<World>();
-                engine = engineRegistrations.Resolve<EngineGame>();
+                engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
