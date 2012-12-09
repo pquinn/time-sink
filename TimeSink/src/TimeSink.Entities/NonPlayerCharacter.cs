@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TimeSink.Engine.Core;
-using Microsoft.Xna.Framework;
-using FarseerPhysics.Dynamics;
-using TimeSink.Engine.Core.Rendering;
-using TimeSink.Engine.Core.Editor;
-using TimeSink.Engine.Core.Physics;
-using FarseerPhysics.Factories;
-using TimeSink.Engine.Core.States;
 using Autofac;
-using TimeSink.Engine.Core.Caching;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
+using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.Input;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.StateManagement;
+using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
@@ -21,22 +26,37 @@ namespace TimeSink.Entities
     public class NonPlayerCharacter : Entity
     {
         const string EDITOR_NAME = "NPC";
-        const string NPC_TEXTURE = "Textures/Enemies/Dummy";
+        const string DEFAULT_TEXTURE = "Textures/Enemies/Dummy";
 
         private static readonly Guid GUID = new Guid("57eb5766-5ce2-4694-ad4b-e019d4817985");
 
         protected int textureHeight;
         protected int textureWidth;
 
-        public NonPlayerCharacter() : this(Vector2.Zero) { }
+        private bool collided;
+        private ScreenManager screenManager;
 
-        public NonPlayerCharacter(Vector2 position)
+        public int DialogueState { get; set; }
+        public List<String> DialogueTrees { get; set; }
+
+        public NonPlayerCharacter() : this(Vector2.Zero, DEFAULT_TEXTURE) { }
+
+        public NonPlayerCharacter(Vector2 position, String textureName)
         {
+            DialogueState = 0;
             Position = position;
+            TextureName = textureName;
+
+            DialogueTrees = new List<String>();
+            DialogueTrees.Add("4cf17838-279c-11e2-b64d-109adda800ea");
         }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
+        
+        [SerializableField]
+        [EditableField ("Texture Name")]
+        public string TextureName { get; set; }
 
         public override string EditorName
         {
@@ -50,12 +70,29 @@ namespace TimeSink.Entities
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            throw new NotImplementedException();
+            if (collided)
+            {
+                if (InputManager.Instance.IsNewKey(Keys.X) && !screenManager.IsInDialogueState())
+                {
+                    screenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueTrees[DialogueState])), null);
+                }
+            }
         }
 
         public override void Load(IComponentContext container)
         {
-            var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(NPC_TEXTURE);
+            var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
+        }
+
+        public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        {
+            collided = true;
+            return true;
+        }
+
+        public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
+        {
+            collided = false;
         }
 
         private bool initialized;
@@ -63,8 +100,11 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(NPC_TEXTURE);
+                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
                 var world = engineRegistrations.Resolve<World>();
+                var game = engineRegistrations.Resolve<EngineGame>();
+                screenManager = game.ScreenManager;
+
                 Width = texture.Width;
                 Height = texture.Height;
                 Physics = BodyFactory.CreateRectangle(
@@ -86,6 +126,9 @@ namespace TimeSink.Entities
                 hitsensor.CollisionCategories = Category.Cat2;
                 hitsensor.CollidesWith = Category.Cat2;
 
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+
                 initialized = true;
             }
         }
@@ -103,7 +146,7 @@ namespace TimeSink.Entities
             get
             {
                 return new BasicRendering(
-                  NPC_TEXTURE,
+                  TextureName,
                   PhysicsConstants.MetersToPixels(Physics.Position),
                   0f,
                   Vector2.One);

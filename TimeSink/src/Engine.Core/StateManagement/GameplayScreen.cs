@@ -343,7 +343,7 @@ namespace TimeSink.Engine.Core.StateManagement
             }
             else if (startAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid("4cf17838-279c-11e2-b64d-109adda800ea")), null);
+                //ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid("4cf17838-279c-11e2-b64d-109adda800ea")), null);
             }
             else
             {

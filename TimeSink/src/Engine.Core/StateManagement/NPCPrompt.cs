@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DialoguePrototype
+namespace TimeSink.Engine.Core.StateManagement
 {
-    class NPCPrompt
+    public class NPCPrompt
     {
         #region Fields
 

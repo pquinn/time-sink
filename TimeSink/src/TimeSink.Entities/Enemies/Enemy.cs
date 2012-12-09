@@ -193,6 +193,10 @@ namespace TimeSink.Entities.Enemies
                 hitsensor.CollidesWith = Category.Cat2;
 
                 initialized = true;
+
+                Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
         }
 

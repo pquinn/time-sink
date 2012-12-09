@@ -11,9 +11,9 @@ using DialoguePrototype;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.StateManagement;
 
-namespace DialoguePrototype
+namespace TimeSink.Engine.Core.StateManagement
 {
-    class DialogueScreen : GameScreen
+    public class DialogueScreen : GameScreen
     {
         #region Fields
 

@@ -44,7 +44,7 @@ namespace TimeSink.Entities.Enemies
         public NormalCentipede(Vector2 position, Vector2 direction)
             : base(position)
         {
-            health = 150;
+            health = 150; 
             PatrolDirection = direction;
         }
 

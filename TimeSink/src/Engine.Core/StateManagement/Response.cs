@@ -16,7 +16,7 @@ namespace DialoguePrototype
     /// <summary>
     /// Holds the data for a player response in the Dialogue engine
     /// </summary>
-    class Response
+    public class Response
     {
         #region Fields
 
