@@ -19,7 +19,7 @@ namespace TimeSink.Entities.Enemies
 {
     [EditorEnabled]
     [SerializableEntity("bb7f91f9-af92-41cc-a985-bd1e85066403")]
-    public class FlyingCentipede : Enemy, IHaveHealth
+    public class FlyingCentipede : Enemy
     {
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Flying Centipede/Flying01"; //temporary
@@ -30,19 +30,39 @@ namespace TimeSink.Entities.Enemies
         private static int textureHeight;
         private static int textureWidth;
 
+        private bool first;
+        private float tZero;
+
         public FlyingCentipede()
-            : this(Vector2.Zero)
+            : this(Vector2.Zero, Vector2.Zero, 0f)
         {
+            first = true;
         }
 
-        public FlyingCentipede(Vector2 position)
-            : base(position)
+        public FlyingCentipede(Vector2 startPosition, Vector2 endPosition, float timeSpan) : base()
         {
             health = 150;
+            Position = startPosition;
+            StartPosition = startPosition;
+            EndPosition = endPosition;
+            TimeSpan = timeSpan;
+            first = true;
         }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
+
+        [SerializableField]
+        [EditableField("Start Position")]
+        public Vector2 StartPosition { get; set; }
+
+        [SerializableField]
+        [EditableField("End Position")]
+        public Vector2 EndPosition { get; set; }
+
+        [SerializableField]
+        [EditableField("Time Span")]
+        public float TimeSpan { get; set; }
 
         public override string EditorName
         {
@@ -85,6 +105,25 @@ namespace TimeSink.Entities.Enemies
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
+
+            if (first)
+            {
+                tZero = (float)time.TotalGameTime.TotalSeconds;
+                first = false;
+            }
+
+            float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
+            var stepAmt = currentStep / TimeSpan;
+            var dir = Math.Sin(stepAmt * 2 * Math.PI);
+            var offset = EndPosition - StartPosition;
+            var len = offset.Length();
+            offset.Normalize();
+            if (dir > 0)
+                Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            else if (dir < 0)
+                Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            else
+                Physics.LinearVelocity = Vector2.Zero;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -106,7 +145,8 @@ namespace TimeSink.Entities.Enemies
             if (force || !initialized)
             {
                 base.InitializePhysics(force, engineRegistrations);
-                Physics.BodyType = BodyType.Static;
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.IgnoreGravity = true;
 
                 initialized = true;
             }

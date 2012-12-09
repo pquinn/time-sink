@@ -20,7 +20,7 @@ namespace TimeSink.Entities.Enemies
 {
     [EditorEnabled]
     [SerializableEntity("849aaec2-7155-4c37-aa71-42d0c1611881")]
-    public class NormalCentipede : Enemy, IHaveHealth
+    public class NormalCentipede : Enemy
     {
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Centipede/Neutral";
@@ -96,29 +96,18 @@ namespace TimeSink.Entities.Enemies
         private bool collidedAhead = false;
         private bool collidedDownward = false;
         private bool needToTurn = false;
-        private bool needToTransformCW = false;
-        private bool needToTransformCCW = false;
         private Vector2 rayTopOffset = Vector2.Zero;
         private Vector2 rayBottomOffset = Vector2.Zero;
+        private Vector2 rayTurnTopOffset = Vector2.Zero;
+        private Vector2 rayTurnBottomOffset = Vector2.Zero;
         private Vector2 xDirectionCast = new Vector2(.1f, 0);
-        private Vector2 yDirectionCast = new Vector2(0, .1f);
+        private Vector2 yDirectionCast = new Vector2(0, .25f);
         private bool initialized = false;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
 
-            //if (Physics.IgnoreGravity == false)
-            //{
-            //    return;
-            //}
-
-            //var widthMeters = PhysicsConstants.PixelsToMeters(Width);
-            //var heightMeters = PhysicsConstants.PixelsToMeters(Height);
-
             Physics.Position += PatrolDirection * (float)time.ElapsedGameTime.TotalSeconds;
-
-            //var xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
-            //var yDirection = (int)PatrolDirection.Y > 0 ? 1 : -1;
 
             var totalRotationMatrix = Matrix.CreateRotationZ(Physics.Rotation);
             var quarterTurnCWMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
@@ -126,14 +115,14 @@ namespace TimeSink.Entities.Enemies
 
             if (!initialized)
             {
+                xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
+
                 rayTopOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
                     -PhysicsConstants.PixelsToMeters(Height) / 2);
                 rayBottomOffset = new Vector2(
                     xDirection * PhysicsConstants.PixelsToMeters(Width) / 2,
                     PhysicsConstants.PixelsToMeters(Height) / 2);
-
-                xDirection = (int)PatrolDirection.X >= 0 ? 1 : -1;
 
                 initialized = true;
             }
@@ -145,7 +134,7 @@ namespace TimeSink.Entities.Enemies
                     -PhysicsConstants.PixelsToMeters(Height) / 2);
 
                 rayBottomOffset = new Vector2(
-                    xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
+                    -1 * xDirection * PhysicsConstants.PixelsToMeters(Width) / 4,
                     PhysicsConstants.PixelsToMeters(Height) / 2);
             }
             else
@@ -159,61 +148,40 @@ namespace TimeSink.Entities.Enemies
                     PhysicsConstants.PixelsToMeters(Height) / 2);
             }
 
-            //if (needToTransformCW)
-            //{
-            //    Physics.Rotation += MathHelper.PiOver2;
-            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCWMatrix);
-            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCWMatrix);
-            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCWMatrix);
-            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCWMatrix);
-            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCWMatrix);
-            //    //forwardTop.Y *= -1;
-            //    //forwardBottom.Y *= -1;
-            //    needToTransformCW = false;
-            //}
-
-            //if (needToTransformCCW)
-            //{
-            //    Physics.Rotation -= MathHelper.PiOver2;
-            //    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
-            //    rayTopOffset = Vector2.Transform(rayTopOffset, quarterTurnCCWMatrix);
-            //    rayBottomOffset = Vector2.Transform(rayBottomOffset, quarterTurnCCWMatrix);
-            //    xDirectionCast = Vector2.Transform(xDirectionCast, quarterTurnCCWMatrix);
-            //    yDirectionCast = Vector2.Transform(yDirectionCast, quarterTurnCCWMatrix);
-            //    //forwardTop.Y *= -1;
-            //    //forwardBottom.Y *= -1;
-            //    needToTransformCCW = false;
-            //}
-
             //cast a ray forward from top front corner
             world.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     // do what it do here
-                    //Console.WriteLine("Front Top Forward Ray Cast Callback");
                     collidedAhead = true;
-                    return 0;
+                    if (fixture.UserData != null && fixture.UserData is UserControlledCharacter)
+                        return -1;
+                    else
+                        return 0;
                 },
                 Physics.Position + Vector2.Transform(rayTopOffset, totalRotationMatrix),
                 Physics.Position + Vector2.Transform(rayTopOffset + xDirectionCast, totalRotationMatrix));
 
-            //cast a ray downward from bottom front corner 
+
+            //cast a ray downward from bottom front 
             world.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
                     // do what it do here
-                   // Console.WriteLine("Front Bottom Downward Ray Cast Callback");
                     collidedDownward = true;
-                    return 0;
+                    if (fixture.UserData != null && fixture.UserData is UserControlledCharacter)
+                        return -1;
+                    else
+                        return 0;
                 },
-                Physics.Position + rayBottomOffset,
-                Physics.Position + rayBottomOffset + yDirectionCast);
+                Physics.Position + Vector2.Transform(rayBottomOffset, totalRotationMatrix),
+                Physics.Position + Vector2.Transform(rayBottomOffset + yDirectionCast, totalRotationMatrix));
 
             if (collidedAhead)
             {
                 if (needToTurn)
                 {
-                    var rotation = MathHelper.PiOver2 * xDirection;
+                    var rotation = MathHelper.PiOver2 * -xDirection;
                     Physics.Rotation += rotation;
                     PatrolDirection = Vector2.Transform(PatrolDirection, Matrix.CreateRotationZ(rotation));
                     needToTurn = false;
@@ -226,21 +194,20 @@ namespace TimeSink.Entities.Enemies
                 collidedAhead = false;
             }
 
-            //if (!collidedDownward && Physics.IgnoreGravity == true)
-            //{
-            //    if (needToTurn)
-            //    {
-            //        Physics.Rotation -= MathHelper.PiOver2;
-            //        PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
-            //        needToTransformCCW = true;
-            //        needToTurn = false;
-            //    }
-            //    else
-            //    {
-            //        needToTurn = true;
-            //    }
-            //    collidedDownward = true;
-            //}
+            if (!collidedDownward && Physics.IgnoreGravity == true)
+            {
+                if (needToTurn)
+                {
+                    Physics.Rotation -= MathHelper.PiOver2 * -xDirection;
+                    PatrolDirection = Vector2.Transform(PatrolDirection, quarterTurnCCWMatrix);
+                    needToTurn = false;
+                }
+                else
+                {
+                    needToTurn = true;
+                }
+            }
+            collidedDownward = false;
         }
 
         public override void Load(IComponentContext engineRegistrations)

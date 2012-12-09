@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Rendering;
 using FarseerPhysics.Dynamics;
 using Autofac;
@@ -11,15 +12,25 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Factories;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Objects
 {
+    [EditorEnabled]
     [SerializableEntity("9bad74e2-3c00-443b-a461-26f625d32124")]
     public class Bramble : Entity
     {
-        const string EDITOR_NAME = "Ladder";
-        const string TEXTURE = "Materials/blank";
+        const string EDITOR_NAME = "Bramble";
+        const string TEXTURE = "Textures/Objects/Bramble_Tileable";
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
+
+        private static int textureHeight;
+        private static int textureWidth;
+
+        // lasts 1000 seconds, should probably use positive infinity
+        public DamageOverTimeEffect dot = new DamageOverTimeEffect(.1f);
 
         private static readonly Guid guid = new Guid("9bad74e2-3c00-443b-a461-26f625d32124");
 
@@ -30,6 +41,9 @@ namespace TimeSink.Entities.Objects
 
         public Bramble(Vector2 position, int width, int height)
         {
+            Position = position;
+            Width = width;
+            Height = height;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -38,11 +52,15 @@ namespace TimeSink.Entities.Objects
 
         public override void Load(IComponentContext engineRegistrations)
         {
+            var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = textureCache.LoadResource(TEXTURE);
+            textureWidth = texture.Width;
+            textureHeight = texture.Height; 
         }
 
         public override string EditorName
         {
-            get { throw new NotImplementedException(); }
+            get { return EDITOR_NAME; }
         }
 
         [SerializableField]
@@ -94,14 +112,17 @@ namespace TimeSink.Entities.Objects
             get { return Rendering; }
         }
 
+        public override IRendering Rendering
+        {
+            get 
+            {
+                return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height);
+            }
+        }
+
         public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
-        }
-
-        public override IRendering Rendering
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

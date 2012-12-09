@@ -997,6 +997,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Objects\Bramble_Tileable.png">
+      <Name>Bramble_Tileable</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Tiles\MovingPlatform.png">
       <Name>MovingPlatform</Name>
       <Importer>TextureImporter</Importer>
