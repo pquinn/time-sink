@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Enemies\EnemySpawner.cs" />
     <Compile Include="Enemies\FlyingCentipede.cs" />
     <Compile Include="Enemies\NormalCentipede.cs" />
     <Compile Include="EntityBootstrapper.cs" />
