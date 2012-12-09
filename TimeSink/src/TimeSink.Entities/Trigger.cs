@@ -95,5 +95,13 @@ namespace TimeSink.Entities
                 initialized = true;
             }
         }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+        }
     }
 }

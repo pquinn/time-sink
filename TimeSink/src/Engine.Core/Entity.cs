@@ -38,7 +38,7 @@ namespace TimeSink.Engine.Core
 
         public virtual void HandleKeyboardInput(GameTime gameTime, EngineGame world) { }
 
-        public abstract void Load(IComponentContext engineRegistrations);
+        public virtual void Load(IComponentContext engineRegistrations) { }
 
         public abstract string EditorName { get; }
 
@@ -111,5 +111,7 @@ namespace TimeSink.Engine.Core
 
         [XmlIgnore]
         public Vector2? PreviousPosition { get; private set; }
+
+        public virtual void DestroyPhysics() { }
     }
 }

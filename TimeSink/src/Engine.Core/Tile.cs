@@ -66,10 +66,6 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
-        {
-        }
-
         [XmlIgnore]
         public override IRendering Rendering
         {
@@ -83,10 +79,6 @@ namespace TimeSink.Engine.Core
         public override IRendering Preview
         {
             get { return Rendering; }
-        }
-
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
         }
 
         public override void Load(IComponentContext engineRegistrations)

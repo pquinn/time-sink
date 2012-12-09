@@ -136,6 +136,7 @@ namespace TimeSink.Entities.Enemies
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
+                world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
             }
         }
 
