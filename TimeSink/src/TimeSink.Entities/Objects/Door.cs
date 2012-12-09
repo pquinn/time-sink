@@ -16,6 +16,8 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Dynamics.Contacts;
 using System.IO;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Objects
 {
@@ -29,10 +31,14 @@ namespace TimeSink.Entities.Objects
         const string TEXTURE = "Materials/blank";
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
 
+        const string UP_POPUP = "Textures/Keys/w-key";
+        const string DOWN_POPUP = "Textures/Keys/s-key";
+
         private static readonly Guid guid = new Guid("66c116cc-60bf-4808-a4c0-f5bb8cad053b");
 
         private bool collided;
         private EngineGame engine;
+        private ItemPopup popup;
 
         public Door()
             : this(Vector2.Zero, 50, 50, DoorType.Up, string.Empty, 0)
@@ -47,6 +53,20 @@ namespace TimeSink.Entities.Objects
             DoorType = doorType;
             LevelPath = levelPath;
             SpawnPoint = spawnPoint;
+
+
+            if (DoorType == DoorType.Up)
+            {
+                popup = new ItemPopup(UP_POPUP, position);
+            }
+            else if (DoorType == DoorType.Down)
+            {
+                popup = new ItemPopup(DOWN_POPUP, position);
+            }
+            else
+            {
+                popup = null;
+            }
         }
 
         public override string EditorName
@@ -87,11 +107,30 @@ namespace TimeSink.Entities.Objects
 
             collided = true;
 
+            if (DoorType == DoorType.Up)
+            {
+                popup = new ItemPopup(UP_POPUP, Physics.Position);
+            }
+            else if (DoorType == DoorType.Down)
+            {
+                popup = new ItemPopup(DOWN_POPUP, Physics.Position);
+            }
+            else
+            {
+                popup = null;
+            }
+
+            if (popup != null)
+                engine.LevelManager.RenderManager.RegisterRenderable(popup);
+
             return true;
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
+            if (popup != null)
+                engine.LevelManager.RenderManager.UnregisterRenderable(popup);
+
             collided = false;
         }
 
@@ -144,6 +183,9 @@ namespace TimeSink.Entities.Objects
 
         public override void Load(IComponentContext engineRegistrations)
         {
+            var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            cache.GetResource(UP_POPUP);
+            cache.GetResource(DOWN_POPUP);
         }
 
         public override IRendering Preview

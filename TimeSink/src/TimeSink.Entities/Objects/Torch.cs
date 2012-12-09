@@ -107,10 +107,12 @@ namespace TimeSink.Entities.Objects
                 initialized = true;
             }
         }
+
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             return true;
         }
+
         void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
         }

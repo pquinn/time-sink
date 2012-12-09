@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<PlayerStart>
+		<X>3.34375</X><Y>6.25</Y>
+	</PlayerStart>
+	<Midground />
+	<Tiles />
+	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.328125</X><Y>7.640625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>13.296875</X><Y>7.75</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+	</GeoSegments>
+	<EntitySerializations>
+		<EntitySerialization>
+			<EntityId>57eb5766-5ce2-4694-ad4b-e019d4817985</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">57eb5766-5ce2-4694-ad4b-e019d4817985</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>TextureName</Key>
+					<Value xsi:type="xsd:string">Textures/Enemies/Dummy</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">npc_1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>10.890625</X><Y>6.640625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+	</EntitySerializations>
+</Level>

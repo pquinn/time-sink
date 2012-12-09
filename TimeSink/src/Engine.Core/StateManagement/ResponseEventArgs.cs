@@ -12,13 +12,13 @@ using System;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace DialoguePrototype
+namespace TimeSink.Engine.Core.StateManagement
 {
     /// <summary>
     /// Custom event argument which includes the GUID
     /// of the selected response
     /// </summary>
-    class ResponseEventArgs : EventArgs
+    public class ResponseEventArgs : EventArgs
     {
         /// <summary>
         /// Constructor.
