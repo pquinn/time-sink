@@ -60,7 +60,7 @@ namespace TimeSink.Engine.Core.Rendering
                 Matrix.CreateRotationZ(Rotation) *
                 Matrix.CreateTranslation(new Vector3(Position, 0)) *
                 transform;
-            
+
             frames[CurrentFrame].Draw(spriteBatch, cache, relativeTransform);
         }
 
