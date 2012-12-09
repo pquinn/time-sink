@@ -35,17 +35,18 @@ namespace TimeSink.Entities.Objects
         private EngineGame engine;
 
         public Door()
-            : this(Vector2.Zero, 50, 50, DoorType.Up, string.Empty)
+            : this(Vector2.Zero, 50, 50, DoorType.Up, string.Empty, 0)
         {
         }
 
-        public Door(Vector2 position, int width, int height, DoorType doorType, string levelPath)
+        public Door(Vector2 position, int width, int height, DoorType doorType, string levelPath, int spawnPoint)
         {
             Position = position;
             Width = width;
             Height = height;
             DoorType = doorType;
             LevelPath = levelPath;
+            SpawnPoint = spawnPoint;
         }
 
         public override string EditorName
@@ -74,6 +75,10 @@ namespace TimeSink.Entities.Objects
         [SerializableField]
         [EditableField("LevelPath")]
         public string LevelPath { get; set; }
+
+        [SerializableField]
+        [EditableField("SpawnPoint")]
+        public int SpawnPoint { get; set; }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
@@ -134,7 +139,7 @@ namespace TimeSink.Entities.Objects
 
         private void ChangeLevel()
         {
-            engine.MarkAsLoadLevel(LevelPath);
+            engine.MarkAsLoadLevel(LevelPath, SpawnPoint);
         }
 
         public override void Load(IComponentContext engineRegistrations)
