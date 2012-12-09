@@ -8,6 +8,7 @@ namespace TimeSink.Engine.Core
     public interface IHaveHealth
     {
         float Health { get;  set; }
+        HashSet<DamageOverTimeEffect> Dots { get; set; }
         void RegisterDot(DamageOverTimeEffect dot);
     }
 }

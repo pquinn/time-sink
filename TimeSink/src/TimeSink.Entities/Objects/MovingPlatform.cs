@@ -22,20 +22,16 @@ namespace TimeSink.Entities
     [SerializableEntity("c31fb7ad-f9de-4ca3-a091-521583c6c6bf")]
     public class MovingPlatform : Entity
     {
-        const string WORLD_TEXTURE_NAME = "Textures/giroux";
+        const string WORLD_TEXTURE_NAME = "Textures/Tiles/MovingPlatform";
         const string EDITOR_NAME = "Moving Geometry";
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f9de-4ca3-a091-521583c6c6bf");
 
         protected int textureHeight;
         protected int textureWidth;
-
-        private Func<float, Vector2> PatrolFunction { get; set; }
-        private int direction;
+        
         private bool first;
         private float tZero;
-
-        private HashSet<Entity> collidedEntities;
 
         public MovingPlatform() : this(Vector2.Zero, Vector2.Zero, 0, 0, 0) { }
 
@@ -43,30 +39,13 @@ namespace TimeSink.Entities
         public MovingPlatform(Vector2 startPosition, Vector2 endPosition, float timeSpan, int width, int height)
             : base()
         {
-            collidedEntities = new HashSet<Entity>();
             Position = startPosition;
             StartPosition = startPosition;
             EndPosition = endPosition;
             TimeSpan = timeSpan;
             Width = width > 0 ? width : 50;
             Height = height > 0 ? width : 50;
-            direction = 1;
             first = true;
-            PatrolFunction = delegate(float time)
-            {
-                float currentStep = time % TimeSpan;
-                Vector2 newPosition = new Vector2();
-                if (currentStep >= 0 && currentStep < (TimeSpan / 2f))
-                {
-                    var stepAmt = currentStep / TimeSpan * 2;
-                    newPosition = StartPosition + (stepAmt * (EndPosition - StartPosition));
-                }
-                else
-                {
-                    newPosition = EndPosition + ((currentStep - TimeSpan / 2) / TimeSpan * 2 * (StartPosition - EndPosition));
-                }
-                return newPosition;
-            };
         }
 
         [SerializableField]
@@ -114,13 +93,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                var tint = Math.Min(100, 2.55f * 100);
-                return new TintedRendering(
-                  WORLD_TEXTURE_NAME,
-                  PhysicsConstants.MetersToPixels(Physics.Position),
-                  0,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));
+                return new SizedRendering(WORLD_TEXTURE_NAME, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height);
             }
         }
 
@@ -146,14 +119,6 @@ namespace TimeSink.Entities
                 Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
             else
                 Physics.LinearVelocity = Vector2.Zero;
-        }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Entity character, Contact info)
-        {
-            collidedEntities.Add(character);
-
-            return true;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

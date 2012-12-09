@@ -81,20 +81,13 @@ namespace TimeSink.Entities.Weapons
         {
         }
 
-        //[OnCollidedWith.Overload]
-        //public void OnCollidedWith(WorldGeometry entity, CollisionInfo info)
-        //{
-        //    Dead = true;
-        //}
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Entity entity, Contact info)
+        public bool OnCollidedWith(Fixture f, Entity entity, Fixture eFix, Contact info)
         {
-            if (!(entity is UserControlledCharacter || entity is Trigger || entity is Ladder))
+            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder))
             {
                 Dead = true;
             }
-            return true;
+            return info.Enabled;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -110,8 +103,10 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.CollisionManager.UnregisterCollideable(this);
+                Physics.Dispose();
             }
+            else
+                Physics.Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X);
         }
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
@@ -159,6 +154,9 @@ namespace TimeSink.Entities.Weapons
                 Physics.IsBullet = true;
                 Physics.UserData = this;
                 Physics.IsSensor = true;
+                Physics.CollidesWith = Category.All | ~Category.Cat31;
+
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
                 initialized = true;
             }

@@ -16,7 +16,7 @@ using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities
 {
-    public delegate void TriggerDelegate(ICollideable collided);
+    public delegate void TriggerDelegate(Entity collided);
 
     [SerializableEntity("f3722310-9db5-478f-9e37-608cbcbf92f9")]
     public class Trigger : Entity
@@ -71,8 +71,7 @@ namespace TimeSink.Entities
 
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(ICollideable obj, Contact info)
+        public bool OnCollidedWith(Fixture f, Entity obj, Fixture f2, Contact info)
         {
             if (Triggered != null)
                 Triggered(obj);
@@ -90,6 +89,8 @@ namespace TimeSink.Entities
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 _geom = Physics.FixtureList;
+
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
                 initialized = true;
             }

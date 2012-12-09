@@ -34,9 +34,9 @@ namespace TimeSink.Entities.Enemies
 
         private static int textureHeight;
         private static int textureWidth;
-
-        private List<DamageOverTimeEffect> dots;
         protected float health;
+
+        public HashSet<DamageOverTimeEffect> Dots { get; set; }
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace TimeSink.Entities.Enemies
             health = 100;
             Position = position;
 
-            dots = new List<DamageOverTimeEffect>();
+            Dots = new HashSet<DamageOverTimeEffect>();
         }
 
         [SerializableField]
@@ -100,22 +100,19 @@ namespace TimeSink.Entities.Enemies
         {
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Arrow arrow, Contact info)
+        bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
         {
             health -= 25;
             return true;
         }
-
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Dart dart, Contact info)
+        
+        bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
         {
             RegisterDot(dart.dot);
             return true;
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(UserControlledCharacter c, Contact info)
+        bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             c.TakeDamage(25);
             return true;
@@ -125,13 +122,12 @@ namespace TimeSink.Entities.Enemies
         {
             if (health <= 0)
             {
-                Console.WriteLine("dummy dead");
                 Dead = true;
             }
 
             RemoveInactiveDots();
 
-            foreach (DamageOverTimeEffect dot in dots)
+            foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active)
                     health -= dot.Tick(time);
@@ -140,13 +136,12 @@ namespace TimeSink.Entities.Enemies
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.CollisionManager.UnregisterCollideable(this);
             }
         }
 
         private void RemoveInactiveDots()
         {
-            dots.RemoveAll(x => x.Finished);
+            Dots.RemoveWhere(x => x.Finished);
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -159,7 +154,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (!dot.Active)
             {
-                dots.Add(dot);
+                Dots.Add(dot);
                 dot.Active = true;
             }
         }
@@ -183,6 +178,10 @@ namespace TimeSink.Entities.Enemies
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
+
+                Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
 
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat3;

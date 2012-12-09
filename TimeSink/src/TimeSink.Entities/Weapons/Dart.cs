@@ -26,7 +26,6 @@ namespace TimeSink.Entities.Weapons
 
         private static readonly Guid GUID = new Guid("158e2984-34ce-4c1f-93ef-fbf81c5fed1f");
 
-        public GravityPhysics physics { get; private set; }
         public DamageOverTimeEffect dot { get; private set; }
 
         const float DART_SPEED = 2000;
@@ -38,11 +37,6 @@ namespace TimeSink.Entities.Weapons
 
         public Dart(Vector2 position)
         {
-            //Physics = new GravityPhysics(position, DART_MASS)
-            //{
-            //    GravityEnabled = true
-            //};
-
             Position = position;
             dot = new DamageOverTimeEffect(4, 100);
         }
@@ -91,14 +85,13 @@ namespace TimeSink.Entities.Weapons
         {
         }
 
-        [OnCollidedWith.Overload]
-        public bool OnCollidedWith(Entity entity, Contact info)
+        bool OnCollidedWith(Fixture f, Entity entity, Fixture ef, Contact info)
         {
             if (!(entity is UserControlledCharacter) && !(entity is Ladder))
             {
                 Dead = true;
             }
-            return true;
+            return info.Enabled;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -114,8 +107,7 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.CollisionManager.UnregisterCollideable(this);
-               // Physics.Dispose();
+                Physics.Dispose();
             }
             else
             {
@@ -159,6 +151,8 @@ namespace TimeSink.Entities.Weapons
                 Physics.IsBullet = true;
                 Physics.IsSensor = true;
                 Physics.UserData = this;
+
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
                 initialized = true;
             }

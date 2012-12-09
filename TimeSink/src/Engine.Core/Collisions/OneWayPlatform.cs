@@ -18,7 +18,8 @@ namespace TimeSink.Entities
 {
     public class OneWayPlatform
     {
-        private Dictionary<Fixture, bool> separatedDict = new Dictionary<Fixture, bool>();
+        //private Dictionary<Fixture, bool> separatedDict = new Dictionary<Fixture, bool>();
+        private HashSet<Fixture> collided = new HashSet<Fixture>();
 
         public OneWayPlatform(Fixture f)
         {
@@ -26,57 +27,26 @@ namespace TimeSink.Entities
 
             var sensor = f.Clone(f.Body);
             sensor.IsSensor = true;
-            sensor.OnSeparation += new OnSeparationEventHandler(OnSeparation);
+            CollisionUtils.RegisterOnSeparatedListener<Entity>(sensor, OnSeparation);
+
             f.UserData = this;
+            CollisionUtils.RegisterOnCollidedListener<Entity>(f, OnCollision);
         }
 
-        void OnSeparation(Fixture fixtureA, Fixture fixtureB)
+        void OnSeparation(Fixture platformFixture, Entity entity, Fixture entityFixture)
         {
-            Fixture f;
-            if (fixtureB.Body.UserData is Entity)
-                f = fixtureB;
-            else if (fixtureA.Body.UserData is Entity)
-                f = fixtureA;
-            else
-                return;
-
-            if (!f.IsSensor)
-                separatedDict[f] = true;
+            if (!entityFixture.IsSensor)
+                collided.Remove(entityFixture);
         }
 
-        [OnCollidedWith.Overload]
-        public static bool OnCollidedWith(Entity player, WorldGeometry2 world, Contact contact)
+        private bool OnCollision(Fixture platformFixture, Entity entity, Fixture entityFixture, Contact contact)
         {
-            var fixtureA = contact.FixtureA;
-            var fixtureB = contact.FixtureB;
+            if (entityFixture.IsSensor)
+                return false;
 
-            Fixture f;
-            if (fixtureB.Body.UserData is WorldGeometry2)
-                f = fixtureB;
-            else if (fixtureA.Body.UserData is WorldGeometry2)
-                f = fixtureA;
-            else
-                return true;
-
-            if (f.UserData is OneWayPlatform)
-            {
-                if (fixtureA == f)
-                    return (f.UserData as OneWayPlatform).OnCollision(player, fixtureB, fixtureA, contact);
-                else
-                    return (f.UserData as OneWayPlatform).OnCollision(player, fixtureA, fixtureB, contact);
-            }
-            return true;
-        }
-
-        private bool OnCollision(Entity e, Fixture entityFixture, Fixture platformFixture, Contact contact)
-        {
             bool result = false;
 
-            bool separatedAFrame = false;
-            bool found = separatedDict.TryGetValue(entityFixture, out separatedAFrame);
-            separatedAFrame = !found || separatedAFrame;
-
-            if (separatedAFrame)
+            if (!collided.Contains(entityFixture))
             {
                 Vector2 normal;
                 FixedArray2<Vector2> points;
@@ -86,7 +56,7 @@ namespace TimeSink.Entities
                 for (int i = 0; i < contact.Manifold.PointCount; i++)
                 {
                     var pointVelPlatform = platformFixture.Body.GetLinearVelocityFromWorldPoint(points[i]);
-                    var pointVelEntity = e.Physics.GetLinearVelocityFromWorldPoint(points[i]);
+                    var pointVelEntity = entity.Physics.GetLinearVelocityFromWorldPoint(points[i]);
 
                     var relativeVel = platformFixture.Body.GetLocalVector(pointVelEntity - pointVelPlatform);
 
@@ -96,7 +66,8 @@ namespace TimeSink.Entities
                         break;
                     }
                     else if (relativeVel.Y > -1)
-                    { //if moving slower than 1 m/s
+                    { 
+                        //if moving slower than 1 m/s
                         //borderline case, moving only slightly out of platform
                         var relativePoint = platformFixture.Body.GetLocalPoint(points[i]);
                         float platformFaceY = 0.5f;//front of platform, from fixture definition :(
@@ -107,41 +78,11 @@ namespace TimeSink.Entities
                         }
                     }
                 }
-
-
-                //if (e.PreviousPosition != null && e.Physics.LinearVelocity.Y > .1f)
-                //{
-                //Vector2 normal;
-                //FixedArray2<Vector2> points;
-                //contact.GetWorldManifold(out normal, out points);
-
-                //    var offset = (e.PreviousPosition ?? Vector2.Zero) - e.Position;
-
-                //    var edgeShape = platformFixture.Shape as EdgeShape;
-                //    var platformVector = edgeShape.Vertex1.X < edgeShape.Vertex2.X
-                //        ? edgeShape.Vertex2 - edgeShape.Vertex1
-                //        : edgeShape.Vertex1 - edgeShape.Vertex2;
-
-                //    for (int i = 0; i < contact.Manifold.PointCount; i++)
-                //    {
-                //        var entityVector = points[i] + offset - edgeShape.Vertex1;
-
-                //        var cross = Vector3.Cross(
-                //            new Vector3(entityVector, 0),
-                //            new Vector3(platformVector, 0));
-
-                //        if (cross.Z > 0)
-                //        {
-                //            result = true;
-                //            break;
-                //        }
-                //    }
-                //}
             }
 
-            
-            separatedDict[entityFixture] = false;
+            collided.Add(entityFixture);
 
+            contact.Enabled = result;
             return result;
         }
     }

@@ -311,6 +311,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\Body_Neutral.png">
+      <Name>Body_Neutral</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Sprites\SpriteSheets\Idle_ClosedHand.PNG">
+      <Name>Idle_ClosedHand</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Sprites\SpriteSheets\Idle_OpenHand.PNG">
+      <Name>Idle_OpenHand</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Sprites\WalkingSheet.png">
       <Name>WalkingSheet</Name>
       <Importer>TextureImporter</Importer>
@@ -392,18 +407,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Sprites\SpriteSheets\Idle_ClosedHand.PNG">
-      <Name>Idle_ClosedHand</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Sprites\SpriteSheets\Idle_OpenHand.PNG">
-      <Name>Idle_OpenHand</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\Body_Walking_Right_Intermediate.png">
       <Name>Body_Walking_Right_Intermediate</Name>
       <Importer>TextureImporter</Importer>
@@ -416,13 +419,6 @@
     </Compile>
     <Compile Include="Textures\Sprites\SpriteSheets\Jumping_Right.PNG">
       <Name>Jumping_Right</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Sprites\SpriteSheets\Body_Neutral.png">
-      <Name>Body_Neutral</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -537,20 +533,6 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\Body_Walking_Intermediate_Left.png">
       <Name>Body_Walking_Intermediate_Left</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Sprites\SpriteSheets\Body_Running_Intermediate_Left.png">
-      <Name>Body_Running_Intermediate_Left</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Sprites\SpriteSheets\BodyRunningLeft.PNG">
-      <Name>BodyRunningLeft</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -982,6 +964,46 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\HorizontalClimbRightNeut.png">
       <Name>HorizontalClimbRightNeut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\RunningLeft.PNG">
+      <Name>RunningLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\RunningRight.PNG">
+      <Name>RunningRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\Body_Running_Intermediate_Left.png">
+      <Name>Body_Running_Intermediate_Left</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\Body_Running_Intermediate_Right.png">
+      <Name>Body_Running_Intermediate_Right</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Bramble_Tileable.png">
+      <Name>Bramble_Tileable</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\MovingPlatform.png">
+      <Name>MovingPlatform</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
