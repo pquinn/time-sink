@@ -26,13 +26,16 @@ namespace TimeSink.Entities.Objects
     public class Torch : Entity, IInventoryItem
     {
         const string EDITOR_NAME = "Torch";
-        const string TEXTURE = "Textures/Weapons/Torch_Staff_Unlit";
+        const string TEXTURE = "Textures/Objects/TorchFlaming";
 
         private static readonly Guid GUID = new Guid("749a40d4-fd31-438d-8d68-9d7a7700ea2d");
 
         private WeldJoint j;
         private World w;
         private UserControlledCharacter held;
+        private float timer;
+        private float interval = 200f;
+        private NewAnimationRendering rendering;
 
         public Torch()
             :this(Vector2.Zero, 10, 75)
@@ -43,6 +46,13 @@ namespace TimeSink.Entities.Objects
             Position = position;
             Width = width;
             Height = height;
+            rendering =  new NewAnimationRendering(
+                  TEXTURE,
+                  new Vector2(29.5f, 130f),
+                  2,
+                  Vector2.Zero,
+                  0,
+                  Vector2.One);
         }
 
         [SerializableField]
@@ -97,10 +107,12 @@ namespace TimeSink.Entities.Objects
                 initialized = true;
             }
         }
+
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             return true;
         }
+
         void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
         }
@@ -117,7 +129,10 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Rendering
         {
-            get { return new  ZRendering(TEXTURE,PhysicsConstants.MetersToPixels(Physics.Position),0,Width,Height, 0); }
+            get
+            {
+                return rendering;
+            }
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
@@ -145,11 +160,19 @@ namespace TimeSink.Entities.Objects
         }
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+            timer += (float)time.ElapsedGameTime.TotalMilliseconds;
             base.OnUpdate(time, world);
             if (held != null)
             {
                 Physics.Position = held.Physics.Position;
             }
+            if (timer >= interval)
+            {
+                rendering.CurrentFrame = (rendering.CurrentFrame + 1) % rendering.NumFrames;
+                timer = 0f;
+            }
+
+            rendering.Position = PhysicsConstants.MetersToPixels(Physics.Position);
 
         }
     }
