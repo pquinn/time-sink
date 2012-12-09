@@ -114,11 +114,19 @@ namespace TimeSink.Entities.Objects
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
                 initialized = true;
             }
         }
 
+        bool OnCollidedWith(Fixture f, Entity c, Fixture cf, Contact info)
+        {
+            if (c is UserControlledCharacter)
+                return true;
+            else
+                return false;
+        }
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             rectExit = false;
