@@ -96,7 +96,7 @@ namespace TimeSink.Entities.Weapons
             {
                 Dead = true;
             }
-            return true;
+            return info.Enabled;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -112,7 +112,7 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-               // Physics.Dispose();
+                Physics.Dispose();
             }
             else
             {
