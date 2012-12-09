@@ -77,7 +77,7 @@ namespace TimeSink.Entities.Objects
             // This check is so the second call doesn't override things and create two joints.
             if (!Hanging && character.Physics.LinearVelocity.Y > 0)
             {
-                joint = new PrismaticJoint(                    
+                joint = new PrismaticJoint(
                     Physics,
                     character.WheelBody,                    
                     Vector2.Zero,
