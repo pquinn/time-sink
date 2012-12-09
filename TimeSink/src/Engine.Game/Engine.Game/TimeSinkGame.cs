@@ -170,9 +170,11 @@ namespace TimeSink.Engine.Game
         }
 
         private string loadLevel;
-        public override void MarkAsLoadLevel(string levelPath)
+        private int spawnPoint = -1;
+        public override void MarkAsLoadLevel(string levelPath, int spawnPoint)
         {
             loadLevel = levelPath;
+            this.spawnPoint = spawnPoint;
         }
 
         private void LoadLevel()
@@ -186,10 +188,14 @@ namespace TimeSink.Engine.Game
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
-
-            Character = new UserControlledCharacter(LevelManager.Level.DefaultStart);
+            
+            Character = new UserControlledCharacter(
+                spawnPoint >= 0 ? 
+                    LevelManager.Level.SpawnPoints[spawnPoint] : 
+                    LevelManager.Level.DefaultStart);
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
+            spawnPoint = -1;
         }
 
         #region Controller code

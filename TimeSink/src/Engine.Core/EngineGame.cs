@@ -162,6 +162,6 @@ namespace TimeSink.Engine.Core
         protected virtual void LevelLoaded() { }
 
 
-        public virtual void MarkAsLoadLevel(string levelPath) { }
+        public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
     }
 }

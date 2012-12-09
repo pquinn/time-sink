@@ -98,7 +98,6 @@ namespace TimeSink.Entities.Enemies
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            throw new NotImplementedException();
         }
 
 
