@@ -97,10 +97,12 @@ namespace TimeSink.Entities.Objects
                 initialized = true;
             }
         }
+
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             return true;
         }
+
         void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
         }
@@ -117,7 +119,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Rendering
         {
-            get { return new  ZRendering(TEXTURE,PhysicsConstants.MetersToPixels(Physics.Position),0,Width,Height, 0); }
+            get { return new  ZRendering(TEXTURE,PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height, 0); }
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)

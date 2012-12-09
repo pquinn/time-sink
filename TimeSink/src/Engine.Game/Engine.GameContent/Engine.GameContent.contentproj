@@ -1016,15 +1016,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Keys\e-Key.png">
-      <Name>e-Key</Name>
+    <Compile Include="Textures\Tiles\Torch_Ground.png">
+      <Name>Torch_Ground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Tiles\Torch_Ground.png">
-      <Name>Torch_Ground</Name>
+    <Compile Include="Textures\Keys\e-Key.png">
+      <Name>e-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\s-Key.png">
+      <Name>s-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\w-Key.png">
+      <Name>w-Key</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

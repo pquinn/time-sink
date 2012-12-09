@@ -12,11 +12,13 @@ namespace TimeSink.Engine.Core
     {
         private Vector2 position;
         private string texture;
+
         public ItemPopup(string texture, Vector2 position)
         {
             this.texture = texture;
             this.position = position;
         }
+
         public IRendering Rendering
         {
             get { return new SizedRendering(texture, PhysicsConstants.MetersToPixels(position), 0, 30, 30); }
