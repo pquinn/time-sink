@@ -50,6 +50,15 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized)
+                return;
+
+            Physics.Dispose();
+            initialized = false;
+        }
+
         bool collidedArrow(Fixture f1, Arrow e, Fixture f2, Contact c)
         {
             this.Health -= 25;

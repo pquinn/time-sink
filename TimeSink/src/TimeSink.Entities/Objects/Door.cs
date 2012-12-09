@@ -156,6 +156,15 @@ namespace TimeSink.Entities.Objects
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+            //TODO: destroy item popup too?
+        }
+
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
             Physics.Friction = 0;

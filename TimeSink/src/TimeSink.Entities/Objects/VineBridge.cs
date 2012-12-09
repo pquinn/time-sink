@@ -109,14 +109,6 @@ namespace TimeSink.Entities.Objects
             Hanging = false;
         }
 
-        public override void HandleKeyboardInput(Microsoft.Xna.Framework.GameTime gameTime, EngineGame world)
-        {
-        }
-
-        public override void Load(IComponentContext engineRegistrations)
-        {
-        }
-
         private bool initialized;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
@@ -144,6 +136,14 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         public override IRendering Preview
