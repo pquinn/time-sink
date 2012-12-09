@@ -15,6 +15,7 @@ using Autofac;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
+using FarseerPhysics.Dynamics.Joints;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -22,7 +23,7 @@ namespace TimeSink.Entities.Enemies
     [SerializableEntity("849aaec2-7155-4c37-aa71-42d0c1611881")]
     public class NormalCentipede : Enemy
     {
-        const float CENTIPEDE_MASS = 100f;
+        const float  CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Centipede/Neutral";
         const string CENTIPEDE_WALK_LEFT = "Textures/Enemies/Centipede/CentipedeWalk_Left";
         const string EDITOR_NAME = "Normal Centipede";
@@ -31,8 +32,6 @@ namespace TimeSink.Entities.Enemies
 
         new private static int textureHeight;
         new private static int textureWidth;
-
-        private int generalDirection;
 
         public Func<float, Vector2> PatrolFunction { get; private set; }
 
@@ -158,11 +157,33 @@ namespace TimeSink.Entities.Enemies
         private HashSet<Body> allBodies = new HashSet<Body>();
         private float angle;
 
+        int generalDirection
+        {
+            get
+            {
+                return WheelSpeed > 0 ? 1 : -1;
+            }
+        }
+
+        public float WheelSpeed
+        {
+            get
+            {
+                return wheelMotor.MotorSpeed;
+            }
+            set
+            {
+                wheelMotor.MotorSpeed = value;
+            }
+        }
+
+        RevoluteJoint wheelMotor;
+
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !pinitialized)
             {
-                generalDirection = PatrolDirection.X > 0 ? 1 : -1;
+                var direction = PatrolDirection.X > 0 ? 1 : -1;
 
                 var world = engineRegistrations.Resolve<World>();
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
@@ -206,7 +227,7 @@ namespace TimeSink.Entities.Enemies
                     hitSensor.CollisionCategories = Category.Cat2;
                     hitSensor.CollidesWith = Category.Cat2;
 
-                    var wheelJoint = JointFactory.CreateRevoluteJoint(
+                    wheelMotor = JointFactory.CreateRevoluteJoint(
                         world,
                         anchorBody,
                         wheelBody,
@@ -214,9 +235,9 @@ namespace TimeSink.Entities.Enemies
                     
                     if (i == numSegments - 1)
                     {
-                        wheelJoint.MotorEnabled = true;
-                        wheelJoint.MotorSpeed = 5 * generalDirection;
-                        wheelJoint.MotorTorque = wheelJoint.MaxMotorTorque = Single.MaxValue;
+                        wheelMotor.MotorEnabled = true;
+                        wheelMotor.MotorSpeed = 5 * direction;
+                        wheelMotor.MotorTorque = wheelMotor.MaxMotorTorque = Single.MaxValue;
                     }
 
                     wheelBody.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
