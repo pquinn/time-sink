@@ -34,10 +34,7 @@ namespace TimeSink.Entities
         protected int textureWidth;
 
         private bool collided;
-        private ScreenManager screenManager;
-
-        public int DialogueState { get; set; }
-        public List<String> DialogueTrees { get; set; }
+        private EngineGame game;
 
         public NonPlayerCharacter() : this(Vector2.Zero, DEFAULT_TEXTURE) { }
 
@@ -47,8 +44,8 @@ namespace TimeSink.Entities
             Position = position;
             TextureName = textureName;
 
-            DialogueTrees = new List<String>();
-            DialogueTrees.Add("4cf17838-279c-11e2-b64d-109adda800ea");
+            DialogueRoots = new List<String>();
+            DialogueRoots.Add("4cf17838-279c-11e2-b64d-109adda800ea");
         }
 
         [SerializableField]
@@ -57,6 +54,14 @@ namespace TimeSink.Entities
         [SerializableField]
         [EditableField ("Texture Name")]
         public string TextureName { get; set; }
+
+        [SerializableField]
+        [EditableField("DialogueState")]
+        public int DialogueState { get; set; }
+
+        [SerializableField]
+        [EditableField("DialogueRoots")]
+        public List<String> DialogueRoots { get; set; }
 
         public override string EditorName
         {
@@ -72,9 +77,9 @@ namespace TimeSink.Entities
         {
             if (collided)
             {
-                if (InputManager.Instance.IsNewKey(Keys.X) && !screenManager.IsInDialogueState())
+                if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
                 {
-                    screenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueTrees[DialogueState])), null);
+                    game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRoots[DialogueState])), null);
                 }
             }
         }
@@ -102,8 +107,7 @@ namespace TimeSink.Entities
             {
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
                 var world = engineRegistrations.Resolve<World>();
-                var game = engineRegistrations.Resolve<EngineGame>();
-                screenManager = game.ScreenManager;
+                game = engineRegistrations.ResolveOptional<EngineGame>();
 
                 Width = texture.Width;
                 Height = texture.Height;
