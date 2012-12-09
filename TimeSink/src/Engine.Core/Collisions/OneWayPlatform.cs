@@ -82,7 +82,6 @@ namespace TimeSink.Entities
 
             collided.Add(entityFixture);
 
-            contact.Enabled = result;
             return result;
         }
     }
