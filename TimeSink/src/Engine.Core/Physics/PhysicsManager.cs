@@ -21,7 +21,7 @@ namespace TimeSink.Engine.Core.Physics
 
         public PhysicsManager(IComponentContext engineRegistrations)
         {
-            World = engineRegistrations.Resolve<World>();
+            World = new World(PhysicsConstants.Gravity);
             this.engineRegistrations = engineRegistrations;
         }
 
@@ -43,7 +43,7 @@ namespace TimeSink.Engine.Core.Physics
 
         internal void Clear()
         {
-            World.Clear();
+            World = new World(PhysicsConstants.Gravity);
         }
     }
 }

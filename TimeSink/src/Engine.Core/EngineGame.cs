@@ -106,8 +106,6 @@ namespace TimeSink.Engine.Core
             blank.SetData(new[] { Color.White });
             TextureCache.AddResource("blank", blank);
 
-            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
-
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();

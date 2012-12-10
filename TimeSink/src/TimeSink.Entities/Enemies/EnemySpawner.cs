@@ -33,7 +33,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;

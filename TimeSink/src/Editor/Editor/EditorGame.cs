@@ -75,6 +75,8 @@ namespace Editor
             Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
             Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
 
+            PhysicsConstants.Gravity = Vector2.Zero;
+
             EditorProperties.Instance = new EditorProperties()
             {
                 ShowGridLines = false,
@@ -88,9 +90,12 @@ namespace Editor
 
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
-
-            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
-            debugView.LoadContent(GraphicsDevice, Content);
+            LevelManager.LevelLoaded += new LevelLoadedEventHandler(
+                () =>
+                {
+                    debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+                    debugView.LoadContent(GraphicsDevice, Content);
+                });
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
@@ -126,8 +131,6 @@ namespace Editor
             TextureCache.AddResource("blank", blank);
             SoundCache.LoadResource("Audio/Sounds/Hop");
             SoundCache.LoadResource("Audio/Music/Four");
-
-            builder.RegisterInstance(new World(Vector2.Zero)).AsSelf();
 
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();

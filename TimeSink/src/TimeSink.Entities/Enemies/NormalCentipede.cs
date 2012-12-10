@@ -261,7 +261,7 @@ namespace TimeSink.Entities.Enemies
             {
                 generalDirection = PatrolDirection.X > 0 ? 1 : -1;
 
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var texture = GetTexture(textureCache);
                 var width = PhysicsConstants.PixelsToMeters(texture.Width);

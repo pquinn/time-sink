@@ -137,7 +137,7 @@ namespace TimeSink.Entities.Weapons
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
 
                 Width = 16;
                 Height = 8;

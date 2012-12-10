@@ -122,7 +122,7 @@ namespace TimeSink.Entities.Objects
         {
             if (!initialized || force)
             {
-                world = engineRegistrations.Resolve<World>();
+                world = engineRegistrations.Resolve<PhysicsManager>().World;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height / 2);
 

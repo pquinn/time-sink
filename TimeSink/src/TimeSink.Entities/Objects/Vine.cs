@@ -78,7 +78,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
                 Width = (int)(texture.Width / 2 * Scale);

@@ -106,7 +106,7 @@ namespace TimeSink.Entities
             if (force || !initialized)
             {
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
 
                 Width = texture.Width;

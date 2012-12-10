@@ -1538,7 +1538,7 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 _world = world;
 
                 Width = spriteWidth;

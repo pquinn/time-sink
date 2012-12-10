@@ -88,7 +88,7 @@ namespace TimeSink.Entities.Objects
 
         private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
-        {
+        {            
             if (DoorType == DoorType.Side)
                 ChangeLevel();
 
@@ -119,7 +119,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
