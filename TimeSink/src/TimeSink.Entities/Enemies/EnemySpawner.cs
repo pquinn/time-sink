@@ -139,9 +139,16 @@ namespace TimeSink.Entities.Enemies
 
         private bool canSpawn;
         private int batchCount;
+        private bool firstTick;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
+
+            if (firstTick)
+            {
+                firstTick = false;
+                counter = SpawnOffset;
+            }
 
             counter += (float)time.ElapsedGameTime.TotalMilliseconds;
             betweenTime += time.ElapsedGameTime.Milliseconds;
