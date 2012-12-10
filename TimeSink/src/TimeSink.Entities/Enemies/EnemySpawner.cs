@@ -33,7 +33,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
@@ -48,6 +48,15 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized)
+                return;
+
+            Physics.Dispose();
+            initialized = false;
         }
 
         bool collidedArrow(Fixture f1, Arrow e, Fixture f2, Contact c)

@@ -76,7 +76,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
@@ -94,6 +94,14 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         public override Guid Id

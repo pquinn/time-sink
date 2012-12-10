@@ -126,9 +126,56 @@ namespace TimeSink.Engine.Game
 
             view = ProcessControllerInput(gameTime);
 
+            int topClamp, leftClamp;
+            int bottomClamp, rightClamp;
+
+            topClamp = leftClamp = int.MaxValue;
+            bottomClamp = rightClamp = int.MinValue;
+
+            var h2 = GraphicsDevice.Viewport.Height / 2;
+            var w2 = GraphicsDevice.Viewport.Width / 2;
+
+            bool hasBackground = false;
+
+            foreach (var tile in LevelManager.Level.Midground)
+            {
+                hasBackground = true;
+
+                var position = tile.Position;
+
+                var top = (int)(position.Y) - h2;
+                var bottom = (int)(position.Y) + h2;
+                var left = (int)(position.X) - w2;
+                var right = (int)(position.X) + w2;
+
+                if (top < topClamp)
+                    topClamp = top;
+                if (bottom > bottomClamp)
+                    bottomClamp = bottom;
+                if (left < leftClamp)
+                    leftClamp = left;
+                if (right > rightClamp)
+                    rightClamp = right;
+            }
+
             var pos = Character != null ? Character.Position : Vector2.Zero;
-            Camera.Position = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
+            var camPos = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
                 new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
+
+            if (hasBackground)
+            {
+                if (camPos.X < leftClamp)
+                    camPos.X = leftClamp;
+                else if (camPos.X + GraphicsDevice.Viewport.Width > rightClamp)
+                    camPos.X = rightClamp - GraphicsDevice.Viewport.Width;
+
+                if (camPos.Y < topClamp)
+                    camPos.Y = topClamp;
+                else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
+                    camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
+            }
+
+            Camera.Position = camPos;
 
             ScreenManager.Update(gameTime, this);
 

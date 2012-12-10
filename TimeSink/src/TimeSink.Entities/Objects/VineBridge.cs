@@ -77,18 +77,17 @@ namespace TimeSink.Entities.Objects
             // This check is so the second call doesn't override things and create two joints.
             if (!Hanging && character.Physics.LinearVelocity.Y > 0)
             {
-                joint = new PrismaticJoint(                    
+                joint = JointFactory.CreatePrismaticJoint(
+                    world,
                     Physics,
-                    character.WheelBody,                    
+                    character.WheelBody,
                     Vector2.Zero,
-                    character.Position +
-                        new Vector2(0, -(PhysicsConstants.PixelsToMeters(character.Height) / 4)) -
-                            character.WheelBody.Position,
-                    new Vector2(1, 0));
-                world.AddJoint(joint);
+                    Vector2.UnitX);
 
                 origLinearDamping = character.Physics.LinearDamping;
                 character.Physics.LinearDamping = 10;
+
+                character.Physics.ResetDynamics();
 
                 Hanging = true;
             }
@@ -109,29 +108,21 @@ namespace TimeSink.Entities.Objects
             Hanging = false;
         }
 
-        public override void HandleKeyboardInput(Microsoft.Xna.Framework.GameTime gameTime, EngineGame world)
-        {
-        }
-
-        public override void Load(IComponentContext engineRegistrations)
-        {
-        }
-
         private bool initialized;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
             if (!initialized || force)
             {
-                world = engineRegistrations.Resolve<World>();
+                world = engineRegistrations.Resolve<PhysicsManager>().World;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height / 2);
 
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     spriteWidthMeters, spriteHeightMeters,
-                    0.5f, Position);
+                    300f, Position);
                 Physics.Friction = 5f;
-                Physics.Restitution = 1f;
+                Physics.Restitution = 0f;
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 Physics.UserData = this;
@@ -144,6 +135,14 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         public override IRendering Preview

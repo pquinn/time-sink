@@ -73,7 +73,7 @@ namespace TimeSink.Engine.Core
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
 
                 Physics = BodyFactory.CreateBody(world, this);
                 Physics.BodyType = BodyType.Static;

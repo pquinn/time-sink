@@ -64,10 +64,6 @@ namespace TimeSink.Entities.Objects
             get { return Rendering; }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
         public override void Load(IComponentContext container)
         {
             var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
@@ -78,14 +74,13 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
                 Width = (int)(texture.Width / 2 * Scale);
                 Height = (int)(texture.Height * Scale);
                 TextureWidth = PhysicsConstants.PixelsToMeters(Width);
                 TextureHeight = PhysicsConstants.PixelsToMeters(Height);
-
 
                 //anchor point
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -110,6 +105,15 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+            VineAnchor.Dispose();
         }
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture cFix, Contact info)

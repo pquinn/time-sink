@@ -148,7 +148,7 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     PhysicsConstants.PixelsToMeters(Width),
@@ -168,6 +168,14 @@ namespace TimeSink.Entities
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         public override void Load(IComponentContext container)

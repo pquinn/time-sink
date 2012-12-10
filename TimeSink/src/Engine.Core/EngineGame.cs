@@ -106,8 +106,6 @@ namespace TimeSink.Engine.Core
             blank.SetData(new[] { Color.White });
             TextureCache.AddResource("blank", blank);
 
-            builder.RegisterInstance(new World(PhysicsConstants.Gravity)).AsSelf();
-
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
@@ -159,7 +157,11 @@ namespace TimeSink.Engine.Core
             base.Draw(gameTime);
         }
 
-        protected virtual void LevelLoaded() { }
+        protected virtual void LevelLoaded() 
+        {
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
+        }
 
 
         public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }

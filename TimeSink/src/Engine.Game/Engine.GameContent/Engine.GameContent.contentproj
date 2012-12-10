@@ -56,6 +56,86 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4000.PNG">
+      <Name>Hub_East%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4001.PNG">
+      <Name>Hub_East%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4002.PNG">
+      <Name>Hub_East%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4003.PNG">
+      <Name>Hub_East%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4010.PNG">
+      <Name>Hub_East%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4011.PNG">
+      <Name>Hub_East%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4012.PNG">
+      <Name>Hub_East%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4013.PNG">
+      <Name>Hub_East%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4020.PNG">
+      <Name>Hub_East%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4021.PNG">
+      <Name>Hub_East%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4022.PNG">
+      <Name>Hub_East%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4023.PNG">
+      <Name>Hub_East%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4030.PNG">
+      <Name>Hub_East%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4031.PNG">
+      <Name>Hub_East%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4032.PNG">
+      <Name>Hub_East%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub_East\Hub_East%4033.PNG">
+      <Name>Hub_East%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Sprites\Body\Body_Neutral.png">
       <Name>Body_Neutral</Name>
       <Importer>TextureImporter</Importer>
@@ -672,88 +752,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4000.PNG">
-      <Name>Hub_East%4000</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4001.PNG">
-      <Name>Hub_East%4001</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4002.PNG">
-      <Name>Hub_East%4002</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4003.PNG">
-      <Name>Hub_East%4003</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4010.PNG">
-      <Name>Hub_East%4010</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4011.PNG">
-      <Name>Hub_East%4011</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4012.PNG">
-      <Name>Hub_East%4012</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4013.PNG">
-      <Name>Hub_East%4013</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4020.PNG">
-      <Name>Hub_East%4020</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4021.PNG">
-      <Name>Hub_East%4021</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4022.PNG">
-      <Name>Hub_East%4022</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4023.PNG">
-      <Name>Hub_East%4023</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4030.PNG">
-      <Name>Hub_East%4030</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4031.PNG">
-      <Name>Hub_East%4031</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4032.PNG">
-      <Name>Hub_East%4032</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Hub_East\Hub_East%4033.PNG">
-      <Name>Hub_East%4033</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\ClimbingRight.PNG">
       <Name>ClimbingRight</Name>
       <Importer>TextureImporter</Importer>
@@ -1131,6 +1129,11 @@
     </Compile>
     <Compile Include="Textures\Sprites\SpriteSheets\ShootingWalking\Body_Neutral_Shooting_Right.png">
       <Name>Body_Neutral_Shooting_Right</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\x-Key.png">
+      <Name>x-Key</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

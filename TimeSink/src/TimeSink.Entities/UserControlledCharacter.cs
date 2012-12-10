@@ -1849,7 +1849,7 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 _world = world;
 
                 Width = spriteWidth;
@@ -1947,6 +1947,15 @@ namespace TimeSink.Entities
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+            WheelBody.Dispose();
         }
 
         public void Reset(Vector2 newPos, IComponentContext engineRegistrations)

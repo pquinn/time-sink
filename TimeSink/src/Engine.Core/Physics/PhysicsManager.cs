@@ -21,19 +21,13 @@ namespace TimeSink.Engine.Core.Physics
 
         public PhysicsManager(IComponentContext engineRegistrations)
         {
-            World = engineRegistrations.Resolve<World>();
+            World = new World(PhysicsConstants.Gravity);
             this.engineRegistrations = engineRegistrations;
         }
 
         public void RegisterPhysicsBody(IPhysicsEnabledBody body)
         {
             body.InitializePhysics(false, engineRegistrations);
-        }
-
-        internal void UnregisterPhysicsBody(Entity entity)
-        {
-            //TODO: fix for multiple bodies (ex: UserControlledCharacter)
-            entity.Physics.Dispose();
         }
 
         public void Update(GameTime gameTime)
@@ -43,7 +37,12 @@ namespace TimeSink.Engine.Core.Physics
 
         internal void Clear()
         {
-            World.Clear();
+            World = new World(PhysicsConstants.Gravity);
+        }
+
+        public void UnregisterPhysicsBody(IPhysicsEnabledBody body)
+        {
+            body.DestroyPhysics();
         }
     }
 }

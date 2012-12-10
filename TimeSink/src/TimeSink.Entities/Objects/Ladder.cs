@@ -76,21 +76,17 @@ namespace TimeSink.Entities.Objects
         [EditableField("VineWall")]
         public bool VineWall { get; set; }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
         public override void Load(IComponentContext container)
         {
             var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(TEXTURE);
         }
-        private bool initialized;
 
+        private bool initialized;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
@@ -120,6 +116,14 @@ namespace TimeSink.Entities.Objects
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+        }
+
         bool OnCollidedWith(Fixture f, Entity c, Fixture cf, Contact info)
         {
             if (c is UserControlledCharacter)
@@ -127,6 +131,7 @@ namespace TimeSink.Entities.Objects
             else
                 return false;
         }
+
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             rectExit = false;

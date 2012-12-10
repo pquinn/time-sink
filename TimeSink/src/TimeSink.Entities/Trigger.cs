@@ -83,7 +83,7 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
 
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
@@ -94,6 +94,14 @@ namespace TimeSink.Entities
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }

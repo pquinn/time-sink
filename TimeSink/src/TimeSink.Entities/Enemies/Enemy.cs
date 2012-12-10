@@ -136,6 +136,7 @@ namespace TimeSink.Entities.Enemies
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
+                world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
             }
         }
 
@@ -164,7 +165,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var texture = GetTexture(textureCache);
                 Width = texture.Width;

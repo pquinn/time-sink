@@ -10,5 +10,6 @@ namespace TimeSink.Engine.Core.Physics
     public interface IPhysicsEnabledBody
     {
         void InitializePhysics(bool force, IComponentContext engineRegistrations);
+        void DestroyPhysics();
     }
 }

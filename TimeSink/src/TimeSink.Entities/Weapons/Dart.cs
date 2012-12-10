@@ -107,7 +107,7 @@ namespace TimeSink.Entities.Weapons
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
-                Physics.Dispose();
+                world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
             }
             else
             {
@@ -137,7 +137,7 @@ namespace TimeSink.Entities.Weapons
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
 
                 Width = 16;
                 Height = 8;
@@ -156,6 +156,14 @@ namespace TimeSink.Entities.Weapons
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }

@@ -27,6 +27,8 @@ namespace TimeSink.Entities
     {
         const string EDITOR_NAME = "NPC";
         const string DEFAULT_TEXTURE = "Textures/Enemies/Dummy";
+        const string ACTION_POPUP = "Textures/Keys/x-Key";
+        const int POPUP_OFFSET = 20;
 
         private static readonly Guid GUID = new Guid("57eb5766-5ce2-4694-ad4b-e019d4817985");
 
@@ -35,6 +37,8 @@ namespace TimeSink.Entities
 
         private bool collided;
         private EngineGame game;
+
+        private ItemPopup popup;
 
         public NonPlayerCharacter() : this(Vector2.Zero, DEFAULT_TEXTURE) { }
 
@@ -92,11 +96,13 @@ namespace TimeSink.Entities
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             collided = true;
+            game.LevelManager.RenderManager.RegisterRenderable(popup);
             return true;
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
+            game.LevelManager.RenderManager.UnregisterRenderable(popup);
             collided = false;
         }
 
@@ -106,7 +112,7 @@ namespace TimeSink.Entities
             if (force || !initialized)
             {
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
 
                 Width = texture.Width;
@@ -132,6 +138,9 @@ namespace TimeSink.Entities
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+
+                popup = new ItemPopup(ACTION_POPUP, 
+                    Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)));
 
                 initialized = true;
             }

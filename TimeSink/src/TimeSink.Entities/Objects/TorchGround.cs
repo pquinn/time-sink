@@ -19,7 +19,7 @@ namespace TimeSink.Entities.Objects
 
     [EditorEnabled]
     [SerializableEntity("aa70e739-3d5d-454c-bfb1-64b2dc190e3e")]
-   public class TorchGround : Entity
+    public class TorchGround : Entity
     {
         const string EDITOR_NAME = "Torch Ground";
         const string TEXTURE = "Textures/Tiles/Torch_Ground";
@@ -27,9 +27,10 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid GUID = new Guid("aa70e739-3d5d-454c-bfb1-64b2dc190e3e");
 
         public TorchGround()
-            :this(Vector2.Zero, 50, 10)
+            : this(Vector2.Zero, 50, 10)
         {
         }
+
         public TorchGround(Vector2 position, int width, int height)
         {
             Position = position;
@@ -66,7 +67,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
@@ -85,6 +86,14 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         public override Engine.Core.Rendering.IRendering Preview

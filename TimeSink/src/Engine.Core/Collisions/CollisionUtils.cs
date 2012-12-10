@@ -30,11 +30,11 @@ namespace TimeSink.Engine.Core.Collisions
             f.OnCollision += delegate(Fixture f1, Fixture f2, Contact c)
             {
                 if (f1 == f && f2.Body.UserData is T)
-                    return callback(f1, f2.Body.UserData as T, f2, c);
+                    c.Enabled = callback(f1, f2.Body.UserData as T, f2, c);
                 else if (f1.Body.UserData is T)
-                    return callback(f2, f1.Body.UserData as T, f1, c);
+                    c.Enabled = callback(f2, f1.Body.UserData as T, f1, c);
 
-                return true;
+                return c.Enabled;
             };
         }
 
