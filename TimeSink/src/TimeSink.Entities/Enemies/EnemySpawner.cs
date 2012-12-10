@@ -52,7 +52,7 @@ namespace TimeSink.Entities.Enemies
             MaxSpawn = max;
             Height = height;
             Width = width;
-            counter += offset % interval;
+            SpawnOffset = offset % interval;
         }
 
         public override void Load(IComponentContext engineRegistrations)
