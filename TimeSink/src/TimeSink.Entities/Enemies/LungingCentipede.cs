@@ -66,7 +66,7 @@ namespace TimeSink.Entities.Enemies
 
         bool HitWorld(Fixture wheel, WorldGeometry2 w, Fixture wFix, Contact c)
         {
-            if (midLunge && waitForWorldContact)
+            if (!wheel.IsSensor && midLunge && waitForWorldContact)
             {
                 midLunge = false;
                 waitForWorldContact = false;
@@ -88,7 +88,7 @@ namespace TimeSink.Entities.Enemies
                 Physics.IgnoreGravity = false;
 
                 var force = character.Position - Physics.Position;
-                Physics.ApplyForce(force + Vector2.UnitY * 2);
+                Physics.ApplyForce((force - Vector2.UnitY * 2) * 400);
 
                 if (force.X > 0 && WheelSpeed < 0 || force.X < 0 && WheelSpeed > 0)
                     WheelSpeed *= -1;
