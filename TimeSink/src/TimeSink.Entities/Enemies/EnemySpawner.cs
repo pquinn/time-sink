@@ -27,6 +27,10 @@ namespace TimeSink.Entities.Enemies
         [SerializableField]
         public int SpawnAmount { get; set; }
 
+        [EditableField("Initial Interval Offset")]
+        [SerializableField]
+        public float SpawnOffset { get; set; }
+
         [SerializableField]
         [EditableField("Width")]
         public override int Width { get; set; }
@@ -40,14 +44,15 @@ namespace TimeSink.Entities.Enemies
         float betweenTime;
 
         public EnemySpawner() : 
-            this(10000f, int.MaxValue, 50, 50) { }
+            this(10000f, 0, int.MaxValue, 50, 50) { }
 
-        public EnemySpawner(float interval, int max, int width, int height)
+        public EnemySpawner(float interval, float offset, int max, int width, int height)
         {
             SpawnInterval = interval;
             MaxSpawn = max;
             Height = height;
             Width = width;
+            counter += offset % interval;
         }
 
         public override void Load(IComponentContext engineRegistrations)

@@ -18,7 +18,7 @@ namespace TimeSink.Entities.Enemies
         const string TEXTURE = "Textures/Enemies/Nest";
         const string EDITOR_NAME = "Centipede Spawner";
         public CentipedeSpawner() : base() { }
-        public CentipedeSpawner(float interval, int max, int width, int height, int dir) : base(interval, max, width, height)
+        public CentipedeSpawner(float interval, float offset, int max, int width, int height, int dir) : base(interval, offset, max, width, height)
         {
             SpawnDirection = dir;
         }
