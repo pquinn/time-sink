@@ -177,6 +177,13 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+
+        bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        {
+            c.TakeDamage(25);
+            return true;
+        }
+
         RevoluteJoint wheelMotor;
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
@@ -227,6 +234,8 @@ namespace TimeSink.Entities.Enemies
                     hitSensor.CollisionCategories = Category.Cat2;
                     hitSensor.CollidesWith = Category.Cat2;
 
+                    hitSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+
                     wheelMotor = JointFactory.CreateRevoluteJoint(
                         world,
                         anchorBody,
@@ -258,9 +267,8 @@ namespace TimeSink.Entities.Enemies
                     allBodies.Add(wheelBody);
 
                     previousAnchor = anchorBody;
+                    Physics = wheelBody;
                 }
-
-                Physics = anchors[numSegments - 1];
 
                 pinitialized = true;
             }
