@@ -100,19 +100,19 @@ namespace TimeSink.Entities.Enemies
         {
         }
 
-        bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
+        protected bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
         {
             health -= 25;
             return true;
         }
-        
-        bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
+
+        protected bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
         {
             RegisterDot(dart.dot);
             return true;
         }
 
-        bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        protected bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             c.TakeDamage(25);
             return true;
