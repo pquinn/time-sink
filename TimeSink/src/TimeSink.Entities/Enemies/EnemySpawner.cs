@@ -2,29 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TimeSink.Engine.Core;
-using Microsoft.Xna.Framework;
 using Autofac;
-using TimeSink.Engine.Core.Rendering;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using TimeSink.Engine.Core.Physics;
-using TimeSink.Engine.Core.Collisions;
-using TimeSink.Entities.Weapons;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.States;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities.Enemies
 {
-    public class EnemySpawner : Enemy
+    public abstract class EnemySpawner<T> : Enemy where T : Enemy
     {
-        public override void Load(IComponentContext engineRegistrations)
+        [SerializableField]
+        public float SpawnInterval;
+        
+        float counter;
+
+        public EnemySpawner(float interval, int max)
         {
-            throw new NotImplementedException();
+            SpawnInterval = interval;
+            MaxSpawn = max;
         }
 
-        public override string EditorName
+        public override void Load(IComponentContext engineRegistrations)
         {
-            get { return "Spawner"; }
+
         }
 
         private bool initialized;
@@ -45,6 +53,8 @@ namespace TimeSink.Entities.Enemies
 
                 hitBox.RegisterOnCollidedListener<Arrow>(collidedArrow);
                 hitBox.RegisterOnCollidedListener<Dart>(collidedDart);
+                hitBox.RegisterOnCollidedListener<T>(collidedEnemy);
+                hitBox.RegisterOnSeparatedListener<T>(separatedEnemy);
 
                 initialized = true;
             }
@@ -57,6 +67,25 @@ namespace TimeSink.Entities.Enemies
 
             Physics.Dispose();
             initialized = false;
+        }
+
+        HashSet<T> justSpawned = new HashSet<T>();
+        HashSet<T> spawned = new HashSet<T>();
+
+        [SerializableField]
+        public int MaxSpawn;
+
+        void separatedEnemy(Fixture f1, T e, Fixture eF)
+        {
+            if (justSpawned.Contains(e))
+                justSpawned.Remove(e);
+            else
+                e.Dead = true;
+        }
+
+        bool collidedEnemy(Fixture f1, T e, Fixture eF, Contact c)
+        {
+            return c.Enabled;
         }
 
         bool collidedArrow(Fixture f1, Arrow e, Fixture f2, Contact c)
@@ -75,17 +104,9 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                throw new NotImplementedException();
+                return new Guid("349aaec2-aa55-4c37-aa71-42d0c1616885");
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public override IRendering Preview
-        {
-            get { return new NullRendering(); }
+            set { }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -93,9 +114,28 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            get { return new NullRendering(); }
+            base.OnUpdate(time, world);
+
+            counter += time.ElapsedGameTime.Milliseconds;
+
+            spawned.RemoveWhere(x => x.Dead);
+            justSpawned.RemoveWhere(x => x.Dead);
+
+            if (counter > SpawnInterval && spawned.Count < MaxSpawn)
+            {
+                var enemy = SpawnEnemy(time, world);
+                spawned.Add(enemy);
+                justSpawned.Add(enemy);
+
+                world.LevelManager.PhysicsManager.RegisterPhysicsBody(enemy);
+                world.LevelManager.RenderManager.RegisterRenderable(enemy);
+                
+                counter = 0;
+            }
         }
+
+        protected abstract T SpawnEnemy(GameTime time, EngineGame world);
     }
 }
