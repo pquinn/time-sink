@@ -140,7 +140,7 @@ namespace TimeSink.Entities.Enemies
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var texture = GetTexture(textureCache);
-                Width = (int)(texture.Width * .5);
+                Width = (int)(texture.Width * .65);
                 Height = (int)(texture.Height * .5);
                 Physics = BodyFactory.CreateRectangle(
                     world,
