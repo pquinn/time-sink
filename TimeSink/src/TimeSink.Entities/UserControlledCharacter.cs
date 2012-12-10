@@ -293,7 +293,7 @@ namespace TimeSink.Entities
                     {
                         TouchingGround = true;
                         jumpToggleGuard = true;
-                        Climbing = true;
+                        Climbing = false;
                         fixture.Body.IsSensor = false;
                         return 0;
                     }
@@ -543,6 +543,7 @@ namespace TimeSink.Entities
                 {
                     TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
+                    Climbing = true;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
 
                     if (!canClimb.Sideways)
