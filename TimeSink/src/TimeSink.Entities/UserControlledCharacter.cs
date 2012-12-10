@@ -143,7 +143,7 @@ namespace TimeSink.Entities
             {
                 return new BasicRendering(
                     EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    PhysicsConstants.MetersToPixels(Position),
                     playerRotation, Vector2.One);
             }
         }

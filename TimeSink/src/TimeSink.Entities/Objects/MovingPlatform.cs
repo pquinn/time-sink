@@ -111,7 +111,7 @@ namespace TimeSink.Entities
         {
             get
             {
-                return new SizedRendering(WORLD_TEXTURE_NAME, PhysicsConstants.MetersToPixels(Physics.Position), 0, Width, Height);
+                return new SizedRendering(WORLD_TEXTURE_NAME, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
             }
         }
 

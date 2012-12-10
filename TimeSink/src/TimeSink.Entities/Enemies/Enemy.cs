@@ -89,7 +89,7 @@ namespace TimeSink.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   DUMMY_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Physics.Position),
+                  PhysicsConstants.MetersToPixels(Position),
                   0,
                   Vector2.One,
                   new Color(255f, tint, tint, 255f));//Math.Max(2.55f * health, 155)));

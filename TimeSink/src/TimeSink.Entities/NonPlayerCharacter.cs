@@ -160,7 +160,7 @@ namespace TimeSink.Entities
             {
                 return new BasicRendering(
                   TextureName,
-                  PhysicsConstants.MetersToPixels(Physics.Position),
+                  PhysicsConstants.MetersToPixels(Position),
                   0f,
                   Vector2.One);
             }

@@ -81,7 +81,7 @@ namespace TimeSink.Entities.Enemies
                 var tint = Math.Min(100, 2.55f * health);
                 return new TintedRendering(
                   CENTIPEDE_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Physics.Position),
+                  PhysicsConstants.MetersToPixels(Position),
                   0,
                   new Vector2(.5f,.5f),
                   new Color(255f, tint, tint, 255f));
