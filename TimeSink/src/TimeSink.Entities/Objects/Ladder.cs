@@ -200,7 +200,7 @@ namespace TimeSink.Entities.Objects
             {
                 return new SizedRendering(
                     EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    PhysicsConstants.MetersToPixels(Position),
                     0, Width, Height);
             }
         }

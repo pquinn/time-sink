@@ -151,7 +151,8 @@ namespace TimeSink.Editor.GUI.Views
                     x =>
                     {
                         x.Load(Game.Container);
-                        Game.LevelManager.RegisterEntity(x);
+                        Game.LevelManager.EditorRenderManager.RegisterPreviewable(x);
+                        //Game.LevelManager.RegisterEntity(x);
                     });
                 var entityWindow = new EntitySelector(entities, Game.TextureCache);
 

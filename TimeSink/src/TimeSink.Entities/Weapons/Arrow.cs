@@ -71,7 +71,7 @@ namespace TimeSink.Entities.Weapons
             {
                 return new BasicRendering(
                     ARROW_TEXTURE_NAME,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    PhysicsConstants.MetersToPixels(Position),
                     (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
                     Vector2.One
                 );

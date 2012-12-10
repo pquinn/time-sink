@@ -127,7 +127,7 @@ namespace TimeSink.Entities.Objects
             {
                 return new PivotedRendering(
                     VINE_TEXTURE,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    PhysicsConstants.MetersToPixels(Position),
                     //Need to translate rotation
                     VineAnchor == null ? 0 : VineAnchor.Rotation,
                     new Vector2(Scale, Scale));
