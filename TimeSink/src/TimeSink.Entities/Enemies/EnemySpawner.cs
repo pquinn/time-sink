@@ -143,7 +143,7 @@ namespace TimeSink.Entities.Enemies
         {
             base.OnUpdate(time, world);
 
-            counter += time.ElapsedGameTime.Milliseconds;
+            counter += (float)time.ElapsedGameTime.TotalMilliseconds;
             betweenTime += time.ElapsedGameTime.Milliseconds;
 
             spawned.RemoveWhere(x => x.Dead);
