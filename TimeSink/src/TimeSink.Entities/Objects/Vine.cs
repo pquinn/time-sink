@@ -74,7 +74,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                var world = engineRegistrations.Resolve<World>();
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
                 Width = (int)(texture.Width / 2 * Scale);
@@ -127,7 +127,7 @@ namespace TimeSink.Entities.Objects
             {
                 return new PivotedRendering(
                     VINE_TEXTURE,
-                    PhysicsConstants.MetersToPixels(Position),
+                    PhysicsConstants.MetersToPixels(Physics.Position),
                     //Need to translate rotation
                     VineAnchor == null ? 0 : VineAnchor.Rotation,
                     new Vector2(Scale, Scale));
@@ -141,7 +141,6 @@ namespace TimeSink.Entities.Objects
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            //interpolate the rotation like a line
             base.OnUpdate(time, world);
         }
 
