@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Autofac;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.Collisions;
+using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using Microsoft.Xna.Framework;
-using TimeSink.Engine.Core.Editor;
-using FarseerPhysics.Dynamics;
-using Autofac;
-using TimeSink.Engine.Core.Caching;
-using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
-using FarseerPhysics.Factories;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -83,7 +82,7 @@ namespace TimeSink.Entities.Enemies
                   CENTIPEDE_TEXTURE,
                   PhysicsConstants.MetersToPixels(Position),
                   0,
-                  new Vector2(.5f,.5f),
+                  Vector2.One,
                   new Color(255f, tint, tint, 255f));
             }
         }
@@ -138,9 +137,28 @@ namespace TimeSink.Entities.Enemies
         {
             if (force || !initialized)
             {
-                base.InitializePhysics(force, engineRegistrations);
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+                var texture = GetTexture(textureCache);
+                Width = (int)(texture.Width * .5);
+                Height = (int)(texture.Height * .5);
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
+                    1,
+                    Position);
+                Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
+                Physics.UserData = this;
+                Physics.IsSensor = true;
+                Physics.CollisionCategories = Category.Cat3 | Category.Cat2;
+                Physics.CollidesWith = Category.Cat1 | Category.Cat2;
                 Physics.IgnoreGravity = true;
+
+                Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
 
                 initialized = true;
             }

@@ -97,6 +97,9 @@ namespace Editor
                     debugView.LoadContent(GraphicsDevice, Content);
                 });
 
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
+
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
             stateMachine = new StateMachine<LevelManager>(initState, LevelManager);
