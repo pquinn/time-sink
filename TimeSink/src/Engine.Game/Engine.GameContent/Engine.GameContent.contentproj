@@ -1146,6 +1146,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Tiles\Vine1.png">
+      <Name>Vine1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tiles\Vine2.png">
+      <Name>Vine2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\NPCs\Male_Guard.png">
+      <Name>Male_Guard</Name>
+	  <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Weapons\Bow_Neutral.png">
       <Name>Bow_Neutral</Name>
       <Importer>TextureImporter</Importer>
