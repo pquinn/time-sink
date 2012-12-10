@@ -19,8 +19,9 @@ namespace TimeSink.Entities.Enemies
 {
     public abstract class EnemySpawner<T> : Enemy where T : Enemy
     {
+        [EditableField("Spawn Interval (ms)")]
         [SerializableField]
-        public float SpawnInterval;
+        public float SpawnInterval { get; set; }
 
         [SerializableField]
         [EditableField("Width")]
@@ -86,8 +87,9 @@ namespace TimeSink.Entities.Enemies
         HashSet<T> justSpawned = new HashSet<T>();
         HashSet<T> spawned = new HashSet<T>();
 
+        [EditableField("Max Spawn Amt")]
         [SerializableField]
-        public int MaxSpawn;
+        public int MaxSpawn { get; set; }
 
         void separatedEnemy(Fixture f1, T e, Fixture eF)
         {
