@@ -55,7 +55,7 @@ namespace TimeSink.Entities.Enemies
                     Physics);
 
                 hitBox.RegisterOnCollidedListener<Arrow>(collidedArrow);
-                hitBox.RegisterOnCollidedListener<Dart>(collidedDart);
+                //hitBox.RegisterOnCollidedListener<Dart>(collidedDart);
                 hitBox.RegisterOnCollidedListener<T>(collidedEnemy);
                 hitBox.RegisterOnSeparatedListener<T>(separatedEnemy);
 
@@ -93,13 +93,9 @@ namespace TimeSink.Entities.Enemies
 
         bool collidedArrow(Fixture f1, Arrow e, Fixture f2, Contact c)
         {
-            this.Health -= 25;
-            return c.Enabled;
-        }
+            if (e.OnFire)
+                Dead = true;
 
-        bool collidedDart(Fixture f1, Dart e, Fixture f2, Contact c)
-        {
-            this.RegisterDot(e.dot);
             return c.Enabled;
         }
 
