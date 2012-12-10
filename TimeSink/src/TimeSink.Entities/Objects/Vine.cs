@@ -74,16 +74,17 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
-                var world = engineRegistrations.Resolve<World>();
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(VINE_TEXTURE);
 
                 Width = (int)(texture.Width / 2 * Scale);
                 Height = (int)(texture.Height * Scale);
                 TextureWidth = PhysicsConstants.PixelsToMeters(Width);
-                TextureHeight = PhysicsConstants.PixelsToMeters(Height);
+                TextureHeight = PhysicsConstants.PixelsToMeters((int)(Height * .9));
 
                 //anchor point
-                Physics = BodyFactory.CreateBody(world, Position, this);
+                var offset = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(Height * .1)));
+                Physics = BodyFactory.CreateBody(world, Position - offset, this);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
 
@@ -92,7 +93,7 @@ namespace TimeSink.Entities.Objects
                     TextureWidth,
                     TextureHeight,
                     1,
-                    Position);
+                    Position - offset);
                 VineAnchor.BodyType = BodyType.Dynamic;
                 VineAnchor.UserData = this;
                 VineAnchor.CollidesWith = Category.Cat5;
@@ -127,7 +128,7 @@ namespace TimeSink.Entities.Objects
             {
                 return new PivotedRendering(
                     VINE_TEXTURE,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
+                    PhysicsConstants.MetersToPixels(Position),
                     //Need to translate rotation
                     VineAnchor == null ? 0 : VineAnchor.Rotation,
                     new Vector2(Scale, Scale));
