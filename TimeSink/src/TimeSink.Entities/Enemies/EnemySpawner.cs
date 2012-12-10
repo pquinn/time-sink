@@ -24,6 +24,9 @@ namespace TimeSink.Entities.Enemies
         
         float counter;
 
+        public EnemySpawner() : 
+            this(1000f, int.MaxValue) { }
+
         public EnemySpawner(float interval, int max)
         {
             SpawnInterval = interval;

@@ -13,6 +13,7 @@ namespace TimeSink.Entities.Enemies
     [SerializableEntity("349aaec2-aa55-4c37-aa71-42d0c1616885")]
     public class CentipedeSpawner : EnemySpawner<NormalCentipede>
     {
+        public CentipedeSpawner() : base() { }
         public CentipedeSpawner(float interval, int max) : base(interval, max) { }
 
         protected override NormalCentipede SpawnEnemy(GameTime time, EngineGame world)
