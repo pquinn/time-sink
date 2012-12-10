@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.States;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -23,6 +24,18 @@ namespace TimeSink.Entities.Enemies
 
         private UserControlledCharacter character;
 
+        public override Guid Id
+        {
+            get
+            {
+                return new Guid("849abec2-71f5-4c37-aa71-42d0c161d881");
+            }
+            set
+            {
+                base.Id = value;
+            }
+        }
+
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
             base.InitializePhysics(force, engineRegistrations);
@@ -30,7 +43,7 @@ namespace TimeSink.Entities.Enemies
             if (force || !initialized)
             {
                 var sensor = FixtureFactory.AttachCircle(
-                    PhysicsConstants.PixelsToMeters(100),
+                    PhysicsConstants.PixelsToMeters(200),
                     0,
                     Physics);
                 sensor.IsSensor = true;
@@ -75,7 +88,7 @@ namespace TimeSink.Entities.Enemies
                 Physics.IgnoreGravity = false;
 
                 var force = character.Position - Physics.Position;
-                Physics.ApplyForce(force);
+                Physics.ApplyForce(force + Vector2.UnitY * 2);
 
                 if (force.X > 0 && WheelSpeed < 0 || force.X < 0 && WheelSpeed > 0)
                     WheelSpeed *= -1;
