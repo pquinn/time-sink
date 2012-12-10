@@ -18,11 +18,18 @@ namespace TimeSink.Entities.Enemies
         const string TEXTURE = "Textures/Enemies/Nest";
         const string EDITOR_NAME = "Centipede Spawner";
         public CentipedeSpawner() : base() { }
-        public CentipedeSpawner(float interval, int max, int width, int height) : base(interval, max, width, height) { }
+        public CentipedeSpawner(float interval, int max, int width, int height, int dir) : base(interval, max, width, height)
+        {
+            SpawnDirection = dir;
+        }
+
+        [EditableField("Direction")]
+        [SerializableField]
+        public int SpawnDirection { get; set; }
 
         protected override NormalCentipede SpawnEnemy(GameTime time, EngineGame world)
         {
-            return new NormalCentipede(Position, Vector2.UnitX);
+            return new NormalCentipede(Position, Vector2.UnitX * (SpawnDirection > 0 ? 1 : -1));
         }
 
         public override IRendering Rendering

@@ -125,7 +125,16 @@ namespace TimeSink.Entities
         public bool Climbing {get {return climbing;} set {climbing = value;}}
 
         private List<IInventoryItem> inventory;
-        public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
+        public override IMenuItem InventoryItem
+        {
+            get
+            {
+                if (inventory.Count != 0)
+                    return inventory[activeItem];
+                else 
+                    return null;
+            }
+        }
         private int activeItem;
         private ItemPopup currentItemPrompt;
 
@@ -235,8 +244,7 @@ namespace TimeSink.Entities
             // this seems stupid
             activeItem = 0;
             inventory = new List<IInventoryItem>();
-            inventory.Add(new Arrow());
-            inventory.Add(new Dart());
+            //inventory.Add(new Dart());
 
             animations = CreateAnimations();
 
@@ -285,7 +293,7 @@ namespace TimeSink.Entities
                     {
                         TouchingGround = true;
                         jumpToggleGuard = true;
-                        Climbing = true;
+                        Climbing = false;
                         fixture.Body.IsSensor = false;
                         return 0;
                     }
@@ -307,6 +315,12 @@ namespace TimeSink.Entities
         private void RemoveInactiveDots()
         {
             Dots.RemoveWhere(x => x.Finished);
+        }
+
+        public void AddInventoryItem(IInventoryItem item)
+        {
+            inventory.Add(item);
+            activeItem = inventory.IndexOf(item);
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -529,6 +543,7 @@ namespace TimeSink.Entities
                 {
                     TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
+                    Climbing = true;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
 
                     if (!canClimb.Sideways)
@@ -729,17 +744,21 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                if (facing == -1)
-                    currentState = BodyStates.ShootingArrowLeft;
-                else
-                    currentState = BodyStates.ShootingArrowRight;
-                //currentState = BodyStates.ShootingRight;
-                holdTime = gameTime.TotalGameTime.TotalSeconds;
-                inHold = true;
+                if (holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                {
+                    if (facing == -1)
+                        currentState = BodyStates.ShootingArrowLeft;
+                    else
+                        currentState = BodyStates.ShootingArrowRight;
+                    //currentState = BodyStates.ShootingRight;
+                    holdTime = gameTime.TotalGameTime.TotalSeconds;
+                    inHold = true;
+                }
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                if (!ClimbingState() && !swinging && !VineBridgeState() && (shotTimer >= shotInterval))
+                if (!ClimbingState() && !swinging && !VineBridgeState() &&
+                    (shotTimer >= shotInterval) && holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
                     var shooting = animations[currentState].CurrentFrame = 0;
@@ -1256,6 +1275,16 @@ namespace TimeSink.Entities
         {
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
             onTorchGround = null;
+        }
+
+        bool OnCollidedWith(Fixture f, WorldGeometry2 wg, Fixture c, Contact info)
+        {
+            if (c.UserData is OneWayPlatform && climbing)
+                return false;
+
+            else
+                return info.Enabled;
+
         }
 
         bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
@@ -1945,6 +1974,7 @@ namespace TimeSink.Entities
                 r.RegisterOnSeparatedListener<Torch>(OnSeparation);
                 c.RegisterOnCollidedListener<TorchGround>(OnCollidedWith);
                 c.RegisterOnSeparatedListener<TorchGround>(OnSeparation);
+                c.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
                 //var vineSensor = BodyFactory.CreateCircle(
                 //    world, .1f, 5,
                 //    Physics.Position, this);
