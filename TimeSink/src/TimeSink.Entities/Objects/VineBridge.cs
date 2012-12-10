@@ -87,6 +87,8 @@ namespace TimeSink.Entities.Objects
                 origLinearDamping = character.Physics.LinearDamping;
                 character.Physics.LinearDamping = 10;
 
+                character.Physics.ResetDynamics();
+
                 Hanging = true;
             }
 
@@ -118,9 +120,9 @@ namespace TimeSink.Entities.Objects
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     spriteWidthMeters, spriteHeightMeters,
-                    0.5f, Position);
+                    300f, Position);
                 Physics.Friction = 5f;
-                Physics.Restitution = 1f;
+                Physics.Restitution = 0f;
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 Physics.UserData = this;
