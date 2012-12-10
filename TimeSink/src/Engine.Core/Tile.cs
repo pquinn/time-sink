@@ -66,10 +66,6 @@ namespace TimeSink.Engine.Core
             }
         }
 
-        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
-        {
-        }
-
         [XmlIgnore]
         public override IRendering Rendering
         {
@@ -85,14 +81,10 @@ namespace TimeSink.Engine.Core
             get { return Rendering; }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
         public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-            textureCache.LoadResource(Texture);
+            var t = textureCache.LoadResource(Texture);
         }
 
         public void Expand(IResourceCache<Texture2D> cache, Vector2 dragOffset, Vector2 origScale, Matrix transform)

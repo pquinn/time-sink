@@ -96,11 +96,6 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
-
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
@@ -149,6 +144,14 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }

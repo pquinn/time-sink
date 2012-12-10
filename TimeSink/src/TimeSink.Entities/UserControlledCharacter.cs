@@ -1638,6 +1638,15 @@ namespace TimeSink.Entities
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+            WheelBody.Dispose();
+        }
+
         public void Reset(Vector2 newPos, IComponentContext engineRegistrations)
         {
             //Physics.Dispose();

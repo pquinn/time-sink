@@ -38,9 +38,10 @@ namespace TimeSink.Entities.Objects
         private NewAnimationRendering rendering;
 
         public Torch()
-            :this(Vector2.Zero, 10, 75)
+            : this(Vector2.Zero, 10, 75)
         {
         }
+
         public Torch(Vector2 position, int width, int height)
         {
             Position = position;
@@ -76,10 +77,6 @@ namespace TimeSink.Entities.Objects
             get { return EDITOR_NAME; }
         }
 
-        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
-        {
-        }
-
         private bool initialized;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
@@ -106,6 +103,14 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)

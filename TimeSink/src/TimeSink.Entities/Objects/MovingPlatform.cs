@@ -170,6 +170,14 @@ namespace TimeSink.Entities
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+        }
+
         public override void Load(IComponentContext container)
         {
             var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(WORLD_TEXTURE_NAME);

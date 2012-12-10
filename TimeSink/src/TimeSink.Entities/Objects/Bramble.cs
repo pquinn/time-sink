@@ -96,6 +96,14 @@ namespace TimeSink.Entities.Objects
             }
         }
 
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
+        }
+
         public override Guid Id
         {
             get

@@ -157,7 +157,11 @@ namespace TimeSink.Engine.Core
             base.Draw(gameTime);
         }
 
-        protected virtual void LevelLoaded() { }
+        protected virtual void LevelLoaded() 
+        {
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
+        }
 
 
         public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
