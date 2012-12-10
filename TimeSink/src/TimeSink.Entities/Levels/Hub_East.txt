@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<DefaultStart>
-		<X>38.28125</X><Y>3.28125</Y>
+		<X>1.40625</X><Y>16.09375</Y>
 	</DefaultStart>
 	<SpawnPoints>
 		<Vector2>
