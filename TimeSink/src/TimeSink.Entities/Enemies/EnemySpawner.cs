@@ -21,16 +21,26 @@ namespace TimeSink.Entities.Enemies
     {
         [SerializableField]
         public float SpawnInterval;
+
+        [SerializableField]
+        [EditableField("Width")]
+        public override int Width { get; set; }
+
+        [SerializableField]
+        [EditableField("Height")]
+        public override int Height { get; set; }
         
         float counter;
 
         public EnemySpawner() : 
-            this(1000f, int.MaxValue) { }
+            this(10000f, int.MaxValue, 50, 50) { }
 
-        public EnemySpawner(float interval, int max)
+        public EnemySpawner(float interval, int max, int width, int height)
         {
             SpawnInterval = interval;
             MaxSpawn = max;
+            Height = height;
+            Width = width;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -47,12 +57,13 @@ namespace TimeSink.Entities.Enemies
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
-                Physics.IsSensor = true;
 
                 var hitBox = FixtureFactory.AttachCircle(
                     PhysicsConstants.PixelsToMeters(50),
                     1,
                     Physics);
+
+                Physics.IsSensor = true;
 
                 hitBox.RegisterOnCollidedListener<Arrow>(collidedArrow);
                 //hitBox.RegisterOnCollidedListener<Dart>(collidedDart);
@@ -82,12 +93,12 @@ namespace TimeSink.Entities.Enemies
         {
             if (justSpawned.Contains(e))
                 justSpawned.Remove(e);
-            else
-                e.Dead = true;
         }
 
         bool collidedEnemy(Fixture f1, T e, Fixture eF, Contact c)
         {
+            if (!justSpawned.Contains(e))
+                e.Dead = true;
             return c.Enabled;
         }
 
@@ -128,8 +139,7 @@ namespace TimeSink.Entities.Enemies
                 spawned.Add(enemy);
                 justSpawned.Add(enemy);
 
-                world.LevelManager.PhysicsManager.RegisterPhysicsBody(enemy);
-                world.LevelManager.RenderManager.RegisterRenderable(enemy);
+                world.LevelManager.RegisterEntity(enemy);
                 
                 counter = 0;
             }
