@@ -37,6 +37,9 @@ namespace TimeSink.Entities.Objects
         private EngineGame engine;
         private ItemPopup popup;
         private bool used;
+        private UserControlledCharacter character;
+
+        public UserControlledCharacter Character { get { return character; } }
 
         public InteractableItem()
             : this(Vector2.Zero, 50, 50)
@@ -74,7 +77,7 @@ namespace TimeSink.Entities.Objects
         private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-
+            character = c;
             if (popup != null && !registered && !used)
             {
                 engine.LevelManager.RenderManager.RegisterRenderable(popup);
@@ -88,6 +91,7 @@ namespace TimeSink.Entities.Objects
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
+            character = null;
             if (popup != null)
             {
                 engine.LevelManager.RenderManager.UnregisterRenderable(popup);

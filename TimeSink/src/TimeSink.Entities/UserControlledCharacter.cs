@@ -125,7 +125,16 @@ namespace TimeSink.Entities
         public bool Climbing {get {return climbing;} set {climbing = value;}}
 
         private List<IInventoryItem> inventory;
-        public override IMenuItem InventoryItem { get { return inventory[activeItem]; } }
+        public override IMenuItem InventoryItem
+        {
+            get
+            {
+                if (inventory.Count != 0)
+                    return inventory[activeItem];
+                else 
+                    return null;
+            }
+        }
         private int activeItem;
         private ItemPopup currentItemPrompt;
 
@@ -235,8 +244,7 @@ namespace TimeSink.Entities
             // this seems stupid
             activeItem = 0;
             inventory = new List<IInventoryItem>();
-            inventory.Add(new Arrow());
-            inventory.Add(new Dart());
+            //inventory.Add(new Dart());
 
             animations = CreateAnimations();
 
@@ -307,6 +315,12 @@ namespace TimeSink.Entities
         private void RemoveInactiveDots()
         {
             Dots.RemoveWhere(x => x.Finished);
+        }
+
+        public void AddInventoryItem(IInventoryItem item)
+        {
+            inventory.Add(item);
+            activeItem = inventory.IndexOf(item);
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -729,7 +743,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                if (holdingTorch == null)
+                if (holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     if (facing == -1)
                         currentState = BodyStates.ShootingArrowLeft;
@@ -742,7 +756,8 @@ namespace TimeSink.Entities
             }
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
-                if (!ClimbingState() && !swinging && !VineBridgeState() && (shotTimer >= shotInterval) && holdingTorch == null)
+                if (!ClimbingState() && !swinging && !VineBridgeState() &&
+                    (shotTimer >= shotInterval) && holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
                     var shooting = animations[currentState].CurrentFrame = 0;
