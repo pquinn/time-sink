@@ -543,6 +543,7 @@ namespace TimeSink.Entities
                 {
                     TouchingGround = false;
                     canClimb.Physics.IsSensor = true;
+                    Climbing = true;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
 
                     if (!canClimb.Sideways)
