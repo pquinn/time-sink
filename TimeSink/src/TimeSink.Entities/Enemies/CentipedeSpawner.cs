@@ -22,7 +22,7 @@ namespace TimeSink.Entities.Enemies
 
         protected override NormalCentipede SpawnEnemy(GameTime time, EngineGame world)
         {
-            return new NormalCentipede(Position - Vector2.UnitY*2, Vector2.UnitX);
+            return new NormalCentipede(Position, Vector2.UnitX);
         }
 
         public override IRendering Rendering

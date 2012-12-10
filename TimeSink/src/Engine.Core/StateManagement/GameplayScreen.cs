@@ -246,13 +246,8 @@ namespace TimeSink.Engine.Core.StateManagement
             if (IsActive)
             {
                 UpdateHudElements();
-
                 currentLevel.PhysicsManager.Update(gameTime);
-
-                var entity = currentLevel.Level.Entities[0];
-
                 currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
-                //Console.WriteLine(string.Format("Upd: {0:D6}, {1:D6}", entity.PreviousPosition, entity.Position));
             }
         }
 
