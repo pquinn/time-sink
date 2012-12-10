@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimeSink.Engine.Core.Editor
 {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property|AttributeTargets.Field, Inherited=true)]
     public class EditableFieldAttribute : Attribute
     {
         public EditableFieldAttribute(string display)
