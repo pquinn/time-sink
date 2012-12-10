@@ -22,7 +22,7 @@ namespace TimeSink.Entities.Weapons
     [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
     public class Arrow : Entity, IWeapon
     {
-        const float ARROW_MASS = .1f;
+        const float ARROW_MASS = .02f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
         const string FLAME_TEXTURE = "Textures/Weapons/ArrowFlames";
         const string EDITOR_NAME = "Arrow";
@@ -171,6 +171,7 @@ namespace TimeSink.Entities.Weapons
                 Physics.IsBullet = true;
                 Physics.UserData = this;
                 Physics.IsSensor = true;
+                Physics.Mass = ARROW_MASS;
                 Physics.CollidesWith = Category.All | ~Category.Cat31;
 
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
