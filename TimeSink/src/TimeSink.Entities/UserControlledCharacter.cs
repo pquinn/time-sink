@@ -293,7 +293,7 @@ namespace TimeSink.Entities
                     {
                         TouchingGround = true;
                         jumpToggleGuard = true;
-                        Climbing = true;
+                        Climbing = false;
                         fixture.Body.IsSensor = false;
                         return 0;
                     }
