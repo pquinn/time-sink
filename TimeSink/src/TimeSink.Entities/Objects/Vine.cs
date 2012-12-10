@@ -80,10 +80,11 @@ namespace TimeSink.Entities.Objects
                 Width = (int)(texture.Width / 2 * Scale);
                 Height = (int)(texture.Height * Scale);
                 TextureWidth = PhysicsConstants.PixelsToMeters(Width);
-                TextureHeight = PhysicsConstants.PixelsToMeters(Height);
+                TextureHeight = PhysicsConstants.PixelsToMeters((int)(Height * .9));
 
                 //anchor point
-                Physics = BodyFactory.CreateBody(world, Position, this);
+                var offset = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(Height * .1)));
+                Physics = BodyFactory.CreateBody(world, Position - offset, this);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
 
@@ -92,7 +93,7 @@ namespace TimeSink.Entities.Objects
                     TextureWidth,
                     TextureHeight,
                     1,
-                    Position);
+                    Position - offset);
                 VineAnchor.BodyType = BodyType.Dynamic;
                 VineAnchor.UserData = this;
                 VineAnchor.CollidesWith = Category.Cat5;
@@ -141,7 +142,6 @@ namespace TimeSink.Entities.Objects
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            //interpolate the rotation like a line
             base.OnUpdate(time, world);
         }
 
