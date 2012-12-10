@@ -1127,7 +1127,7 @@ namespace TimeSink.Entities
             {
                 var pointOnVine = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(vine.Height * .4)));
 
-                Position = vine.VineAnchor.GetWorldPoint(pointOnVine);
+                Position = vine.VineAnchor.GetWorldPoint(Vector2.Zero);//pointOnVine);
                 vineJoint = JointFactory.CreateWeldJoint(
                     vine.VineAnchor,
                     Physics,
