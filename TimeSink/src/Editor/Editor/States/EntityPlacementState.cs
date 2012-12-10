@@ -29,6 +29,7 @@ namespace Editor.States
 
         public override void Enter()
         {
+            StateMachine.Owner.RegisterEntity(entity);
         }
 
         public override void Execute()
