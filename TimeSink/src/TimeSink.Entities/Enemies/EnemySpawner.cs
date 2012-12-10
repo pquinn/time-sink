@@ -144,6 +144,8 @@ namespace TimeSink.Entities.Enemies
         {
             base.OnUpdate(time, world);
 
+            if (Dead) return;
+
             if (firstTick)
             {
                 firstTick = false;
