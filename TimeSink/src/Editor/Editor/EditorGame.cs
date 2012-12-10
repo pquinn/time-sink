@@ -87,7 +87,7 @@ namespace Editor
             };
 
             camera = Camera.ZeroedCamera;
-
+            
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
             LevelManager.LevelLoaded += new LevelLoadedEventHandler(
@@ -96,6 +96,9 @@ namespace Editor
                     debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
                     debugView.LoadContent(GraphicsDevice, Content);
                 });
+
+            debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+            debugView.LoadContent(GraphicsDevice, Content);
 
             // set up state machine
             initState = new DefaultEditorState(camera, TextureCache);
