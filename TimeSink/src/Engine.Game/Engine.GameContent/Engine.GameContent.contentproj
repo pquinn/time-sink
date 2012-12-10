@@ -1145,6 +1145,76 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Weapons\Bow_Neutral.png">
+      <Name>Bow_Neutral</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4000.PNG">
+      <Name>Jungle_Hub--RESIZE%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4001.PNG">
+      <Name>Jungle_Hub--RESIZE%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4002.PNG">
+      <Name>Jungle_Hub--RESIZE%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4003.PNG">
+      <Name>Jungle_Hub--RESIZE%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4004.PNG">
+      <Name>Jungle_Hub--RESIZE%4004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4005.PNG">
+      <Name>Jungle_Hub--RESIZE%4005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4010.PNG">
+      <Name>Jungle_Hub--RESIZE%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4011.PNG">
+      <Name>Jungle_Hub--RESIZE%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4012.PNG">
+      <Name>Jungle_Hub--RESIZE%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4013.PNG">
+      <Name>Jungle_Hub--RESIZE%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4014.PNG">
+      <Name>Jungle_Hub--RESIZE%4014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4015.PNG">
+      <Name>Jungle_Hub--RESIZE%4015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
