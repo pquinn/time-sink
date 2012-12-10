@@ -1114,7 +1114,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">0</Value>
+					<Value xsi:type="xsd:float">2000</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
@@ -1165,7 +1165,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">2000</Value>
+					<Value xsi:type="xsd:float">0</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
