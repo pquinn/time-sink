@@ -34,7 +34,7 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid guid = new Guid("edc87822-ee90-4826-84af-d0eeba3c13fe");
 
         private bool collided;
-        private EngineGame engine;
+        protected EngineGame engine;
         private ItemPopup popup;
         private bool used;
 
@@ -139,7 +139,7 @@ namespace TimeSink.Entities.Objects
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            if (collided)
+            if (collided && !used)
             {
                 if (InputManager.Instance.IsNewKey(Keys.X))
                 {

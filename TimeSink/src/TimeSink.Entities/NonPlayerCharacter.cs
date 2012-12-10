@@ -40,18 +40,28 @@ namespace TimeSink.Entities
 
         private ItemPopup popup;
 
-        public NonPlayerCharacter() : this(Vector2.Zero, DEFAULT_TEXTURE) { }
+        public NonPlayerCharacter() : this(Vector2.Zero,  DEFAULT_TEXTURE, 64, 128) { }
 
-        public NonPlayerCharacter(Vector2 position, String textureName)
+        public NonPlayerCharacter(Vector2 position, String textureName, int width, int height)
         {
             DialogueState = 0;
             Position = position;
             TextureName = textureName;
+            Width = width;
+            Height = height;
         }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
-        
+
+        [SerializableField]
+        [EditableField("Width")]
+        public override int Width { get; set; }
+
+        [SerializableField]
+        [EditableField("Height")]
+        public override int Height { get; set; }
+
         [SerializableField]
         [EditableField ("Texture Name")]
         public string TextureName { get; set; }
@@ -120,8 +130,8 @@ namespace TimeSink.Entities
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
 
-                Width = texture.Width;
-                Height = texture.Height;
+                //Width = texture.Width;
+                //Height = texture.Height;
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     PhysicsConstants.PixelsToMeters(Width),
@@ -129,7 +139,7 @@ namespace TimeSink.Entities
                     1,
                     Position);
                 Physics.FixedRotation = true;
-                Physics.BodyType = BodyType.Dynamic;
+                Physics.BodyType = BodyType.Static;
                 Physics.UserData = this;
 
                 var fix = Physics.FixtureList[0];
@@ -159,15 +169,17 @@ namespace TimeSink.Entities
             }
         }
 
+        // fix NPC in editor
         public override IRendering Rendering
         {
             get
             {
-                return new BasicRendering(
+                return new SizedRendering(
                   TextureName,
                   PhysicsConstants.MetersToPixels(Position),
-                  0f,
-                  Vector2.One);
+                  0,
+                  Width, 
+                  Height);
             }
         }
     }
