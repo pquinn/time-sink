@@ -34,9 +34,12 @@ namespace TimeSink.Entities
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
+            WalkingShootRight, WalkingShoot2Right, WalkingShoot3Right, WalkingDrawnRight,
+            WalkingShootLeft, WalkingShoot2Left, WalkingShoot3Left, WalkingDrawnLeft,
             RunningStartRight, RunningRight, RunningStopRight, RunningStartLeft, RunningLeft, RunningStopLeft,
             JumpingRight, JumpingLeft,
-            ShootingRight, ShootingLeft,
+            ShootingArrowRight, ShootingArrowLeft,
+            ShootingArrowNeutRight, ShootingArrowNeutLeft,
             DuckingRight, DuckingLeft,
             ClimbingBack,
             ClimbingLeft, ClimbingRight,
@@ -78,14 +81,28 @@ namespace TimeSink.Entities
         const string HORIZ_CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/HorizClimbRight";
         const string HORIZ_CLIMBING_LEFT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbLeftNeut";
         const string HORIZ_CLIMBING_RIGHT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbRightNeut";
+        const string SHOOT_ARROW_RIGHT = "Textures/Sprites/SpriteSheets/ShootArrowRight";
+        const string SHOOT_ARROW_LEFT = "Textures/Sprites/SpriteSheets/ShootArrowLeft";
+        #region walking+shooting
+        const string WALK_SHOOT_LEFT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShootLeft";
+        const string WALK_SHOOT_RIGHT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShootRight";
+        const string WALK_SHOOT2_LEFT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShoot2Left";
+        const string WALK_SHOOT2_RIGHT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShoot2Right";
+        const string WALK_SHOOT3_LEFT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShoot3Left";
+        const string WALK_SHOOT3_RIGHT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkShoot3Right";
+        const string WALK_DRAWN_RIGHT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkRightDrawn";
+        const string WALK_DRAWN_LEFT = "Textures/Sprites/SpriteSheets/ShootingWalking/BodyWalkLeftDrawn";
+        const string SHOOT_NEUT_LEFT = "Textures/Sprites/SpriteSheets/ShootingWalking/Body_Neutral_Shooting_Left";
+        const string SHOOT_NEUT_RIGHT = "Textures/Sprites/SpriteSheets/ShootingWalking/Body_Neutral_Shooting_Right";
+        #endregion
 
         private Dictionary<BodyStates, NewAnimationRendering> animations;
 
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 500;
         const float MAX_ARROW_INIT_SPEED = 1500;
-        public static float X_OFFSET = PhysicsConstants.PixelsToMeters(60 - 65);
-        public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(80 - 141);
+        public static float X_OFFSET = PhysicsConstants.PixelsToMeters(-5);
+        public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(-30);
 
         private SoundEffect jumpSound;
         private bool jumpToggleGuard = true;
@@ -182,6 +199,7 @@ namespace TimeSink.Entities
         float shotTimer = 0f;
         float idleInterval = 2000f;
         float interval = 200f;
+        float bowInterval = 150f;
         float shotInterval = 500f;
         int currentFrame = 0;
         int spriteWidth = 35;
@@ -394,6 +412,18 @@ namespace TimeSink.Entities
                                 currentState = BodyStates.RunningStartLeft;
                             }
                         }
+                        else if (InventoryItem is Arrow)
+                        {
+                            if (currentState != BodyStates.WalkingShootLeft &&
+                                currentState != BodyStates.WalkingShoot2Left &&
+                                currentState != BodyStates.WalkingShoot3Left &&
+                                currentState != BodyStates.WalkingDrawnLeft)
+                            {
+                                animations[BodyStates.WalkingShootLeft].CurrentFrame = 0;
+                                currentState = BodyStates.WalkingShootLeft;
+                            }
+                        }
+
                         else if (currentState != BodyStates.WalkingLeft)
                         {
                             animations[BodyStates.WalkingLeft].CurrentFrame = 0;
@@ -451,6 +481,18 @@ namespace TimeSink.Entities
                             {
                                 animations[BodyStates.RunningRight].CurrentFrame = 0;
                                 currentState = BodyStates.RunningStartRight;
+                            }
+                        }
+
+                        else if (InventoryItem is Arrow)
+                        {
+                            if (currentState != BodyStates.WalkingShootRight &&
+                                currentState != BodyStates.WalkingShoot2Right &&
+                                currentState != BodyStates.WalkingShoot3Right &&
+                                currentState != BodyStates.WalkingDrawnRight)
+                            {
+                                animations[BodyStates.WalkingShootRight].CurrentFrame = 0;
+                                currentState = BodyStates.WalkingShootRight;
                             }
                         }
                         else if (currentState != BodyStates.WalkingRight)
@@ -685,6 +727,10 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
+                if (facing == -1)
+                    currentState = BodyStates.ShootingArrowLeft;
+                else
+                    currentState = BodyStates.ShootingArrowRight;
                 //currentState = BodyStates.ShootingRight;
                 holdTime = gameTime.TotalGameTime.TotalSeconds;
                 inHold = true;
@@ -694,6 +740,13 @@ namespace TimeSink.Entities
                 if (!ClimbingState() && !swinging && !VineBridgeState() && (shotTimer >= shotInterval))
                 {
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
+                    var shooting = animations[currentState].CurrentFrame = 0;
+                    if (facing == -1)
+                    {
+                        currentState = BodyStates.ShootingArrowNeutLeft;
+                    }
+                    else
+                        currentState = BodyStates.ShootingArrowNeutRight;
                     shotTimer = 0f;
                 }
             }
@@ -760,14 +813,24 @@ namespace TimeSink.Entities
                     {
                         animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
                     }
-                    if (currentState == BodyStates.RunningLeft)
+                    else if (currentState == BodyStates.RunningLeft)
                     {
                         currentState = BodyStates.RunningStopLeft;
                         timer = 0f;
                     }
-                    if (currentState == BodyStates.RunningRight)
+                    else if (currentState == BodyStates.RunningRight)
                     {
                         currentState = BodyStates.RunningStopRight;
+                        timer = 0f;
+                    }
+                    else if (currentState == BodyStates.WalkingShootLeft)
+                    {
+                        currentState = BodyStates.ShootingArrowNeutLeft; //Add in Stopping Animation
+                        timer = 0f;
+                    }
+                    else if (currentState == BodyStates.WalkingShootRight)
+                    {
+                        currentState = BodyStates.ShootingArrowNeutRight; //Add in Stopping Animation
                         timer = 0f;
                     }
                 }
@@ -945,7 +1008,7 @@ namespace TimeSink.Entities
                 currentState = BodyStates.NeutralLeft;
                 timer = 0f;
             }
-
+            #region Running
             else if (currentState == BodyStates.RunningStartRight && timer >= interval)
             {
                 var walking = animations[BodyStates.RunningRight].CurrentFrame = 0;
@@ -970,6 +1033,130 @@ namespace TimeSink.Entities
                 walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
                 timer = 0f;
             }
+            #endregion
+
+            #region Shooting
+            else if (currentState == BodyStates.ShootingArrowLeft && timer >= bowInterval)
+            {
+                var shooting = animations[BodyStates.ShootingArrowLeft];
+                if (inHold)
+                {
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                        shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+                }
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.ShootingArrowRight && timer >= bowInterval)
+            {
+                var shooting = animations[BodyStates.ShootingArrowRight];
+                if (inHold)
+                {
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                        shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+                }
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingShootLeft && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingShoot2Left].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot2Left].NumFrames;
+                    currentState = BodyStates.WalkingShoot2Left;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingShoot2Left && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingShoot3Left].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot3Left].NumFrames;
+                    currentState = BodyStates.WalkingShoot3Left;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingShoot3Left && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingDrawnLeft].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot3Left].NumFrames;
+                    currentState = BodyStates.WalkingDrawnLeft;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingDrawnLeft && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+
+            else if (currentState == BodyStates.WalkingShootRight && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingShoot2Right].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot2Right].NumFrames;
+                    currentState = BodyStates.WalkingShoot2Right;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingShoot2Right && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingShoot3Right].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot3Right].NumFrames;
+                    currentState = BodyStates.WalkingShoot3Right;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingShoot3Right && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                if (inHold)
+                {
+                    animations[BodyStates.WalkingDrawnRight].CurrentFrame = (shooting.CurrentFrame + 1) %
+                                                                                animations[BodyStates.WalkingShoot3Right].NumFrames;
+                    currentState = BodyStates.WalkingDrawnRight;
+                }
+                else
+                    shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.WalkingDrawnRight && timer >= interval)
+            {
+                var shooting = animations[currentState];
+                shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+
+                timer = 0f;
+            }
+            #endregion
+
             if (currentState == BodyStates.JumpingRight && timer >= interval)
             {
                 if (!TouchingGround && Physics.LinearVelocity.Y < 0)
@@ -1443,6 +1630,130 @@ namespace TimeSink.Entities
                     Vector2.One));
             #endregion
 
+            #region Shooting
+
+            dictionary.Add(
+                BodyStates.ShootingArrowLeft,
+                 new NewAnimationRendering(
+                    SHOOT_ARROW_LEFT,
+                    new Vector2(153.6f, 185f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.ShootingArrowRight,
+                 new NewAnimationRendering(
+                    SHOOT_ARROW_RIGHT,
+                    new Vector2(153.6f, 185f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            #endregion
+            #region WalkingShooting
+
+            dictionary.Add(
+                BodyStates.WalkingDrawnLeft,
+                 new NewAnimationRendering(
+                    WALK_DRAWN_LEFT,
+                    new Vector2(94f, 169f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingDrawnRight,
+                 new NewAnimationRendering(
+                    WALK_DRAWN_RIGHT,
+                    new Vector2(94f, 171f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShootLeft,
+                 new NewAnimationRendering(
+                    WALK_SHOOT_LEFT,
+                    new Vector2(158f, 146f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShootRight,
+                 new NewAnimationRendering(
+                    WALK_SHOOT_RIGHT,
+                    new Vector2(159f, 146f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShoot2Left,
+                 new NewAnimationRendering(
+                    WALK_SHOOT2_LEFT,
+                    new Vector2(135f, 147f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShoot2Right,
+                 new NewAnimationRendering(
+                    WALK_SHOOT2_RIGHT,
+                    new Vector2(135f, 147f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShoot3Left,
+                 new NewAnimationRendering(
+                    WALK_SHOOT3_LEFT,
+                    new Vector2(104f, 147f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.WalkingShoot3Right,
+                 new NewAnimationRendering(
+                    WALK_SHOOT3_RIGHT,
+                    new Vector2(104f, 147f),
+                    6,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.ShootingArrowNeutLeft,
+                 new NewAnimationRendering(
+                    SHOOT_NEUT_LEFT,
+                    new Vector2(158f, 146f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.ShootingArrowNeutRight,
+                 new NewAnimationRendering(
+                    SHOOT_NEUT_RIGHT,
+                    new Vector2(159f, 146f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            #endregion
 
             return dictionary;
         }
@@ -1474,7 +1785,7 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingEndRight ||
                     currentState == BodyStates.WalkingStartRight ||
                     currentState == BodyStates.WalkingRight ||
-                    currentState == BodyStates.ShootingRight ||
+                    currentState == BodyStates.ShootingArrowRight ||
                     currentState == BodyStates.RunningRight ||
                     currentState == BodyStates.NeutralRight ||
                     currentState == BodyStates.IdleRightOpen ||
@@ -1490,7 +1801,7 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingEndLeft ||
                     currentState == BodyStates.WalkingStartLeft ||
                     currentState == BodyStates.WalkingLeft ||
-                    currentState == BodyStates.ShootingLeft ||
+                    currentState == BodyStates.ShootingArrowLeft ||
                     currentState == BodyStates.RunningLeft ||
                     currentState == BodyStates.NeutralLeft ||
                     currentState == BodyStates.IdleLeftOpen ||

@@ -24,6 +24,7 @@ namespace TimeSink.Entities.Weapons
     {
         const float ARROW_MASS = .1f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
+        const string FLAME_TEXTURE = "Textures/Weapons/ArrowFlames";
         const string EDITOR_NAME = "Arrow";
 
         const float MAX_ARROW_HOLD = 1;
@@ -69,12 +70,22 @@ namespace TimeSink.Entities.Weapons
         {
             get
             {
-                return new BasicRendering(
-                    ARROW_TEXTURE_NAME,
-                    PhysicsConstants.MetersToPixels(Physics.Position),
-                    (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                    Vector2.One
-                );
+                if (!OnFire)
+                {
+                    return new BasicRendering(
+                        ARROW_TEXTURE_NAME,
+                        PhysicsConstants.MetersToPixels(Physics.Position),
+                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        Vector2.One
+                    );
+                }
+                else
+                    return new BasicRendering(
+                        FLAME_TEXTURE,
+                        PhysicsConstants.MetersToPixels(Physics.Position),
+                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        Vector2.One
+                        );
             }
         }
 
@@ -118,7 +129,7 @@ namespace TimeSink.Entities.Weapons
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
         {
             Arrow arrow = new Arrow(
-                new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
+                new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
                             character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
 
             world.LevelManager.RegisterEntity(arrow);
