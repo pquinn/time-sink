@@ -113,7 +113,7 @@ namespace TimeSink.Entities
         private Ladder canClimb = null;
         private bool climbing = false;
         private TorchGround onTorchGround;
-        private Torch holdingTorch;
+        public Torch HoldingTorch {get; set;}
         private World _world;
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
@@ -744,7 +744,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                if (holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     if (facing == -1)
                         currentState = BodyStates.ShootingArrowLeft;
@@ -758,7 +758,7 @@ namespace TimeSink.Entities
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
-                    (shotTimer >= shotInterval) && holdingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                    (shotTimer >= shotInterval) && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
                     var shooting = animations[currentState].CurrentFrame = 0;
@@ -795,19 +795,19 @@ namespace TimeSink.Entities
                     {
                         inventory.Add(onPickup);
                         ((Torch)onPickup).WeldToPlayer(this);
-                        holdingTorch = (Torch)onPickup;
+                        HoldingTorch = (Torch)onPickup;
                         onPickup = null;
                         EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
                         
                     }
                 }
-                else if (onTorchGround != null && holdingTorch != null)
+                else if (onTorchGround != null && HoldingTorch != null)
                 {
-                    ((Torch)holdingTorch).PlaceTorch(this, onTorchGround);
-                    inventory.Remove(holdingTorch);
+                    ((Torch)HoldingTorch).PlaceTorch(this, onTorchGround);
+                    inventory.Remove(HoldingTorch);
                     activeItem = 0;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
-                    holdingTorch = null;
+                    HoldingTorch = null;
 
                 }
             }
@@ -1260,7 +1260,7 @@ namespace TimeSink.Entities
 
         bool OnCollidedWith(Fixture f, TorchGround torchGround, Fixture c, Contact info)
         {
-            if (holdingTorch != null)
+            if (HoldingTorch != null)
             {
                 currentItemPrompt = new ItemPopup("Textures/Keys/e-Key",
                                                     torchGround.Physics.Position);

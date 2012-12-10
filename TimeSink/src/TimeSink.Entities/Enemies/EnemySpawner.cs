@@ -139,7 +139,7 @@ namespace TimeSink.Entities.Enemies
 
         private bool canSpawn;
         private int batchCount;
-        private bool firstTick;
+        private bool firstTick = true;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
