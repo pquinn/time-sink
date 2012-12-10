@@ -665,14 +665,15 @@ namespace TimeSink.Entities
                     {
                         if (canClimb.Sideways)
                         {
-                            if (RightFacingBodyState())
+                         /*   if (RightFacingBodyState())
                                 currentState = BodyStates.ClimbingRight; //TODO -- Change to sideways climb state
                             else if (LeftFacingBodyState())
-                                currentState = BodyStates.ClimbingLeft;
+                                currentState = BodyStates.ClimbingLeft;*/
 
 
                             if (Physics.Position.X >= canClimb.Position.X) //We are to the right of the ladder
                             {
+                                currentState = BodyStates.ClimbingLeft;
                                 Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) + 
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
@@ -685,6 +686,7 @@ namespace TimeSink.Entities
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
+                                currentState = BodyStates.ClimbingRight;
                                 Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) - 
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
@@ -1785,7 +1787,12 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingEndRight ||
                     currentState == BodyStates.WalkingStartRight ||
                     currentState == BodyStates.WalkingRight ||
+                    currentState == BodyStates.WalkingDrawnRight ||
+                    currentState == BodyStates.WalkingShootRight ||
+                    currentState == BodyStates.WalkingShoot2Right ||
+                    currentState == BodyStates.WalkingShoot3Right ||
                     currentState == BodyStates.ShootingArrowRight ||
+                    currentState == BodyStates.ShootingArrowNeutRight ||
                     currentState == BodyStates.RunningRight ||
                     currentState == BodyStates.NeutralRight ||
                     currentState == BodyStates.IdleRightOpen ||
@@ -1801,7 +1808,12 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingEndLeft ||
                     currentState == BodyStates.WalkingStartLeft ||
                     currentState == BodyStates.WalkingLeft ||
+                    currentState == BodyStates.WalkingDrawnLeft ||
+                    currentState == BodyStates.WalkingShootLeft ||
+                    currentState == BodyStates.WalkingShoot2Left ||
+                    currentState == BodyStates.WalkingShoot3Left ||
                     currentState == BodyStates.ShootingArrowLeft ||
+                    currentState == BodyStates.ShootingArrowNeutLeft||
                     currentState == BodyStates.RunningLeft ||
                     currentState == BodyStates.NeutralLeft ||
                     currentState == BodyStates.IdleLeftOpen ||
