@@ -47,9 +47,6 @@ namespace TimeSink.Entities
             DialogueState = 0;
             Position = position;
             TextureName = textureName;
-
-            DialogueRoots = new List<String>();
-            DialogueRoots.Add("4cf17838-279c-11e2-b64d-109adda800ea");
         }
 
         [SerializableField]
@@ -65,7 +62,15 @@ namespace TimeSink.Entities
 
         [SerializableField]
         [EditableField("DialogueRoots")]
-        public List<String> DialogueRoots { get; set; }
+        public string DialogueRoots { get; set; }
+
+        public List<String> DialogueRootsList
+        {
+            get
+            {
+                return DialogueRoots.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+        }
 
         public override string EditorName
         {
@@ -83,7 +88,7 @@ namespace TimeSink.Entities
             {
                 if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
                 {
-                    game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRoots[DialogueState])), null);
+                    game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRootsList[DialogueState])), null);
                 }
             }
         }

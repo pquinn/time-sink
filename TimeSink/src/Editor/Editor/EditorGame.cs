@@ -87,7 +87,7 @@ namespace Editor
             };
 
             camera = Camera.ZeroedCamera;
-
+            
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
             LevelManager.LevelLoaded += new LevelLoadedEventHandler(

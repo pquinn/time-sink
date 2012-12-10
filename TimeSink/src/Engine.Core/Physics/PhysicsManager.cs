@@ -16,7 +16,6 @@ namespace TimeSink.Engine.Core.Physics
     {
         private IComponentContext engineRegistrations;
 
-        //private HashSet<IPhysicsEnabledBody> bodies = new HashSet<IPhysicsEnabledBody>();
         public World World { get; private set; }
 
         public PhysicsManager(IComponentContext engineRegistrations)

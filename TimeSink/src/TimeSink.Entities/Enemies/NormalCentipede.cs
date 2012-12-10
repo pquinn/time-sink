@@ -124,7 +124,7 @@ namespace TimeSink.Entities.Enemies
                 anchors.ForEach(x => x.IgnoreGravity = false);
 
             foreach (var x in collided)
-                anchors.ForEach(b => b.ApplyLinearImpulse(-x.Item2));
+                anchors.ForEach(b => b.ApplyForce(-x.Item2 * 10));
 
 
             if (PreviousPosition != null)
@@ -185,6 +185,7 @@ namespace TimeSink.Entities.Enemies
         }
 
         RevoluteJoint wheelMotor;
+        private bool firstTick = true;
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
@@ -214,16 +215,18 @@ namespace TimeSink.Entities.Enemies
 
                     FixtureFactory.AttachCircle(
                         PhysicsConstants.PixelsToMeters(5),
-                        1,
+                        .1f,
                         anchorBody);
 
                     anchorBody.IsSensor = true;
 
                     var wheel = FixtureFactory.AttachCircle(
                         wheelRadius,
-                        1,
+                        .1f,
                         wheelBody);
 
+
+                    firstTick = false;
                     wheelBody.Friction = Single.MaxValue;
                     wheelBody.Restitution = 0;
                     wheelBody.CollisionCategories = Category.Cat3;
@@ -245,8 +248,8 @@ namespace TimeSink.Entities.Enemies
                     if (i == numSegments - 1)
                     {
                         wheelMotor.MotorEnabled = true;
-                        wheelMotor.MotorSpeed = 5 * direction;
-                        wheelMotor.MotorTorque = wheelMotor.MaxMotorTorque = Single.MaxValue;
+                        wheelMotor.MotorSpeed = 5 * direction; 
+                        wheelMotor.MotorTorque = wheelMotor.MaxMotorTorque = 100;
                     }
 
                     wheelBody.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
