@@ -2132,6 +2132,7 @@ namespace TimeSink.Entities
 
         private bool initialized;
         private RevoluteJoint MotorJoint;
+        public float RopeAttachHeight;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -2190,9 +2191,12 @@ namespace TimeSink.Entities
                 Physics.Friction = 10.0f;
                 WheelBody.BodyType = BodyType.Dynamic;
                 WheelBody.Friction = 10.0f;
+                Physics.IsBullet = true;
+                
+                RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
 
                 var ropeSensor = FixtureFactory.AttachCircle(
-                .1f, 5, Physics, new Vector2(0, -(PhysicsConstants.PixelsToMeters(Height) / 4)));
+                    .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
                 ropeSensor.Friction = 5f;
                 ropeSensor.Restitution = 1f;
                 ropeSensor.UserData = this;
@@ -2221,17 +2225,6 @@ namespace TimeSink.Entities
                 c.RegisterOnCollidedListener<TorchGround>(OnCollidedWith);
                 c.RegisterOnSeparatedListener<TorchGround>(OnSeparation);
                 c.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
-                //var vineSensor = BodyFactory.CreateCircle(
-                //    world, .1f, 5,
-                //    Physics.Position, this);
-                //vineSensor.Friction = 5f;
-                //vineSensor.Restitution = 1f;
-                //vineSensor.UserData = this;
-                //vineSensor.IsSensor = true;
-                //vineSensor.CollidesWith = Category.Cat5;
-                //vineSensor.CollisionCategories = Category.Cat5;
-
-                //var vineSensorJoint = JointFactory.CreateWeldJoint(world, vineSensor, Physics, new Vector2(0, Height / 2));
 
                 initialized = true;
             }
