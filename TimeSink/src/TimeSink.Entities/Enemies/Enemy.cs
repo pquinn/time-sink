@@ -102,7 +102,7 @@ namespace TimeSink.Entities.Enemies
 
         protected bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
         {
-            health -= 25;
+            health -= 100;
             return true;
         }
 

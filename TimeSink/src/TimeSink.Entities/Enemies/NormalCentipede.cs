@@ -16,6 +16,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
 using FarseerPhysics.Dynamics.Joints;
+using TimeSink.Entities.Weapons;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -43,7 +44,6 @@ namespace TimeSink.Entities.Enemies
         public NormalCentipede(Vector2 position, Vector2 direction)
             : base(position)
         {
-            health = 150; 
             PatrolDirection = direction;
         }
 
@@ -254,6 +254,7 @@ namespace TimeSink.Entities.Enemies
 
                     wheelBody.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
                     wheelBody.RegisterOnSeparatedListener<WorldGeometry2>(OnSeparation);
+                    wheelBody.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
 
                     if (previousAnchor != null)
                     {

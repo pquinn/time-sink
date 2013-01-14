@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Enemies\CentipedeSpawner.cs" />
     <Compile Include="Enemies\LungingCentipede.cs" />
+    <Compile Include="Objects\BurnNest.cs" />
     <Compile Include="Objects\Chest.cs" />
     <Compile Include="Objects\BowPickup.cs" />
     <Compile Include="Objects\Door.cs" />

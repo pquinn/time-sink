@@ -23,6 +23,14 @@ namespace TimeSink.Entities.Enemies
         [SerializableField]
         public float SpawnInterval { get; set; }
 
+        [EditableField("Spawn Amount")]
+        [SerializableField]
+        public int SpawnAmount { get; set; }
+
+        [EditableField("Initial Interval Offset")]
+        [SerializableField]
+        public float SpawnOffset { get; set; }
+
         [SerializableField]
         [EditableField("Width")]
         public override int Width { get; set; }
@@ -32,16 +40,19 @@ namespace TimeSink.Entities.Enemies
         public override int Height { get; set; }
         
         float counter;
+        float inBetween = 800f;
+        float betweenTime;
 
         public EnemySpawner() : 
-            this(10000f, int.MaxValue, 50, 50) { }
+            this(10000f, 0, int.MaxValue, 50, 50) { }
 
-        public EnemySpawner(float interval, int max, int width, int height)
+        public EnemySpawner(float interval, float offset, int max, int width, int height)
         {
             SpawnInterval = interval;
             MaxSpawn = max;
             Height = height;
             Width = width;
+            SpawnOffset = offset % interval;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -126,16 +137,34 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
+        private bool canSpawn;
+        private int batchCount;
+        private bool firstTick = true;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
 
-            counter += time.ElapsedGameTime.Milliseconds;
+            if (Dead) return;
+
+            if (firstTick)
+            {
+                firstTick = false;
+                counter = SpawnOffset;
+            }
+
+            counter += (float)time.ElapsedGameTime.TotalMilliseconds;
+            betweenTime += time.ElapsedGameTime.Milliseconds;
 
             spawned.RemoveWhere(x => x.Dead);
             justSpawned.RemoveWhere(x => x.Dead);
 
             if (counter > SpawnInterval && spawned.Count < MaxSpawn)
+            {
+                canSpawn = true;
+                counter = 0;
+            }
+
+            if (canSpawn && betweenTime > inBetween)
             {
                 var enemy = SpawnEnemy(time, world);
                 spawned.Add(enemy);
@@ -143,7 +172,14 @@ namespace TimeSink.Entities.Enemies
 
                 world.LevelManager.RegisterEntity(enemy);
                 
-                counter = 0;
+                betweenTime = 0;
+                batchCount += 1;
+
+                if (batchCount == SpawnAmount)
+                {
+                    batchCount = 0;
+                    canSpawn = false;
+                }
             }
         }
 
