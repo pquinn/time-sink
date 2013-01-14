@@ -1160,7 +1160,7 @@
   <ItemGroup>
     <Compile Include="Textures\NPCs\Male_Guard.png">
       <Name>Male_Guard</Name>
-	  <Importer>TextureImporter</Importer>
+      <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="Textures\Weapons\Bow_Neutral.png">
@@ -1169,7 +1169,13 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\KnockBackRight.PNG">
+      <Name>KnockBackRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4000.PNG">
       <Name>Jungle_Hub--RESIZE%4000</Name>
@@ -1228,6 +1234,13 @@
     </Compile>
     <Compile Include="Textures\Levels\Hub\Jungle_Hub--RESIZE%4015.PNG">
       <Name>Jungle_Hub--RESIZE%4015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\KnockBackLeft.PNG">
+      <Name>KnockBackLeft</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

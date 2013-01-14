@@ -31,21 +31,38 @@ namespace TimeSink.Entities
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
         {
+            #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
+            #endregion
+            #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
             WalkingShootRight, WalkingShoot2Right, WalkingShoot3Right, WalkingDrawnRight,
             WalkingShootLeft, WalkingShoot2Left, WalkingShoot3Left, WalkingDrawnLeft,
+            #endregion
+            #region running
             RunningStartRight, RunningRight, RunningStopRight, RunningStartLeft, RunningLeft, RunningStopLeft,
+            #endregion
+            #region jumping
             JumpingRight, JumpingLeft,
+            #endregion
+            #region shooting
             ShootingArrowRight, ShootingArrowLeft,
             ShootingArrowNeutRight, ShootingArrowNeutLeft,
+            #endregion
+            #region ducking
             DuckingRight, DuckingLeft,
+            #endregion
+            #region knockback
+            KnockbackRight, KnockbackLeft,
+            #endregion
+            #region climbing
             ClimbingBack,
             ClimbingLeft, ClimbingRight,
             ClimbingLeftNeutral, ClimbingRightNeutral,
             ClimbingLookRight, ClimbingLookLeft,
-            HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut 
+            HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut
+            #endregion
         };
 
 
@@ -71,6 +88,9 @@ namespace TimeSink.Entities
         const string RUNNING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Left";
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
+        const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
+        #region climbing
         const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
         const string CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRight";
         const string CLIMBING_NEUTRAL_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeftNeut";
@@ -81,6 +101,7 @@ namespace TimeSink.Entities
         const string HORIZ_CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/HorizClimbRight";
         const string HORIZ_CLIMBING_LEFT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbLeftNeut";
         const string HORIZ_CLIMBING_RIGHT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbRightNeut";
+        #endregion
         const string SHOOT_ARROW_RIGHT = "Textures/Sprites/SpriteSheets/ShootArrowRight";
         const string SHOOT_ARROW_LEFT = "Textures/Sprites/SpriteSheets/ShootArrowLeft";
         #region walking+shooting
@@ -206,6 +227,8 @@ namespace TimeSink.Entities
 
         float timer = 0f;
         float shotTimer = 0f;
+        float invulnTimer = 0f;
+        const float invulnInterval = 3000f;
         float idleInterval = 2000f;
         float interval = 200f;
         float bowInterval = 150f;
@@ -214,6 +237,8 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
         bool isRunning;
+        bool invulnerable = false;
+        public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
         public Body WheelBody { get; set; }
 
         public override List<Fixture> CollisionGeometry
@@ -261,6 +286,20 @@ namespace TimeSink.Entities
         {
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
+                if (!Invulnerable)
+                {
+                    Invulnerable = true;
+                }
+                if (RightFacingBodyState())
+                {
+                    currentState = BodyStates.KnockbackRight;
+                    Physics.ApplyLinearImpulse(new Vector2(-25, 0));
+                }
+                else if (LeftFacingBodyState())
+                {
+                    currentState = BodyStates.KnockbackLeft;
+                    Physics.ApplyLinearImpulse(new Vector2(25, 0));
+                }
                 Health -= val;
                 EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
             }
@@ -344,6 +383,10 @@ namespace TimeSink.Entities
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
             shotTimer += (timeframe * 1000);
+            if (Invulnerable)
+            {
+                invulnTimer += (timeframe * 1000);
+            }
 
             if (TouchingGround)
                 Physics.Friction = WheelBody.Friction = 10;
@@ -378,6 +421,11 @@ namespace TimeSink.Entities
             }
             #endregion
 
+            if (invulnTimer >= invulnInterval)
+            {
+                invulnTimer = 0f;
+                Invulnerable = false;
+            }
             if (InputManager.Instance.Pressed(Keys.LeftShift))
             {
                 isRunning = true;
@@ -1247,6 +1295,34 @@ namespace TimeSink.Entities
                 climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
                 timer = 0f;
             }
+            if (currentState == BodyStates.KnockbackRight && timer >= interval)
+            {
+                var knockback = animations[BodyStates.KnockbackRight];
+                if (knockback.CurrentFrame == knockback.NumFrames - 1)
+                {
+                    knockback.CurrentFrame = 0;
+                    currentState = BodyStates.NeutralRight;
+                }
+                else
+                {
+                    knockback.CurrentFrame = (knockback.CurrentFrame + 1) % knockback.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.KnockbackLeft && timer >= interval)
+            {
+                var knockback = animations[BodyStates.KnockbackLeft];
+                if (knockback.CurrentFrame == knockback.NumFrames - 1)
+                {
+                    knockback.CurrentFrame = 0;
+                    currentState = BodyStates.NeutralLeft;
+                }
+                else
+                {
+                    knockback.CurrentFrame = (knockback.CurrentFrame + 1) % knockback.NumFrames;
+                }
+                timer = 0f;
+            }
         }
 
         //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
@@ -1785,6 +1861,29 @@ namespace TimeSink.Entities
                     0,
                     Vector2.One));
             #endregion
+
+            #region Knockback
+            dictionary.Add(
+                BodyStates.KnockbackRight,
+                new NewAnimationRendering(
+                    KNOCKBACK_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+
+            dictionary.Add(
+                BodyStates.KnockbackLeft,
+                new NewAnimationRendering(
+                    KNOCKBACK_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One));
+            #endregion
+
 
             return dictionary;
         }
