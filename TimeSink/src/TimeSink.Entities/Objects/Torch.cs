@@ -53,7 +53,8 @@ namespace TimeSink.Entities.Objects
                   2,
                   Vector2.Zero,
                   0,
-                  Vector2.One);
+                  Vector2.One,
+                  Color.White);
         }
 
         [SerializableField]

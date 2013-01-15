@@ -13,10 +13,10 @@ namespace TimeSink.Engine.Core.Rendering
         private string spriteSheet;
         private Vector2 srcRectSize;
 
-        private List<BasicRendering> frames;
+        private List<TintedRendering> frames;
 
         public NewAnimationRendering(string spriteSheet, Vector2 srcRectSize, int numFrames, 
-            Vector2 position, float rotation, Vector2 scale)
+            Vector2 position, float rotation, Vector2 scale, Color tint)
         {
             this.spriteSheet = spriteSheet;
             this.srcRectSize = srcRectSize;
@@ -25,6 +25,7 @@ namespace TimeSink.Engine.Core.Rendering
             this.Rotation = rotation;
             this.Scale = scale;
             this.CurrentFrame = 0;
+            this.Tint = tint;
             this.frames = InitRenderings();
         }
 
@@ -33,16 +34,18 @@ namespace TimeSink.Engine.Core.Rendering
         public Vector2 Scale { get; set; }
         public int CurrentFrame { get; set; }
         public int NumFrames { get; set; }
+        public Color Tint { get; set; }
 
-        private List<BasicRendering> InitRenderings()
+        private List<TintedRendering> InitRenderings()
         {
-            var renderings = new List<BasicRendering>();
+            var renderings = new List<TintedRendering>();
 
             for (var i = 0; i < NumFrames; i++)
             {
                 renderings.Add(
-                    new BasicRendering(
+                    new TintedRendering(
                         spriteSheet, Vector2.Zero, 0, Vector2.One,
+                        Tint,
                         new Rectangle(
                             i * (int)srcRectSize.X, 
                             0, 
@@ -62,6 +65,14 @@ namespace TimeSink.Engine.Core.Rendering
                 transform;
 
             frames[CurrentFrame].Draw(spriteBatch, cache, relativeTransform);
+        }
+
+        public void UpdateTint(Color tint)
+        {
+            foreach (TintedRendering b in frames)
+            {
+                b.TintColor = tint;
+            }
         }
 
         public NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, Matrix globalTransform)
