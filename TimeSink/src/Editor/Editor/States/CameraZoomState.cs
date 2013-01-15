@@ -16,8 +16,8 @@ namespace Editor.States
         private bool leftClick;
         private bool rightClick;
 
-        public CameraZoomState(Camera camera, IResourceCache<Texture2D> cache)
-            : base(camera, cache)
+        public CameraZoomState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         {
         }
 

@@ -26,8 +26,8 @@ namespace Editor.States
         protected Vector2 dragPivot;
         protected Vector2 selectionPivot;
 
-        public SelectionEditorState(Camera camera, IResourceCache<Texture2D> cache)
-            : base(camera, cache)
+        public SelectionEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         {
             selectedMeshes = new List<Tile>();
             drillIndex = 0;
@@ -39,75 +39,77 @@ namespace Editor.States
 
         public override void Execute()
         {
-            Console.WriteLine(GetMousePosition());
-            var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
-            var hasSelect = selectedMeshes.Count > 0;
-            var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
-            if (buttonState == ButtonState.Pressed && MouseOnScreen())
+            if (MouseOnScreen())
             {
-                var clicked = GetSelections(StateMachine.Owner);
-                var sameClick = clicked.Contains(lastSelected);
-                if (clicked.Count == 0) // cancel click
+                var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
+                var hasSelect = selectedMeshes.Count > 0;
+                var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
+                if (buttonState == ButtonState.Pressed && MouseOnScreen())
                 {
-                    emptySelect = true;
-                    selectedMeshes.Clear();
+                    var clicked = GetSelections(StateMachine.Owner);
+                    var sameClick = clicked.Contains(lastSelected);
+                    if (clicked.Count == 0) // cancel click
+                    {
+                        emptySelect = true;
+                        selectedMeshes.Clear();
+                    }
+                    else if (hasSelect && sameClick && !drag && !emptySelect)  // enter drag
+                    {
+                        DragStart();
+                    }
+                    else if (hasSelect && drag && !emptySelect) // dragging
+                    {
+                        HandleDrag();
+                        //lastMouse = GetMousePosition();
+                    }
+                    else if (!emptySelect) // basic selection
+                    {
+                        selectedMeshes = GetSelections(StateMachine.Owner);
+                        drillIndex = 0;
+                    }
                 }
-                else if (hasSelect && sameClick && !drag && !emptySelect)  // enter drag
+                else if (buttonState == ButtonState.Released)
                 {
-                    DragStart();
-                }
-                else if (hasSelect && drag && !emptySelect) // dragging
-                {
-                    HandleDrag();
-                    //lastMouse = GetMousePosition();
-                }
-                else if (!emptySelect) // basic selection
-                {
-                    selectedMeshes = GetSelections(StateMachine.Owner);
-                    drillIndex = 0;
-                }
-            }
-            else if (buttonState == ButtonState.Released)
-            {
-                if (drag)
-                {
-                    drag = false;
+                    if (drag)
+                    {
+                        drag = false;
+                    }
+
+                    emptySelect = false;
                 }
 
-                emptySelect = false;
-            }
+                if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
+                {
+                    drillIndex = (drillIndex + 1) % selectedMeshes.Count;
+                }
+                else if (InputManager.Instance.Pressed(Keys.Down) && selectedMeshes.Count > 0)
+                {
+                    selectedMeshes[drillIndex].Position += new Vector2(0, 2);
+                }
+                else if (InputManager.Instance.Pressed(Keys.Up) && selectedMeshes.Count > 0)
+                {
+                    selectedMeshes[drillIndex].Position += new Vector2(0, -2);
+                }
+                else if (InputManager.Instance.Pressed(Keys.Right) && selectedMeshes.Count > 0)
+                {
+                    selectedMeshes[drillIndex].Position += new Vector2(2, 0);
+                }
+                else if (InputManager.Instance.Pressed(Keys.Left) && selectedMeshes.Count > 0)
+                {
+                    selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
+                }
 
-            if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
-            {
-                drillIndex = (drillIndex + 1) % selectedMeshes.Count;
+                cameraOffset = Vector3.Zero;
+                var mouse = GetMousePosition();
+                if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
+                    cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
+                if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
+                    cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
+                if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
+                    cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
+                if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
+                    cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
             }
-            else if (InputManager.Instance.Pressed(Keys.Down) && selectedMeshes.Count > 0)
-            {
-                selectedMeshes[drillIndex].Position += new Vector2(0, 2);
-            }
-            else if (InputManager.Instance.Pressed(Keys.Up) && selectedMeshes.Count > 0)
-            {
-                selectedMeshes[drillIndex].Position += new Vector2(0, -2);
-            }
-            else if (InputManager.Instance.Pressed(Keys.Right) && selectedMeshes.Count > 0)
-            {
-                selectedMeshes[drillIndex].Position += new Vector2(2, 0);
-            }
-            else if (InputManager.Instance.Pressed(Keys.Left) && selectedMeshes.Count > 0)
-            {
-                selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
-            }
-
-            cameraOffset = Vector3.Zero;
-            var mouse = GetMousePosition();
-            if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
-                cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
-            if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
-                cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
-            if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
-                cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
-            if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
-                cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
         }
 
         public override void Exit()

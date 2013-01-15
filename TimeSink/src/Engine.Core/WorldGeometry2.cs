@@ -119,5 +119,10 @@ namespace TimeSink.Engine.Core
         public override void Load(IComponentContext engineRegistrations)
         {
         }
+
+        public override void DestroyPhysics()
+        {
+            Physics.Dispose();
+        }
     }
 }

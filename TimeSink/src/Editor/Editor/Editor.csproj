@@ -79,15 +79,17 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="mscorlib" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Net" />
-    <Reference Include="XNAControl">
-      <HintPath>..\..\..\lib\XNAControl.dll</HintPath>
-    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="States\GeometryPlacementState.cs" />
@@ -114,6 +116,10 @@
     <ProjectReference Include="..\..\..\Farseer Physics Engine 3.3 XNA\Farseer Physics XNA.csproj">
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\XNAControl\XNAControl.csproj">
+      <Project>{322980EB-C247-43BD-96E8-B2609DE25244}</Project>
+      <Name>XNAControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ContentReference\ContentReference.csproj">
       <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
