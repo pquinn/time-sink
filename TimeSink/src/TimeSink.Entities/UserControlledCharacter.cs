@@ -90,6 +90,8 @@ namespace TimeSink.Entities
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
         const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
         const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
+        const string DUCK_LEFT = "Textures/Sprites/SpriteSheets/DuckingLeft";
+        const string DUCK_RIGHT = "Textures/Sprites/SpriteSheets/DuckingRight";
         #region climbing
         const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
         const string CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRight";
@@ -351,7 +353,7 @@ namespace TimeSink.Entities
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
-                if (dot.Active)
+                if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
             }
         }
@@ -633,6 +635,20 @@ namespace TimeSink.Entities
                 {
                     Physics.Friction = WheelBody.Friction = .1f;
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.LeftControl))
+            {
+                if(TouchingGround)
+                {
+                    if (LeftFacingBodyState())
+                    {
+                        currentState = BodyStates.DuckingLeft;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.DuckingRight;
+                    }
                 }
             }
             #endregion
@@ -938,6 +954,16 @@ namespace TimeSink.Entities
                 else if (currentState == BodyStates.HorizontalClimbLeft)
                 {
                     currentState = BodyStates.HorizontalClimbLeftNeut;
+                }
+                if (currentState == BodyStates.DuckingLeft)
+                {
+                    animations[BodyStates.DuckingLeft].CurrentFrame = 0;
+                    currentState = BodyStates.NeutralLeft;
+                }
+                if (currentState == BodyStates.DuckingRight)
+                {
+                    currentState = BodyStates.NeutralRight;
+                    animations[BodyStates.DuckingRight].CurrentFrame = 0;
                 }
             }
 
@@ -1342,6 +1368,24 @@ namespace TimeSink.Entities
                 }
                 timer = 0f;
             }
+            if (currentState == BodyStates.DuckingLeft && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingLeft];
+                if (ducking.CurrentFrame != ducking.NumFrames - 2)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.DuckingRight && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingRight];
+                if (ducking.CurrentFrame != ducking.NumFrames - 2)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
         }
 
         //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
@@ -1421,9 +1465,15 @@ namespace TimeSink.Entities
 
         public bool OnCollidedWith(Fixture f1, Bramble bramble, Fixture f2, Contact info)
         {
-            this.RegisterDot(bramble.dot);
-            bramble.dot.Active = true;
-            return true;
+
+            if (!Invulnerable)
+            {
+                this.RegisterDot(bramble.dot);
+                bramble.dot.Active = true;
+                return true;
+            }
+            else
+                return false;
         }
 
         public void OnSeparation(Fixture f1, Bramble bramble, Fixture f2)
@@ -1955,6 +2005,29 @@ namespace TimeSink.Entities
                     Vector2.One,
                     invulnTint));
             #endregion
+
+            dictionary.Add(
+                BodyStates.DuckingLeft,
+                 new NewAnimationRendering(
+                    DUCK_LEFT,
+                    new Vector2(154f, 154f),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.DuckingRight,
+                 new NewAnimationRendering(
+                    DUCK_RIGHT,
+                    new Vector2(154f, 154f),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
 
 
             return dictionary;
