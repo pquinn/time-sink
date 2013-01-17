@@ -31,6 +31,8 @@ namespace Editor.States
 
         public override void Execute()
         {
+            ScrollCamera();
+
             if (MouseOnScreen())
             {
                 if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)

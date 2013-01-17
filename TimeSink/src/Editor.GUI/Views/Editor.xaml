@@ -61,7 +61,7 @@
                 </StackPanel>
             </StackPanel>
         </DockPanel>
-        <xna:UserControl1 Grid.Column="1" x:Name="xnaControl" Width="1280" Height="720">
+        <xna:UserControl1 Grid.Column="1" x:Name="xnaControl">
         </xna:UserControl1>
     </DockPanel>
 </UserControl>

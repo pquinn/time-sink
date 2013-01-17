@@ -15,8 +15,6 @@ namespace Editor.States
 {
     public class SelectionEditorState : DefaultEditorState
     {
-        const int CAMERA_TOLERANCE = 10;
-        const int CAMERA_MOVE_SPEED = 5;
         private Vector3 cameraOffset = Vector3.Zero;
 
         protected List<Tile> selectedMeshes;
@@ -39,6 +37,8 @@ namespace Editor.States
 
         public override void Execute()
         {
+            ScrollCamera();
+
             if (MouseOnScreen())
             {
                 var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
@@ -98,17 +98,6 @@ namespace Editor.States
                 {
                     selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
                 }
-
-                cameraOffset = Vector3.Zero;
-                var mouse = GetMousePosition();
-                if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
-                    cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
-                if (mouse.X > Constants.SCREEN_X - CAMERA_TOLERANCE && mouse.X < Constants.SCREEN_X)
-                    cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
-                if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
-                    cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
-                if (mouse.Y > Constants.SCREEN_Y - CAMERA_TOLERANCE && mouse.Y < Constants.SCREEN_Y)
-                    cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
             }
         }
 
@@ -118,8 +107,6 @@ namespace Editor.States
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Camera.PanCamera(cameraOffset);
-
             base.Draw(spriteBatch);
 
             spriteBatch.Begin();

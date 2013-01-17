@@ -72,10 +72,6 @@ namespace Editor
 
             base.Initialize();
 
-            // todo: this is horrible
-            Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
-            Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
-
             PhysicsConstants.Gravity = Vector2.Zero;
 
             EditorProperties.Instance = new EditorProperties()
@@ -267,6 +263,8 @@ namespace Editor
             base.Draw(gameTime);
         }
 
+        #region WPF Button Hooks
+
         public void PanSelected()
         {
             stateMachine.ChangeState(
@@ -350,5 +348,7 @@ namespace Editor
             camera.Position = new Vector3(0, 0, 0);
             stateMachine.ChangeState(new CameraTranslateState(this, camera, TextureCache), true, true);
         }
+
+        #endregion
     }
 }

@@ -70,10 +70,6 @@ namespace TimeSink.Engine.Core
         {
             base.Initialize();
 
-            // todo: this is horrible
-            Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
-            Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
-
             Camera = Camera.ZeroedCamera;
 
             // create default level

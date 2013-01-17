@@ -34,6 +34,8 @@ namespace Editor.States
 
         public override void Execute()
         {
+            ScrollCamera();
+
             if (MouseOnScreen())
             {
                 var position = new Vector2(

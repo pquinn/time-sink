@@ -12,7 +12,5 @@ namespace TimeSink.Engine.Core
     /// </summary>
     public static class Constants
     {
-        public static int SCREEN_X = 0;
-        public static int SCREEN_Y = 0;
     }
 }

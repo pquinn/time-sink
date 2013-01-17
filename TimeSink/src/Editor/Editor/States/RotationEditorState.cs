@@ -40,6 +40,7 @@ namespace Editor.States
             origAngle = Math.Atan2(dragOffset.Y, dragOffset.X);
             curAngle = selectedMeshes[drillIndex].Rotation;
         }
+
         protected override void HandleDrag()
         {
             var dir = GetMousePosition() - center;
