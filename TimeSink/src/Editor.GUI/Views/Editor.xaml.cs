@@ -16,6 +16,7 @@ using TimeSink.Editor.GUI.ViewModels;
 using Editor;
 using TimeSink.Engine.Core;
 using Autofac;
+using System.Windows.Interop;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -80,12 +81,13 @@ namespace TimeSink.Editor.GUI.Views
             Game.SaveAs(fileName);
         }
 
+        
+
         void Editor_Loaded(object sender, RoutedEventArgs e)
         {
             if (!isLoaded)
             {
                 Game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
-
                 isLoaded = true;
             }
         }

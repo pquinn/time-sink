@@ -21,8 +21,8 @@ namespace Editor.States
 
         private Vector2 lastMouse;
 
-        public ScalingEditorState(Camera camera, IResourceCache<Texture2D> cache)
-            : base(camera, cache)
+        public ScalingEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         {
         }
 

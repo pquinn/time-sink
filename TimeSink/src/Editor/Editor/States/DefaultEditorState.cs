@@ -9,18 +9,24 @@ using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Input;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Forms;
 
 namespace Editor.States
 {
     public class DefaultEditorState : State<LevelManager>
     {
-        public DefaultEditorState(Camera camera, IResourceCache<Texture2D> textureCache)
+        public DefaultEditorState(Game game, Camera camera, IResourceCache<Texture2D> textureCache)
         {
+            Game = game;
             Camera = camera;
             TextureCache = textureCache;
         }
 
         public bool IsMouseInteractionEnabled { get; set; }
+
+        protected Game Game { get; set; }
 
         protected Camera Camera { get; set; }
 
@@ -54,7 +60,9 @@ namespace Editor.States
         {
             var mouse = GetMousePosition();
 
-            return mouse.X > 0 && mouse.X < Constants.SCREEN_X &&
+            var isActive = Game.IsActive;
+            return isActive &&
+                   mouse.X > 0 && mouse.X < Constants.SCREEN_X &&
                    mouse.Y > 0 && mouse.Y < Constants.SCREEN_Y;
         }
     }

@@ -18,6 +18,7 @@ using TimeSink.Engine.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.States;
+using XNAControl;
 
 namespace TimeSink.Editor.GUI.Views
 {

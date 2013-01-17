@@ -19,8 +19,8 @@ namespace Editor.States
         double origAngle;
         double curAngle;
 
-        public RotationEditorState(Camera camera, IResourceCache<Texture2D> cache)
-            : base(camera, cache)
+        public RotationEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         {
         }
 

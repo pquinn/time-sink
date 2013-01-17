@@ -18,32 +18,34 @@ namespace Editor.States
         string textureKey;
         Texture2D texture;
 
-        public StaticMeshPlacementEditorState(Camera camera, IResourceCache<Texture2D> cache, string textureKey)
-            : base(camera, cache)
+        public StaticMeshPlacementEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache, string textureKey)
+            : base(game, camera, cache)
         {
             this.textureKey = textureKey;
         }
 
         public override void Enter()
         {
-
             texture = StateMachine.Owner.RenderManager.TextureCache.GetResource(textureKey);
         }
 
         public override void Execute()
         {
-            if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            if (MouseOnScreen())
             {
-                var position = new Vector2(
-                        InputManager.Instance.CurrentMouseState.X ,
-                        InputManager.Instance.CurrentMouseState.Y);
-                var tile = new Tile(
-                    textureKey,                    
-                    Vector2.Transform(position, Matrix.Invert(Camera.Transform)),
-                    0, Vector2.One);
-                StateMachine.Owner.RegisterTile(tile);
+                if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+                {
+                    var position = new Vector2(
+                            InputManager.Instance.CurrentMouseState.X,
+                            InputManager.Instance.CurrentMouseState.Y);
+                    var tile = new Tile(
+                        textureKey,
+                        Vector2.Transform(position, Matrix.Invert(Camera.Transform)),
+                        0, Vector2.One);
+                    StateMachine.Owner.RegisterTile(tile);
 
-                StateMachine.RevertToPreviousState(true);
+                    StateMachine.RevertToPreviousState(true);
+                }
             }
         }
 
