@@ -86,8 +86,6 @@ namespace XNAControl
             Microsoft.Xna.Framework.Input.Mouse.WindowHandle = windowHandle;
             m_windowHandle = windowHandle;
 
-            this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
-
             // Create the graphics device manager and set the delegate for initializing the graphics device
             m_graphics = new GraphicsDeviceManager(this);
             m_graphics.PreferMultiSampling = true;
@@ -110,11 +108,6 @@ namespace XNAControl
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
             //this.Tick();
-        }
-
-        void Window_ClientSizeChanged(object sender, EventArgs e)
-        {
-            ChangeGraphics(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
         void GraphicsDevice_DeviceReset(object sender, EventArgs e)

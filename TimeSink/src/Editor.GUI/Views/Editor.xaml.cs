@@ -328,5 +328,13 @@ namespace TimeSink.Editor.GUI.Views
         {
             Game.New();
         }
+
+        private void xnaControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Game != null)
+            {
+                Game.ChangeGraphics((int)e.NewSize.Width, (int)e.NewSize.Height);
+            }
+        }
     }
 }
