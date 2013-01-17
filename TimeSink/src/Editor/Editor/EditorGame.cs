@@ -338,5 +338,17 @@ namespace Editor
         {
             LevelManager.Clear();
         }
+
+        public void ZoomRevertClick()
+        {
+            camera.Scale = new Vector2(1, 1);
+            stateMachine.ChangeState(new CameraZoomState(this, camera, TextureCache), true, true);
+        }
+
+        public void PanRevertClick()
+        {
+            camera.Position = new Vector3(0, 0, 0);
+            stateMachine.ChangeState(new CameraTranslateState(this, camera, TextureCache), true, true);
+        }
     }
 }
