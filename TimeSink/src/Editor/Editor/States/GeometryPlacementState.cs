@@ -66,6 +66,8 @@ namespace Editor
 
         public override void Execute()
         {
+            ScrollCamera();
+
             if (!MouseOnScreen())
                 return;
 

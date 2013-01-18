@@ -73,21 +73,20 @@ namespace TimeSink.Entities.Objects
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
         {
-            // Todo:this method gets called twice for some reason and I don't know why.
-            // This check is so the second call doesn't override things and create two joints.
             if (!Hanging && character.Physics.LinearVelocity.Y > 0)
             {
+                character.Physics.ResetDynamics();
+                character.WheelBody.ResetDynamics();
+
                 joint = JointFactory.CreatePrismaticJoint(
                     world,
-                    Physics,
                     character.WheelBody,
+                    Physics,
                     Vector2.Zero,
                     Vector2.UnitX);
 
                 origLinearDamping = character.Physics.LinearDamping;
                 character.Physics.LinearDamping = 10;
-
-                character.Physics.ResetDynamics();
 
                 Hanging = true;
             }
@@ -119,7 +118,7 @@ namespace TimeSink.Entities.Objects
 
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    spriteWidthMeters, spriteHeightMeters,
+                    spriteWidthMeters, .2f,
                     300f, Position);
                 Physics.Friction = 5f;
                 Physics.Restitution = 0f;

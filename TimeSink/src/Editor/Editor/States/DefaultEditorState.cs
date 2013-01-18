@@ -17,6 +17,9 @@ namespace Editor.States
 {
     public class DefaultEditorState : State<LevelManager>
     {
+        const int CAMERA_TOLERANCE = 10;
+        const int CAMERA_MOVE_SPEED = 5;
+
         public DefaultEditorState(Game game, Camera camera, IResourceCache<Texture2D> textureCache)
         {
             Game = game;
@@ -62,8 +65,24 @@ namespace Editor.States
 
             var isActive = Game.IsActive;
             return isActive &&
-                   mouse.X > 0 && mouse.X < Constants.SCREEN_X &&
-                   mouse.Y > 0 && mouse.Y < Constants.SCREEN_Y;
+                   mouse.X > 0 && mouse.X < Game.GraphicsDevice.Viewport.Width &&
+                   mouse.Y > 0 && mouse.Y < Game.GraphicsDevice.Viewport.Height;
+        }
+
+        protected void ScrollCamera()
+        {
+            var cameraOffset = Vector3.Zero;
+            var mouse = GetMousePosition();
+            if (mouse.X < CAMERA_TOLERANCE && mouse.X > 0)
+                cameraOffset = -Vector3.UnitX * CAMERA_MOVE_SPEED;
+            if (mouse.X > Game.GraphicsDevice.Viewport.Width - CAMERA_TOLERANCE && mouse.X < Game.GraphicsDevice.Viewport.Width)
+                cameraOffset = Vector3.UnitX * CAMERA_MOVE_SPEED;
+            if (mouse.Y < CAMERA_TOLERANCE && mouse.Y > 0)
+                cameraOffset = -Vector3.UnitY * CAMERA_MOVE_SPEED;
+            if (mouse.Y > Game.GraphicsDevice.Viewport.Height - CAMERA_TOLERANCE && mouse.Y < Game.GraphicsDevice.Viewport.Height)
+                cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
+            
+            Camera.PanCamera(cameraOffset);
         }
     }
 }
