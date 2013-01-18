@@ -1246,6 +1246,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingBack.PNG">
+      <Name>ClimbingBack</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\DuckingLeft.PNG">
       <Name>DuckingLeft</Name>
       <Importer>TextureImporter</Importer>
@@ -1255,6 +1262,41 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\DuckingRight.PNG">
       <Name>DuckingRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\ClimbingNeut.png">
+      <Name>ClimbingNeut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\DuckLeftBow.PNG">
+      <Name>DuckLeftBow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\DuckLeftShoot.PNG">
+      <Name>DuckLeftShoot</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\DuckShootRightBow.PNG">
+      <Name>DuckShootRightBow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\DuckingRightBow.PNG">
+      <Name>DuckingRightBow</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -15,6 +15,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Collisions;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 
 namespace TimeSink.Entities.Objects
 {
@@ -29,10 +30,6 @@ namespace TimeSink.Entities.Objects
 
         public float TextureHeight { get; set; }
         public float TextureWidth { get; set; }
-
-        //private Func<float, float> PatrolFunction { get; set; }
-        private bool first;
-        private float tZero;
 
         public Body VineAnchor { get; set; }
         public Body VineEndAffector { get; set; }
@@ -145,6 +142,6 @@ namespace TimeSink.Entities.Objects
             base.OnUpdate(time, world);
         }
 
-        public FarseerPhysics.Dynamics.Joints.RevoluteJoint RevJoint { get; set; }
+        public RevoluteJoint RevJoint { get; set; }
     }
 }

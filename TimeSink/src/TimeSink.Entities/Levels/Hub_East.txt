@@ -1383,13 +1383,13 @@
 				<PairOfStringObject>
 					<Key>StartPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>7</X><Y>9.4375</Y>
+						<X>16.9141216</X><Y>14.9787474</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>EndPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>13.28125</X><Y>9.4375</Y>
+						<X>23.1953716</X><Y>14.9787474</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
@@ -1430,13 +1430,13 @@
 				<PairOfStringObject>
 					<Key>StartPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>16.40625</X><Y>5.46875</Y>
+						<X>26.2728539</X><Y>11.0320654</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>EndPosition</Key>
 					<Value xsi:type="Vector2">
-						<X>16.40625</X><Y>9.453125</Y>
+						<X>26.2728539</X><Y>15.0164404</Y>
 					</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
