@@ -159,21 +159,21 @@ namespace TimeSink.Engine.Game
             }
 
             var pos = Character != null ? Character.Position : Vector2.Zero;
-            var camPos = new Vector3(PhysicsConstants.MetersToPixels(pos), 0) -
-                new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0);
+            var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
+                new Vector3(PhysicsConstants.MetersToPixels(pos), 0);
 
-            if (hasBackground)
-            {
-                if (camPos.X < leftClamp)
-                    camPos.X = leftClamp;
-                else if (camPos.X + GraphicsDevice.Viewport.Width > rightClamp)
-                    camPos.X = rightClamp - GraphicsDevice.Viewport.Width;
+            //if (hasBackground)
+            //{
+            //    if (camPos.X < leftClamp)
+            //        camPos.X = leftClamp;
+            //    else if (camPos.X + GraphicsDevice.Viewport.Width > rightClamp)
+            //        camPos.X = rightClamp - GraphicsDevice.Viewport.Width;
 
-                if (camPos.Y < topClamp)
-                    camPos.Y = topClamp;
-                else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
-                    camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
-            }
+            //    if (camPos.Y < topClamp)
+            //        camPos.Y = topClamp;
+            //    else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
+            //        camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
+            //}
 
             Camera.MoveCameraTo(camPos);
 

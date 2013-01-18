@@ -39,7 +39,7 @@ namespace TimeSink.Engine.Core.Rendering
         /// <param name="position">Position to move to.</param>
         public void MoveCameraTo(Vector3 position)
         {
-            Transform *= Matrix.CreateTranslation(Transform.Translation - position);
+            Transform *= Matrix.CreateTranslation(position - Transform.Translation);
         }
 
         /// <summary>
