@@ -314,17 +314,12 @@ namespace TimeSink.Entities
 
         public override void OnUpdate(GameTime gameTime, EngineGame game)
         {
-            //Console.WriteLine("Character Position: {0}", Position);
-            //Console.WriteLine("Previous Position: {0}", PreviousPosition);
-            //Console.WriteLine();
-
             RemoveInactiveDots();
 
             if (!BridgeHanging())
                 TouchingGround = false;
 
             var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
-
 
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
@@ -1518,7 +1513,6 @@ namespace TimeSink.Entities
             Physics.AngularVelocity = 0;
             Physics.Rotation = 0;
             Physics.FixedRotation = true;
-            //Physics.ApplyLinearImpulse(vineJoint.BodyA.LinearVelocity);
             _world.RemoveJoint(vineJoint);
             swinging = false;
         }
