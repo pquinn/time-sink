@@ -83,6 +83,8 @@ namespace TimeSink.Engine.Core
             debugView.LoadContent(GraphicsDevice, Content);
 
             log4net.Config.XmlConfigurator.Configure();
+
+            Logger.Info("EngineGame initialized");
             
             ScreenManager.Initialize();
         }

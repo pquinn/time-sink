@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Autofac;
+using log4net;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
@@ -25,6 +26,10 @@ namespace TimeSink.Entities
     [SerializableEntity("defb4f64-1021-420d-8069-e24acebf70bb")]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(UserControlledCharacter));
+        private double nextLogTime = 0;
+        private readonly double LOG_INTERVAL = 5000; //5 seconds = 5000 milliseconds
+
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
 
@@ -326,8 +331,13 @@ namespace TimeSink.Entities
                     currentState = BodyStates.KnockbackLeft;
                     Physics.ApplyLinearImpulse(new Vector2(25, 0));
                 }
-                Health -= val;
-                EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+
+                if (!Invulnerable)
+                {
+                    Health -= val;
+                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+                    Logger.Info(String.Format("Player took {0} damage.", val));
+                }
             }
         }
 
@@ -367,8 +377,14 @@ namespace TimeSink.Entities
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
-                if (dot.Active && !Invulnerable)
+                if (dot.Active)
                     TakeDamage(dot.Tick(gameTime));
+            }
+
+            if (gameTime.TotalGameTime.TotalMilliseconds >= nextLogTime)
+            {
+                LogMetricSnapshot();
+                nextLogTime = gameTime.TotalGameTime.TotalMilliseconds + LOG_INTERVAL;
             }
         }
 
@@ -766,7 +782,7 @@ namespace TimeSink.Entities
                     PerformJump();
                 }
 
-                EngineGame.Logger.Debug("Jumped!");
+                Logger.Debug("Jumped!");
             }
             if (keyboard.IsKeyDown(Keys.S) && InputManager.Instance.IsNewKey(Keys.Space))
             {
@@ -2411,6 +2427,13 @@ namespace TimeSink.Entities
             //InitializePhysics(true, engineRegistrations);
 
             //Physics.Position = newPos;
+        }
+
+        private void LogMetricSnapshot()
+        {
+            Logger.Info(String.Format("Player health: {0}", Health));
+            Logger.Info(String.Format("Player mana: {0}", Mana));
+            Logger.Info(String.Format("Player positon: {0}", Position));
         }
     }
 }
