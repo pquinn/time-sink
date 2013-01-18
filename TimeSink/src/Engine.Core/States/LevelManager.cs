@@ -18,6 +18,7 @@ using FarseerPhysics.Dynamics;
 namespace TimeSink.Engine.Core.States
 {
     public delegate void LevelLoadedEventHandler();
+    public delegate void GeometryResetEventHandler();
 
     public class LevelManager
     {
@@ -43,6 +44,8 @@ namespace TimeSink.Engine.Core.States
         public Level Level { get; set; }
 
         public LevelLoadedEventHandler LevelLoaded { get; set; }
+
+        public GeometryResetEventHandler GeometryReset { get; set; }
 
         public void RegisterMidground(Tile tile)
         {
@@ -107,6 +110,8 @@ namespace TimeSink.Engine.Core.States
                 serializer.Serialize(xmlWriter, Level);
 
                 xmlWriter.Flush();
+
+                ResetGeometry();
             }
         }
 
@@ -138,6 +143,7 @@ namespace TimeSink.Engine.Core.States
             PhysicsManager.Clear();
             RenderManager.Clear();
             EditorRenderManager.Clear();
+            ResetGeometry();
         }
 
         private void RegisterLevelComponents()
@@ -194,6 +200,11 @@ namespace TimeSink.Engine.Core.States
             UnregisterEntities(worldGeo);
 
             RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
+
+            if (GeometryReset != null)
+            {
+                GeometryReset();
+            }
         }
     }
 }

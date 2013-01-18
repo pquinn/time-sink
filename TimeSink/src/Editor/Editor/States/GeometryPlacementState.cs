@@ -21,8 +21,8 @@ namespace Editor
 {
     public class GeometryPlacementState : DefaultEditorState
     {
-        public GeometryPlacementState(Camera c, IResourceCache<Texture2D> cache)
-            : base(c, cache)
+        public GeometryPlacementState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         { }
 
         bool clickToggleGuard = true;
@@ -61,18 +61,20 @@ namespace Editor
         public override void Exit()
         {
             stopMakingChain();
-            StateMachine.Owner.ResetGeometry();
+            UpdateGeometry();
         }
 
         public override void Execute()
         {
-            if (!IsMouseInteractionEnabled)
+            ScrollCamera();
+
+            if (!MouseOnScreen())
                 return;
 
             highlighted = null;
 
             var mouse = InputManager.Instance.CurrentMouseState;
-            var mousePosition = Vector2.Transform(new Vector2(mouse.X, mouse.Y), Camera.Transform);
+            var mousePosition = Vector2.Transform(new Vector2(mouse.X, mouse.Y), Matrix.Invert(Camera.Transform));
 
             var closestDistance = Single.PositiveInfinity;
 
@@ -89,8 +91,8 @@ namespace Editor
                 }
             }
 
-            if (MouseOnScreen())
-            {
+            //if (MouseOnScreen())
+            //{
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
                     if (InputManager.Instance.Pressed(Keys.LeftShift) || InputManager.Instance.Pressed(Keys.RightShift))
@@ -131,6 +133,8 @@ namespace Editor
                             }
                             chains.RemoveAll(x => !x.Any());
                         }
+
+                        UpdateGeometry();
                     }
                     else
                     {
@@ -183,7 +187,13 @@ namespace Editor
                     clickToggleGuard = true;
                     dragging = null;
                 }
-            }
+            //}
+        }
+
+        private void UpdateGeometry()
+        {
+            StateMachine.Owner.Level.GeoSegments = chains;
+            StateMachine.Owner.ResetGeometry();
         }
 
         private void startMakingNewChain()
@@ -199,9 +209,6 @@ namespace Editor
             if (!makingChain) return;
 
             makingChain = false;
-
-            //StateMachine.Owner.Level.GeoChains.Clear();
-            //StateMachine.Owner.Level.GeoChains.AddRange(chains);
 
             lastPlaced = null;
             _chainIndex = chains.Count;
@@ -224,11 +231,11 @@ namespace Editor
             foreach (var chain in chains)
             {
                 var thickness = cnt == _chainIndex
-                    ? 4 
+                    ? 4
                     : 2;
 
                 var chainPixels = chain.Select(
-                    delegate (WorldCollisionGeometrySegment x)
+                    delegate(WorldCollisionGeometrySegment x)
                     {
                         x.EndPoint = PhysicsConstants.MetersToPixels(x.EndPoint);
                         return x;
@@ -250,7 +257,7 @@ namespace Editor
 
                 chainPixels.Where(x => x.EndPoint != highlighted)
                     .ForEach(x => spriteBatch.DrawCircle(TextureCache, x.EndPoint, new Vector2(6, 6), Color.White));
-                
+
                 cnt++;
             }
 

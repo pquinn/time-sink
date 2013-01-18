@@ -31,21 +31,38 @@ namespace TimeSink.Entities
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
         {
+            #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
+            #endregion
+            #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
             WalkingShootRight, WalkingShoot2Right, WalkingShoot3Right, WalkingDrawnRight,
             WalkingShootLeft, WalkingShoot2Left, WalkingShoot3Left, WalkingDrawnLeft,
+            #endregion
+            #region running
             RunningStartRight, RunningRight, RunningStopRight, RunningStartLeft, RunningLeft, RunningStopLeft,
+            #endregion
+            #region jumping
             JumpingRight, JumpingLeft,
+            #endregion
+            #region shooting
             ShootingArrowRight, ShootingArrowLeft,
             ShootingArrowNeutRight, ShootingArrowNeutLeft,
+            #endregion
+            #region ducking
             DuckingRight, DuckingLeft,
+            #endregion
+            #region knockback
+            KnockbackRight, KnockbackLeft,
+            #endregion
+            #region climbing
             ClimbingBack,
             ClimbingLeft, ClimbingRight,
             ClimbingLeftNeutral, ClimbingRightNeutral,
             ClimbingLookRight, ClimbingLookLeft,
-            HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut 
+            HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut
+            #endregion
         };
 
 
@@ -71,6 +88,11 @@ namespace TimeSink.Entities
         const string RUNNING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Left";
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
+        const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
+        const string DUCK_LEFT = "Textures/Sprites/SpriteSheets/DuckingLeft";
+        const string DUCK_RIGHT = "Textures/Sprites/SpriteSheets/DuckingRight";
+        #region climbing
         const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
         const string CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRight";
         const string CLIMBING_NEUTRAL_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeftNeut";
@@ -81,6 +103,7 @@ namespace TimeSink.Entities
         const string HORIZ_CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/HorizClimbRight";
         const string HORIZ_CLIMBING_LEFT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbLeftNeut";
         const string HORIZ_CLIMBING_RIGHT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbRightNeut";
+        #endregion
         const string SHOOT_ARROW_RIGHT = "Textures/Sprites/SpriteSheets/ShootArrowRight";
         const string SHOOT_ARROW_LEFT = "Textures/Sprites/SpriteSheets/ShootArrowLeft";
         #region walking+shooting
@@ -206,6 +229,10 @@ namespace TimeSink.Entities
 
         float timer = 0f;
         float shotTimer = 0f;
+        float invulnTimer = 0f;
+        float damageTimer = 0f;
+        const float invulnInterval = 2000f;
+        const float damageFlashInterval = 300f;
         float idleInterval = 2000f;
         float interval = 200f;
         float bowInterval = 150f;
@@ -214,6 +241,10 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
         bool isRunning;
+        bool invulnerable = false;
+        bool invulnFlash = false;
+        bool damageFlash = false;
+        public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
         public Body WheelBody { get; set; }
 
         public override List<Fixture> CollisionGeometry
@@ -261,6 +292,21 @@ namespace TimeSink.Entities
         {
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
+                if (!Invulnerable)
+                {
+                    Invulnerable = true;
+                    damageFlash = true;
+                }
+                if (RightFacingBodyState())
+                {
+                    currentState = BodyStates.KnockbackRight;
+                    Physics.ApplyLinearImpulse(new Vector2(-25, 0));
+                }
+                else if (LeftFacingBodyState())
+                {
+                    currentState = BodyStates.KnockbackLeft;
+                    Physics.ApplyLinearImpulse(new Vector2(25, 0));
+                }
                 Health -= val;
                 EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
             }
@@ -307,7 +353,7 @@ namespace TimeSink.Entities
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
-                if (dot.Active)
+                if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
             }
         }
@@ -344,6 +390,19 @@ namespace TimeSink.Entities
             //Update the animation timer by the timeframe in milliseconds
             timer += (timeframe * 1000);
             shotTimer += (timeframe * 1000);
+            if (Invulnerable)
+            {
+                invulnTimer += (timeframe * 1000);
+                if (damageFlash)
+                {
+                    damageTimer += (timeframe * 1000);
+                }
+
+                if ((int)invulnTimer % 10 == 0 && damageTimer == 0)
+                {
+                    invulnFlash = !invulnFlash;
+                }
+            }
 
             if (TouchingGround)
                 Physics.Friction = WheelBody.Friction = 10;
@@ -378,6 +437,16 @@ namespace TimeSink.Entities
             }
             #endregion
 
+            if (invulnTimer >= invulnInterval)
+            {
+                invulnTimer = 0f;
+                Invulnerable = false;
+            }
+            if (damageTimer >= damageFlashInterval)
+            {
+                damageTimer = 0f;
+                damageFlash = false;
+            }
             if (InputManager.Instance.Pressed(Keys.LeftShift))
             {
                 isRunning = true;
@@ -566,6 +635,20 @@ namespace TimeSink.Entities
                 {
                     Physics.Friction = WheelBody.Friction = .1f;
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
+                }
+            }
+            if (keyboard.IsKeyDown(Keys.LeftControl))
+            {
+                if(TouchingGround)
+                {
+                    if (LeftFacingBodyState())
+                    {
+                        currentState = BodyStates.DuckingLeft;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.DuckingRight;
+                    }
                 }
             }
             #endregion
@@ -873,6 +956,16 @@ namespace TimeSink.Entities
                 else if (currentState == BodyStates.HorizontalClimbLeft)
                 {
                     currentState = BodyStates.HorizontalClimbLeftNeut;
+                }
+                if (currentState == BodyStates.DuckingLeft)
+                {
+                    animations[BodyStates.DuckingLeft].CurrentFrame = 0;
+                    currentState = BodyStates.NeutralLeft;
+                }
+                if (currentState == BodyStates.DuckingRight)
+                {
+                    currentState = BodyStates.NeutralRight;
+                    animations[BodyStates.DuckingRight].CurrentFrame = 0;
                 }
             }
 
@@ -1249,6 +1342,52 @@ namespace TimeSink.Entities
                 climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
                 timer = 0f;
             }
+            if (currentState == BodyStates.KnockbackRight && timer >= interval)
+            {
+                var knockback = animations[BodyStates.KnockbackRight];
+                if (knockback.CurrentFrame == knockback.NumFrames - 1)
+                {
+                    knockback.CurrentFrame = 0;
+                    currentState = BodyStates.NeutralRight;
+                }
+                else
+                {
+                    knockback.CurrentFrame = (knockback.CurrentFrame + 1) % knockback.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.KnockbackLeft && timer >= interval)
+            {
+                var knockback = animations[BodyStates.KnockbackLeft];
+                if (knockback.CurrentFrame == knockback.NumFrames - 1)
+                {
+                    knockback.CurrentFrame = 0;
+                    currentState = BodyStates.NeutralLeft;
+                }
+                else
+                {
+                    knockback.CurrentFrame = (knockback.CurrentFrame + 1) % knockback.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.DuckingLeft && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingLeft];
+                if (ducking.CurrentFrame != ducking.NumFrames - 2)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.DuckingRight && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingRight];
+                if (ducking.CurrentFrame != ducking.NumFrames - 2)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
         }
 
         //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
@@ -1328,9 +1467,15 @@ namespace TimeSink.Entities
 
         public bool OnCollidedWith(Fixture f1, Bramble bramble, Fixture f2, Contact info)
         {
-            this.RegisterDot(bramble.dot);
-            bramble.dot.Active = true;
-            return true;
+
+            if (!Invulnerable)
+            {
+                this.RegisterDot(bramble.dot);
+                bramble.dot.Active = true;
+                return true;
+            }
+            else
+                return false;
         }
 
         public void OnSeparation(Fixture f1, Bramble bramble, Fixture f2)
@@ -1383,6 +1528,16 @@ namespace TimeSink.Entities
             get
             {
                 var anim = animations[currentState];
+                if (invulnFlash)
+                {
+                    anim.UpdateTint(new Color(0, 0, 0, 0));
+                }
+                else if(damageFlash)
+                {
+                    anim.UpdateTint(new Color(255f, 0, 0, .5f));
+                }
+                else
+                    anim.UpdateTint(Color.White);
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 anim.Rotation = Physics.Rotation;
                 return anim;
@@ -1392,7 +1547,7 @@ namespace TimeSink.Entities
         private Dictionary<BodyStates, NewAnimationRendering> CreateAnimations()
         {
             var dictionary = new Dictionary<BodyStates, NewAnimationRendering>();
-
+            Color invulnTint = Color.White;
             #region Neutral
 
             dictionary.Add(
@@ -1403,7 +1558,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.NeutralLeft,
@@ -1413,7 +1569,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
 
             #region Idle
@@ -1426,7 +1583,8 @@ namespace TimeSink.Entities
                         5,
                         Vector2.Zero,
                         0,
-                        Vector2.One));
+                        Vector2.One,
+                    invulnTint));
             dictionary.Add(
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
@@ -1435,7 +1593,8 @@ namespace TimeSink.Entities
                         5,
                         Vector2.Zero,
                         0,
-                        Vector2.One));
+                        Vector2.One,
+                    invulnTint));
 
             #endregion
 
@@ -1448,7 +1607,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
@@ -1457,7 +1617,8 @@ namespace TimeSink.Entities
                     5,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
@@ -1466,7 +1627,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
@@ -1475,7 +1637,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
@@ -1484,7 +1647,8 @@ namespace TimeSink.Entities
                     5,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
@@ -1493,7 +1657,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
 
             #region Running
@@ -1504,7 +1669,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
@@ -1513,7 +1679,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
@@ -1522,7 +1689,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
@@ -1531,7 +1699,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
@@ -1539,7 +1708,8 @@ namespace TimeSink.Entities
                     8,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
@@ -1547,7 +1717,8 @@ namespace TimeSink.Entities
                     8,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
             #region Jumping
 
@@ -1558,7 +1729,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
@@ -1567,7 +1739,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
 
             #region Climbing
@@ -1578,7 +1751,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
@@ -1587,7 +1761,8 @@ namespace TimeSink.Entities
                     2,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
                     CLIMBING_RIGHT,
@@ -1595,7 +1770,8 @@ namespace TimeSink.Entities
                     2,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.ClimbingRightNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_RIGHT,
@@ -1603,7 +1779,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.ClimbingLeftNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_LEFT,
@@ -1611,7 +1788,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.ClimbingLookRight,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_RIGHT,
@@ -1619,7 +1797,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
@@ -1627,7 +1806,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.HorizontalClimbLeft,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT,
@@ -1635,7 +1815,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.HorizontalClimbRight,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT,
@@ -1643,7 +1824,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             dictionary.Add(BodyStates.HorizontalClimbRightNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT_NEUT,
@@ -1651,7 +1833,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
                new NewAnimationRendering(
@@ -1660,7 +1843,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
 
             #region Shooting
@@ -1673,7 +1857,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.ShootingArrowRight,
@@ -1683,7 +1868,8 @@ namespace TimeSink.Entities
                     4,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
             #region WalkingShooting
 
@@ -1695,7 +1881,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingDrawnRight,
@@ -1705,7 +1892,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShootLeft,
@@ -1715,7 +1903,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShootRight,
@@ -1725,7 +1914,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Left,
@@ -1735,7 +1925,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Right,
@@ -1745,7 +1936,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Left,
@@ -1755,7 +1947,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Right,
@@ -1765,7 +1958,8 @@ namespace TimeSink.Entities
                     6,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutLeft,
@@ -1775,7 +1969,8 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutRight,
@@ -1785,8 +1980,57 @@ namespace TimeSink.Entities
                     1,
                     Vector2.Zero,
                     0,
-                    Vector2.One));
+                    Vector2.One,
+                    invulnTint));
             #endregion
+
+            #region Knockback
+            dictionary.Add(
+                BodyStates.KnockbackRight,
+                new NewAnimationRendering(
+                    KNOCKBACK_RIGHT,
+                    new Vector2(76.8f, 153.6f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.KnockbackLeft,
+                new NewAnimationRendering(
+                    KNOCKBACK_LEFT,
+                    new Vector2(76.8f, 153.6f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+            #endregion
+
+            dictionary.Add(
+                BodyStates.DuckingLeft,
+                 new NewAnimationRendering(
+                    DUCK_LEFT,
+                    new Vector2(154f, 154f),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.DuckingRight,
+                 new NewAnimationRendering(
+                    DUCK_RIGHT,
+                    new Vector2(154f, 154f),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+
 
             return dictionary;
         }

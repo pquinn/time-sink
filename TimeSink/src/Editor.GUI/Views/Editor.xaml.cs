@@ -16,6 +16,7 @@ using TimeSink.Editor.GUI.ViewModels;
 using Editor;
 using TimeSink.Engine.Core;
 using Autofac;
+using System.Windows.Interop;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -44,6 +45,26 @@ namespace TimeSink.Editor.GUI.Views
         {
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(Editor_Loaded);
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => PanClick()), new KeyGesture(Key.P, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => PanRevertClick()), new KeyGesture(Key.P, ModifierKeys.Alt)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => ZoomClick()), new KeyGesture(Key.Z, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => ZoomRevertClick()), new KeyGesture(Key.Z, ModifierKeys.Alt)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => SelectionClick()), new KeyGesture(Key.M, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => RotationClick()), new KeyGesture(Key.R, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => ScalingClick()), new KeyGesture(Key.S, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => GeometryClick()), new KeyGesture(Key.G, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => EntitiesClick()), new KeyGesture(Key.E, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => StaticClick()), new KeyGesture(Key.T, ModifierKeys.Control)));
         }
 
         public EditorGame Game { get; set; }
@@ -85,12 +106,15 @@ namespace TimeSink.Editor.GUI.Views
             if (!isLoaded)
             {
                 Game = new EditorGame(xnaControl.Handle, (int)xnaControl.ActualWidth, (int)xnaControl.ActualHeight);
-
                 isLoaded = true;
             }
         }
 
         private void Pan_Click(object sender, RoutedEventArgs e)
+        {
+            PanClick();
+        }
+        private void PanClick()
         {
             ClearButtons();
 
@@ -102,6 +126,10 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Zoom_Click(object sender, RoutedEventArgs e)
         {
+            ZoomClick();
+        }
+        private void ZoomClick()
+        {
             ClearButtons();
 
             if (!selectionButtonPressed)
@@ -111,6 +139,10 @@ namespace TimeSink.Editor.GUI.Views
         }
 
         private void Selection_Click(object sender, RoutedEventArgs e)
+        {
+            SelectionClick();
+        }
+        private void SelectionClick()
         {
             ClearButtons();
 
@@ -122,6 +154,10 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Rotation_Click(object sender, RoutedEventArgs e)
         {
+            RotationClick();
+        }
+        private void RotationClick()
+        {
             ClearButtons();
 
             if (!rotationButtonPressed)
@@ -132,6 +168,10 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Scaling_Click(object sender, RoutedEventArgs e)
         {
+            ScalingClick();
+        }
+        private void ScalingClick()
+        {
             ClearButtons();
 
             if (!selectionButtonPressed)
@@ -141,6 +181,10 @@ namespace TimeSink.Editor.GUI.Views
         }
 
         private void Entities_Click(object sender, RoutedEventArgs e)
+        {
+            EntitiesClick();
+        }
+        private void EntitiesClick()
         {
             ClearButtons();
 
@@ -189,10 +233,14 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Static_Click(object sender, RoutedEventArgs e)
         {
+            StaticClick();
+        }
+        private void StaticClick()
+        {
             ClearButtons();
 
             if (!meshButtonPressed)
-            {                
+            {
                 var selectorWindow = new StaticMeshSelector(Game.Tiles, Game.TextureCache);
 
                 selectorWindow.ShowDialog();
@@ -213,6 +261,10 @@ namespace TimeSink.Editor.GUI.Views
         }
 
         private void Geometry_Click(object sender, RoutedEventArgs e)
+        {
+            GeometryClick();
+        }
+        private void GeometryClick()
         {
             ClearButtons();
 
@@ -244,6 +296,16 @@ namespace TimeSink.Editor.GUI.Views
             }
         }
 
+        private void ZoomRevertClick()
+        {
+            Game.ZoomRevertClick();
+        }
+
+        private void PanRevertClick()
+        {
+            Game.PanRevertClick();
+        }
+
         private void ClearButtons()
         {
             panButtonPressed = false;
@@ -265,6 +327,14 @@ namespace TimeSink.Editor.GUI.Views
         internal void New()
         {
             Game.New();
+        }
+
+        private void xnaControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Game != null)
+            {
+                Game.ChangeGraphics((int)e.NewSize.Width, (int)e.NewSize.Height);
+            }
         }
     }
 }

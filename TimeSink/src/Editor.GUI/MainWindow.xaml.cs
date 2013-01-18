@@ -21,6 +21,8 @@ namespace TimeSink.Editor.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string fileName;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,7 +46,21 @@ namespace TimeSink.Editor.GUI
             editor.ToggleSnapping();
         }
 
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                SaveAs();
+            else
+            {
+                editor.SaveAs(fileName);
+            }
+        }
+
         private void Save_As_Click(object sender, RoutedEventArgs e)
+        {
+            SaveAs();
+        }
+        private void SaveAs()
         {
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
@@ -65,6 +81,9 @@ namespace TimeSink.Editor.GUI
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
+            if (!PromptOk())
+                return;
+
             // Configure open file dialog box
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = "Document"; // Default file name
@@ -80,6 +99,8 @@ namespace TimeSink.Editor.GUI
                 // Open document 
                 editor.Open(dlg.FileName);
 
+                fileName = dlg.FileName;
+
                 if (LevelChanged != null)
                     LevelChanged();
             }
@@ -87,10 +108,38 @@ namespace TimeSink.Editor.GUI
 
         private void New_Click(object sender, RoutedEventArgs e)
         {
+            if (!PromptOk())
+                return;
+
+            fileName = null;
+
             editor.New();
 
             if (LevelChanged != null)
                 LevelChanged();
+        }
+
+        private bool PromptOk()
+        {
+            // Configure the message box to be displayed 
+            string messageBoxText = "WARNING! Proceeding will discard all changes since your last save!";
+            string caption = "Discard Changes";
+            MessageBoxButton button = MessageBoxButton.OKCancel;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+
+            // Display message box
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            // Process message box results 
+            switch (result)
+            {
+                case MessageBoxResult.OK:
+                    return true;
+                case MessageBoxResult.Cancel:
+                    return false;
+            }
+
+            return false;
         }
     }
 }

@@ -25,6 +25,7 @@ using XNAControl;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.DebugViews;
 using TimeSink.Entities;
+using System.Reflection;
 
 namespace Editor
 {
@@ -71,10 +72,6 @@ namespace Editor
 
             base.Initialize();
 
-            // todo: this is horrible
-            Constants.SCREEN_X = GraphicsDevice.Viewport.Width;
-            Constants.SCREEN_Y = GraphicsDevice.Viewport.Height;
-
             PhysicsConstants.Gravity = Vector2.Zero;
 
             EditorProperties.Instance = new EditorProperties()
@@ -96,14 +93,24 @@ namespace Editor
                     debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
                     debugView.LoadContent(GraphicsDevice, Content);
                 });
+            LevelManager.GeometryReset += new GeometryResetEventHandler(
+                () =>
+                {
+                    debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
+                    debugView.LoadContent(GraphicsDevice, Content);
+                });
 
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
 
             // set up state machine
-            initState = new DefaultEditorState(camera, TextureCache);
+            initState = new DefaultEditorState(this, camera, TextureCache);
             stateMachine = new StateMachine<LevelManager>(initState, LevelManager);
             initState.StateMachine = stateMachine;
+
+            // this is a hack to activate the game inside a wpf control automatically
+            typeof(Game).GetMethod("HostActivated", BindingFlags.NonPublic | BindingFlags.Instance)
+                .Invoke(this, new object[] { this, null });
         }
 
         /// <summary>
@@ -256,58 +263,60 @@ namespace Editor
             base.Draw(gameTime);
         }
 
+        #region WPF Button Hooks
+
         public void PanSelected()
         {
             stateMachine.ChangeState(
-                new CameraTranslateState(camera, TextureCache),
+                new CameraTranslateState(this, camera, TextureCache),
                 true, true);
         }
 
         public void ZoomSelected()
         {
             stateMachine.ChangeState(
-                new CameraZoomState(camera, TextureCache),
+                new CameraZoomState(this, camera, TextureCache),
                 true, true);
         }
 
         public void StaticMeshSelected(string textureKey)
         {
             stateMachine.ChangeState(
-                new StaticMeshPlacementEditorState(camera, TextureCache, textureKey),
+                new StaticMeshPlacementEditorState(this, camera, TextureCache, textureKey),
                 true, true);
         }
 
         public void EntitySelected(Entity entity, Func<Entity, bool> onPlacePredicate)
         {
             stateMachine.ChangeState(
-                new EntityPlacementState(camera, TextureCache, entity, onPlacePredicate),
+                new EntityPlacementState(this, camera, TextureCache, entity, onPlacePredicate),
                 true, true);
         }
 
         public void SelectionSelected()
         {
             stateMachine.ChangeState(
-                new SelectionEditorState(camera, TextureCache),
+                new SelectionEditorState(this, camera, TextureCache),
                 true, true);
         }
 
         public void RotationSelected()
         {
             stateMachine.ChangeState(
-                new RotationEditorState(camera, TextureCache),
+                new RotationEditorState(this, camera, TextureCache),
                 true, true);
         }
 
         public void ScalingSelected()
         {
             stateMachine.ChangeState(
-                new ScalingEditorState(camera, TextureCache),
+                new ScalingEditorState(this, camera, TextureCache),
                 true, true);
         }
 
         public GeometryPlacementState GeometrySelected()
         {
-            var s = new GeometryPlacementState(camera, TextureCache);
+            var s = new GeometryPlacementState(this, camera, TextureCache);
             stateMachine.ChangeState(s, true, true);
             return s;
         }
@@ -327,5 +336,19 @@ namespace Editor
         {
             LevelManager.Clear();
         }
+
+        public void ZoomRevertClick()
+        {
+            camera.Scale = new Vector2(1, 1);
+            stateMachine.ChangeState(new CameraZoomState(this, camera, TextureCache), true, true);
+        }
+
+        public void PanRevertClick()
+        {
+            camera.Position = new Vector3(0, 0, 0);
+            stateMachine.ChangeState(new CameraTranslateState(this, camera, TextureCache), true, true);
+        }
+
+        #endregion
     }
 }

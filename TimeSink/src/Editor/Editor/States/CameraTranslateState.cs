@@ -20,8 +20,8 @@ namespace Editor.States
         private Vector3 cameraStart;
         private Vector3 negOffset;
 
-        public CameraTranslateState(Camera camera, IResourceCache<Texture2D> cache)
-            : base(camera, cache)
+        public CameraTranslateState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+            : base(game, camera, cache)
         {
         }
 

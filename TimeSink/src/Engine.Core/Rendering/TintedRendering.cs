@@ -17,12 +17,22 @@ namespace TimeSink.Engine.Core.Rendering
         {
             this.tintColor = tintColor;
         }
+        public TintedRendering(string textureKey, Vector2 position, float rotation, Vector2 scale, Color tintColor, Rectangle? rect)
+            : base(textureKey, position, rotation, scale, rect)
+        {
+            this.tintColor = tintColor;
+        }
+        public Color TintColor { get { return tintColor; } set { tintColor = value; } }
 
         public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var texture = cache.GetResource(textureKey);
 
-            var origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            Vector2 origin;
+            if (srcRectangle.HasValue)
+                origin = new Vector2(srcRectangle.Value.Width / 2, srcRectangle.Value.Height / 2);
+            else
+                origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
             spriteBatch.Begin(
                 SpriteSortMode.BackToFront,

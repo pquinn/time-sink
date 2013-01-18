@@ -50,6 +50,7 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -61,11 +62,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="WPFFolderBrowser">
       <HintPath>..\..\lib\WPFFolderBrowser.dll</HintPath>
-    </Reference>
-    <Reference Include="XNAControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\XNAControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AnyKeyGesture.cs" />
     <Compile Include="EditorExtensions.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\EntitySelectorViewModel.cs" />
@@ -211,6 +211,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\XNAControl\XNAControl.csproj">
+      <Project>{322980EB-C247-43BD-96E8-B2609DE25244}</Project>
+      <Name>XNAControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ContentReference\ContentReference.csproj">
       <Project>{7065EBE9-0FFA-4E0E-AEEB-216C1FDA6B52}</Project>
       <Name>ContentReference</Name>

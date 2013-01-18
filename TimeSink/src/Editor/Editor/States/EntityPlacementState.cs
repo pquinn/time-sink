@@ -20,8 +20,8 @@ namespace Editor.States
         Texture2D texture;
         Func<Entity, bool> onPlacePredicate;
 
-        public EntityPlacementState(Camera camera, IResourceCache<Texture2D> cache, Entity entity, Func<Entity, bool> onPlacePredicate)
-            : base(camera, cache)
+        public EntityPlacementState(Game game, Camera camera, IResourceCache<Texture2D> cache, Entity entity, Func<Entity, bool> onPlacePredicate)
+            : base(game, camera, cache)
         {
             this.entity = entity;
             this.onPlacePredicate = onPlacePredicate;
@@ -34,20 +34,25 @@ namespace Editor.States
 
         public override void Execute()
         {
-            var position = new Vector2(
-                            InputManager.Instance.CurrentMouseState.X,
-                            InputManager.Instance.CurrentMouseState.Y);
-            entity.Position = PhysicsConstants.PixelsToMeters(
-                Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
+            ScrollCamera();
 
-            if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            if (MouseOnScreen())
             {
-                if (!onPlacePredicate(entity))
-                {
-                    StateMachine.Owner.UnregisterEntity(entity);                     
-                }
+                var position = new Vector2(
+                                InputManager.Instance.CurrentMouseState.X,
+                                InputManager.Instance.CurrentMouseState.Y);
+                entity.Position = PhysicsConstants.PixelsToMeters(
+                    Vector2.Transform(position, Matrix.Invert(Camera.Transform)));
 
-                StateMachine.RevertToPreviousState(true);
+                if (InputManager.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (!onPlacePredicate(entity))
+                    {
+                        StateMachine.Owner.UnregisterEntity(entity);
+                    }
+
+                    StateMachine.RevertToPreviousState(true);
+                }
             }
         }
 

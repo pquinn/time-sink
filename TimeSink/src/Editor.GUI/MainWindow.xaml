@@ -13,7 +13,7 @@
             <MenuItem Header="File">
                 <MenuItem Header="New..." Click="New_Click"/>
                 <MenuItem Header="Open..." Click="Open_Click"/>
-                <MenuItem Header="Save..." />
+                <MenuItem Header="Save..." Click="Save_Click" />
                 <MenuItem Header="Save As..." Click="Save_As_Click" />
             </MenuItem>
             <MenuItem Header="Edit">
