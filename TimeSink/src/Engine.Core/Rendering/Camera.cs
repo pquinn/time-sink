@@ -7,49 +7,66 @@ using TimeSink.Engine.Core;
 
 namespace TimeSink.Engine.Core.Rendering
 {
+    /// <summary>
+    /// Provides basic orthographic camera capabilities.
+    /// </summary>
     public class Camera
     {
-        private static readonly Camera singleton = new Camera(Vector3.Zero, Vector2.One);
-
-        public static Camera ZeroedCamera { get { return singleton; } }
-
-        public Camera(Vector3 position, Vector2 scale)
+        /// <summary>
+        /// Creates a camera scaled by the given factor, then translated to the given point.
+        /// </summary>
+        /// <param name="scale">Scale factor.</param>
+        /// <param name="position">Translation factor.</param>
+        public Camera(Vector2 scale, Vector3 position)
         {
-            Position = position;
-            Scale = scale;
+            Transform = Matrix.CreateScale(new Vector3(scale, 1)) * Matrix.CreateTranslation(position);
         }
 
-        public Matrix Transform 
-        {
-            get
-            {
-                return Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
-                       Matrix.CreateTranslation(-Position);
-            }
-        }
-        
-        public Vector2 Scale { get; set; }
+        public Matrix Transform { get; private set; }
 
-        public Vector3 Position { get; set; }
-
-        public void PanCamera(Vector3 trans)
+        /// <summary>
+        /// Translates the camera by the given amount.
+        /// </summary>
+        /// <param name="translation">Translation factor.</param>
+        public void TranslateCamera(Vector3 translation)
         {
-            Position += trans;
+            Transform *= Matrix.CreateTranslation(translation);
         }
 
-        public void ZoomCamera(Vector2 scale)
+        /// <summary>
+        /// Moves the camera to the given position.
+        /// </summary>
+        /// <param name="position">Position to move to.</param>
+        public void MoveCameraTo(Vector3 position)
         {
-            Scale *= scale;
+            Transform *= Matrix.CreateTranslation(Transform.Translation - position);
         }
 
-        public void ResetPosition()
+        /// <summary>
+        /// Zooms the camera about the current position by the given amount.
+        /// </summary>
+        /// <param name="zoomAmount">Zoom amount.</param>
+        public void ZoomCamera(Vector2 zoomAmount)
         {
-            Position = Vector3.Zero;
+            Transform *= Matrix.CreateTranslation(-Transform.Translation);
+            Transform *= Matrix.CreateScale(new Vector3(zoomAmount, 1));
+            Transform *= Matrix.CreateTranslation(Transform.Translation);
         }
 
-        public void ResetScale()
+        /// <summary>
+        /// Zooms the camera about the given point by the given amount.
+        /// </summary>
+        /// <param name="zoomAmount">Zoom amount.</param>
+        public void ZoomCamera(Vector2 zoomAmount, Vector3 zoomPoint)
         {
-            Scale = Vector2.One;
+            Transform *= Matrix.CreateTranslation(-zoomPoint);
+            Transform *= Matrix.CreateScale(new Vector3(zoomAmount, 1));
+            Transform *= Matrix.CreateTranslation(zoomPoint);
+        }
+
+        public void RevertZoom()
+        {
+            Transform = Matrix.CreateTranslation(Transform.Translation);
         }
     }
 }

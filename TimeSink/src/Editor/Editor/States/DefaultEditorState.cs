@@ -82,7 +82,7 @@ namespace Editor.States
             if (mouse.Y > Game.GraphicsDevice.Viewport.Height - CAMERA_TOLERANCE && mouse.Y < Game.GraphicsDevice.Viewport.Height)
                 cameraOffset = Vector3.UnitY * CAMERA_MOVE_SPEED;
             
-            Camera.PanCamera(cameraOffset);
+            Camera.TranslateCamera(-cameraOffset);
         }
     }
 }

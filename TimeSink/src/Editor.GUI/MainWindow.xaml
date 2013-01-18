@@ -11,10 +11,10 @@
         <Menu Grid.Row="0" Height="Auto" HorizontalAlignment="Stretch" Margin="0" Name="menu1" VerticalAlignment="Top" Width="Auto"
               IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New..." Click="New_Click"/>
-                <MenuItem Header="Open..." Click="Open_Click"/>
-                <MenuItem Header="Save..." Click="Save_Click" />
-                <MenuItem Header="Save As..." Click="Save_As_Click" />
+                <MenuItem Header="New..." ToolTip="Ctrl+N" Click="New_Click"/>
+                <MenuItem Header="Open..." ToolTip="Ctrl+O" Click="Open_Click"/>
+                <MenuItem Header="Save..." ToolTip="Ctrl+S" Click="Save_Click" />
+                <MenuItem Header="Save As..." ToolTip="Ctrl+S" Click="Save_As_Click" />
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Show Grid Lines" Click="Show_Grid_Lines_Click" />

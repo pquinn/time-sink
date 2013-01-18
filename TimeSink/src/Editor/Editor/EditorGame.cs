@@ -83,7 +83,7 @@ namespace Editor
                 ResolutionY = ResolutionHeight
             };
 
-            camera = Camera.ZeroedCamera;
+            camera = new Camera(Vector2.One, Vector3.Zero);
             
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
@@ -339,13 +339,13 @@ namespace Editor
 
         public void ZoomRevertClick()
         {
-            camera.Scale = new Vector2(1, 1);
+            camera.RevertZoom();
             stateMachine.ChangeState(new CameraZoomState(this, camera, TextureCache), true, true);
         }
 
         public void PanRevertClick()
         {
-            camera.Position = new Vector3(0, 0, 0);
+            camera.MoveCameraTo(Vector3.Zero);
             stateMachine.ChangeState(new CameraTranslateState(this, camera, TextureCache), true, true);
         }
 

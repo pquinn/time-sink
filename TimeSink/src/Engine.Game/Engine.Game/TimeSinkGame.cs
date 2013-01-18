@@ -175,7 +175,7 @@ namespace TimeSink.Engine.Game
                     camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
             }
 
-            Camera.Position = camPos;
+            Camera.MoveCameraTo(camPos);
 
             ScreenManager.Update(gameTime, this);
 

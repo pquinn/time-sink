@@ -29,7 +29,10 @@ namespace Editor.States
             if (leftMouse == ButtonState.Pressed && !leftClick && onScreen)
             {
                 leftClick = true;
-                Camera.Scale += new Vector2(.1f, .1f);
+                var halfScreen = new Vector2(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
+                var mousePos = new Vector3(GetMousePosition(), 0);
+                Camera.ZoomCamera(new Vector2(1.5f, 1.5f), mousePos);
+                Camera.TranslateCamera(new Vector3(halfScreen, 0) - mousePos);
             }
             else if (leftMouse == ButtonState.Released)
             {
@@ -39,20 +42,15 @@ namespace Editor.States
             if (rightMouse == ButtonState.Pressed && !rightClick && onScreen)
             {
                 rightClick = true;
-                Camera.Scale -= new Vector2(.1f, .1f);
+                var halfScreen = new Vector2(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
+                var mousePos = new Vector3(GetMousePosition(), 0);
+                Camera.ZoomCamera(new Vector2(.667f, .667f), mousePos);
+                Camera.TranslateCamera(new Vector3(halfScreen, 0) - mousePos);
             }
             else if (rightMouse == ButtonState.Released)
             {
                 rightClick = false;
             }
-        }
-
-        private Vector3 GetMousePosition()
-        {
-            return new Vector3(
-                InputManager.Instance.CurrentMouseState.X,
-                InputManager.Instance.CurrentMouseState.Y,
-                0);
         }
     }
 }

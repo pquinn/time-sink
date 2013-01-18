@@ -50,15 +50,15 @@ namespace TimeSink.Editor.GUI.Views
             this.InputBindings.Add(
                 new KeyBinding(new RelayCommand(a => PanRevertClick()), new KeyGesture(Key.P, ModifierKeys.Alt)));
             this.InputBindings.Add(
-                new KeyBinding(new RelayCommand(a => ZoomClick()), new KeyGesture(Key.Z, ModifierKeys.Control)));
+                new KeyBinding(new RelayCommand(a => ZoomClick()), new KeyGesture(Key.I, ModifierKeys.Control)));
             this.InputBindings.Add(
-                new KeyBinding(new RelayCommand(a => ZoomRevertClick()), new KeyGesture(Key.Z, ModifierKeys.Alt)));
+                new KeyBinding(new RelayCommand(a => ZoomRevertClick()), new KeyGesture(Key.I, ModifierKeys.Alt)));
             this.InputBindings.Add(
-                new KeyBinding(new RelayCommand(a => SelectionClick()), new KeyGesture(Key.M, ModifierKeys.Control)));
+                new KeyBinding(new RelayCommand(a => SelectionClick()), new KeyGesture(Key.J, ModifierKeys.Control)));
             this.InputBindings.Add(
-                new KeyBinding(new RelayCommand(a => RotationClick()), new KeyGesture(Key.R, ModifierKeys.Control)));
+                new KeyBinding(new RelayCommand(a => RotationClick()), new KeyGesture(Key.K, ModifierKeys.Control)));
             this.InputBindings.Add(
-                new KeyBinding(new RelayCommand(a => ScalingClick()), new KeyGesture(Key.S, ModifierKeys.Control)));
+                new KeyBinding(new RelayCommand(a => ScalingClick()), new KeyGesture(Key.L, ModifierKeys.Control)));
             this.InputBindings.Add(
                 new KeyBinding(new RelayCommand(a => GeometryClick()), new KeyGesture(Key.G, ModifierKeys.Control)));
             this.InputBindings.Add(
