@@ -51,13 +51,13 @@ namespace TimeSink.Entities
             ShootingArrowNeutRight, ShootingArrowNeutLeft,
             #endregion
             #region ducking
-            DuckingRight, DuckingLeft,
+            DuckingRight, DuckingLeft, DuckingRightBow, DuckingLeftBow, DuckShootRightBow, DuckShootLeftBow,
             #endregion
             #region knockback
             KnockbackRight, KnockbackLeft,
             #endregion
             #region climbing
-            ClimbingBack,
+            ClimbingBack, ClimbingBackNeut,
             ClimbingLeft, ClimbingRight,
             ClimbingLeftNeutral, ClimbingRightNeutral,
             ClimbingLookRight, ClimbingLookLeft,
@@ -73,25 +73,41 @@ namespace TimeSink.Entities
 
         const string EDITOR_PREVIEW = "Textures/Body_Neutral";
 
+        #region neutral
         const string NEUTRAL_RIGHT = "Textures/Sprites/SpriteSheets/Body_Neutral";
         const string NEUTRAL_LEFT = "Textures/Sprites/SpriteSheets/Neutral_Left";
         const string IDLE_CLOSED_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
         const string IDLE_OPEN_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
+        #endregion
+        #region walking
         const string WALKING_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Intermediate";
         const string WALKING_RIGHT = "Textures/Sprites/SpriteSheets/Body_Walking_Right";
-        const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
         const string WALKING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Intermediate_Left";
         const string WALKING_LEFT = "Textures/Sprites/SpriteSheets/BodyWalkLeft";
+        #endregion
+        #region Running
         const string RUNNING_RIGHT = "Textures/Sprites/SpriteSheets/RunningRight";
         const string RUNNING_LEFT = "Textures/Sprites/SpriteSheets/RunningLeft";
         const string RUNNING_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Right";
         const string RUNNING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Running_Intermediate_Left";
+        #endregion
+        #region jumping
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
+        const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
+        #endregion
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        #region Knockback
         const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
         const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
+        #endregion
+        #region Ducking
         const string DUCK_LEFT = "Textures/Sprites/SpriteSheets/DuckingLeft";
         const string DUCK_RIGHT = "Textures/Sprites/SpriteSheets/DuckingRight";
+        const string DUCK_LEFT_BOW = "Textures/Sprites/SpriteSheets/DuckLeftBow";
+        const string DUCK_RIGHT_BOW = "Textures/Sprites/SpriteSheets/DuckingRightBow";
+        const string DUCK_LEFT_SHOOT_BOW = "Textures/Sprites/SpriteSheets/DuckLeftShoot";
+        const string DUCK_RIGHT_SHOOT_BOW = "Textures/Sprites/SpriteSheets/DuckShootRightBow";
+        #endregion
         #region climbing
         const string CLIMBING_LEFT = "Textures/Sprites/SpriteSheets/ClimbingLeft";
         const string CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/ClimbingRight";
@@ -103,6 +119,8 @@ namespace TimeSink.Entities
         const string HORIZ_CLIMBING_RIGHT = "Textures/Sprites/SpriteSheets/HorizClimbRight";
         const string HORIZ_CLIMBING_LEFT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbLeftNeut";
         const string HORIZ_CLIMBING_RIGHT_NEUT = "Textures/Sprites/SpriteSheets/HorizontalClimbRightNeut";
+        const string CLIMBING_BACK = "Textures/Sprites/SpriteSheets/ClimbingBack";
+        const string CLIMBING_NEUT = "Textures/Sprites/SpriteSheets/ClimbingNeut";
         #endregion
         const string SHOOT_ARROW_RIGHT = "Textures/Sprites/SpriteSheets/ShootArrowRight";
         const string SHOOT_ARROW_LEFT = "Textures/Sprites/SpriteSheets/ShootArrowLeft";
@@ -241,6 +259,7 @@ namespace TimeSink.Entities
         int spriteWidth = 35;
         int spriteHeight = 130;
         bool isRunning;
+        bool isDucking;
         bool invulnerable = false;
         bool invulnFlash = false;
         bool damageFlash = false;
@@ -637,20 +656,33 @@ namespace TimeSink.Entities
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
                 }
             }
-            if (keyboard.IsKeyDown(Keys.LeftControl))
+            if (InputManager.Instance.Pressed(Keys.LeftControl))
             {
-                if(TouchingGround)
+                isDucking = true;
+                if (TouchingGround && !inHold)
                 {
                     if (LeftFacingBodyState())
                     {
-                        currentState = BodyStates.DuckingLeft;
+                        if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                        {
+                            currentState = BodyStates.DuckingLeftBow;
+                        }
+                        else
+                            currentState = BodyStates.DuckingLeft;
                     }
                     else
                     {
-                        currentState = BodyStates.DuckingRight;
+                        if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                        {
+                            currentState = BodyStates.DuckingRightBow;
+                        }
+                        else
+                            currentState = BodyStates.DuckingRight;
                     }
                 }
             }
+            else
+                isDucking = false;
             #endregion
 
             #region Direction
@@ -830,9 +862,20 @@ namespace TimeSink.Entities
                 if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     if (facing == -1)
-                        currentState = BodyStates.ShootingArrowLeft;
+                        if (isDucking)
+                        {
+                            currentState = BodyStates.DuckShootLeftBow;
+                        }
+                        else
+                            currentState = BodyStates.ShootingArrowLeft;
                     else
-                        currentState = BodyStates.ShootingArrowRight;
+
+                        if (isDucking)
+                        {
+                            currentState = BodyStates.DuckShootRightBow;
+                        }
+                        else
+                            currentState = BodyStates.ShootingArrowRight;
                     //currentState = BodyStates.ShootingRight;
                     holdTime = gameTime.TotalGameTime.TotalSeconds;
                     inHold = true;
@@ -847,10 +890,20 @@ namespace TimeSink.Entities
                     var shooting = animations[currentState].CurrentFrame = 0;
                     if (facing == -1)
                     {
-                        currentState = BodyStates.ShootingArrowNeutLeft;
+                        if (isDucking)
+                        {
+                            currentState = BodyStates.DuckingLeftBow;
+                        }
+                        else
+                            currentState = BodyStates.ShootingArrowNeutLeft;
                     }
                     else
-                        currentState = BodyStates.ShootingArrowNeutRight;
+                        if (isDucking)
+                        {
+                            currentState = BodyStates.DuckingRightBow;
+                        }
+                        else
+                            currentState = BodyStates.ShootingArrowNeutRight;
                     shotTimer = 0f;
                 }
             }
@@ -955,6 +1008,11 @@ namespace TimeSink.Entities
                 {
                     currentState = BodyStates.HorizontalClimbLeftNeut;
                 }
+                if (currentState == BodyStates.ClimbingBack)
+                {
+                    animations[BodyStates.ClimbingBack].CurrentFrame = 0;
+                    currentState = BodyStates.ClimbingBackNeut;
+                }
                 if (currentState == BodyStates.DuckingLeft)
                 {
                     animations[BodyStates.DuckingLeft].CurrentFrame = 0;
@@ -964,6 +1022,16 @@ namespace TimeSink.Entities
                 {
                     currentState = BodyStates.NeutralRight;
                     animations[BodyStates.DuckingRight].CurrentFrame = 0;
+                }
+                if (currentState == BodyStates.DuckingLeftBow)
+                {
+                    animations[BodyStates.DuckingLeftBow].CurrentFrame = 0;
+                    currentState = BodyStates.NeutralLeft;
+                }
+                if (currentState == BodyStates.DuckingRightBow)
+                {
+                    currentState = BodyStates.NeutralRight;
+                    animations[BodyStates.DuckingRightBow].CurrentFrame = 0;
                 }
             }
 
@@ -1269,6 +1337,26 @@ namespace TimeSink.Entities
 
                 timer = 0f;
             }
+            else if (currentState == BodyStates.DuckShootLeftBow && timer >= bowInterval)
+            {
+                var shooting = animations[BodyStates.DuckShootLeftBow];
+                if (inHold)
+                {
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                        shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+                }
+                timer = 0f;
+            }
+            else if (currentState == BodyStates.DuckShootRightBow && timer >= bowInterval)
+            {
+                var shooting = animations[BodyStates.DuckShootRightBow];
+                if (inHold)
+                {
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                        shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
+                }
+                timer = 0f;
+            }
             #endregion
 
             if (currentState == BodyStates.JumpingRight && timer >= interval)
@@ -1340,6 +1428,13 @@ namespace TimeSink.Entities
                 climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
                 timer = 0f;
             }
+            if (currentState == BodyStates.ClimbingBack && timer >= interval)
+            {
+                var climbing = animations[BodyStates.ClimbingBack];
+
+                    climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
+                 timer = 0f;
+            }
             if (currentState == BodyStates.KnockbackRight && timer >= interval)
             {
                 var knockback = animations[BodyStates.KnockbackRight];
@@ -1381,6 +1476,24 @@ namespace TimeSink.Entities
             {
                 var ducking = animations[BodyStates.DuckingRight];
                 if (ducking.CurrentFrame != ducking.NumFrames - 2)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.DuckingLeftBow && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingLeftBow];
+                if (ducking.CurrentFrame != ducking.NumFrames - 1)
+                {
+                    ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
+                }
+                timer = 0f;
+            }
+            if (currentState == BodyStates.DuckingRightBow && timer >= interval)
+            {
+                var ducking = animations[BodyStates.DuckingRightBow];
+                if (ducking.CurrentFrame != ducking.NumFrames - 1)
                 {
                     ducking.CurrentFrame = (ducking.CurrentFrame + 1) % ducking.NumFrames;
                 }
@@ -1744,9 +1857,18 @@ namespace TimeSink.Entities
             #region Climbing
             dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
-                    FACING_BACK,
+                    CLIMBING_BACK,
                     new Vector2(76.8f, 153.6f),
-                    4,
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+            dictionary.Add(BodyStates.ClimbingBackNeut,
+                new NewAnimationRendering(
+                    CLIMBING_NEUT,
+                    new Vector2(76.8f, 153.6f),
+                    1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -2006,6 +2128,7 @@ namespace TimeSink.Entities
                     invulnTint));
             #endregion
 
+            #region Ducking
             dictionary.Add(
                 BodyStates.DuckingLeft,
                  new NewAnimationRendering(
@@ -2028,7 +2151,51 @@ namespace TimeSink.Entities
                     Vector2.One,
                     invulnTint));
 
+            dictionary.Add(
+                BodyStates.DuckingLeftBow,
+                 new NewAnimationRendering(
+                    DUCK_LEFT_BOW,
+                    new Vector2(154f, 154f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
 
+            dictionary.Add(
+                BodyStates.DuckShootLeftBow,
+                 new NewAnimationRendering(
+                    DUCK_LEFT_SHOOT_BOW,
+                    new Vector2(154f, 154f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.DuckingRightBow,
+                 new NewAnimationRendering(
+                    DUCK_RIGHT_BOW,
+                    new Vector2(154f, 154f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.DuckShootRightBow,
+                 new NewAnimationRendering(
+                    DUCK_RIGHT_SHOOT_BOW,
+                    new Vector2(154f, 154f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            #endregion
 
             return dictionary;
         }
@@ -2071,6 +2238,8 @@ namespace TimeSink.Entities
                     currentState == BodyStates.IdleRightOpen ||
                     currentState == BodyStates.IdleRightClosed ||
                     currentState == BodyStates.DuckingRight ||
+                    currentState == BodyStates.DuckingRightBow ||
+                    currentState == BodyStates.DuckShootRightBow ||
                     currentState == BodyStates.JumpingRight);
         }
         public bool LeftFacingBodyState()
@@ -2092,6 +2261,8 @@ namespace TimeSink.Entities
                     currentState == BodyStates.IdleLeftOpen ||
                     currentState == BodyStates.IdleLeftClosed ||
                     currentState == BodyStates.DuckingLeft ||
+                    currentState == BodyStates.DuckingLeftBow ||
+                    currentState == BodyStates.DuckShootLeftBow ||
                     currentState == BodyStates.JumpingLeft);
         }
         public bool ClimbingState()
