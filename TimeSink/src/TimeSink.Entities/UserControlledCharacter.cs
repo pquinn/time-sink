@@ -655,6 +655,8 @@ namespace TimeSink.Entities
                 {
                     PerformJump();
                 }
+
+                EngineGame.Logger.Debug("Jumped!");
             }
             if (keyboard.IsKeyDown(Keys.S) && InputManager.Instance.IsNewKey(Keys.Space))
             {

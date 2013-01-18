@@ -18,6 +18,7 @@ using FarseerPhysics.Dynamics;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Editor;
+using log4net;
 
 namespace TimeSink.Engine.Core
 {
@@ -35,6 +36,8 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
         public SQLiteDatabase database;
+
+        public static readonly ILog Logger = LogManager.GetLogger(typeof(EngineGame));
 
         public ScreenManager ScreenManager { get; private set; }
         public ScreenFactory ScreenFactory { get; private set; }
@@ -82,6 +85,8 @@ namespace TimeSink.Engine.Core
 
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
+
+            log4net.Config.XmlConfigurator.Configure();
             
             ScreenManager.Initialize();
         }
