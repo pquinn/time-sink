@@ -17,8 +17,6 @@ namespace Editor.States
     {
         private bool inDrag;
         private Vector3 dragPivot;
-        private Vector3 cameraStart;
-        private Vector3 negOffset;
 
         public CameraTranslateState(Game game, Camera camera, IResourceCache<Texture2D> cache)
             : base(game, camera, cache)
@@ -32,27 +30,18 @@ namespace Editor.States
             if (leftMouse == ButtonState.Pressed && !inDrag && onScreen)
             {
                 inDrag = true;
-                dragPivot = GetMousePosition();
-                cameraStart = Camera.Position;
+                dragPivot = new Vector3(GetMousePosition(), 0);
             }
             else if (leftMouse == ButtonState.Pressed && onScreen)
             {
-                var mouse = GetMousePosition();
-                Camera.Position = cameraStart - mouse + dragPivot;
+                var mouse = new Vector3(GetMousePosition(), 0);
+                Camera.TranslateCamera(mouse - dragPivot);
+                dragPivot = mouse;
             }
             else if (leftMouse == ButtonState.Released)
             {
                 inDrag = false;
-                negOffset = Vector3.Zero;
             }
-        }
-
-        private Vector3 GetMousePosition()
-        {
-            return new Vector3(
-                InputManager.Instance.CurrentMouseState.X,
-                InputManager.Instance.CurrentMouseState.Y,
-                0);
         }
     }
 }

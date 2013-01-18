@@ -73,7 +73,7 @@ namespace TimeSink.Engine.Core
         {
             base.Initialize();
 
-            Camera = Camera.ZeroedCamera;
+            Camera = new Camera(Vector2.One, Vector3.Zero);
 
             // create default level
             LevelManager = Container.Resolve<LevelManager>();

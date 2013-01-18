@@ -9,6 +9,7 @@ using System.Diagnostics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core;
 
 namespace Editor.States
 {
@@ -20,7 +21,7 @@ namespace Editor.States
         double curAngle;
 
         public RotationEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
-            : base(game, camera, cache)
+            : base(game, camera, cache, true)
         {
         }
 
@@ -28,7 +29,7 @@ namespace Editor.States
         {
             base.DragStart();
 
-            center = selectedMeshes[drillIndex].Preview.GetCenter(
+            center = selectedEntities[drillIndex].Preview.GetCenter(
                 StateMachine.Owner.RenderManager.TextureCache, Matrix.Identity);
             dragOffset = dragPivot - center;
 
@@ -38,7 +39,7 @@ namespace Editor.States
             }
 
             origAngle = Math.Atan2(dragOffset.Y, dragOffset.X);
-            curAngle = selectedMeshes[drillIndex].Rotation;
+            curAngle = ((Tile)selectedEntities[drillIndex]).Rotation;
         }
 
         protected override void HandleDrag()
@@ -59,7 +60,7 @@ namespace Editor.States
 
             var newAngle = Math.Atan2(dir.Y, dir.X);
 
-            selectedMeshes[drillIndex].Rotation = 
+            ((Tile)selectedEntities[drillIndex]).Rotation = 
                 (float)(curAngle + newAngle - origAngle);
         }
     }

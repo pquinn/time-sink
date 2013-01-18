@@ -10,25 +10,29 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Physics;
 
 namespace Editor.States
 {
     public class SelectionEditorState : DefaultEditorState
     {
+        private static readonly float KEYBOARD_MOVEMENT_AMOUNT = PhysicsConstants.PixelsToMeters(2);
         private Vector3 cameraOffset = Vector3.Zero;
+        private bool tilesOnly;
 
-        protected List<Tile> selectedMeshes;
+        protected List<Entity> selectedEntities;
         protected int drillIndex;
         protected bool drag;
         protected bool emptySelect;
         protected Vector2 dragPivot;
         protected Vector2 selectionPivot;
 
-        public SelectionEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
+        public SelectionEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache, bool tilesOnly)
             : base(game, camera, cache)
         {
-            selectedMeshes = new List<Tile>();
+            selectedEntities = new List<Entity>();
             drillIndex = 0;
+            this.tilesOnly = tilesOnly;
         }
 
         public override void Enter()
@@ -42,8 +46,8 @@ namespace Editor.States
             if (MouseOnScreen())
             {
                 var buttonState = InputManager.Instance.CurrentMouseState.LeftButton;
-                var hasSelect = selectedMeshes.Count > 0;
-                var lastSelected = hasSelect ? selectedMeshes[drillIndex] : null;
+                var hasSelect = selectedEntities.Count > 0;
+                var lastSelected = hasSelect ? selectedEntities[drillIndex] : null;
                 if (buttonState == ButtonState.Pressed && MouseOnScreen())
                 {
                     var clicked = GetSelections(StateMachine.Owner);
@@ -51,7 +55,7 @@ namespace Editor.States
                     if (clicked.Count == 0) // cancel click
                     {
                         emptySelect = true;
-                        selectedMeshes.Clear();
+                        selectedEntities.Clear();
                     }
                     else if (hasSelect && sameClick && !drag && !emptySelect)  // enter drag
                     {
@@ -64,7 +68,7 @@ namespace Editor.States
                     }
                     else if (!emptySelect) // basic selection
                     {
-                        selectedMeshes = GetSelections(StateMachine.Owner);
+                        selectedEntities = GetSelections(StateMachine.Owner);
                         drillIndex = 0;
                     }
                 }
@@ -78,25 +82,35 @@ namespace Editor.States
                     emptySelect = false;
                 }
 
-                if (InputManager.Instance.IsNewKey(Keys.D) && selectedMeshes.Count > 0)
+                if (InputManager.Instance.IsNewKey(Keys.D) && selectedEntities.Count > 0)
                 {
-                    drillIndex = (drillIndex + 1) % selectedMeshes.Count;
+                    drillIndex = (drillIndex + 1) % selectedEntities.Count;
                 }
-                else if (InputManager.Instance.Pressed(Keys.Down) && selectedMeshes.Count > 0)
+                else if (InputManager.Instance.Pressed(Keys.Down) && selectedEntities.Count > 0)
                 {
-                    selectedMeshes[drillIndex].Position += new Vector2(0, 2);
+                    selectedEntities[drillIndex].Position += new Vector2(0, KEYBOARD_MOVEMENT_AMOUNT);
                 }
-                else if (InputManager.Instance.Pressed(Keys.Up) && selectedMeshes.Count > 0)
+                else if (InputManager.Instance.Pressed(Keys.Up) && selectedEntities.Count > 0)
                 {
-                    selectedMeshes[drillIndex].Position += new Vector2(0, -2);
+                    selectedEntities[drillIndex].Position += new Vector2(0, -KEYBOARD_MOVEMENT_AMOUNT);
                 }
-                else if (InputManager.Instance.Pressed(Keys.Right) && selectedMeshes.Count > 0)
+                else if (InputManager.Instance.Pressed(Keys.Right) && selectedEntities.Count > 0)
                 {
-                    selectedMeshes[drillIndex].Position += new Vector2(2, 0);
+                    selectedEntities[drillIndex].Position += new Vector2(KEYBOARD_MOVEMENT_AMOUNT, 0);
                 }
-                else if (InputManager.Instance.Pressed(Keys.Left) && selectedMeshes.Count > 0)
+                else if (InputManager.Instance.Pressed(Keys.Left) && selectedEntities.Count > 0)
                 {
-                    selectedMeshes[drillIndex].Position += new Vector2(-2, 0);
+                    selectedEntities[drillIndex].Position += new Vector2(-KEYBOARD_MOVEMENT_AMOUNT, 0);
+                }
+                else if (InputManager.Instance.IsNewKey(Keys.Delete) && selectedEntities.Count > 0)
+                {
+                    var entity = selectedEntities[drillIndex];
+                    if (entity is Tile)
+                        StateMachine.Owner.UnregisterTile((Tile)entity);
+                    else
+                        StateMachine.Owner.UnregisterEntity(entity);
+                    selectedEntities.Remove(entity);
+                    drillIndex--;
                 }
             }
         }
@@ -111,9 +125,9 @@ namespace Editor.States
 
             spriteBatch.Begin();
 
-            for (int i = 0; i < selectedMeshes.Count; i++)
+            for (int i = 0; i < selectedEntities.Count; i++)
             {
-                var box = selectedMeshes[i].Preview.GetNonAxisAlignedBoundingBox(
+                var box = selectedEntities[i].Preview.GetNonAxisAlignedBoundingBox(
                         StateMachine.Owner.RenderManager.TextureCache,
                         Camera.Transform);
 
@@ -135,7 +149,9 @@ namespace Editor.States
             drag = true;
 
             dragPivot = GetMousePosition();
-            selectionPivot = selectedMeshes[drillIndex].Position;
+            selectionPivot = new Vector2(
+                PhysicsConstants.MetersToPixels(selectedEntities[drillIndex].Position.X),
+                PhysicsConstants.MetersToPixels(selectedEntities[drillIndex].Position.Y));
         }
 
         protected virtual void HandleDrag()
@@ -157,7 +173,9 @@ namespace Editor.States
                 newPos = new Vector2(newPos.X + offX, newPos.Y + offY);
             }
 
-            selectedMeshes[drillIndex].Position = newPos;
+            selectedEntities[drillIndex].Position = new Vector2(
+                PhysicsConstants.PixelsToMeters(newPos.X), 
+                PhysicsConstants.PixelsToMeters(newPos.Y));
         }
 
         private void DrawBoundingBox(SpriteBatch spriteBatch, Camera camera, Color color, NonAxisAlignedBoundingBox box)
@@ -166,17 +184,18 @@ namespace Editor.States
             spriteBatch.DrawRect(blank, box, 5, color);
         }
 
-        private List<Tile> GetSelections(LevelManager levelManager)
+        private List<Entity> GetSelections(LevelManager levelManager)
         {
-            var selected = new List<Tile>();
-            foreach (var tile in levelManager.Level.Tiles)
+            var selected = new List<Entity>();
+            var entities = tilesOnly ? levelManager.Level.Tiles : levelManager.Level.Tiles.Concat(levelManager.Level.Entities);
+            foreach (var entity in entities)
             {
-                if (tile.Preview.Contains(
+                if (entity.Preview.Contains(
                         GetMousePosition(),
                         levelManager.RenderManager.TextureCache,
                         Camera.Transform))
                 {
-                    selected.Add(tile);
+                    selected.Add(entity);
                 }
             }
 

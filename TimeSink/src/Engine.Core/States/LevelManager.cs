@@ -71,6 +71,18 @@ namespace TimeSink.Engine.Core.States
             tiles.ForEach(RegisterTile);
         }
 
+        public void UnregisterTile(Tile tile)
+        {
+            EditorRenderManager.UnregisterPreviewable(tile);
+            RenderManager.UnregisterRenderable(tile);
+            Level.Tiles.Remove(tile);
+        }
+
+        public void UnregisterTiles(IEnumerable<Tile> tiles)
+        {
+            tiles.ForEach(x => UnregisterTile(x));
+        }
+
         public void RegisterEntity(Entity entity)
         {
             Level.Entities.Add(entity);

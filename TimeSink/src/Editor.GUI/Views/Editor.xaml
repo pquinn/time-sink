@@ -21,9 +21,9 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="35" />
+                            <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="35" />
+                            <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="10" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -37,14 +37,14 @@
                             <RowDefinition Height="35" />
                             <RowDefinition Height="10" />
                         </Grid.RowDefinitions>
-                        <Button Grid.Column="1" Grid.Row="1" Content="Pan" Click="Pan_Click"></Button>
-                        <Button Grid.Column="3" Grid.Row="1" Content="Zoom" Click="Zoom_Click"></Button>
-                        <Button Grid.Column="1" Grid.Row="3" Content="Selection" Click="Selection_Click"></Button>
-                        <Button Grid.Column="3" Grid.Row="3" Content="Rotation" Click="Rotation_Click"></Button>
-                        <Button Grid.Column="1" Grid.Row="5" Content="Scaling" Click="Scaling_Click"></Button>
-                        <Button Grid.Column="3" Grid.Row="5" Content="Geometry" Click="Geometry_Click"></Button>
-                        <Button Grid.Column="1" Grid.Row="7" Content="Entities" Click="Entities_Click"></Button>
-                        <Button Grid.Column="3" Grid.Row="7" Content="Static Meshes" Click="Static_Click"></Button>
+                        <Button Grid.Column="1" Grid.Row="1" Content="Pan" ToolTip="Ctrl+P" Click="Pan_Click"></Button>
+                        <Button Grid.Column="3" Grid.Row="1" Content="Zoom" ToolTip="Ctrl+I" Click="Zoom_Click"></Button>
+                        <Button Grid.Column="1" Grid.Row="3" Content="Move" ToolTip="Ctrl+J" Click="Selection_Click"></Button>
+                        <Button Grid.Column="3" Grid.Row="3" Content="Rotate" ToolTip="Ctrl+K" Click="Rotation_Click"></Button>
+                        <Button Grid.Column="1" Grid.Row="5" Content="Scale" ToolTip="Ctrl+L" Click="Scaling_Click"></Button>
+                        <Button Grid.Column="3" Grid.Row="5" Content="Geom" ToolTip="Ctrl+G" Click="Geometry_Click"></Button>
+                        <Button Grid.Column="1" Grid.Row="7" Content="Entities" ToolTip="Ctrl+E" Click="Entities_Click"></Button>
+                        <Button Grid.Column="3" Grid.Row="7" Content="Tiles" ToolTip="Ctrl+T" Click="Static_Click"></Button>
                     </Grid>
                 </Grid>
             </Border>

@@ -28,6 +28,7 @@ namespace TimeSink.Entities.Objects
         const string EDITOR_NAME = "Torch";
         const string TEXTURE = "Textures/Objects/TorchFlaming";
 
+        private static readonly Vector2 SrcRectSize = new Vector2(29.5f, 130f);
         private static readonly Guid GUID = new Guid("749a40d4-fd31-438d-8d68-9d7a7700ea2d");
 
         private WeldJoint j;
@@ -49,7 +50,7 @@ namespace TimeSink.Entities.Objects
             Height = height;
             rendering =  new NewAnimationRendering(
                   TEXTURE,
-                  new Vector2(29.5f, 130f),
+                  SrcRectSize,
                   2,
                   Vector2.Zero,
                   0,
@@ -125,7 +126,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return new BasicRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Vector2.One, new Rectangle(0, 0, (int)SrcRectSize.X, (int)SrcRectSize.Y)); }
         }
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
