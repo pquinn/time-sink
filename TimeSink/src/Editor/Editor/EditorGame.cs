@@ -296,7 +296,7 @@ namespace Editor
         public void SelectionSelected()
         {
             stateMachine.ChangeState(
-                new SelectionEditorState(this, camera, TextureCache),
+                new SelectionEditorState(this, camera, TextureCache, false),
                 true, true);
         }
 

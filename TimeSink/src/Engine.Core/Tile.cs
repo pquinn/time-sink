@@ -44,9 +44,6 @@ namespace TimeSink.Engine.Core
         public string Texture { get; set; }
 
         [SerializableField]
-        public Vector2 Position { get; set; }
-
-        [SerializableField]
         public float Rotation { get; set; }
 
         [SerializableField]
@@ -71,7 +68,7 @@ namespace TimeSink.Engine.Core
         {
             get
             {
-                return new BasicRendering(Texture, Position, Rotation, Scale);
+                return new BasicRendering(Texture, PhysicsConstants.MetersToPixels(Position), Rotation, Scale);
             }
         }
 

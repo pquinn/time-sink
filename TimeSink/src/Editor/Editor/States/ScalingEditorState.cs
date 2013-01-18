@@ -22,7 +22,7 @@ namespace Editor.States
         private Vector2 lastMouse;
 
         public ScalingEditorState(Game game, Camera camera, IResourceCache<Texture2D> cache)
-            : base(game, camera, cache)
+            : base(game, camera, cache, true)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Editor.States
         {
             base.DragStart();
 
-            origScale = selectedMeshes[drillIndex].Scale;
+            origScale = ((Tile)selectedEntities[drillIndex]).Scale;
 
             lastMouse = GetMousePosition();
         }
@@ -44,12 +44,12 @@ namespace Editor.States
 
             var mouse = GetMousePosition();
             var dragOffset = lastMouse - mouse;
-            selectedMeshes[drillIndex].Expand(
+            ((Tile)selectedEntities[drillIndex]).Expand(
                 StateMachine.Owner.RenderManager.TextureCache,
                 dragOffset, origScale, Matrix.Identity);
 
             lastMouse = mouse;
-            origScale = selectedMeshes[drillIndex].Scale;
+            origScale = ((Tile)selectedEntities[drillIndex]).Scale;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

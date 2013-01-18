@@ -24,7 +24,7 @@ namespace TimeSink.Engine.Core.Physics
             return meters * PixelsPerMeter;
         }
 
-        public static float PixelsToMeters(int pixels)
+        public static float PixelsToMeters(float pixels)
         {
             return pixels / PixelsPerMeter;
         }

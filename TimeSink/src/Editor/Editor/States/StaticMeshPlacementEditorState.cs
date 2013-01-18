@@ -42,7 +42,7 @@ namespace Editor.States
                             InputManager.Instance.CurrentMouseState.Y);
                     var tile = new Tile(
                         textureKey,
-                        Vector2.Transform(position, Matrix.Invert(Camera.Transform)),
+                        PhysicsConstants.PixelsToMeters(Vector2.Transform(position, Matrix.Invert(Camera.Transform))),
                         0, Vector2.One);
                     StateMachine.Owner.RegisterTile(tile);
 
