@@ -54,7 +54,7 @@ namespace TimeSink.Engine.Core
 
         [EditableField("Position")]
         [SerializableField]
-        public Vector2 Position
+        public virtual Vector2 Position
         {
             get 
             {

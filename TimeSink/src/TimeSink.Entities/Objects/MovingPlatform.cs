@@ -103,31 +103,14 @@ namespace TimeSink.Entities
         {
             base.OnUpdate(time, world);
 
-            Vector2 transform = StartPosition - EndPosition;
+            var transform = StartPosition - EndPosition;
 
-            double timeScale = TimeSpan / Math.PI * 2;
-            double theta = timeScale * time.TotalGameTime.TotalSeconds - Math.PI;
-            Vector2 targetPosition = StartPosition + transform * (float)Math.Sin(theta) * Vector2.One;
-            Physics.LinearVelocity = (targetPosition - Physics.Position) / (float)time.ElapsedGameTime.TotalSeconds;
+            var timeScale = Math.PI * 2 / TimeSpan;
+            var theta = timeScale * time.TotalGameTime.TotalSeconds;
 
-            //if (first)
-            //{
-            //    tZero = (float)time.TotalGameTime.TotalSeconds;
-            //    first = false;
-            //}
+            var targetPosition = StartPosition + transform * (-.5f * (float)Math.Cos(theta) - .5f) * Vector2.One;
 
-            //float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
-            //var stepAmt = currentStep / TimeSpan;
-            //var dir = Math.Sin(stepAmt * 2 * Math.PI);
-            //var offset = EndPosition - StartPosition;
-            //var len = offset.Length();
-            //offset.Normalize();
-            //if (dir > 0)
-            //    Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            //else if (dir < 0)
-            //    Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            //else
-            //    Physics.LinearVelocity = Vector2.Zero;
+            Physics.LinearVelocity = (targetPosition - Position) / (float)time.ElapsedGameTime.TotalSeconds;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
