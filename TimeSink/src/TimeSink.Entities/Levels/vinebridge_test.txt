@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<DefaultStart>
-		<X>0.78125</X><Y>0.78125</Y>
+		<X>0.78125</X><Y>-01.78125</Y>
 	</DefaultStart>
 	<Midground />
 	<Tiles />
