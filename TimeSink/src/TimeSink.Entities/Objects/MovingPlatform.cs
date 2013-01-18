@@ -30,7 +30,6 @@ namespace TimeSink.Entities
         protected int textureHeight;
         protected int textureWidth;
 
-        private Func<float, Vector2> PatrolFunction { get; set; }
         private int direction;
         private bool first;
         private float tZero;
@@ -49,21 +48,6 @@ namespace TimeSink.Entities
             Height = height > 0 ? width : 50;
             direction = 1;
             first = true;
-            PatrolFunction = delegate(float time)
-            {
-                float currentStep = time % TimeSpan;
-                Vector2 newPosition = new Vector2();
-                if (currentStep >= 0 && currentStep < (TimeSpan / 2f))
-                {
-                    var stepAmt = currentStep / TimeSpan * 2;
-                    newPosition = StartPosition + (stepAmt * (EndPosition - StartPosition));
-                }
-                else
-                {
-                    newPosition = EndPosition + ((currentStep - TimeSpan / 2) / TimeSpan * 2 * (StartPosition - EndPosition));
-                }
-                return newPosition;
-            };
         }
 
         [SerializableField]
@@ -119,24 +103,31 @@ namespace TimeSink.Entities
         {
             base.OnUpdate(time, world);
 
-            if (first)
-            {
-                tZero = (float)time.TotalGameTime.TotalSeconds;
-                first = false;
-            }
+            Vector2 transform = StartPosition - EndPosition;
 
-            float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
-            var stepAmt = currentStep / TimeSpan;
-            var dir = Math.Sin(stepAmt * 2 * Math.PI);
-            var offset = EndPosition - StartPosition;
-            var len = offset.Length();
-            offset.Normalize();
-            if (dir > 0)
-                Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else if (dir < 0)
-                Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else
-                Physics.LinearVelocity = Vector2.Zero;
+            double timeScale = TimeSpan / Math.PI * 2;
+            double theta = timeScale * time.TotalGameTime.TotalSeconds - Math.PI;
+            Vector2 targetPosition = StartPosition + transform * (float)Math.Sin(theta) * Vector2.One;
+            Physics.LinearVelocity = (targetPosition - Physics.Position) / (float)time.ElapsedGameTime.TotalSeconds;
+
+            //if (first)
+            //{
+            //    tZero = (float)time.TotalGameTime.TotalSeconds;
+            //    first = false;
+            //}
+
+            //float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
+            //var stepAmt = currentStep / TimeSpan;
+            //var dir = Math.Sin(stepAmt * 2 * Math.PI);
+            //var offset = EndPosition - StartPosition;
+            //var len = offset.Length();
+            //offset.Normalize();
+            //if (dir > 0)
+            //    Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            //else if (dir < 0)
+            //    Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
+            //else
+            //    Physics.LinearVelocity = Vector2.Zero;
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
