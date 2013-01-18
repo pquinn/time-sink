@@ -309,6 +309,8 @@ namespace TimeSink.Entities
                 }
                 Health -= val;
                 EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+
+                EngineGame.Logger.Info(String.Format("Player took {0} damage.", val));
             }
         }
 
@@ -351,6 +353,9 @@ namespace TimeSink.Entities
                 if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
             }
+
+            if (gameTime.TotalGameTime.TotalMilliseconds % 5000 == 0)
+                LogMetricSnapshot();
         }
 
         private void RemoveInactiveDots()
@@ -2240,6 +2245,13 @@ namespace TimeSink.Entities
             //InitializePhysics(true, engineRegistrations);
 
             //Physics.Position = newPos;
+        }
+
+        private void LogMetricSnapshot()
+        {
+            EngineGame.Logger.Info(String.Format("Player health: {0}", Health));
+            EngineGame.Logger.Info(String.Format("Player mana: {0}", Mana));
+            EngineGame.Logger.Info(String.Format("Player positon: {0}", Position));
         }
     }
 }
