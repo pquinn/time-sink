@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.States;
 using XNAControl;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -115,7 +116,7 @@ namespace TimeSink.Editor.GUI.Views
                     Game.LevelManager.RegisterMidground(
                         new Tile(
                             texture.Key,
-                            new Vector2((x * width) + (width / 2), (y * height) + (height / 2)),
+                            PhysicsConstants.PixelsToMeters(new Vector2((x * width) + (width / 2), (y * height) + (height / 2))),
                             0, Vector2.One));
                 }
             }
