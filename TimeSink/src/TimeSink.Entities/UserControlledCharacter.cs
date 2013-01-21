@@ -332,12 +332,9 @@ namespace TimeSink.Entities
                     Physics.ApplyLinearImpulse(new Vector2(25, 0));
                 }
 
-                if (!Invulnerable)
-                {
                     Health -= val;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
                     Logger.Info(String.Format("Player took {0} damage.", val));
-                }
             }
         }
 
@@ -377,7 +374,7 @@ namespace TimeSink.Entities
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
-                if (dot.Active)
+                if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
             }
 
@@ -1594,8 +1591,10 @@ namespace TimeSink.Entities
 
             if (!Invulnerable)
             {
-                this.RegisterDot(bramble.dot);
+              /*  this.RegisterDot(bramble.dot);
                 bramble.dot.Active = true;
+                return true;*/
+                TakeDamage(10);
                 return true;
             }
             else
