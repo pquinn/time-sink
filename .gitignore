@@ -2,6 +2,7 @@
 *.suo
 bin/
 obj/
+venv/
 !lib/
 !lib/*.dll
 *.chachefile
