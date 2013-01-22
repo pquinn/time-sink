@@ -146,6 +146,7 @@
     <Compile Include="Rendering\PivotedRendering.cs" />
     <Compile Include="Rendering\EmptyPreviewRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
+    <Compile Include="Rendering\TextRendering.cs" />
     <Compile Include="Rendering\ZRendering.cs" />
     <Compile Include="States\EntitySerialization.cs" />
     <Compile Include="Pair.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="TutorialDisplay.cs" />
     <Compile Include="VectorExtensions.cs" />
     <Compile Include="WorldGeometry2.cs" />
     <Compile Include="XNAExtensions.cs" />
