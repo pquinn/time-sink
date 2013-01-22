@@ -67,7 +67,7 @@ namespace TimeSink.Engine.Game
         protected override void Initialize()
         {
             base.Initialize();
-            LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\level_0.txt");
+            LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
         }
 
         private void AddInitialScreens()
@@ -227,7 +227,7 @@ namespace TimeSink.Engine.Game
         private void LoadLevel()
         {
             LevelManager.Clear();
-            var path = "..\\..\\..\\..\\..\\TimeSink.Entities\\Levels\\" + loadLevel + ".txt";
+            var path = "..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\Levels\\" + loadLevel + ".txt";
             LevelManager.DeserializeLevel(path);
             loadLevel = null;
         }
