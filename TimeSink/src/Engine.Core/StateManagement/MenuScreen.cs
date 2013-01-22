@@ -228,10 +228,8 @@ namespace TimeSink.Engine.Core.StateManagement
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight(this) + 10;
             }
+
             UpdateHudElements();
-
-
-
         }
 
         public void UpdateHudElements()
