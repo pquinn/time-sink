@@ -21,7 +21,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Objects
 {
-    public enum DoorType { Up, Down, Side }
+    public enum DoorType { Up, Down, Side, None }
 
     [SerializableEntity("66c116cc-60bf-4808-a4c0-f5bb8cad053b")]
     [EditorEnabled]
@@ -91,6 +91,10 @@ namespace TimeSink.Entities.Objects
         {            
             if (DoorType == DoorType.Side)
                 ChangeLevel();
+            if (DoorType == DoorType.Up)
+            {
+                c.DoorType = DoorType.Up;
+            }
 
             collided = true;
 
@@ -112,6 +116,7 @@ namespace TimeSink.Entities.Objects
             }
 
             collided = false;
+            c.DoorType = DoorType.None;
         }
 
         private bool initialized;

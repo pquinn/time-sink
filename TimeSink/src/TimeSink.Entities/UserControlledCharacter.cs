@@ -39,6 +39,7 @@ namespace TimeSink.Entities
             #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
+            FacingBack,
             #endregion
             #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
@@ -164,6 +165,7 @@ namespace TimeSink.Entities
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
         public HashSet<DamageOverTimeEffect> Dots { get; set; }
+        public DoorType DoorType { get; set; }
 
         private Joint vineAttachment;
 
@@ -861,6 +863,10 @@ namespace TimeSink.Entities
                         movedirection.Y -= 1.0f;
                         Physics.LinearDamping = 5f;
                     }                    
+                }
+                else if (DoorType == DoorType.Up)
+                {
+                    currentState = BodyStates.FacingBack;
                 }
             }
             #endregion
@@ -2208,6 +2214,17 @@ namespace TimeSink.Entities
 
             #endregion
 
+            dictionary.Add(
+                BodyStates.FacingBack,
+                 new NewAnimationRendering(
+                    FACING_BACK,
+                    new Vector2(77f, 154f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
             return dictionary;
         }
 
@@ -2326,6 +2343,7 @@ namespace TimeSink.Entities
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 Physics = BodyFactory.CreateBody(world, Position, this);
+                DoorType = DoorType.None;
 
                 var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
                 WheelBody = BodyFactory.CreateBody(world, wPos, this);
