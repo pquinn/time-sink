@@ -7,6 +7,7 @@ using System.Text;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Weapons;
 
@@ -28,6 +29,9 @@ namespace TimeSink.Entities.Objects
             
         }
 
+        [SerializableField]
+        [EditableField("Prompt")]
+        public string Prompt { get; set; }
 
         public override Guid Id
         {
@@ -61,6 +65,8 @@ namespace TimeSink.Entities.Objects
 
             Character.AddInventoryItem(new Arrow());
 
+            if (!engine.ScreenManager.IsInDialogueState())
+                engine.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(Prompt)), null);
         }
         public override string EditorName
         {

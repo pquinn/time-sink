@@ -163,7 +163,6 @@ namespace TimeSink.Entities.Objects
             Physics.Position = new Vector2(c.Physics.Position.X, ground.Physics.Position.Y - 
                                            (PhysicsConstants.PixelsToMeters(Height) / 2));
             held = null;
-          //  w.RemoveJoint(j);
         }
         public override void OnUpdate(GameTime time, EngineGame world)
         {
