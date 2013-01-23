@@ -10,20 +10,28 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public class TextRendering : IRendering
     {
-        protected Vector2 position;
-        protected float rotation;
-        protected Vector2 scale;
         protected String text;
+        Vector2 parentPosition;
+        float parentRotation;
+        Vector2 parentScale;
+        Color color;
 
-        public TextRendering(String text, Vector2 position, float rotation, Vector2 scale)
+        public TextRendering(String text, Vector2 position, float rotation, Vector2 scale, Color color)
         {
             this.text = text;
-            this.position = position;
-            this.rotation = rotation;
-            this.scale = scale;
+            this.parentPosition = position;
+            this.parentRotation = rotation;
+            this.parentScale = scale;
+            this.color = color;
         }
         public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
+            var relativeTransform =
+                Matrix.CreateScale(new Vector3(parentScale.X, parentScale.Y, 1)) *
+                Matrix.CreateRotationZ(parentRotation) *
+                Matrix.CreateTranslation(parentPosition.X, parentPosition.Y, 0) *
+                globalTransform;
+
 
             spriteBatch.Begin(
                 SpriteSortMode.BackToFront,
@@ -32,12 +40,12 @@ namespace TimeSink.Engine.Core.Rendering
                 null,
                 null,
                 null,
-                globalTransform);
+                Matrix.Identity);
 
 
 
 
-            spriteBatch.DrawString(EngineGame.Instance.ScreenManager.Font, text, position, Color.Green);
+            spriteBatch.DrawString(EngineGame.Instance.ScreenManager.Font, text, parentPosition, color);
             spriteBatch.End();
         }
 

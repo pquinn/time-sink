@@ -70,10 +70,7 @@ namespace TimeSink.Entities.Objects
         {
             get
             {
-                return new SizedRendering(
-                    TEXTURE,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new NullRendering();
             }
         }
 
