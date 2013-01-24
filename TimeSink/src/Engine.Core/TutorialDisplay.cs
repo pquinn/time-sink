@@ -25,7 +25,7 @@ namespace TimeSink.Engine.Core
 
         public IRendering Rendering
         {
-            get { return new TextRendering(text, new Vector2(position.X, position.Y - 100), 0, Vector2.One); }
+            get { return new TextRendering(text, new Vector2(100, 100), 0, Vector2.One, Color.DarkGoldenrod); }
         }
     }
 }
