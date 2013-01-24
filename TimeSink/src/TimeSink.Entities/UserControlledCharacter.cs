@@ -77,6 +77,9 @@ namespace TimeSink.Entities
 
         //Texture strings for content loading
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
+        const string JUMP_IMPACT_SOUND = "Audio/Sounds/JumpImpact";
+        const string ARROW_RELEASE_SOUND = "Audio/Sounds/ArrowRelease";
+        const string TAKE_DAMAGE_SOUND = "Audio/Sounds/TakeDamage";
 
         const string EDITOR_PREVIEW = "Textures/Body_Neutral";
 
@@ -153,6 +156,9 @@ namespace TimeSink.Entities
         public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(-30);
 
         private SoundEffect jumpSound;
+        private SoundEffect jumpImpactSound;
+        private SoundEffect arrowSound;
+        private SoundEffect takeDamageSound;
         private bool jumpToggleGuard = true;
         private Rectangle sourceRect;
         private float health;
@@ -313,6 +319,9 @@ namespace TimeSink.Entities
         {
             var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
             jumpSound = soundCache.LoadResource(JUMP_SOUND_NAME);
+            arrowSound = soundCache.LoadResource(ARROW_RELEASE_SOUND);
+            takeDamageSound = soundCache.LoadResource(TAKE_DAMAGE_SOUND);
+            jumpImpactSound = soundCache.LoadResource(JUMP_IMPACT_SOUND);
         }
 
         public void TakeDamage(float val)
@@ -323,6 +332,11 @@ namespace TimeSink.Entities
                 {
                     Invulnerable = true;
                     damageFlash = true;
+
+                    Health -= val;
+                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+                    Logger.Info(String.Format("Player took {0} damage.", val));
+                    takeDamageSound.Play();
                 }
                 if (RightFacingBodyState())
                 {
@@ -335,9 +349,6 @@ namespace TimeSink.Entities
                     Physics.ApplyLinearImpulse(new Vector2(25, 0));
                 }
 
-                    Health -= val;
-                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
-                    Logger.Info(String.Format("Player took {0} damage.", val));
             }
         }
 
@@ -355,6 +366,10 @@ namespace TimeSink.Entities
                 {
                     if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                     {
+                        if (jumpToggleGuard == false)
+                        {
+                            jumpImpactSound.Play();
+                        }
                         jumpToggleGuard = true;
                         TouchingGround = true;
                         return 0;
@@ -903,6 +918,7 @@ namespace TimeSink.Entities
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
                     (shotTimer >= shotInterval) && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
+                    arrowSound.Play();
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
                     var shooting = animations[currentState].CurrentFrame = 0;
                     if (facing == -1)
