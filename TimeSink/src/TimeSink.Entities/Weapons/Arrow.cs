@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Entities.Weapons
 {
@@ -26,6 +27,7 @@ namespace TimeSink.Entities.Weapons
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
         const string FLAME_TEXTURE = "Textures/Weapons/ArrowFlames";
         const string EDITOR_NAME = "Arrow";
+        const string ARROW_IMPACT_SOUND = "Audio/Sounds/ArrowImpact";
 
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 1000;
@@ -33,6 +35,7 @@ namespace TimeSink.Entities.Weapons
         public bool OnFire { get; set; }
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
+        private SoundEffect arrowImpact;
 
         public Arrow()
             : this(Vector2.Zero)
@@ -98,6 +101,7 @@ namespace TimeSink.Entities.Weapons
             if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder || entity is Torch))
             {
                 Dead = true;
+                arrowImpact.Play();
             }
             return info.Enabled;
         }
@@ -157,7 +161,10 @@ namespace TimeSink.Entities.Weapons
         {
             if (force || !initialized)
             {
+                var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
+
+                arrowImpact = soundCache.LoadResource(ARROW_IMPACT_SOUND);
 
                 Width = 64;
                 Height = 32;

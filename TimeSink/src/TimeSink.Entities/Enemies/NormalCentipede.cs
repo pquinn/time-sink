@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
 using FarseerPhysics.Dynamics.Joints;
 using TimeSink.Entities.Weapons;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -28,6 +29,7 @@ namespace TimeSink.Entities.Enemies
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Centipede/Neutral";
         const string CENTIPEDE_WALK_LEFT = "Textures/Enemies/Centipede/CentipedeWalk_Left";
         const string EDITOR_NAME = "Normal Centipede";
+        const string CENTIPEDE_DEATH = "Audio/Sounds/CentipedeDeath";
 
         private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");
 
@@ -45,6 +47,7 @@ namespace TimeSink.Entities.Enemies
             : base(position)
         {
             PatrolDirection = direction;
+
         }
 
         [EditableField("Patrol Direction")]
@@ -113,6 +116,7 @@ namespace TimeSink.Entities.Enemies
         private Vector2 rayTurnBottomOffset = Vector2.Zero;
         private Vector2 xDirectionCast = new Vector2(.1f, 0);
         private Vector2 yDirectionCast = new Vector2(0, .25f);
+        private SoundEffect centipedeDeath;
         private bool initialized = false;
         private bool needToTurnDown;
         
@@ -143,6 +147,7 @@ namespace TimeSink.Entities.Enemies
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
             textureCache.LoadResource(CENTIPEDE_TEXTURE);
+
         }
 
         protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
@@ -204,6 +209,9 @@ namespace TimeSink.Entities.Enemies
                 var width = PhysicsConstants.PixelsToMeters(texture.Width);
                 var interval = new Vector2(width / (numSegments + 1), 0);
                 var wheelRadius = PhysicsConstants.PixelsToMeters(texture.Height) / 2;
+                var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
+
+                centipedeDeath = soundCache.LoadResource(CENTIPEDE_DEATH);
 
                 Body previousAnchor = null;
                 for (int i = 0; i < numSegments; i++)
@@ -287,7 +295,10 @@ namespace TimeSink.Entities.Enemies
         {
             if (!pinitialized) return;
             pinitialized = false;
-
+            
+            if(health <= 0)
+                centipedeDeath.Play();
+            
             allBodies.ForEach(x => x.Dispose());
             allBodies.Clear();
         }
