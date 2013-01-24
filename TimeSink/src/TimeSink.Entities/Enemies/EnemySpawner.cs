@@ -78,9 +78,6 @@ namespace TimeSink.Entities.Enemies
                 Physics.IsSensor = true;
 
                 hitBox.RegisterOnCollidedListener<Arrow>(collidedArrow);
-                //hitBox.RegisterOnCollidedListener<Dart>(collidedDart);
-                hitBox.RegisterOnCollidedListener<T>(collidedEnemy);
-                hitBox.RegisterOnSeparatedListener<T>(separatedEnemy);
 
                 initialized = true;
             }
@@ -101,19 +98,6 @@ namespace TimeSink.Entities.Enemies
         [EditableField("Max Spawn Amt")]
         [SerializableField]
         public int MaxSpawn { get; set; }
-
-        void separatedEnemy(Fixture f1, T e, Fixture eF)
-        {
-            if (justSpawned.Contains(e))
-                justSpawned.Remove(e);
-        }
-
-        bool collidedEnemy(Fixture f1, T e, Fixture eF, Contact c)
-        {
-            if (!justSpawned.Contains(e))
-                e.Dead = true;
-            return c.Enabled;
-        }
 
         bool collidedArrow(Fixture f1, Arrow e, Fixture f2, Contact c)
         {
