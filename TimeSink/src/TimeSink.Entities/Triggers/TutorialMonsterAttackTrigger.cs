@@ -42,14 +42,11 @@ namespace TimeSink.Entities.Triggers
         }
 
         private bool used;
-        public virtual bool OnCollidedWith(Fixture f, TutorialMonster obj, Fixture f2, Contact info)
+        public virtual bool OnCollidedWith(Fixture f, TutorialMonster monster, Fixture f2, Contact info)
         {
             if (!used)
             {
-                var monster = new TutorialMonster(Position - new Vector2(0, PhysicsConstants.PixelsToMeters(800)), Vector2.UnitX);
-                levelManager.RegisterEntity(monster);
-
-                monster.RevJoint.MotorTorque = 5;
+                monster.RevJoint.MotorTorque = 0;
 
                 used = true;
             }
