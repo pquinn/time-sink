@@ -6,7 +6,7 @@ using System.Text;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 
-namespace TimeSink.Engine.Core
+namespace Engine.Defaults
 {
     public class ItemPopup : IRenderable
     {

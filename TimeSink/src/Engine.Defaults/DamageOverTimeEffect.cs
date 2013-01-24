@@ -6,7 +6,7 @@ using System.Text;
 using TimeSink.Engine.Core;
 using Microsoft.Xna.Framework;
 
-namespace TimeSink.Engine.Core
+namespace Engine.Defaults
 {
     public class DamageOverTimeEffect
     {

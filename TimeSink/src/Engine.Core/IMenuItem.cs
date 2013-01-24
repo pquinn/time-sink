@@ -5,7 +5,7 @@ using System.Text;
 using TimeSink.Engine.Core;
 using Microsoft.Xna.Framework;
 
-namespace TimeSink.Entities
+namespace TimeSink.Engine.Core
 {
     public interface IMenuItem
     {

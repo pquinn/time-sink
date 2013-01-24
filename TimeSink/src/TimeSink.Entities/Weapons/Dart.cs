@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Weapons
 {

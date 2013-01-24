@@ -14,14 +14,18 @@ using Autofac;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 
-namespace TimeSink.Engine.Core
+namespace Engine.Defaults
 {
+    public delegate void TriggerDelegate(Entity collided);
+
     [SerializableEntity("f3722310-9db5-478f-9e37-608cbcbf92f9")]
     public class Trigger : Entity
     {
         const string EDITOR_NAME = "Trigger";
 
         private static readonly Guid GUID = new Guid("f3722310-9db5-478f-9e37-608cbcbf92f9");
+
+        public event TriggerDelegate Triggered;
 
         private List<Fixture> _geom;
         public override List<Fixture> CollisionGeometry

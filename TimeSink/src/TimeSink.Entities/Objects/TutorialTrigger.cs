@@ -17,6 +17,7 @@ using TimeSink.Engine.Core.Collisions;
 using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Objects
 {

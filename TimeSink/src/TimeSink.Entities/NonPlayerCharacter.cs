@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
+using Engine.Defaults;
 
 namespace TimeSink.Entities
 {

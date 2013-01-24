@@ -125,7 +125,6 @@
     <Compile Include="Collisions\OneWayPlatform.cs" />
     <Compile Include="Collisions\WorldCollisionSegment.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DamageOverTimeEffect.cs" />
     <Compile Include="DB\SQLiteDatabase.cs" />
     <Compile Include="DotNetExtensions.cs" />
     <Compile Include="EditorProperties.cs" />
@@ -136,13 +135,9 @@
     <Compile Include="Editor\IEditorPreviewable.cs" />
     <Compile Include="EngineGame.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="IHaveHealth.cs" />
-    <Compile Include="IHaveMana.cs" />
-    <Compile Include="IHaveShield.cs" />
-    <Compile Include="IInventoryItem.cs" />
+    <Compile Include="IMenuItem.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="ItemPopup.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />
     <Compile Include="Rendering\EmptyPreviewRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
@@ -209,7 +204,6 @@
     <Compile Include="States\State.cs" />
     <Compile Include="States\StateMachine.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="TutorialDisplay.cs" />
     <Compile Include="VectorExtensions.cs" />
     <Compile Include="WorldGeometry2.cs" />
     <Compile Include="XNAExtensions.cs" />

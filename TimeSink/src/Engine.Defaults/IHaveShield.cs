@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TimeSink.Engine.Core
+namespace Engine.Defaults
 {
-   public interface IHaveMana
+   public interface IHaveShield
     {
-        float Mana
+        float Shield
         {
             get;
             set;

@@ -20,6 +20,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Weapons;
+using Engine.Defaults;
 
 namespace TimeSink.Entities
 {

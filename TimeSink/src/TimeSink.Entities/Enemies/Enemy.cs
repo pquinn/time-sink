@@ -17,6 +17,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Enemies
 {

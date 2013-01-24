@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Input;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Rendering;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Objects
 {

@@ -18,6 +18,7 @@ using FarseerPhysics.Dynamics.Contacts;
 using System.IO;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Objects
 {
