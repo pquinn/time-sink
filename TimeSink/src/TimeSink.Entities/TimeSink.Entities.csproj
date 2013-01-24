@@ -73,6 +73,7 @@
     <Compile Include="Enemies\EnemyKiller.cs" />
     <Compile Include="Enemies\LungingCentipede.cs" />
     <Compile Include="Enemies\TutorialMonster.cs" />
+    <Compile Include="Objects\BreakableBridge.cs" />
     <Compile Include="Objects\BurnNest.cs" />
     <Compile Include="Objects\Chest.cs" />
     <Compile Include="Objects\BowPickup.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="NonPlayerCharacter.cs" />
     <Compile Include="Objects\Torch.cs" />
     <Compile Include="Objects\TorchGround.cs" />
+    <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Objects\TutorialTrigger.cs" />
     <Compile Include="Objects\Vine.cs" />
     <Compile Include="Objects\VineBridge.cs" />
