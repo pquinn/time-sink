@@ -68,7 +68,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />
+    <Compile Include="Enemies\EnemyKiller.cs" />
     <Compile Include="Enemies\LungingCentipede.cs" />
     <Compile Include="Objects\BurnNest.cs" />
     <Compile Include="Objects\Chest.cs" />
