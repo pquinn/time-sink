@@ -19,8 +19,10 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
-using TimeSink.Entities.Weapons;
+using TimeSink.Entities.Inventory;
 using Engine.Defaults;
+using TimeSink.Entities.Actons;
+using TimeSink.Entities.Triggers;
 
 namespace TimeSink.Entities
 {
@@ -166,7 +168,7 @@ namespace TimeSink.Entities
         private float shield;
         private Ladder canClimb = null;
         private bool climbing = false;
-        private TorchGround onTorchGround;
+        private PlaceTorchTrigger onTorchGround;
         public Torch HoldingTorch {get; set;}
         private World _world;
         private IInventoryItem onPickup;
@@ -1543,7 +1545,7 @@ namespace TimeSink.Entities
         //    return true;
         //}
 
-        bool OnCollidedWith(Fixture f, TorchGround torchGround, Fixture c, Contact info)
+        bool OnCollidedWith(Fixture f, PlaceTorchTrigger torchGround, Fixture c, Contact info)
         {
             if (HoldingTorch != null)
             {
@@ -1556,7 +1558,7 @@ namespace TimeSink.Entities
             onTorchGround = torchGround;
             return true;
         }
-        void OnSeparation(Fixture f1, TorchGround torchGround, Fixture f2)
+        void OnSeparation(Fixture f1, PlaceTorchTrigger torchGround, Fixture f2)
         {
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
             onTorchGround = null;
@@ -2437,8 +2439,8 @@ namespace TimeSink.Entities
                 Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
                 r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
                 r.RegisterOnSeparatedListener<Torch>(OnSeparation);
-                c.RegisterOnCollidedListener<TorchGround>(OnCollidedWith);
-                c.RegisterOnSeparatedListener<TorchGround>(OnSeparation);
+                c.RegisterOnCollidedListener<PlaceTorchTrigger>(OnCollidedWith);
+                c.RegisterOnSeparatedListener<PlaceTorchTrigger>(OnSeparation);
                 c.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
 
                 initialized = true;

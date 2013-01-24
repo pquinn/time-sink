@@ -23,7 +23,7 @@ namespace TimeSink.Entities
     public class MovingPlatform : Entity
     {
         const string WORLD_TEXTURE_NAME = "Textures/Tiles/MovingPlatform";
-        const string EDITOR_NAME = "Moving Geometry";
+        const string EDITOR_NAME = "Moving Platform";
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f9de-4ca3-a091-521583c6c6bf");
 

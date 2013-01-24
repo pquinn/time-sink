@@ -5,7 +5,6 @@ using System.Text;
 using Autofac;
 using TimeSink.Entities;
 using TimeSink.Entities.Enemies;
-using TimeSink.Entities.Weapons;
 using TimeSink.Engine.Core;
 using System.Reflection;
 using TimeSink.Engine.Core.Editor;

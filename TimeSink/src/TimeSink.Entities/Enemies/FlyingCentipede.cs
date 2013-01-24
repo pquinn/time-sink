@@ -12,7 +12,7 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
-using TimeSink.Entities.Weapons;
+using TimeSink.Entities.Inventory;
 
 namespace TimeSink.Entities.Enemies
 {
