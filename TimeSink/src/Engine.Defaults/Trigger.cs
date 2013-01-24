@@ -13,43 +13,43 @@ using FarseerPhysics.Factories;
 using Autofac;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Editor;
 
 namespace Engine.Defaults
 {
     public delegate void TriggerDelegate(Entity collided);
 
-    [SerializableEntity("f3722310-9db5-478f-9e37-608cbcbf92f9")]
-    public class Trigger : Entity
+    public abstract class Trigger : Entity
     {
-        const string EDITOR_NAME = "Trigger";
+        protected LevelManager levelManager;
 
-        private static readonly Guid GUID = new Guid("f3722310-9db5-478f-9e37-608cbcbf92f9");
-
-        public event TriggerDelegate Triggered;
-
-        private List<Fixture> _geom;
+        protected List<Fixture> _geom;
         public override List<Fixture> CollisionGeometry
         {
             get { return _geom; }
         }
 
         public Trigger()
+            : this(Vector2.Zero, 50, 50)
         {
-
         }
 
-        public Trigger(Vector2 position)
+        public Trigger(Vector2 position, int width, int height)
         {
             Position = position;
+            Width = width;
+            Height = height;
         }
 
         [SerializableField]
-        public override Guid Id { get { return GUID; } set { } }
+        [EditableField("Width")]
+        public override int Width { get; set; }
 
-        public override string EditorName
-        {
-            get { return EDITOR_NAME; }
-        }
+        [SerializableField]
+        [EditableField("Height")]
+        public override int Height { get; set; }
+
+        public Action<Body> Registrations { get; set; }
         
         public override IRendering Preview
         {
@@ -63,17 +63,10 @@ namespace Engine.Defaults
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-
         }
 
         public override void Load(IComponentContext engineRegistrations)
         {
-
-        }
-
-        public virtual bool OnCollidedWith(Fixture f, Entity obj, Fixture f2, Contact info)
-        {
-            return true;
         }
 
         private bool initialized;
@@ -82,17 +75,20 @@ namespace Engine.Defaults
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                levelManager = engineRegistrations.Resolve<LevelManager>();
 
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 _geom = Physics.FixtureList;
 
-                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
+                RegisterCollisions();
 
                 initialized = true;
             }
         }
+
+        protected abstract void RegisterCollisions();
 
         public override void DestroyPhysics()
         {

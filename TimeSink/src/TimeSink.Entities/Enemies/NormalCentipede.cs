@@ -16,7 +16,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.States;
 using FarseerPhysics.Dynamics.Joints;
-using TimeSink.Entities.Weapons;
+using TimeSink.Entities.Inventory;
 using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Entities.Enemies

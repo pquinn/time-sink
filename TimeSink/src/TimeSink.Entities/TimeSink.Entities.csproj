@@ -78,6 +78,10 @@
     <Compile Include="Objects\Chest.cs" />
     <Compile Include="Objects\BowPickup.cs" />
     <Compile Include="Objects\Door.cs" />
+    <Compile Include="Actions\BurnNest.cs" />
+    <Compile Include="Actions\OpenChest.cs" />
+    <Compile Include="Actions\PickupBow.cs" />
+    <Compile Include="Actions\UseDoor.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="Enemies\EnemySpawner.cs" />
     <Compile Include="Enemies\FlyingCentipede.cs" />
@@ -86,7 +90,7 @@
     <Compile Include="IEntityMetadata.cs" />
     <Compile Include="IInventoryItem.cs" />
     <Compile Include="Objects\Bramble.cs" />
-    <Compile Include="Objects\InteractableItem.cs" />
+    <Compile Include="Actions\InteractableItem.cs" />
     <Compile Include="Objects\Ladder.cs" />
     <Compile Include="Objects\MovingPlatform.cs" />
     <Compile Include="NonPlayerCharacter.cs" />
@@ -94,15 +98,18 @@
     <Compile Include="Objects\TorchGround.cs" />
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Objects\TutorialTrigger.cs" />
+    <Compile Include="Inventory\Torch.cs" />
+    <Compile Include="Triggers\PlaceTorchTrigger.cs" />
+    <Compile Include="Triggers\TutorialTrigger.cs" />
     <Compile Include="Objects\Vine.cs" />
     <Compile Include="Objects\VineBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Trigger.cs" />
-    <Compile Include="Triggers\TutorialMonsterCreateTrigger.cs" />
+    <Compile Include="Triggers\CreateTutorialMonsterTrigger.cs" />
+    <Compile Include="Triggers\TutorialMonsterAttackTrigger.cs" />
     <Compile Include="UserControlledCharacter.cs" />
-    <Compile Include="Weapons\Arrow.cs" />
-    <Compile Include="Weapons\Dart.cs" />
-    <Compile Include="Weapons\IWeapon.cs" />
+    <Compile Include="Inventory\Arrow.cs" />
+    <Compile Include="Inventory\Dart.cs" />
+    <Compile Include="Inventory\IWeapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Farseer Physics Engine 3.3 XNA\Farseer Physics XNA.csproj">

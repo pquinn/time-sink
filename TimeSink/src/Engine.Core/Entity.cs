@@ -85,12 +85,6 @@ namespace TimeSink.Engine.Core
         [XmlIgnore]
         public virtual int Height { get; set; }
 
-      //  [XmlIgnore]
-      ////  public virtual bool InHold { get; set; }
-
-      //  [XmlIgnore]
-      //  public virtual Vector2 Direction { get; set; }
-
         [XmlIgnore]
         public abstract IRendering Preview
         {
