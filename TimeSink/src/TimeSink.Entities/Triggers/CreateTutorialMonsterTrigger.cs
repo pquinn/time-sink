@@ -48,7 +48,7 @@ namespace TimeSink.Entities.Triggers
         {
             if (!used)
             {
-                var monster = new TutorialMonster(Position - new Vector2(0, PhysicsConstants.PixelsToMeters(800)), Vector2.UnitX);
+                var monster = new TutorialMonster(Position - PhysicsConstants.PixelsToMeters(new Vector2(400, 800)), Vector2.UnitX);
                 levelManager.RegisterEntity(monster);
                 monster.StartChase();
                 used = true;
