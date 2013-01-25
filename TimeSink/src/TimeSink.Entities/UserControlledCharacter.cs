@@ -23,6 +23,7 @@ using TimeSink.Entities.Inventory;
 using Engine.Defaults;
 using TimeSink.Entities.Actons;
 using TimeSink.Entities.Triggers;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities
 {
@@ -35,6 +36,8 @@ namespace TimeSink.Entities
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
+
+        ShieldDamageQueue shieldDamager;
 
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
@@ -315,6 +318,8 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
+            
+            shieldDamager = new ShieldDamageQueue(this);
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -335,7 +340,15 @@ namespace TimeSink.Entities
                     Invulnerable = true;
                     damageFlash = true;
 
+                    if (Shield > 0)
+                    {
+                        var newAmt = Math.Min(Shield, val);
+                        val -= newAmt;
+                        shieldDamager.TakeDamage(newAmt);
+                    }
+
                     Health -= val;
+
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
                     Logger.Info(String.Format("Player took {0} damage.", val));
                     takeDamageSound.Play();
@@ -1185,7 +1198,8 @@ namespace TimeSink.Entities
                 if (!ClimbingState())
                 {
                     // Move player based on the controller direction and time scale.
-                    Physics.ApplyLinearImpulse(movedirection * amount);
+                    //Physics.ApplyLinearImpulse(movedirection * amount);
+                    MovePlayer(movedirection.X);
                 }
                 else
                     Physics.ApplyLinearImpulse(movedirection * climbAmount);
@@ -1193,9 +1207,59 @@ namespace TimeSink.Entities
                 MotorJoint.MotorSpeed = movedirection.X * 10;
             }
 
-            ClampVelocity();
+            //ClampVelocity();
 
             UpdateAnimationStates();
+        }
+
+        enum MoveDirection
+        {
+            Left = -1,
+            Right = 1
+        };
+
+        private void MovePlayer(float dir)
+        {
+            if (dir == 0) return;
+
+            float x_vel = WALK_X_CLAMP;
+
+            if (swinging)
+                x_vel = SWING_X_CLAMP;
+            else if (isRunning)
+            {
+                x_vel = RUN_X_CLAMP;
+                if (!TouchingGround)
+                {
+                    x_vel = x_vel * .8f;
+                }
+            }
+
+            var accel = 1f;
+
+            var vel = Physics.LinearVelocity.X;
+
+            float desiredVel = 0;
+
+            MoveDirection d = dir <= 0 
+                ? MoveDirection.Left 
+                : MoveDirection.Right;
+
+            x_vel *= Math.Abs(dir);
+
+            switch (d)
+            {
+                case MoveDirection.Left:
+                    desiredVel = Math.Max(vel - accel, -x_vel);
+                    break;
+                case MoveDirection.Right:
+                    desiredVel = Math.Min(vel + accel, x_vel);
+                    break;
+            }
+
+            var velChange = desiredVel - vel;
+            var impulse = Physics.Mass * velChange;
+            Physics.ApplyLinearImpulse(Vector2.UnitX * impulse);
         }
 
         private bool BridgeHanging()
@@ -1225,48 +1289,6 @@ namespace TimeSink.Entities
         private const float WALK_Y_CLAMP = 15;
         private const float RUN_X_CLAMP = 10;
         private const float SWING_X_CLAMP = 8;
-
-        private void ClampVelocity()
-        {
-            float x_vel = WALK_X_CLAMP;
-
-            if (swinging)
-                x_vel = SWING_X_CLAMP;
-            else if (isRunning)
-            {
-                x_vel = RUN_X_CLAMP;
-                if (!TouchingGround)
-                {
-                    x_vel = x_vel * .8f;
-                }
-            }
-
-            var v = Physics.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
-
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            Physics.LinearVelocity = v;
-
-            v = WheelBody.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
-
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            WheelBody.LinearVelocity = v;
-        }
 
         protected void UpdateAnimationStates()
         {
