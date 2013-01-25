@@ -184,6 +184,12 @@ namespace TimeSink.Entities
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
         public bool Climbing {get {return climbing;} set {climbing = value;}}
 
+        private bool manaRegenEnabled = true;
+        private const float MANA_REGEN_RATE = .2f; //percent/sec
+        private const float CHARGE_MANA_COST = 5f; //mana/percent
+        private bool chargingWeapon = false;
+        private float chargePercent = 0f;
+
         private List<IInventoryItem> inventory;
         public override IMenuItem InventoryItem
         {
@@ -409,6 +415,34 @@ namespace TimeSink.Entities
             {
                 if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
+            }
+
+            if (chargingWeapon)
+            {
+                if (Mana > 0)
+                {
+                    var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    var manaCost = chargeAmt * CHARGE_MANA_COST;
+                    if (manaCost > Mana)
+                    {
+                        chargeAmt *= Mana / manaCost;
+                    }
+                    var newChargePercent = chargePercent + chargeAmt;
+                    if (newChargePercent > 1)
+                    {
+                        chargePercent = 1;
+                        manaCost *= 1f / newChargePercent;
+                    }
+                    else
+                    {
+                        chargePercent += chargeAmt;
+                    }
+                    Mana -= manaCost;
+                }
+            }
+            else
+            {
+                Mana += 1; //Recharge
             }
 
             if (gameTime.TotalGameTime.TotalMilliseconds >= nextLogTime)
