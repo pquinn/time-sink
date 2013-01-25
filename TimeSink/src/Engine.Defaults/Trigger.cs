@@ -77,7 +77,13 @@ namespace Engine.Defaults
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 levelManager = engineRegistrations.Resolve<LevelManager>();
 
-                Physics = BodyFactory.CreateBody(world, Position, this);
+                Physics = BodyFactory.CreateRectangle(
+                    world, 
+                    PhysicsConstants.PixelsToMeters(Width), 
+                    PhysicsConstants.PixelsToMeters(Height), 
+                    1, 
+                    Position, 
+                    this);
                 Physics.BodyType = BodyType.Static;
                 Physics.IsSensor = true;
                 _geom = Physics.FixtureList;

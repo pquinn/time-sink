@@ -70,36 +70,40 @@ namespace TimeSink.Entities.Enemies
                 Width = texture.Width;
                 Height = texture.Height;
 
+                var width = PhysicsConstants.PixelsToMeters(Width);
+                var height = PhysicsConstants.PixelsToMeters(Height);
+
                 // Create a wheel for motion.
                 Wheel = BodyFactory.CreateCircle(
                     world,
-                    Width / 2,
+                    width / 2,
                     1,
-                    Position + new Vector2(0, Height / 2));
+                    Position + new Vector2(0, height / 2));
                 Wheel.BodyType = BodyType.Dynamic;
                 Wheel.Friction = 10.0f;
+                Wheel.Mass = 200f;
 
                 // Create a rectangular body for hit detection.
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(Width),
-                    PhysicsConstants.PixelsToMeters(Height),
+                    width,
+                    height,
                     1,
                     Position);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
+                Physics.Mass = 200f;
 
                 // Fix the wheel to the body
                 RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, Wheel, Vector2.Zero);
                 RevJoint.MotorEnabled = true;
-                RevJoint.MaxMotorTorque = 10;
+                RevJoint.MaxMotorTorque = 1000;
                 
                 // Register hit detection callbacks.
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
-                var fix = Physics.FixtureList[0];
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollidesWith = Category.Cat1;
+                Physics.CollisionCategories = Category.Cat3;
+                Physics.CollidesWith = Category.Cat1;
 
                 initialized = true;
             }
