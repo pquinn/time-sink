@@ -1085,7 +1085,8 @@ namespace TimeSink.Entities
                 if (!ClimbingState())
                 {
                     // Move player based on the controller direction and time scale.
-                    Physics.ApplyLinearImpulse(movedirection * amount);
+                    //Physics.ApplyLinearImpulse(movedirection * amount);
+                    Physics.AccelerateToTargetVelocity(ClampVelocity() * movedirection, 1);
                 }
                 else
                     Physics.ApplyLinearImpulse(movedirection * climbAmount);
@@ -1093,7 +1094,7 @@ namespace TimeSink.Entities
                 MotorJoint.MotorSpeed = movedirection.X * 10;
             }
 
-            ClampVelocity();
+            //ClampVelocity();
 
             UpdateAnimationStates();
         }
@@ -1126,9 +1127,10 @@ namespace TimeSink.Entities
         private const float RUN_X_CLAMP = 10;
         private const float SWING_X_CLAMP = 8;
 
-        private void ClampVelocity()
+        private Vector2 ClampVelocity()
         {
             float x_vel = WALK_X_CLAMP;
+            float y_vel = Physics.LinearVelocity.Y;
 
             if (swinging)
                 x_vel = SWING_X_CLAMP;
@@ -1141,31 +1143,12 @@ namespace TimeSink.Entities
                 }
             }
 
-            var v = Physics.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
+            //if (y_vel > WALK_Y_CLAMP)
+            //    y_vel = WALK_Y_CLAMP;
+            //else if (y_vel < -WALK_Y_CLAMP)
+            //    y_vel = -WALK_Y_CLAMP;
 
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            Physics.LinearVelocity = v;
-
-            v = WheelBody.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
-
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            WheelBody.LinearVelocity = v;
+            return new Vector2(x_vel, y_vel);
         }
 
         protected void UpdateAnimationStates()
