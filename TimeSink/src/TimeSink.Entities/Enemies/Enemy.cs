@@ -7,7 +7,7 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
-using TimeSink.Entities.Weapons;
+using TimeSink.Entities.Inventory;
 using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -17,6 +17,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
+using Engine.Defaults;
 
 namespace TimeSink.Entities.Enemies
 {

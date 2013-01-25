@@ -26,6 +26,12 @@ namespace TimeSink.Editor.GUI
         public MainWindow()
         {
             InitializeComponent();
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => Save()), new KeyGesture(Key.S, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => Open()), new KeyGesture(Key.O, ModifierKeys.Control)));
+            this.InputBindings.Add(
+                new KeyBinding(new RelayCommand(a => New()), new KeyGesture(Key.N, ModifierKeys.Control)));
         }
 
         public LevelChangedEventHandler LevelChanged { get; set; }
@@ -47,6 +53,10 @@ namespace TimeSink.Editor.GUI
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            Save();
+        }
+        private void Save()
         {
             if (string.IsNullOrEmpty(fileName))
                 SaveAs();
@@ -81,6 +91,10 @@ namespace TimeSink.Editor.GUI
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
+            Open();   
+        }
+        private void Open()
+        {
             if (!PromptOk())
                 return;
 
@@ -107,6 +121,11 @@ namespace TimeSink.Editor.GUI
         }
 
         private void New_Click(object sender, RoutedEventArgs e)
+        {
+            New();
+        }
+
+        private void New()
         {
             if (!PromptOk())
                 return;

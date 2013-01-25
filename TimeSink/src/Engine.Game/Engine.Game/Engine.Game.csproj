@@ -111,7 +111,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="readme.htm" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +128,10 @@
     <ProjectReference Include="..\..\Engine.Core\Engine.Core.csproj">
       <Project>{8D3B71D1-B287-437C-85AD-5019BC9AE233}</Project>
       <Name>Engine.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Engine.Defaults\Engine.Defaults.csproj">
+      <Project>{dd262f62-43d9-40c4-9745-ead156e40fe8}</Project>
+      <Name>Engine.Defaults</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\TimeSink.Entities\TimeSink.Entities.csproj">
       <Project>{9c3bd6bb-3862-4a30-9dd2-5b929cc5ffcf}</Project>

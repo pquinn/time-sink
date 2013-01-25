@@ -19,7 +19,11 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
-using TimeSink.Entities.Weapons;
+using TimeSink.Entities.Inventory;
+using Engine.Defaults;
+using TimeSink.Entities.Actons;
+using TimeSink.Entities.Triggers;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities
 {
@@ -33,12 +37,15 @@ namespace TimeSink.Entities
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
 
+        ShieldDamageQueue shieldDamager;
+
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
         {
             #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
+            FacingBack,
             #endregion
             #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
@@ -75,6 +82,9 @@ namespace TimeSink.Entities
 
         //Texture strings for content loading
         const string JUMP_SOUND_NAME = "Audio/Sounds/Hop";
+        const string JUMP_IMPACT_SOUND = "Audio/Sounds/JumpImpact";
+        const string ARROW_RELEASE_SOUND = "Audio/Sounds/ArrowRelease";
+        const string TAKE_DAMAGE_SOUND = "Audio/Sounds/TakeDamage";
 
         const string EDITOR_PREVIEW = "Textures/Body_Neutral";
 
@@ -151,6 +161,9 @@ namespace TimeSink.Entities
         public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(-30);
 
         private SoundEffect jumpSound;
+        private SoundEffect jumpImpactSound;
+        private SoundEffect arrowSound;
+        private SoundEffect takeDamageSound;
         private bool jumpToggleGuard = true;
         private Rectangle sourceRect;
         private float health;
@@ -158,12 +171,13 @@ namespace TimeSink.Entities
         private float shield;
         private Ladder canClimb = null;
         private bool climbing = false;
-        private TorchGround onTorchGround;
+        private PlaceTorchTrigger onTorchGround;
         public Torch HoldingTorch {get; set;}
         private World _world;
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
         public HashSet<DamageOverTimeEffect> Dots { get; set; }
+        public DoorType DoorType { get; set; }
 
         private Joint vineAttachment;
 
@@ -304,12 +318,17 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
+            
+            shieldDamager = new ShieldDamageQueue(this);
         }
 
         public override void Load(IComponentContext engineRegistrations)
         {
             var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
             jumpSound = soundCache.LoadResource(JUMP_SOUND_NAME);
+            arrowSound = soundCache.LoadResource(ARROW_RELEASE_SOUND);
+            takeDamageSound = soundCache.LoadResource(TAKE_DAMAGE_SOUND);
+            jumpImpactSound = soundCache.LoadResource(JUMP_IMPACT_SOUND);
         }
 
         public void TakeDamage(float val)
@@ -320,6 +339,19 @@ namespace TimeSink.Entities
                 {
                     Invulnerable = true;
                     damageFlash = true;
+
+                    if (Shield > 0)
+                    {
+                        var newAmt = Math.Min(Shield, val);
+                        val -= newAmt;
+                        shieldDamager.TakeDamage(newAmt);
+                    }
+
+                    Health -= val;
+
+                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+                    Logger.Info(String.Format("Player took {0} damage.", val));
+                    takeDamageSound.Play();
                 }
                 if (RightFacingBodyState())
                 {
@@ -332,12 +364,6 @@ namespace TimeSink.Entities
                     Physics.ApplyLinearImpulse(new Vector2(25, 0));
                 }
 
-                if (!Invulnerable)
-                {
-                    Health -= val;
-                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
-                    Logger.Info(String.Format("Player took {0} damage.", val));
-                }
             }
         }
 
@@ -355,6 +381,10 @@ namespace TimeSink.Entities
                 {
                     if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                     {
+                        if (jumpToggleGuard == false)
+                        {
+                            jumpImpactSound.Play();
+                        }
                         jumpToggleGuard = true;
                         TouchingGround = true;
                         return 0;
@@ -377,7 +407,7 @@ namespace TimeSink.Entities
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
-                if (dot.Active)
+                if (dot.Active && !Invulnerable)
                     TakeDamage(dot.Tick(gameTime));
             }
 
@@ -865,6 +895,10 @@ namespace TimeSink.Entities
                         Physics.LinearDamping = 5f;
                     }                    
                 }
+                else if (DoorType == DoorType.Up)
+                {
+                    currentState = BodyStates.FacingBack;
+                }
             }
             #endregion
 
@@ -899,6 +933,7 @@ namespace TimeSink.Entities
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
                     (shotTimer >= shotInterval) && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
+                    arrowSound.Play();
                     inventory[activeItem].Use(this, world, gameTime, holdTime);
                     var shooting = animations[currentState].CurrentFrame = 0;
                     if (facing == -1)
@@ -1063,7 +1098,8 @@ namespace TimeSink.Entities
                 if (!ClimbingState())
                 {
                     // Move player based on the controller direction and time scale.
-                    Physics.ApplyLinearImpulse(movedirection * amount);
+                    //Physics.ApplyLinearImpulse(movedirection * amount);
+                    MovePlayer(movedirection.X);
                 }
                 else
                     Physics.ApplyLinearImpulse(movedirection * climbAmount);
@@ -1071,9 +1107,59 @@ namespace TimeSink.Entities
                 MotorJoint.MotorSpeed = movedirection.X * 10;
             }
 
-            ClampVelocity();
+            //ClampVelocity();
 
             UpdateAnimationStates();
+        }
+
+        enum MoveDirection
+        {
+            Left = -1,
+            Right = 1
+        };
+
+        private void MovePlayer(float dir)
+        {
+            if (dir == 0) return;
+
+            float x_vel = WALK_X_CLAMP;
+
+            if (swinging)
+                x_vel = SWING_X_CLAMP;
+            else if (isRunning)
+            {
+                x_vel = RUN_X_CLAMP;
+                if (!TouchingGround)
+                {
+                    x_vel = x_vel * .8f;
+                }
+            }
+
+            var accel = 1f;
+
+            var vel = Physics.LinearVelocity.X;
+
+            float desiredVel = 0;
+
+            MoveDirection d = dir <= 0 
+                ? MoveDirection.Left 
+                : MoveDirection.Right;
+
+            x_vel *= Math.Abs(dir);
+
+            switch (d)
+            {
+                case MoveDirection.Left:
+                    desiredVel = Math.Max(vel - accel, -x_vel);
+                    break;
+                case MoveDirection.Right:
+                    desiredVel = Math.Min(vel + accel, x_vel);
+                    break;
+            }
+
+            var velChange = desiredVel - vel;
+            var impulse = Physics.Mass * velChange;
+            Physics.ApplyLinearImpulse(Vector2.UnitX * impulse);
         }
 
         private bool BridgeHanging()
@@ -1103,48 +1189,6 @@ namespace TimeSink.Entities
         private const float WALK_Y_CLAMP = 15;
         private const float RUN_X_CLAMP = 10;
         private const float SWING_X_CLAMP = 8;
-
-        private void ClampVelocity()
-        {
-            float x_vel = WALK_X_CLAMP;
-
-            if (swinging)
-                x_vel = SWING_X_CLAMP;
-            else if (isRunning)
-            {
-                x_vel = RUN_X_CLAMP;
-                if (!TouchingGround)
-                {
-                    x_vel = x_vel * .8f;
-                }
-            }
-
-            var v = Physics.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
-
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            Physics.LinearVelocity = v;
-
-            v = WheelBody.LinearVelocity;
-            if (v.X > x_vel)
-                v.X = x_vel;
-            else if (v.X < -x_vel)
-                v.X = -x_vel;
-
-            if (v.Y > WALK_Y_CLAMP)
-                v.Y = WALK_Y_CLAMP;
-            else if (v.Y < -WALK_Y_CLAMP)
-                v.Y = -WALK_Y_CLAMP;
-
-            WheelBody.LinearVelocity = v;
-        }
 
         protected void UpdateAnimationStates()
         {
@@ -1523,7 +1567,7 @@ namespace TimeSink.Entities
         //    return true;
         //}
 
-        bool OnCollidedWith(Fixture f, TorchGround torchGround, Fixture c, Contact info)
+        bool OnCollidedWith(Fixture f, PlaceTorchTrigger torchGround, Fixture c, Contact info)
         {
             if (HoldingTorch != null)
             {
@@ -1536,7 +1580,7 @@ namespace TimeSink.Entities
             onTorchGround = torchGround;
             return true;
         }
-        void OnSeparation(Fixture f1, TorchGround torchGround, Fixture f2)
+        void OnSeparation(Fixture f1, PlaceTorchTrigger torchGround, Fixture f2)
         {
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
             onTorchGround = null;
@@ -1594,8 +1638,10 @@ namespace TimeSink.Entities
 
             if (!Invulnerable)
             {
-                this.RegisterDot(bramble.dot);
+              /*  this.RegisterDot(bramble.dot);
                 bramble.dot.Active = true;
+                return true;*/
+                TakeDamage(10);
                 return true;
             }
             else
@@ -2209,6 +2255,17 @@ namespace TimeSink.Entities
 
             #endregion
 
+            dictionary.Add(
+                BodyStates.FacingBack,
+                 new NewAnimationRendering(
+                    FACING_BACK,
+                    new Vector2(77f, 154f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
             return dictionary;
         }
 
@@ -2298,9 +2355,15 @@ namespace TimeSink.Entities
         public void DismountLadder()
         {
             if (RightFacingBodyState())
+            {
                 currentState = BodyStates.JumpingRight;
+                Physics.ApplyLinearImpulse(new Vector2(3, -2));
+            }
             else if (LeftFacingBodyState())
+            {
                 currentState = BodyStates.JumpingLeft;
+                Physics.ApplyLinearImpulse(new Vector2(-3, -2));
+            }
             else
                 currentState = BodyStates.JumpingRight;
         }
@@ -2327,6 +2390,7 @@ namespace TimeSink.Entities
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 Physics = BodyFactory.CreateBody(world, Position, this);
+                DoorType = DoorType.None;
 
                 var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
                 WheelBody = BodyFactory.CreateBody(world, wPos, this);
@@ -2347,8 +2411,8 @@ namespace TimeSink.Entities
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
-                c.UserData = true;
-                r.UserData = false;
+                c.UserData = "Circle";
+                r.UserData = "Rectangle";
 
                 var rSens = r.Clone(r.Body);
                 var cSens = c.Clone(c.Body);
@@ -2403,8 +2467,8 @@ namespace TimeSink.Entities
                 Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
                 r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
                 r.RegisterOnSeparatedListener<Torch>(OnSeparation);
-                c.RegisterOnCollidedListener<TorchGround>(OnCollidedWith);
-                c.RegisterOnSeparatedListener<TorchGround>(OnSeparation);
+                c.RegisterOnCollidedListener<PlaceTorchTrigger>(OnCollidedWith);
+                c.RegisterOnSeparatedListener<PlaceTorchTrigger>(OnSeparation);
                 c.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
 
                 initialized = true;

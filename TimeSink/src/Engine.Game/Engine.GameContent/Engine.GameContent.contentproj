@@ -56,6 +56,76 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4000.PNG">
+      <Name>Centipede_Nests%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4001.PNG">
+      <Name>Centipede_Nests%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4002.PNG">
+      <Name>Centipede_Nests%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4003.PNG">
+      <Name>Centipede_Nests%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4004.PNG">
+      <Name>Centipede_Nests%4004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4005.PNG">
+      <Name>Centipede_Nests%4005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4006.PNG">
+      <Name>Centipede_Nests%4006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4010.PNG">
+      <Name>Centipede_Nests%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4011.PNG">
+      <Name>Centipede_Nests%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4012.PNG">
+      <Name>Centipede_Nests%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4013.PNG">
+      <Name>Centipede_Nests%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4014.PNG">
+      <Name>Centipede_Nests%4014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4015.PNG">
+      <Name>Centipede_Nests%4015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4016.PNG">
+      <Name>Centipede_Nests%4016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4000.PNG">
       <Name>Hub_East%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -799,113 +869,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4000.PNG">
-      <Name>Centipede_Nests%4000</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4001.PNG">
-      <Name>Centipede_Nests%4001</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4002.PNG">
-      <Name>Centipede_Nests%4002</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4003.PNG">
-      <Name>Centipede_Nests%4003</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4004.PNG">
-      <Name>Centipede_Nests%4004</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4005.PNG">
-      <Name>Centipede_Nests%4005</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4006.PNG">
-      <Name>Centipede_Nests%4006</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4010.PNG">
-      <Name>Centipede_Nests%4010</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4011.PNG">
-      <Name>Centipede_Nests%4011</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4012.PNG">
-      <Name>Centipede_Nests%4012</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4013.PNG">
-      <Name>Centipede_Nests%4013</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4014.PNG">
-      <Name>Centipede_Nests%4014</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4015.PNG">
-      <Name>Centipede_Nests%4015</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4016.PNG">
-      <Name>Centipede_Nests%4016</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4020.PNG">
-      <Name>Centipede_Nests%4020</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4021.PNG">
-      <Name>Centipede_Nests%4021</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4022.PNG">
-      <Name>Centipede_Nests%4022</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4023.PNG">
-      <Name>Centipede_Nests%4023</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4024.PNG">
-      <Name>Centipede_Nests%4024</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4025.PNG">
-      <Name>Centipede_Nests%4025</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4026.PNG">
-      <Name>Centipede_Nests%4026</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Levels\Centipede_Hill\Centipede_Hill%4000.PNG">
       <Name>Centipede_Hill%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -1297,6 +1260,241 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\DuckingRightBow.PNG">
       <Name>DuckingRightBow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub\Hub%4000.png">
+      <Name>Hub%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4000.PNG">
+      <Name>Hub_East%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4001.PNG">
+      <Name>Hub_East%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4002.PNG">
+      <Name>Hub_East%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4003.PNG">
+      <Name>Hub_East%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4004.PNG">
+      <Name>Hub_East%4004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4010.PNG">
+      <Name>Hub_East%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4011.PNG">
+      <Name>Hub_East%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4012.PNG">
+      <Name>Hub_East%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4013.PNG">
+      <Name>Hub_East%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4014.PNG">
+      <Name>Hub_East%4014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4000.PNG">
+      <Name>Ice_Cave_Entrance%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4001.PNG">
+      <Name>Ice_Cave_Entrance%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4002.PNG">
+      <Name>Ice_Cave_Entrance%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4003.PNG">
+      <Name>Ice_Cave_Entrance%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4010.PNG">
+      <Name>Ice_Cave_Entrance%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4011.PNG">
+      <Name>Ice_Cave_Entrance%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4012.PNG">
+      <Name>Ice_Cave_Entrance%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Entrance\Ice_Cave_Entrance%4013.PNG">
+      <Name>Ice_Cave_Entrance%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4000.PNG">
+      <Name>Ice_Cave_Inner%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4001.PNG">
+      <Name>Ice_Cave_Inner%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4002.PNG">
+      <Name>Ice_Cave_Inner%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4003.PNG">
+      <Name>Ice_Cave_Inner%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4010.PNG">
+      <Name>Ice_Cave_Inner%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4011.PNG">
+      <Name>Ice_Cave_Inner%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4012.PNG">
+      <Name>Ice_Cave_Inner%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4013.PNG">
+      <Name>Ice_Cave_Inner%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4020.PNG">
+      <Name>Ice_Cave_Inner%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4021.PNG">
+      <Name>Ice_Cave_Inner%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4022.PNG">
+      <Name>Ice_Cave_Inner%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_Inner\Ice_Cave_Inner%4023.PNG">
+      <Name>Ice_Cave_Inner%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Apoc_Present\Ice_Cave_TimeMachine\Ice_Cave_TimeMachine%4000.png">
+      <Name>Ice_Cave_TimeMachine%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\tutorial.jpg">
+      <Name>tutorial</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\ArrowRelease.wav">
+      <Name>ArrowRelease</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\TakeDamage.wav">
+      <Name>TakeDamage</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\CentipedeDeath.wav">
+      <Name>CentipedeDeath</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\ArrowImpact.wav">
+      <Name>ArrowImpact</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sounds\JumpImpact.wav">
+      <Name>JumpImpact</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\ice bridge.png">
+      <Name>ice bridge</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Ice Wall.png">
+      <Name>Ice Wall</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Ice Wall2.png">
+      <Name>Ice Wall2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Ice Wall3.png">
+      <Name>Ice Wall3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Ice Wall4.png">
+      <Name>Ice Wall4</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
