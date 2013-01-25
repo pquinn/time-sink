@@ -1,0 +1,13 @@
+2013-01-18 13:21:28,340 [1] INFO  TimeSink.Engine.Core.EngineGame [(null)] - EngineGame initialized
+2013-01-18 13:21:59,556 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player health: 100
+2013-01-18 13:21:59,556 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player mana: 0
+2013-01-18 13:21:59,557 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player positon: {X:1.5625 Y:25.00764}
+2013-01-18 13:22:04,515 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player health: 85
+2013-01-18 13:22:04,515 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player mana: 0
+2013-01-18 13:22:04,515 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player positon: {X:1.563564 Y:25.72486}
+2013-01-18 13:22:09,528 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player health: 70
+2013-01-18 13:22:09,529 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player mana: 0
+2013-01-18 13:22:09,529 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player positon: {X:1.563564 Y:25.72486}
+2013-01-18 13:22:29,476 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player health: 60
+2013-01-18 13:22:29,476 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player mana: 0
+2013-01-18 13:22:29,476 [1] INFO  TimeSink.Entities.UserControlledCharacter [(null)] - Player positon: {X:1.563564 Y:25.72486}
