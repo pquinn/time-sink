@@ -12,6 +12,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -85,7 +86,16 @@ namespace TimeSink.Entities.Enemies
                 Physics.ApplyLinearImpulse(Velocity);
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<BreakableWall>(OnCollidedWith);
             }
+        }
+
+        private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            wall.BulletHit();
+            Dead = true;
+
+            return true;
         }
 
         private bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)

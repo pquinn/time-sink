@@ -77,13 +77,11 @@ namespace TimeSink.Entities.Objects
                 Physics.CollisionCategories = Category.Cat2 | Category.Cat1;
                 Physics.CollidesWith = Category.Cat2 | Category.Cat3;
 
-                Physics.RegisterOnCollidedListener<LargeBullet>(OnCollidedWith);
-
                 initialized = true;
             }
         }
 
-        public bool OnCollidedWith(Fixture f, LargeBullet c, Fixture cf, Contact info)
+        public bool BulletHit()
         {
             remainingHits--;
             if (remainingHits <= 0)
@@ -104,7 +102,7 @@ namespace TimeSink.Entities.Objects
                 else if (remainingHits == 1)
                     return new SizedRendering(TEXTURE3, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
                 else
-                    return new SizedRendering(TEXTURE4, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                    return new NullRendering();
             }
         }
 
