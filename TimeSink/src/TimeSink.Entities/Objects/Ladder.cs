@@ -142,8 +142,8 @@ namespace TimeSink.Entities.Objects
             {
                 feetTouching = false;
             }
-            else if ((info.FixtureA.UserData != null && info.FixtureA.UserData.Equals(false))
-                || (info.FixtureB.UserData != null && info.FixtureB.UserData.Equals(false)))
+            else if ((info.FixtureA.UserData != null && info.FixtureA.UserData.Equals("Rectangle"))
+                || (info.FixtureB.UserData != null && info.FixtureB.UserData.Equals("Rectangle")))
             {
                 Physics.IsSensor = true;
                 feetTouching = true;
@@ -161,10 +161,9 @@ namespace TimeSink.Entities.Objects
         {
             if (f2.UserData != null)
             {
-                if (f2.UserData.Equals(true))
+                if (f2.UserData.Equals("Circle"))
                 {
                     c.CanClimb = null;
-                    c.DismountLadder();
                     c.Physics.IgnoreGravity = false;
                     c.Physics.LinearDamping = linearDamping;
                     if (wheelExit1)
@@ -172,14 +171,17 @@ namespace TimeSink.Entities.Objects
                     else
                         wheelExit1 = true;
                 }
-                else if (f2.UserData.Equals(false))
+                else if (f2.UserData.Equals("Rectangle"))
                 {
                     rectExit = true;
                 }
-                if (rectExit && wheelExit)
+                if (rectExit && wheelExit && wheelExit1)
                 {
                     c.CanClimb = null;
-                    c.DismountLadder();
+                    if (c.Climbing)
+                    {
+                        c.DismountLadder();
+                    }
                     c.Physics.IgnoreGravity = false;
                     c.Physics.LinearDamping = linearDamping;
                     c.Climbing = false;
