@@ -46,6 +46,7 @@ namespace TimeSink.Entities.Triggers
         {
             if (!used)
             {
+                monster.RevJoint.MotorSpeed = 0;
                 monster.RevJoint.MotorTorque = 0;
 
                 used = true;
