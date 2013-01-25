@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Engine.Defaults
 {
-   public interface IHaveMana
+    public interface IHaveMana
     {
         float Mana
         {

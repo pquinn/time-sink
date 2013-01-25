@@ -2,6 +2,7 @@
 *.suo
 bin/
 obj/
+venv/
 !lib/
 !lib/*.dll
 *.chachefile
@@ -13,3 +14,6 @@ obj/
 *.sublime-workspace
 *.DS_Store
 *.cachefile
+*.pyc
+.idea/
+*~

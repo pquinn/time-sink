@@ -105,6 +105,7 @@
     <Compile Include="Inventory\Arrow.cs" />
     <Compile Include="Inventory\Dart.cs" />
     <Compile Include="Inventory\IWeapon.cs" />
+    <Compile Include="Utils\ShieldDamageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Farseer Physics Engine 3.3 XNA\Farseer Physics XNA.csproj">

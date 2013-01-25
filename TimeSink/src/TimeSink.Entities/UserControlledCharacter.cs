@@ -23,6 +23,7 @@ using TimeSink.Entities.Inventory;
 using Engine.Defaults;
 using TimeSink.Entities.Actons;
 using TimeSink.Entities.Triggers;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities
 {
@@ -35,6 +36,8 @@ namespace TimeSink.Entities
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
+
+        ShieldDamageQueue shieldDamager;
 
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
@@ -315,6 +318,8 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
+            
+            shieldDamager = new ShieldDamageQueue(this);
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -335,7 +340,15 @@ namespace TimeSink.Entities
                     Invulnerable = true;
                     damageFlash = true;
 
+                    if (Shield > 0)
+                    {
+                        var newAmt = Math.Min(Shield, val);
+                        val -= newAmt;
+                        shieldDamager.TakeDamage(newAmt);
+                    }
+
                     Health -= val;
+
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
                     Logger.Info(String.Format("Player took {0} damage.", val));
                     takeDamageSound.Play();
@@ -680,37 +693,137 @@ namespace TimeSink.Entities
                 //Sliding
                 else if (TouchingGround)
                 {
+                    if (TouchingGround && !inHold && !isDucking)
+                    {
+                        isDucking = true;
+
+                        var pos = Physics.Position;
+                        
+                        Physics.Dispose();
+                        _world.RemoveJoint(MotorJoint);
+
+                        float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                        float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                        
+
+                        Physics = BodyFactory.CreateBody(_world);
+                        var r = FixtureFactory.AttachRectangle(
+                            PhysicsConstants.PixelsToMeters(Width),
+                            PhysicsConstants.PixelsToMeters(Height / 2),
+                            1.4f,
+                            new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
+                            Physics);
+                        Physics.FixedRotation = true;
+                        Physics.Position = pos;
+                        Physics.BodyType = BodyType.Dynamic;
+
+                        MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+                        MotorJoint.MotorEnabled = true;
+                        MotorJoint.MaxMotorTorque = 10;
+
+                        if (LeftFacingBodyState())
+                        {
+                            if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                            {
+                                currentState = BodyStates.DuckingLeftBow;
+                            }
+                            else
+                                currentState = BodyStates.DuckingLeft;
+                        }
+                        else
+                        {
+                            if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                            {
+                                currentState = BodyStates.DuckingRightBow;
+                            }
+                            else
+                                currentState = BodyStates.DuckingRight;
+                        }
+                    }
+                    /*
                     Physics.Friction = WheelBody.Friction = .1f;
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
+                     * */
                 }
             }
-            if (InputManager.Instance.Pressed(Keys.LeftControl))
-            {
-                isDucking = true;
-                if (TouchingGround && !inHold)
-                {
-                    if (LeftFacingBodyState())
-                    {
-                        if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
-                        {
-                            currentState = BodyStates.DuckingLeftBow;
-                        }
-                        else
-                            currentState = BodyStates.DuckingLeft;
-                    }
-                    else
-                    {
-                        if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
-                        {
-                            currentState = BodyStates.DuckingRightBow;
-                        }
-                        else
-                            currentState = BodyStates.DuckingRight;
-                    }
-                }
-            }
+
             else
-                isDucking = false;
+                if (isDucking)
+                {
+                    Physics.Dispose();
+                    Width = spriteWidth;
+                    Height = spriteHeight;
+                    float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                    float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                    Physics = BodyFactory.CreateBody(_world, Position, this);
+                    DoorType = DoorType.None;
+
+                   // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
+
+                    var r = FixtureFactory.AttachRectangle(
+                        spriteWidthMeters,
+                        spriteHeightMeters - spriteWidthMeters / 2,
+                        1.4f,
+                        new Vector2(0, -spriteWidthMeters / 4),
+                        Physics);
+
+                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                    r.CollisionCategories = Category.Cat3;
+                    r.UserData = "Rectangle";
+
+                    var rSens = r.Clone(r.Body);
+
+                    MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+                    MotorJoint.MotorEnabled = true;
+                    MotorJoint.MaxMotorTorque = 10;
+
+                    rSens.IsSensor = true;
+                    rSens.Shape.Density = 0;
+
+                    rSens.CollidesWith = Category.All;
+                    rSens.CollisionCategories = Category.Cat2;
+
+                    Physics.BodyType = BodyType.Dynamic;
+                    Physics.FixedRotation = true;
+                    Physics.Friction = 10.0f;
+                    WheelBody.BodyType = BodyType.Dynamic;
+                    WheelBody.Friction = 10.0f;
+                    Physics.IsBullet = true;
+
+                    RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
+
+                    var ropeSensor = FixtureFactory.AttachCircle(
+                        .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
+                    ropeSensor.Friction = 5f;
+                    ropeSensor.Restitution = 1f;
+                    ropeSensor.UserData = this;
+                    ropeSensor.IsSensor = true;
+                    ropeSensor.CollidesWith = Category.Cat4;
+                    ropeSensor.CollisionCategories = Category.Cat4;
+
+                    ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+                    ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+
+                    var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
+                    vineSensor.Friction = 5f;
+                    vineSensor.Restitution = 1f;
+                    vineSensor.UserData = this;
+                    vineSensor.IsSensor = true;
+                    vineSensor.CollidesWith = Category.Cat5;
+                    vineSensor.CollisionCategories = Category.Cat5;
+
+                    vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+                    vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
+
+                    Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
+                    Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
+                    r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
+                    r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+                    isDucking = false;
+                }
+
             #endregion
 
             #region Direction
