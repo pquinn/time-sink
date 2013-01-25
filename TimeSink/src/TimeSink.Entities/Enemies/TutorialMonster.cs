@@ -13,6 +13,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics.Joints;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -22,6 +23,8 @@ namespace TimeSink.Entities.Enemies
     {
         const float MASS = 100f;
         const string EDITOR_NAME = "Tutorial Monster";
+
+        private float lastShotTime;
 
         private static readonly Guid GUID = new Guid("fc8cddb4-e1ef-4b83-bc22-5b6460103524");
 
@@ -45,28 +48,49 @@ namespace TimeSink.Entities.Enemies
 
         public Body Wheel { get; set; }
         public RevoluteJoint RevJoint { get; set; }
+        public bool IsShooting { get; set; }
 
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
-        public override void OnUpdate(GameTime time, Engine.Core.EngineGame world)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
             base.OnUpdate(time, world);
-        }
 
+            if (IsShooting)
+            {
+                lastShotTime += time.ElapsedGameTime.Milliseconds;
+                if (lastShotTime > 5000)
+                {
+                    Shoot(world);
+                    lastShotTime = 0;
+                }
+            }
+        }
+            
         public void StartChase()
         {
-            RevJoint.MotorSpeed = 10;
-            RevJoint.MotorTorque = RevJoint.MaxMotorTorque;
+            //RevJoint.MotorSpeed = 10;
+            //RevJoint.MotorTorque = RevJoint.MaxMotorTorque;
         }
 
         public void EndChase()
         {
-            RevJoint.MotorSpeed = 0;
-            RevJoint.MotorTorque = RevJoint.MaxMotorTorque = 200;
-            RevJoint.LimitEnabled = false;
+            //RevJoint.MotorSpeed = 0;
+            //RevJoint.MotorTorque = RevJoint.MaxMotorTorque = 200;
+            //RevJoint.LimitEnabled = false;
+
+            IsShooting = true;
+        }
+
+        private void Shoot(EngineGame world)
+        {
+            var largeBullet = new LargeBullet(
+                Position + PhysicsConstants.PixelsToMeters(new Vector2(Width / 2, -Height / 4)), 
+                200, 30, new Vector2(30, 0));
+            world.LevelManager.RegisterEntity(largeBullet);            
         }
 
         private bool initialized;
@@ -89,7 +113,7 @@ namespace TimeSink.Entities.Enemies
                     world,
                     width / 2,
                     1,
-                    Position + new Vector2(0, height / 2));
+                   Position + new Vector2(0, height / 2));
                 Wheel.BodyType = BodyType.Dynamic;
                 Wheel.Friction = 10.0f;
                 Wheel.Mass = 100;
@@ -105,6 +129,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
                 Physics.Mass = 0f;
+                Physics.CollidesWith = Category.Cat1;
+                Physics.CollisionCategories = Category.Cat3;
 
                 // Fix the wheel to the body
                 RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, Wheel, Vector2.Zero);
@@ -113,8 +139,6 @@ namespace TimeSink.Entities.Enemies
                 
                 // Register hit detection callbacks.
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
-                Physics.CollisionCategories = Category.Cat3;
-                Physics.CollidesWith = Category.Cat1;
 
                 initialized = true;
             }

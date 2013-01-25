@@ -73,6 +73,7 @@
     <Compile Include="Enemies\EnemyKiller.cs" />
     <Compile Include="Enemies\LungingCentipede.cs" />
     <Compile Include="Enemies\TutorialMonster.cs" />
+    <Compile Include="Enemies\LargeBullet.cs" />
     <Compile Include="Objects\BreakableBridge.cs" />
     <Compile Include="Actions\BurnNest.cs" />
     <Compile Include="Actions\OpenChest.cs" />

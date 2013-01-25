@@ -12,6 +12,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Collisions;
+using TimeSink.Entities.Enemies;
 
 namespace TimeSink.Entities.Objects
 {
@@ -73,13 +74,14 @@ namespace TimeSink.Entities.Objects
                 Physics.IsSensor = false;
                 Physics.UserData = this;
 
-                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.CollisionCategories = Category.Cat2 | Category.Cat1;
+                Physics.CollidesWith = Category.Cat2 | Category.Cat3;
 
                 initialized = true;
             }
         }
 
-        public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        public bool BulletHit()
         {
             remainingHits--;
             if (remainingHits <= 0)
@@ -100,7 +102,7 @@ namespace TimeSink.Entities.Objects
                 else if (remainingHits == 1)
                     return new SizedRendering(TEXTURE3, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
                 else
-                    return new SizedRendering(TEXTURE4, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                    return new NullRendering();
             }
         }
 
