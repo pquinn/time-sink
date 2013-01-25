@@ -26,6 +26,65 @@ using TimeSink.Entities.Triggers;
 
 namespace TimeSink.Entities
 {
+    class ShieldDamageQueue
+    {
+        IHaveShield target;
+
+        public ShieldDamageQueue(IHaveShield target)
+        {
+            this.target = target;
+        }
+
+        class ShieldDamage
+        {
+            private float RechargeRemaining;
+
+            public ShieldDamage(float amt)
+            {
+                RechargeRemaining = amt;
+            }
+
+            private float rate = 5;
+            private float delay = 3000;
+
+            public float Recharge(float ms)
+            {
+                delay -= ms;
+                if (delay < 0)
+                {
+                    var amount = Math.Min(-delay * rate, RechargeRemaining);
+                    RechargeRemaining -= amount;
+                    delay = 0;
+                    return amount;
+                }
+                return 0;
+            }
+
+            public bool Done
+            {
+                get { return RechargeRemaining == 0; }
+            }
+        }
+
+        HashSet<ShieldDamage> damage = new HashSet<ShieldDamage>();
+
+        public void Update(GameTime time)
+        {
+            var tick = (float)time.ElapsedGameTime.TotalMilliseconds;
+            foreach (var d in damage)
+            {
+                target.Shield += d.Recharge(tick);
+            }
+            damage.RemoveWhere(x => x.Done);
+        }
+
+        public void TakeDamage(float amt)
+        {
+            target.Shield -= amt;
+            damage.Add(new ShieldDamage(amt));
+        }
+    }
+
     [SerializableEntity("defb4f64-1021-420d-8069-e24acebf70bb")]
     public class UserControlledCharacter : Entity, IHaveHealth, IHaveShield, IHaveMana
     {
