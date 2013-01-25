@@ -50,10 +50,7 @@ namespace TimeSink.Entities.Triggers
             {
                 var monster = new TutorialMonster(Position - new Vector2(0, PhysicsConstants.PixelsToMeters(800)), Vector2.UnitX);
                 levelManager.RegisterEntity(monster);
-                
-                monster.RevJoint.MotorSpeed = 10;
-                monster.RevJoint.MotorTorque = monster.RevJoint.MaxMotorTorque;
-
+                monster.StartChase();
                 used = true;
             }
 
