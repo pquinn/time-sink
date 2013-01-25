@@ -23,6 +23,7 @@ using TimeSink.Entities.Inventory;
 using Engine.Defaults;
 using TimeSink.Entities.Actons;
 using TimeSink.Entities.Triggers;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities
 {
@@ -35,6 +36,8 @@ namespace TimeSink.Entities
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
+
+        ShieldDamageQueue shieldDamager;
 
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
@@ -315,6 +318,8 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
+            
+            shieldDamager = new ShieldDamageQueue(this);
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -335,7 +340,15 @@ namespace TimeSink.Entities
                     Invulnerable = true;
                     damageFlash = true;
 
+                    if (Shield > 0)
+                    {
+                        var newAmt = Math.Min(Shield, val);
+                        val -= newAmt;
+                        shieldDamager.TakeDamage(newAmt);
+                    }
+
                     Health -= val;
+
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
                     Logger.Info(String.Format("Player took {0} damage.", val));
                     takeDamageSound.Play();
