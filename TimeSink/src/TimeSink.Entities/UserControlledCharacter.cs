@@ -1086,7 +1086,7 @@ namespace TimeSink.Entities
                 {
                     // Move player based on the controller direction and time scale.
                     //Physics.ApplyLinearImpulse(movedirection * amount);
-                    Physics.AccelerateToTargetVelocity(ClampVelocity() * movedirection, 1);
+                    MovePlayer(movedirection.X);
                 }
                 else
                     Physics.ApplyLinearImpulse(movedirection * climbAmount);
@@ -1097,6 +1097,56 @@ namespace TimeSink.Entities
             //ClampVelocity();
 
             UpdateAnimationStates();
+        }
+
+        enum MoveDirection
+        {
+            Left = -1,
+            Right = 1
+        };
+
+        private void MovePlayer(float dir)
+        {
+            if (dir == 0) return;
+
+            float x_vel = WALK_X_CLAMP;
+
+            if (swinging)
+                x_vel = SWING_X_CLAMP;
+            else if (isRunning)
+            {
+                x_vel = RUN_X_CLAMP;
+                if (!TouchingGround)
+                {
+                    x_vel = x_vel * .8f;
+                }
+            }
+
+            var accel = 1f;
+
+            var vel = Physics.LinearVelocity.X;
+
+            float desiredVel = 0;
+
+            MoveDirection d = dir <= 0 
+                ? MoveDirection.Left 
+                : MoveDirection.Right;
+
+            x_vel *= Math.Abs(dir);
+
+            switch (d)
+            {
+                case MoveDirection.Left:
+                    desiredVel = Math.Max(vel - accel, -x_vel);
+                    break;
+                case MoveDirection.Right:
+                    desiredVel = Math.Min(vel + accel, x_vel);
+                    break;
+            }
+
+            var velChange = desiredVel - vel;
+            var impulse = Physics.Mass * velChange;
+            Physics.ApplyLinearImpulse(Vector2.UnitX * impulse);
         }
 
         private bool BridgeHanging()
@@ -1126,30 +1176,6 @@ namespace TimeSink.Entities
         private const float WALK_Y_CLAMP = 15;
         private const float RUN_X_CLAMP = 10;
         private const float SWING_X_CLAMP = 8;
-
-        private Vector2 ClampVelocity()
-        {
-            float x_vel = WALK_X_CLAMP;
-            float y_vel = Physics.LinearVelocity.Y;
-
-            if (swinging)
-                x_vel = SWING_X_CLAMP;
-            else if (isRunning)
-            {
-                x_vel = RUN_X_CLAMP;
-                if (!TouchingGround)
-                {
-                    x_vel = x_vel * .8f;
-                }
-            }
-
-            //if (y_vel > WALK_Y_CLAMP)
-            //    y_vel = WALK_Y_CLAMP;
-            //else if (y_vel < -WALK_Y_CLAMP)
-            //    y_vel = -WALK_Y_CLAMP;
-
-            return new Vector2(x_vel, y_vel);
-        }
 
         protected void UpdateAnimationStates()
         {
