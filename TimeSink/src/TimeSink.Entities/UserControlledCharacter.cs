@@ -2333,9 +2333,15 @@ namespace TimeSink.Entities
         public void DismountLadder()
         {
             if (RightFacingBodyState())
+            {
                 currentState = BodyStates.JumpingRight;
+                Physics.ApplyLinearImpulse(new Vector2(3, -2));
+            }
             else if (LeftFacingBodyState())
+            {
                 currentState = BodyStates.JumpingLeft;
+                Physics.ApplyLinearImpulse(new Vector2(-3, -2));
+            }
             else
                 currentState = BodyStates.JumpingRight;
         }
@@ -2383,8 +2389,8 @@ namespace TimeSink.Entities
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
-                c.UserData = true;
-                r.UserData = false;
+                c.UserData = "Circle";
+                r.UserData = "Rectangle";
 
                 var rSens = r.Clone(r.Body);
                 var cSens = c.Clone(c.Body);
