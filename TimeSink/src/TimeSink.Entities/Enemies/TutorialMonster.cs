@@ -54,8 +54,19 @@ namespace TimeSink.Entities.Enemies
         public override void OnUpdate(GameTime time, Engine.Core.EngineGame world)
         {
             base.OnUpdate(time, world);
+        }
 
+        public void StartChase()
+        {
+            RevJoint.MotorSpeed = 10;
+            RevJoint.MotorTorque = RevJoint.MaxMotorTorque;
+        }
 
+        public void EndChase()
+        {
+            RevJoint.MotorSpeed = 0;
+            RevJoint.MotorTorque = RevJoint.MaxMotorTorque = 200;
+            RevJoint.LimitEnabled = false;
         }
 
         private bool initialized;
@@ -81,7 +92,7 @@ namespace TimeSink.Entities.Enemies
                     Position + new Vector2(0, height / 2));
                 Wheel.BodyType = BodyType.Dynamic;
                 Wheel.Friction = 10.0f;
-                Wheel.Mass = 200f;
+                Wheel.Mass = 100;
 
                 // Create a rectangular body for hit detection.
                 Physics = BodyFactory.CreateRectangle(
@@ -93,7 +104,7 @@ namespace TimeSink.Entities.Enemies
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
-                Physics.Mass = 200f;
+                Physics.Mass = 0f;
 
                 // Fix the wheel to the body
                 RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, Wheel, Vector2.Zero);

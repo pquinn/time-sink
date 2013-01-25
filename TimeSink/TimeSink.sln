@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor.GUI", "src\Editor.GUI\Editor.GUI.csproj", "{47A36FCD-5FD2-4E74-BAE3-09FD2F22BF56}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Editor", "Editor", "{23AFF0CC-CC5C-4686-9400-F16836D42722}"
