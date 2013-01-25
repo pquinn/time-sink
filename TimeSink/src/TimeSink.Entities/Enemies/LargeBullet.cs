@@ -79,8 +79,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.Mass = 5;
 
                 var fix = Physics.FixtureList[0];
-                fix.CollisionCategories = Category.Cat3;
-                fix.CollidesWith = Category.Cat1;
+                fix.CollisionCategories = Category.Cat2;
+                fix.CollidesWith = Category.Cat2;
 
                 Physics.ApplyLinearImpulse(Velocity);
 
@@ -90,7 +90,8 @@ namespace TimeSink.Entities.Enemies
 
         private bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
-            character.TakeDamage(30);
+            if (!character.Invulnerable)
+                character.TakeDamage(30);
 
             return true;
         }

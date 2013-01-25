@@ -12,6 +12,7 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Collisions;
+using TimeSink.Entities.Enemies;
 
 namespace TimeSink.Entities.Objects
 {
@@ -73,13 +74,16 @@ namespace TimeSink.Entities.Objects
                 Physics.IsSensor = false;
                 Physics.UserData = this;
 
-                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.CollisionCategories = Category.Cat2 | Category.Cat1;
+                Physics.CollidesWith = Category.Cat2 | Category.Cat3;
+
+                Physics.RegisterOnCollidedListener<LargeBullet>(OnCollidedWith);
 
                 initialized = true;
             }
         }
 
-        public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        public bool OnCollidedWith(Fixture f, LargeBullet c, Fixture cf, Contact info)
         {
             remainingHits--;
             if (remainingHits <= 0)
