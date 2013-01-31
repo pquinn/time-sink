@@ -134,7 +134,7 @@ namespace TimeSink.Entities.Objects
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            rectExit = false;
+          /*  rectExit = false;
             wheelExit = false;
             wheelExit1 = false;
             //Enable the character to enter a climbing state thus effecting her input handling
@@ -148,19 +148,27 @@ namespace TimeSink.Entities.Objects
                 Physics.IsSensor = true;
                 feetTouching = true;
             }
-
-            if (!c.Climbing)
+            */
+            if (info.FixtureA.UserData != null && info.FixtureA.UserData.Equals("Ladder") ||
+                info.FixtureB.UserData != null && info.FixtureB.UserData.Equals("Ladder"))
             {
-                linearDamping = c.Physics.LinearDamping;
+                if (!c.Climbing)
+                {
+                    linearDamping = c.Physics.LinearDamping;
+                }
+
+                c.CanClimb = this;
+                return true;
             }
-            c.CanClimb = this;
-            return true;
+            else 
+                return false;
         }
 
         void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             if (f2.UserData != null)
             {
+                /*
                 if (f2.UserData.Equals("Circle"))
                 {
                     c.CanClimb = null;
@@ -186,15 +194,29 @@ namespace TimeSink.Entities.Objects
                     c.Physics.LinearDamping = linearDamping;
                     c.Climbing = false;
                 }
+             */
+                if(f2.UserData.Equals("Ladder"))
+                {
+                    c.CanClimb = null;
+                    if (c.Climbing)
+                    {
+                        c.DismountLadder();
+                    }
+                    c.Physics.IgnoreGravity = false;
+                    c.Physics.LinearDamping = linearDamping;
+                    c.Climbing = false;
+                }
             }
+                /*
             else if (feetTouching == false)
             {
                 c.CanClimb = null;
                 c.Physics.LinearDamping = linearDamping;
                 c.Physics.IgnoreGravity = false;
             }
-
+                 */
         }
+
 
         public override IRendering Preview
         {

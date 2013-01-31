@@ -290,6 +290,7 @@ namespace TimeSink.Entities
         bool damageFlash = false;
         public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
         public Body WheelBody { get; set; }
+        public Body LadderSensor { get; set; }
 
         public override List<Fixture> CollisionGeometry
         {
@@ -395,13 +396,15 @@ namespace TimeSink.Entities
                         TouchingGround = true;
                         return 0;
                     }
-                    else if (fixture.Body.UserData is Ladder)
+                   else if (fixture.Body.UserData is Ladder)
                     {
+                       /*
                         TouchingGround = true;
                         jumpToggleGuard = true;
-                        Climbing = false;
-                        fixture.Body.IsSensor = false;
+                        //fixture.Body.IsSensor = false;
                         return 0;
+                        * */
+                        return -1;
                     }
                     else
                     {
@@ -748,9 +751,19 @@ namespace TimeSink.Entities
                             1.4f,
                             new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
                             Physics);
+
+
+
+                        r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                        r.CollisionCategories = Category.Cat3;
+                        r.UserData = "Rectangle";
+                        r.Shape.Density = 7;
+
                         Physics.FixedRotation = true;
                         Physics.Position = pos;
                         Physics.BodyType = BodyType.Dynamic;
+                        Physics.Friction = 10.0f;
+                        Physics.IsBullet = true;
 
                         MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
                         MotorJoint.MotorEnabled = true;
@@ -782,79 +795,9 @@ namespace TimeSink.Entities
                 }
             }
 
-            else
-                if (isDucking)
+            else if (isDucking)
                 {
-                    Physics.Dispose();
-                    Width = spriteWidth;
-                    Height = spriteHeight;
-                    float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                    float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
-
-                    Physics = BodyFactory.CreateBody(_world, Position, this);
-                    DoorType = DoorType.None;
-
-                   // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
-
-                    var r = FixtureFactory.AttachRectangle(
-                        spriteWidthMeters,
-                        spriteHeightMeters - spriteWidthMeters / 2,
-                        1.4f,
-                        new Vector2(0, -spriteWidthMeters / 4),
-                        Physics);
-
-                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
-                    r.CollisionCategories = Category.Cat3;
-                    r.UserData = "Rectangle";
-
-                    var rSens = r.Clone(r.Body);
-
-                    MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
-                    MotorJoint.MotorEnabled = true;
-                    MotorJoint.MaxMotorTorque = 10;
-
-                    rSens.IsSensor = true;
-                    rSens.Shape.Density = 0;
-
-                    rSens.CollidesWith = Category.All;
-                    rSens.CollisionCategories = Category.Cat2;
-
-                    Physics.BodyType = BodyType.Dynamic;
-                    Physics.FixedRotation = true;
-                    Physics.Friction = 10.0f;
-                    WheelBody.BodyType = BodyType.Dynamic;
-                    WheelBody.Friction = 10.0f;
-                    Physics.IsBullet = true;
-
-                    RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
-
-                    var ropeSensor = FixtureFactory.AttachCircle(
-                        .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
-                    ropeSensor.Friction = 5f;
-                    ropeSensor.Restitution = 1f;
-                    ropeSensor.UserData = this;
-                    ropeSensor.IsSensor = true;
-                    ropeSensor.CollidesWith = Category.Cat4;
-                    ropeSensor.CollisionCategories = Category.Cat4;
-
-                    ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
-                    ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
-
-                    var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
-                    vineSensor.Friction = 5f;
-                    vineSensor.Restitution = 1f;
-                    vineSensor.UserData = this;
-                    vineSensor.IsSensor = true;
-                    vineSensor.CollidesWith = Category.Cat5;
-                    vineSensor.CollisionCategories = Category.Cat5;
-
-                    vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
-                    vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
-
-                    Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
-                    Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
-                    r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
-                    r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+                    ReRegisterPhysics();
                     isDucking = false;
                 }
 
@@ -926,6 +869,11 @@ namespace TimeSink.Entities
             {
                 if (BridgeHanging())
                 {
+                    if (isDucking)
+                    {
+                        ReRegisterPhysics();
+                        isDucking = false;
+                    }
                     vineBridge.ForceSeperation(this);
                     if (!InputManager.Instance.Pressed(Keys.S))
                         PerformJump();
@@ -1857,7 +1805,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralRight,
                 new NewAnimationRendering(
                     NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1868,7 +1816,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralLeft,
                  new NewAnimationRendering(
                     NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1882,7 +1830,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightOpen,
                 new NewAnimationRendering(
                         IDLE_OPEN_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
@@ -1892,7 +1840,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
                         IDLE_CLOSED_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
@@ -1906,7 +1854,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1916,7 +1864,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
@@ -1926,7 +1874,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1936,7 +1884,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1946,7 +1894,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
@@ -1956,7 +1904,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1968,7 +1916,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1978,7 +1926,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1988,7 +1936,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1998,7 +1946,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2007,7 +1955,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
@@ -2016,7 +1964,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
@@ -2028,7 +1976,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingRight,
                 new NewAnimationRendering(
                     JUMPING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2038,7 +1986,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
                     JUMPING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2050,7 +1998,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
                     CLIMBING_BACK,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2059,7 +2007,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingBackNeut,
                 new NewAnimationRendering(
                     CLIMBING_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2069,7 +2017,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
                     CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2078,7 +2026,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
                     CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2087,7 +2035,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingRightNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2096,7 +2044,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLeftNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2105,7 +2053,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLookRight,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2114,7 +2062,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2123,7 +2071,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbLeft,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2132,7 +2080,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbRight,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2141,7 +2089,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbRightNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2151,7 +2099,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2165,7 +2113,7 @@ namespace TimeSink.Entities
                 BodyStates.ShootingArrowLeft,
                  new NewAnimationRendering(
                     SHOOT_ARROW_LEFT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2176,7 +2124,7 @@ namespace TimeSink.Entities
                 BodyStates.ShootingArrowRight,
                  new NewAnimationRendering(
                     SHOOT_ARROW_RIGHT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2301,7 +2249,7 @@ namespace TimeSink.Entities
                 BodyStates.KnockbackRight,
                 new NewAnimationRendering(
                     KNOCKBACK_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2312,7 +2260,7 @@ namespace TimeSink.Entities
                 BodyStates.KnockbackLeft,
                 new NewAnimationRendering(
                     KNOCKBACK_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2540,6 +2488,16 @@ namespace TimeSink.Entities
                     spriteWidthMeters / 2,
                     1.4f,
                     WheelBody);
+                var l = FixtureFactory.AttachRectangle(
+                    spriteWidthMeters,
+                    spriteHeightMeters,
+                    1.4f,
+                    new Vector2(0, 0),
+                    Physics);
+
+                l.IsSensor = true;
+                l.UserData = "Ladder";
+                l.Shape.Density = 0;
 
                 r.CollidesWith = Category.Cat1 | ~Category.Cat31;
                 r.CollisionCategories = Category.Cat3;
@@ -2632,6 +2590,91 @@ namespace TimeSink.Entities
             Logger.Info(String.Format("Player health: {0}", Health));
             Logger.Info(String.Format("Player mana: {0}", Mana));
             Logger.Info(String.Format("Player positon: {0}", Position));
+        }
+
+        private void ReRegisterPhysics()
+        {
+            Physics.Dispose();
+            Width = spriteWidth;
+            Height = spriteHeight;
+            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+            Physics = BodyFactory.CreateBody(_world, Position, this);
+            DoorType = DoorType.None;
+
+            // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
+
+            var r = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters - spriteWidthMeters / 2,
+                1.4f,
+                new Vector2(0, -spriteWidthMeters / 4),
+                Physics);
+
+            var l = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters,
+                1.4f,
+                new Vector2(0, 0),
+                Physics);
+
+            l.IsSensor = true;
+            l.UserData = "Ladder";
+            l.Shape.Density = 0;
+
+            r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+            r.CollisionCategories = Category.Cat3;
+            r.UserData = "Rectangle";
+
+            var rSens = r.Clone(r.Body);
+
+            MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+            MotorJoint.MotorEnabled = true;
+            MotorJoint.MaxMotorTorque = 10;
+
+            rSens.IsSensor = true;
+            rSens.Shape.Density = 0;
+
+            rSens.CollidesWith = Category.All;
+            rSens.CollisionCategories = Category.Cat2;
+
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.FixedRotation = true;
+            Physics.Friction = 10.0f;
+            WheelBody.BodyType = BodyType.Dynamic;
+            WheelBody.Friction = 10.0f;
+            Physics.IsBullet = true;
+
+            RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
+
+            var ropeSensor = FixtureFactory.AttachCircle(
+                .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
+            ropeSensor.Friction = 5f;
+            ropeSensor.Restitution = 1f;
+            ropeSensor.UserData = this;
+            ropeSensor.IsSensor = true;
+            ropeSensor.CollidesWith = Category.Cat4;
+            ropeSensor.CollisionCategories = Category.Cat4;
+
+            ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+            ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+
+            var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
+            vineSensor.Friction = 5f;
+            vineSensor.Restitution = 1f;
+            vineSensor.UserData = this;
+            vineSensor.IsSensor = true;
+            vineSensor.CollidesWith = Category.Cat5;
+            vineSensor.CollisionCategories = Category.Cat5;
+
+            vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+            vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
+
+            Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
+            Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
+            r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
+            r.RegisterOnSeparatedListener<Torch>(OnSeparation);
         }
     }
 }
