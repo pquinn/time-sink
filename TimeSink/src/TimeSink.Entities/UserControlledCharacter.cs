@@ -363,12 +363,12 @@ namespace TimeSink.Entities
                 if (RightFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackRight;
-                    Physics.ApplyLinearImpulse(new Vector2(-25, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(-20, 0));
                 }
                 else if (LeftFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackLeft;
-                    Physics.ApplyLinearImpulse(new Vector2(25, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(20, 0));
                 }
 
             }
@@ -395,16 +395,6 @@ namespace TimeSink.Entities
                         jumpToggleGuard = true;
                         TouchingGround = true;
                         return 0;
-                    }
-                   else if (fixture.Body.UserData is Ladder)
-                    {
-                       /*
-                        TouchingGround = true;
-                        jumpToggleGuard = true;
-                        //fixture.Body.IsSensor = false;
-                        return 0;
-                        * */
-                        return -1;
                     }
                     else
                     {
