@@ -163,18 +163,19 @@ namespace TimeSink.Engine.Game
             if (InputManager.Instance.Pressed(Keys.D9))
             {
             }
-            
+
             var velMaxX = GraphicsDevice.Viewport.Width * .1f;
             var velMaxY = GraphicsDevice.Viewport.Height * .1f;
             var pos = Character != null ? Character.Position : Vector2.Zero;
             var vel = new Vector2(
                 (Character.Physics.LinearVelocity.X <= 1 && Character.Physics.LinearVelocity.X >= -1) ?
-                    0 : Character.Physics.LinearVelocity.X, 
-                (Character.Physics.LinearVelocity.Y <= 1 && Character.Physics.LinearVelocity.Y >= -1) ? 
+                    0 : Character.Physics.LinearVelocity.X,
+                (Character.Physics.LinearVelocity.Y <= 1 && Character.Physics.LinearVelocity.Y >= -1) ?
                     0 : Character.Physics.LinearVelocity.Y);
             if (vel != Vector2.Zero) vel.Normalize();
+
             cameraVel = Vector2.Clamp(
-                cameraVel + (gameTime.ElapsedGameTime.Milliseconds * new Vector2(.25f, .125f) * vel),
+                cameraVel + gameTime.ElapsedGameTime.Milliseconds * new Vector2(.35f, .125f) * vel,
                 new Vector2(-velMaxX, -velMaxY),
                 new Vector2(velMaxX, velMaxY));
 
