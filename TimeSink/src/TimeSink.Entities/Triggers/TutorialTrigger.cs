@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -32,6 +33,7 @@ namespace TimeSink.Entities.Triggers
 
         private static readonly Guid guid = new Guid("75522a0f-66c2-444e-90bb-88df79c36c29");
 
+        private Vector2 previewScale;
         private String tutorialText;
         private EngineGame engine;
         private TutorialDisplay display;
@@ -57,14 +59,14 @@ namespace TimeSink.Entities.Triggers
             get { return guid; }
             set { }
         }
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get
             {
-                return new SizedRendering(
+                return new TintedRendering(
                     EDITOR_PREVIEW,
                     PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                    0, previewScale, new Color(255, 255, 255, .1f));
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering
@@ -98,6 +100,10 @@ namespace TimeSink.Entities.Triggers
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
+                var cache = engineRegistrations.ResolveOptional<IResourceCache<Texture2D>>();
+                var texture = cache.GetResource(EDITOR_PREVIEW);
+                previewScale = new Vector2(Width / texture.Width, Height / texture.Height);
+
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 display = new TutorialDisplay(TutorialText, PhysicsConstants.MetersToPixels(Position));
 
@@ -121,13 +127,13 @@ namespace TimeSink.Entities.Triggers
             }
         }
 
-
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             engine.LevelManager.RenderManager.RegisterRenderable(display);
 
             return true;
         }
+
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             engine.LevelManager.RenderManager.UnregisterRenderable(display);
