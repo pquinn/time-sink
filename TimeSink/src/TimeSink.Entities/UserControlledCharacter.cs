@@ -45,7 +45,7 @@ namespace TimeSink.Entities
             #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
-            FacingBack,
+            FacingBack, FacingForward,
             #endregion
             #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
@@ -111,6 +111,7 @@ namespace TimeSink.Entities
         const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
         #endregion
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        const string FACING_FORWARD = "Textures/Sprites/SpriteSheets/Facing_Forward";
         #region Knockback
         const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
         const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
@@ -720,7 +721,12 @@ namespace TimeSink.Entities
                 //Sliding
                 else if (TouchingGround)
                 {
-                    if (TouchingGround && !inHold && !isDucking)
+                    
+                  if (DoorType == DoorType.Down)
+                    {
+                        currentState = BodyStates.FacingForward;
+                    }
+                  else if (TouchingGround && !inHold && !isDucking)
                     {
                         isDucking = true;
 
@@ -783,7 +789,9 @@ namespace TimeSink.Entities
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
                      * */
                 }
+
             }
+
 
             else if (isDucking)
                 {
@@ -1683,7 +1691,7 @@ namespace TimeSink.Entities
             OnPickup = null;
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
         }
-
+        
         private VineBridge vineBridge;
         bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
         {
@@ -1806,6 +1814,17 @@ namespace TimeSink.Entities
                 BodyStates.NeutralLeft,
                  new NewAnimationRendering(
                     NEUTRAL_LEFT,
+                    new Vector2(77f, 154f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint));
+
+            dictionary.Add(
+                BodyStates.FacingForward,
+                 new NewAnimationRendering(
+                    FACING_FORWARD,
                     new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,

@@ -96,6 +96,10 @@ namespace TimeSink.Entities.Actons
             {
                 c.DoorType = DoorType.Up;
             }
+            if (DoorType == DoorType.Down)
+            {
+                c.DoorType = DoorType.Down;
+            }
 
             collided = true;
 
