@@ -1805,7 +1805,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralRight,
                 new NewAnimationRendering(
                     NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1816,7 +1816,7 @@ namespace TimeSink.Entities
                 BodyStates.NeutralLeft,
                  new NewAnimationRendering(
                     NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1830,7 +1830,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightOpen,
                 new NewAnimationRendering(
                         IDLE_OPEN_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
@@ -1840,7 +1840,7 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
                         IDLE_CLOSED_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
@@ -1854,7 +1854,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1864,7 +1864,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
@@ -1874,7 +1874,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1884,7 +1884,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1894,7 +1894,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
@@ -1904,7 +1904,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1916,7 +1916,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1926,7 +1926,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1936,7 +1936,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1946,7 +1946,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -1955,7 +1955,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
@@ -1964,7 +1964,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
@@ -1976,7 +1976,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingRight,
                 new NewAnimationRendering(
                     JUMPING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -1986,7 +1986,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
                     JUMPING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -1998,7 +1998,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
                     CLIMBING_BACK,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2007,7 +2007,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingBackNeut,
                 new NewAnimationRendering(
                     CLIMBING_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2017,7 +2017,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
                     CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2026,7 +2026,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
                     CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2035,7 +2035,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingRightNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2044,7 +2044,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLeftNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2053,7 +2053,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLookRight,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2062,7 +2062,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2071,7 +2071,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbLeft,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2080,7 +2080,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbRight,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2089,7 +2089,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbRightNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2099,7 +2099,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2113,7 +2113,7 @@ namespace TimeSink.Entities
                 BodyStates.ShootingArrowLeft,
                  new NewAnimationRendering(
                     SHOOT_ARROW_LEFT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2124,7 +2124,7 @@ namespace TimeSink.Entities
                 BodyStates.ShootingArrowRight,
                  new NewAnimationRendering(
                     SHOOT_ARROW_RIGHT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2249,7 +2249,7 @@ namespace TimeSink.Entities
                 BodyStates.KnockbackRight,
                 new NewAnimationRendering(
                     KNOCKBACK_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
@@ -2260,7 +2260,7 @@ namespace TimeSink.Entities
                 BodyStates.KnockbackLeft,
                 new NewAnimationRendering(
                     KNOCKBACK_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
