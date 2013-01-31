@@ -44,6 +44,9 @@ namespace TimeSink.Engine.Game
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
+        float levelTime;
+        bool levelStarted;
+
         public UserControlledCharacter Character
         {
             get;
@@ -53,6 +56,9 @@ namespace TimeSink.Engine.Game
         public TimeSinkGame()
             : base(1280, 720)
         {
+            levelTime = 0f;
+            levelStarted = false;
+
             RenderDebugGeometry = true;
 
             AddInitialScreens();
@@ -122,7 +128,15 @@ namespace TimeSink.Engine.Game
                 this.Exit();
 
             if (!string.IsNullOrEmpty(loadLevel))
+            {
                 LoadLevel();
+                
+            }
+
+            if (levelStarted)
+            {
+                levelTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
 
             view = ProcessControllerInput(gameTime);
 
@@ -235,6 +249,14 @@ namespace TimeSink.Engine.Game
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
+
+            if (Character != null) Character.LogLevelSummary();
+
+
+            Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
+            levelTime = 0f;
+            levelStarted = true;
+            Logger.Info("Level loaded.");
             
             Character = new UserControlledCharacter(
                 spawnPoint >= 0 ? 

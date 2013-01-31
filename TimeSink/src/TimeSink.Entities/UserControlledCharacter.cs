@@ -32,7 +32,7 @@ namespace TimeSink.Entities
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(UserControlledCharacter));
         private double nextLogTime = 0;
-        private readonly double LOG_INTERVAL = 5000; //5 seconds = 5000 milliseconds
+        private readonly double LOG_INTERVAL = 1000; //1 second = 1000 milliseconds
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
@@ -187,6 +187,7 @@ namespace TimeSink.Entities
         private bool manaRegenEnabled = true;
         private const float MANA_REGEN_RATE = .2f; //percent/sec
         private const float CHARGE_MANA_COST = 5f; //mana/percent
+        private const float MAX_MANA = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
 
@@ -291,6 +292,18 @@ namespace TimeSink.Entities
         public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
         public Body WheelBody { get; set; }
 
+        #region logging metrics
+        int numberOfJumps = 0;
+        float damageTaken = 0;
+
+        float idleTime = 0f;
+        float totalIdleTime = 0f;
+        bool isIdleLogged = false;
+
+        float totalSprintingTime = 0f;
+        #endregion
+
+
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -308,6 +321,7 @@ namespace TimeSink.Entities
 
         public UserControlledCharacter(Vector2 position)
         {
+            ResetSummaryMetrics();
             //physics = new GravityPhysics(position, PLAYER_MASS)
             //{
             //    GravityEnabled = true
@@ -354,9 +368,10 @@ namespace TimeSink.Entities
                     }
 
                     Health -= val;
+                    damageTaken += val;
+                    Logger.Info(String.Format("DAMAGED: {0}", val));
 
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
-                    Logger.Info(String.Format("Player took {0} damage.", val));
                     takeDamageSound.Play();
                 }
                 if (RightFacingBodyState())
@@ -442,13 +457,39 @@ namespace TimeSink.Entities
             }
             else
             {
-                Mana += 1; //Recharge
+                if (mana < MAX_MANA) Mana += 1; //Recharge
             }
 
             if (gameTime.TotalGameTime.TotalMilliseconds >= nextLogTime)
             {
                 LogMetricSnapshot();
                 nextLogTime = gameTime.TotalGameTime.TotalMilliseconds + LOG_INTERVAL;
+            }
+
+            //log idle time and location
+            if (IdleState())
+            {
+                if (!isIdleLogged)
+                {
+                    Logger.Info(String.Format("IDLE(pos): {0}", FormatPosition(Position)));
+                    isIdleLogged = true;
+                }
+                totalIdleTime += gameTime.ElapsedGameTime.Milliseconds;
+                idleTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
+            else
+            {
+                if (isIdleLogged)
+                {
+                    Logger.Info(String.Format("IDLE(ms): {0} ms", idleTime));
+                    idleTime = 0f;
+                    isIdleLogged = false;
+                }
+            }
+
+            if (isRunning)
+            {
+                totalSprintingTime += gameTime.ElapsedGameTime.Milliseconds;
             }
         }
 
@@ -946,7 +987,7 @@ namespace TimeSink.Entities
                     PerformJump();
                 }
 
-                Logger.Debug("Jumped!");
+                numberOfJumps++;
             }
             if (keyboard.IsKeyDown(Keys.S) && InputManager.Instance.IsNewKey(Keys.Space))
             {
@@ -2486,6 +2527,14 @@ namespace TimeSink.Entities
                     currentState == BodyStates.HorizontalClimbRightNeut);
         }
 
+        public bool IdleState()
+        {
+            return (currentState == BodyStates.IdleLeftClosed ||
+                    currentState == BodyStates.IdleLeftOpen ||
+                    currentState == BodyStates.IdleRightClosed ||
+                    currentState == BodyStates.IdleRightOpen);
+        }
+
         public void DismountLadder()
         {
             if (RightFacingBodyState())
@@ -2627,11 +2676,39 @@ namespace TimeSink.Entities
             //Physics.Position = newPos;
         }
 
+
+        #region Logging
+
         private void LogMetricSnapshot()
         {
-            Logger.Info(String.Format("Player health: {0}", Health));
-            Logger.Info(String.Format("Player mana: {0}", Mana));
-            Logger.Info(String.Format("Player positon: {0}", Position));
+            Logger.Info(String.Format("STATUS - h: {0} m: {1} p: {2}", Health, Mana, FormatPosition(Position)));
         }
+
+        private String FormatPosition(Vector2 input)
+        {
+            return String.Format("{0} {1}", Position.X, Position.Y);
+        }
+
+        public void LogLevelSummary()
+        {
+            Logger.Info("Level finished:");
+            Logger.Info(String.Format("Jumps: {0}", numberOfJumps));
+            Logger.Info(String.Format("Damage taken: {0}", damageTaken));
+            Logger.Info(String.Format("Idle time(ms): {0}", totalIdleTime));
+            Logger.Info(String.Format("Sprinting time(ms): {0}", totalSprintingTime));
+            ResetSummaryMetrics();
+        }
+
+        private void ResetSummaryMetrics()
+        {
+            numberOfJumps = 0;
+            damageTaken = 0f;
+            idleTime = 0f;
+            totalIdleTime = 0f;
+            totalSprintingTime = 0f;
+            isIdleLogged = false;
+        }
+
+        #endregion
     }
 }
