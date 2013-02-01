@@ -382,28 +382,34 @@ namespace TimeSink.Entities
             if (!BridgeHanging())
                 TouchingGround = false;
 
-            var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+            var startMid = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+            var startLeft = WheelBody.Position + new Vector2(-PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
+            var startRight = WheelBody.Position + new Vector2(PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
 
-            game.LevelManager.PhysicsManager.World.RayCast(
-                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+            RayCastCallback cb = delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+            {
+                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
+                    if (jumpToggleGuard == false)
                     {
-                        if (jumpToggleGuard == false)
-                        {
-                            jumpImpactSound.Play();
-                        }
-                        jumpToggleGuard = true;
-                        TouchingGround = true;
-                        return 0;
+                        jumpImpactSound.Play();
                     }
-                    else
-                    {
-                        return -1;
-                    }
-                },
-                start,
-                start + new Vector2(0, .1f));
+                    jumpToggleGuard = true;
+                    TouchingGround = true;
+                    return 0;
+                }
+                else
+                {
+                    return -1;
+                }
+            };
+
+            var distMid = new Vector2(0, .1f);
+            var distSides = distMid + WheelBody.Position - Physics.Position;
+
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startMid, startMid + distMid);
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startLeft, startLeft + distSides);
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startRight, startRight + distSides);
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
