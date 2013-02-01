@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Inventory;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Actons
 {
@@ -43,10 +44,11 @@ namespace TimeSink.Entities.Actons
         {
             get
             {
-                return new SizedRendering(
-                    TEXTURE,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering

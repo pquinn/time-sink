@@ -71,14 +71,11 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                return Dead 
-                    ? null 
-                    : new BasicRendering(
-                        DART_TEXTURE_NAME,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                    );
+                return Dead ? null : new BasicRendering(DART_TEXTURE_NAME)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                        Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X)
+                    };
             }
         }
 

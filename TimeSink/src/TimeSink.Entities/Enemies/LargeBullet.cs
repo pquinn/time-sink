@@ -57,7 +57,14 @@ namespace TimeSink.Entities.Enemies
 
         public override Engine.Core.Rendering.IRendering Rendering
         {
-            get { return new SizedRendering("Textures/giroux", Position, 0, Width, Height); }
+            get 
+            { 
+                return new BasicRendering("Textures/giroux")
+                    { 
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height) 
+                    }; 
+            }
         }
 
         private bool initialized;

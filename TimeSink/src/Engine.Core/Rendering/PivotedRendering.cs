@@ -25,6 +25,9 @@ namespace TimeSink.Engine.Core.Rendering
         protected Rectangle? srcRectangle;
         protected Rectangle? destRectangle;
 
+
+        public RenderLayer RenderLayer { get; set; }
+
         public Rectangle? SrcRectangle
         {
             get { return srcRectangle; }

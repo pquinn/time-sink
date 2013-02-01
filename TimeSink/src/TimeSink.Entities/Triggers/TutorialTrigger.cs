@@ -63,10 +63,12 @@ namespace TimeSink.Entities.Triggers
         {
             get
             {
-                return new TintedRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, previewScale, new Color(255, 255, 255, .1f));
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = previewScale, 
+                    TintColor = new Color(255, 255, 255, .1f)
+                };
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering

@@ -10,6 +10,7 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public class NullRendering : IRendering
     {
+        public RenderLayer RenderLayer { get; set; }
         public void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform)
         {
         }

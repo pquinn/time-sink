@@ -108,12 +108,19 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
-            get { return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
+            get
+            {
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
+            }
         }
 
-        public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
         }

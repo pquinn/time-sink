@@ -69,7 +69,12 @@ namespace TimeSink.Engine.Core
         {
             get
             {
-                return new BasicRendering(Texture, PhysicsConstants.MetersToPixels(Position), Rotation, Scale);
+                return new BasicRendering(Texture)
+                { 
+                    Position = PhysicsConstants.MetersToPixels(Position), 
+                    Rotation = Rotation, 
+                    Scale = Scale
+                };
             }
         }
 

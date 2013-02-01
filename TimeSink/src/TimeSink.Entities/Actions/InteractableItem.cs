@@ -170,10 +170,11 @@ namespace TimeSink.Entities.Actons
         {
             get
             {
-                return new SizedRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
             }
         }
 

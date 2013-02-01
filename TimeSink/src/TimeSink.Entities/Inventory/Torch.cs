@@ -127,7 +127,14 @@ namespace TimeSink.Entities.Inventory
 
         public override IRendering Preview
         {
-            get { return new BasicRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Vector2.One, new Rectangle(0, 0, (int)SrcRectSize.X, (int)SrcRectSize.Y)); }
+            get 
+            { 
+                return new BasicRendering(TEXTURE)
+                {
+                    Position =  PhysicsConstants.MetersToPixels(Position),
+                    SrcRectangle = new Rectangle(0, 0, (int)SrcRectSize.X, (int)SrcRectSize.Y)
+                };
+            }
         }
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry

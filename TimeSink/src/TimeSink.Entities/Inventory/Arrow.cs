@@ -74,22 +74,11 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                if (!OnFire)
+                return new BasicRendering(!OnFire ? ARROW_TEXTURE_NAME : FLAME_TEXTURE)
                 {
-                    return new BasicRendering(
-                        ARROW_TEXTURE_NAME,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                    );
-                }
-                else
-                    return new BasicRendering(
-                        FLAME_TEXTURE,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                        );
+                    Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                    Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X)
+                };
             }
         }
 

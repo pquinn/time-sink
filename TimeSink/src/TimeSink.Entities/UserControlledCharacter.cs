@@ -217,10 +217,11 @@ namespace TimeSink.Entities
         {
             get
             {
-                return new BasicRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    playerRotation, Vector2.One);
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Rotation = playerRotation
+                };
             }
         }
 

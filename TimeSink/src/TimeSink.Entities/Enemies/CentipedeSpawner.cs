@@ -36,7 +36,11 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Height, Width);
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
             }
         }
         public override IRendering Preview

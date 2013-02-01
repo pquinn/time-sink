@@ -16,6 +16,8 @@ namespace TimeSink.Engine.Core.Rendering
         Vector2 parentScale;
         Color color;
 
+        public RenderLayer RenderLayer { get; set; }
+
         public TextRendering(String text, Vector2 position, float rotation, Vector2 scale, Color color)
         {
             this.text = text;
