@@ -52,12 +52,12 @@ namespace TimeSink.Entities.Enemies
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
         {
-            get { throw new NotImplementedException(); }
+            get { return Physics.FixtureList; }
         }
 
         public override Engine.Core.Rendering.IRendering Rendering
         {
-            get { return new SizedRendering("Textures/giroux", Position, 0, Width, Height); }
+            get { return new SizedRendering("Textures/Objects/ice beam", PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
         }
 
         private bool initialized;
