@@ -21,7 +21,7 @@ namespace TimeSink.Engine.Core.Rendering
 
         public bool Contains(Microsoft.Xna.Framework.Vector2 point, Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, Microsoft.Xna.Framework.Matrix globalTransform)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public Microsoft.Xna.Framework.Vector2 GetCenter(Caching.IResourceCache<Microsoft.Xna.Framework.Graphics.Texture2D> cache, Microsoft.Xna.Framework.Matrix globalTransform)
