@@ -21,7 +21,7 @@ namespace Engine.Defaults
 
         public IRendering Rendering
         {
-            get { return new SizedRendering(texture, PhysicsConstants.MetersToPixels(position), 0, 30, 30); }
+            get { return new SizedRendering(texture, PhysicsConstants.MetersToPixels(position), 0, 45, 45); }
         }
     }
 }

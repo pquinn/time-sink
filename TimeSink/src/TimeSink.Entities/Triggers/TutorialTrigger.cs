@@ -34,12 +34,12 @@ namespace TimeSink.Entities.Triggers
         private static readonly Guid guid = new Guid("75522a0f-66c2-444e-90bb-88df79c36c29");
 
         private Vector2 previewScale;
-        private String tutorialText;
         private EngineGame engine;
         private TutorialDisplay display;
+        private UserControlledCharacter character;
 
         public TutorialTrigger()
-            : this(Vector2.Zero, 50, 50, "Enter Text Here")
+            : this(Vector2.Zero, 200, 150, "Enter Text Here")
         {
         }
         public TutorialTrigger(Vector2 position, int width, int height, String text)
@@ -65,7 +65,7 @@ namespace TimeSink.Entities.Triggers
             {
                 return new TintedRendering(
                     EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
+                    PhysicsConstants.MetersToPixels(position),
                     0, previewScale, new Color(255, 255, 255, .1f));
             }
         }
@@ -130,6 +130,7 @@ namespace TimeSink.Entities.Triggers
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             engine.LevelManager.RenderManager.RegisterRenderable(display);
+            character = c;
 
             return true;
         }
