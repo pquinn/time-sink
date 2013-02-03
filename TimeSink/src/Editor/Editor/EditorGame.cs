@@ -26,6 +26,7 @@ using TimeSink.Engine.Core.Editor;
 using FarseerPhysics.DebugViews;
 using TimeSink.Entities;
 using System.Reflection;
+using TimeSink.Engine.Core.DB;
 
 namespace Editor
 {
@@ -45,9 +46,12 @@ namespace Editor
         private DebugViewXNA debugView;
         private SpriteFont spriteFont;
 
+        private static SQLiteDatabase database;
+
         public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
         {
+            database = new SQLiteDatabase();
         }
 
         public LevelManager LevelManager { get; private set; }
@@ -59,6 +63,12 @@ namespace Editor
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
 
         public IComponentContext Container { get; set; }
+
+        public static SQLiteDatabase Database
+        {
+            get { return database; }
+            private set { database = value; }
+        }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
