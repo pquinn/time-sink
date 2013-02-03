@@ -387,7 +387,7 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(
                 delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
+                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform || fixture.Body.UserData is TutorialBreakBridge)
                     {
                         if (jumpToggleGuard == false)
                         {
