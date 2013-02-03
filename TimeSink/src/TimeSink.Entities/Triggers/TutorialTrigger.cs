@@ -67,7 +67,8 @@ namespace TimeSink.Entities.Triggers
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     Scale = previewScale, 
-                    TintColor = new Color(255, 255, 255, .1f)
+                    TintColor = new Color(0, 0, 0, .5f),
+                    DepthWithinLayer = .625f
                 };
             }
         }

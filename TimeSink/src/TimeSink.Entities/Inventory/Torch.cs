@@ -28,6 +28,7 @@ namespace TimeSink.Entities.Inventory
     {
         const string EDITOR_NAME = "Torch";
         const string TEXTURE = "Textures/Objects/TorchFlaming";
+        const float DEPTH = -150;
 
         private static readonly Vector2 SrcRectSize = new Vector2(29.5f, 130f);
         private static readonly Guid GUID = new Guid("749a40d4-fd31-438d-8d68-9d7a7700ea2d");
@@ -49,14 +50,14 @@ namespace TimeSink.Entities.Inventory
             Position = position;
             Width = width;
             Height = height;
-            rendering =  new NewAnimationRendering(
+            rendering = new NewAnimationRendering(
                   TEXTURE,
                   SrcRectSize,
                   2,
                   Vector2.Zero,
                   0,
                   Vector2.One,
-                  Color.White);
+                  Color.White) { DepthWithinLayer = DEPTH };
         }
 
         [SerializableField]
@@ -132,7 +133,8 @@ namespace TimeSink.Entities.Inventory
                 return new BasicRendering(TEXTURE)
                 {
                     Position =  PhysicsConstants.MetersToPixels(Position),
-                    SrcRectangle = new Rectangle(0, 0, (int)SrcRectSize.X, (int)SrcRectSize.Y)
+                    SrcRectangle = new Rectangle(0, 0, (int)SrcRectSize.X, (int)SrcRectSize.Y),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }

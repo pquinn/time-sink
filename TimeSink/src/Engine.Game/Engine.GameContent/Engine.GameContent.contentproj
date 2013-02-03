@@ -1529,6 +1529,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Objects\ice beam.png">
+      <Name>ice beam</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Tiles\Ice_rung.png">
       <Name>Ice_rung</Name>
       <Importer>TextureImporter</Importer>
@@ -1538,6 +1545,23 @@
   <ItemGroup>
     <Compile Include="Textures\Tiles\Ice_rung_small.png">
       <Name>Ice_rung_small</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Kyles_SpecialDoor.png">
+      <Name>Kyles_SpecialDoor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Kyles_SpecialDoorBackward.png">
+      <Name>Kyles_SpecialDoorBackward</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Kyles_SpecialDoorForward.png">
+      <Name>Kyles_SpecialDoorForward</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

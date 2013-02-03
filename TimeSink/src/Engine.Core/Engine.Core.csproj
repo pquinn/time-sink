@@ -130,7 +130,6 @@
     <Compile Include="EditorProperties.cs" />
     <Compile Include="Editor\EditableFieldAttribute.cs" />
     <Compile Include="Editor\EditorEnabledAttribute.cs" />
-    <Compile Include="Editor\EditorRenderManager.cs" />
     <Compile Include="Editor\GameProject.cs" />
     <Compile Include="Editor\IEditorPreviewable.cs" />
     <Compile Include="EngineGame.cs" />
@@ -140,6 +139,7 @@
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
+    <Compile Include="Rendering\RenderComparer.cs" />
     <Compile Include="Rendering\RenderLayer.cs" />
     <Compile Include="Rendering\TextRendering.cs" />
     <Compile Include="States\EntitySerialization.cs" />

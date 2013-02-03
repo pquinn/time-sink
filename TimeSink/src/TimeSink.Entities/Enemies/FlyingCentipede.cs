@@ -23,7 +23,7 @@ namespace TimeSink.Entities.Enemies
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Flying Centipede/Flying01"; //temporary
         const string EDITOR_NAME = "Flying Centipede";
-
+        const float DEPTH = -50;
         private static readonly Guid GUID = new Guid("bb7f91f9-af92-41cc-a985-bd1e85066403");
 
         private static int textureHeight;
@@ -81,7 +81,8 @@ namespace TimeSink.Entities.Enemies
                 return new BasicRendering(CENTIPEDE_TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    TintColor = new Color(255f, tint, tint, 255f)
+                    TintColor = new Color(255f, tint, tint, 255f),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }

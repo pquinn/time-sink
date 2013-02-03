@@ -144,7 +144,6 @@ namespace Editor
 
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
-            builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
 
             // Create a new SpriteBatch, which can be used to draw textures.

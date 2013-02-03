@@ -30,10 +30,12 @@ namespace TimeSink.Engine.Core.Rendering
         public Vector2 Position { get; set; }
         public float Rotation { get; set; }
         public Vector2 Scale { get; set; }
-        public Vector2 Size { get; set; }
-        public float DepthWithinLayer { get; set; }
+        public Vector2 Size { get; set; }       
         public Rectangle? SrcRectangle { get; set; }
         public Color TintColor { get; set; }
+
+        private float depthClamp;
+        public float DepthWithinLayer { get; set; }
 
         #endregion
 
@@ -44,6 +46,7 @@ namespace TimeSink.Engine.Core.Rendering
             this.Rotation = 0.0f;
             this.Scale = Vector2.One;
             this.Size = Vector2.Zero;
+            this.RenderLayer = Rendering.RenderLayer.Gameground;
             this.DepthWithinLayer = 0;
             this.TintColor = Color.White;
         }
@@ -86,7 +89,7 @@ namespace TimeSink.Engine.Core.Rendering
                 origin,
                 scale,
                 SpriteEffects.None,
-                DepthWithinLayer
+                0
             );
 
             spriteBatch.End();

@@ -16,6 +16,7 @@ namespace TimeSink.Engine.Core.Rendering
         private List<BasicRendering> frames;
 
         public RenderLayer RenderLayer { get; set; }
+        public float DepthWithinLayer { get; set; }
 
         public NewAnimationRendering(string spriteSheet, Vector2 srcRectSize, int numFrames, 
             Vector2 position, float rotation, Vector2 scale, Color tint)
@@ -29,6 +30,8 @@ namespace TimeSink.Engine.Core.Rendering
             this.CurrentFrame = 0;
             this.Tint = tint;
             this.frames = InitRenderings();
+            this.RenderLayer = Rendering.RenderLayer.Gameground;
+            this.DepthWithinLayer = 0;
         }
 
         public Vector2 Position { get; set; }

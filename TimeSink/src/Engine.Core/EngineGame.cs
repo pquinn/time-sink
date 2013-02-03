@@ -111,7 +111,6 @@ namespace TimeSink.Engine.Core
 
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
-            builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
 
             builder.RegisterInstance(this).As<EngineGame>();

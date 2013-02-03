@@ -21,6 +21,7 @@ namespace TimeSink.Entities.Actons
     {
         const string EDITOR_NAME = "Pickup Bow";
         const  string TEXTURE = "Textures/Weapons/Bow_Neutral";
+        const float DEPTH = 0;
 
         private static readonly Guid guid = new Guid("eaa35946-ea93-4e3b-968c-7e6d0c6dbb34");
 
@@ -47,7 +48,8 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }

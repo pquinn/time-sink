@@ -24,6 +24,8 @@ namespace TimeSink.Entities.Enemies
         const float MASS = 100f;
         const string EDITOR_NAME = "Tutorial Monster";
 
+        const float DEPTH = -50f;
+
         private float lastShotTime;
 
         private static readonly Guid GUID = new Guid("fc8cddb4-e1ef-4b83-bc22-5b6460103524");

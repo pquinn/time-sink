@@ -36,6 +36,7 @@ namespace TimeSink.Entities
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
+        const float DEPTH = -100f;
 
         ShieldDamageQueue shieldDamager;
 
@@ -1809,7 +1810,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.NeutralLeft,
@@ -1820,7 +1821,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.FacingForward,
@@ -1831,7 +1832,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Idle
@@ -1845,7 +1846,7 @@ namespace TimeSink.Entities
                         Vector2.Zero,
                         0,
                         Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
@@ -1855,7 +1856,7 @@ namespace TimeSink.Entities
                         Vector2.Zero,
                         0,
                         Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             #endregion
 
@@ -1869,7 +1870,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
@@ -1879,7 +1880,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
@@ -1889,7 +1890,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
@@ -1899,7 +1900,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
@@ -1909,7 +1910,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
@@ -1919,7 +1920,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Running
@@ -1931,7 +1932,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
@@ -1941,7 +1942,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
@@ -1951,7 +1952,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
@@ -1961,7 +1962,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
@@ -1970,7 +1971,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
@@ -1979,7 +1980,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
             #region Jumping
 
@@ -1991,7 +1992,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
@@ -2001,7 +2002,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Climbing
@@ -2013,7 +2014,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingBackNeut,
                 new NewAnimationRendering(
                     CLIMBING_NEUT,
@@ -2022,7 +2023,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
@@ -2032,7 +2033,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
                     CLIMBING_RIGHT,
@@ -2041,7 +2042,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingRightNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_RIGHT,
@@ -2050,7 +2051,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLeftNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_LEFT,
@@ -2059,7 +2060,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLookRight,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_RIGHT,
@@ -2068,7 +2069,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
@@ -2077,7 +2078,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbLeft,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT,
@@ -2086,7 +2087,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbRight,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT,
@@ -2095,7 +2096,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbRightNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT_NEUT,
@@ -2104,7 +2105,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
                new NewAnimationRendering(
@@ -2114,7 +2115,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Shooting
@@ -2128,7 +2129,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowRight,
@@ -2139,7 +2140,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
             #region WalkingShooting
 
@@ -2152,7 +2153,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingDrawnRight,
@@ -2163,7 +2164,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShootLeft,
@@ -2174,7 +2175,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShootRight,
@@ -2185,7 +2186,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Left,
@@ -2196,7 +2197,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Right,
@@ -2207,7 +2208,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Left,
@@ -2218,7 +2219,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Right,
@@ -2229,7 +2230,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutLeft,
@@ -2240,7 +2241,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutRight,
@@ -2251,7 +2252,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Knockback
@@ -2264,7 +2265,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.KnockbackLeft,
@@ -2275,7 +2276,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Ducking
@@ -2288,7 +2289,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingRight,
@@ -2299,7 +2300,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingLeftBow,
@@ -2310,7 +2311,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckShootLeftBow,
@@ -2321,7 +2322,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingRightBow,
@@ -2332,7 +2333,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckShootRightBow,
@@ -2343,7 +2344,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             #endregion
 
@@ -2356,7 +2357,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             return dictionary;
         }

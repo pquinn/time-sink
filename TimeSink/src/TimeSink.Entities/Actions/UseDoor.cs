@@ -30,7 +30,10 @@ namespace TimeSink.Entities.Actons
     {
         const string EDITOR_NAME = "Use Door";
         const string TEXTURE = "Materials/blank";
-        const string EDITOR_PREVIEW = "Textures/Objects/ladder";
+        const string EDITOR_PREVIEW_FORWARD = "Textures/Objects/Kyles_SpecialDoorForward";
+        const string EDITOR_PREVIEW_BACKGROUND = "Textures/Objects/Kyles_SpecialDoorBackward";
+        const string EDITOR_PREVIEW_SIDE = "Textures/Objects/Kyles_SpecialDoorForward";
+        const float DEPTH = 0;
 
         const string UP_POPUP = "Textures/Keys/w-key";
         const string DOWN_POPUP = "Textures/Keys/s-key";
@@ -204,10 +207,15 @@ namespace TimeSink.Entities.Actons
         {
             get 
             {
-                return new BasicRendering(TEXTURE)
+                var tex = EDITOR_PREVIEW_SIDE;
+                if (DoorType == DoorType.Up) tex = EDITOR_PREVIEW_FORWARD;
+                if (DoorType == DoorType.Down) tex = EDITOR_PREVIEW_BACKGROUND;
+                return new BasicRendering(tex)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH,
+                    TintColor = (DoorType == DoorType.Down) ? new Color(255, 255, 255, .5f) : Color.White
                 };
             }
         }

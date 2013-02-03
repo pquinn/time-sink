@@ -30,6 +30,7 @@ namespace TimeSink.Entities.Actons
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
 
         const string ACTION_POPUP = "Textures/Keys/x-Key";
+        const float DEPTH = 0;
         const int POPUP_OFFSET = 20;
 
         private static readonly Guid guid = new Guid("edc87822-ee90-4826-84af-d0eeba3c13fe");
@@ -173,7 +174,8 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }

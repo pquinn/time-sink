@@ -28,6 +28,7 @@ namespace TimeSink.Entities.Objects
         const string EDITOR_NAME = "Ladder";
         const string TEXTURE = "Materials/blank";
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
+        const float DEPTH = 0f;
 
         private bool feetTouching = false;
         private float linearDamping = 0;
@@ -222,10 +223,11 @@ namespace TimeSink.Entities.Objects
         {
             get
             {
-                return new BasicRendering(TEXTURE)
+                return new BasicRendering(EDITOR_PREVIEW)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }

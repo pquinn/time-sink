@@ -16,6 +16,7 @@ namespace TimeSink.Engine.Core.Rendering
         Vector2 parentScale;
 
         public RenderLayer RenderLayer { get; set; }
+        public float DepthWithinLayer { get; set; }
 
         public StackableRendering(Stack<IRendering> renderingStack)
             : this(renderingStack, Vector2.Zero, 0.0f, Vector2.One)

@@ -16,6 +16,7 @@ using TimeSink.Engine.Core.Caching;
 using TimeSink.Editor.GUI.ViewModels;
 using TimeSink.Engine.Core;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -42,7 +43,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             var viewModel = DataContext as TileSelectorViewModel;
             var textureKey = viewModel.TextureKeys[meshList.SelectedIndex];
-            preview.ChangePreview(new Tile(textureKey, Vector2.Zero, 0, Vector2.One));
+            preview.ChangePreview(new Tile(textureKey, Vector2.Zero, 0, Vector2.One, RenderLayer.Gameground, .5f));
         }
     }
 }

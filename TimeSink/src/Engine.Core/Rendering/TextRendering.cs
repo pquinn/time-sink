@@ -17,6 +17,11 @@ namespace TimeSink.Engine.Core.Rendering
         Color color;
 
         public RenderLayer RenderLayer { get; set; }
+        private float wtf;
+        public float DepthWithinLayer 
+        { 
+            get { return wtf; } 
+            set { wtf = value; } }
 
         public TextRendering(String text, Vector2 position, float rotation, Vector2 scale, Color color)
         {
@@ -25,7 +30,10 @@ namespace TimeSink.Engine.Core.Rendering
             this.parentRotation = rotation;
             this.parentScale = scale;
             this.color = color;
+            this.DepthWithinLayer = 0;
+            this.RenderLayer = RenderLayer.Gameground;
         }
+
         public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var relativeTransform =

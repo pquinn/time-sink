@@ -30,6 +30,7 @@ namespace TimeSink.Entities
         const string DEFAULT_TEXTURE = "Textures/Enemies/Dummy";
         const string ACTION_POPUP = "Textures/Keys/x-Key";
         const int POPUP_OFFSET = 20;
+        const float DEPTH = .25f;
 
         private static readonly Guid GUID = new Guid("57eb5766-5ce2-4694-ad4b-e019d4817985");
 
@@ -178,7 +179,8 @@ namespace TimeSink.Entities
                 return new BasicRendering(TextureName)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH
                 };
             }
         }
