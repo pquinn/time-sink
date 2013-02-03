@@ -37,15 +37,29 @@ namespace TimeSink.Engine.Core.Rendering
             return renderables.Remove(renderable);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Camera camera)
+        public void Draw(SpriteBatch spriteBatch, Camera camera, bool forPreviews)
         {
+            var comparer = new RenderComparer();
+            var sets = new Dictionary<RenderLayer, List<IRendering>>();
+            sets.Add(RenderLayer.Background, new List<IRendering>());
+            sets.Add(RenderLayer.Midground, new List<IRendering>());
+            sets.Add(RenderLayer.Gameground, new List<IRendering>());
+            sets.Add(RenderLayer.Foreground, new List<IRendering>());
+            sets.Add(RenderLayer.UI, new List<IRendering>());
+
             foreach (var renderable in renderables)
             {
-                renderable.Rendering.Draw(
-                    spriteBatch,
-                    TextureCache,
-                    camera.Transform
-                );
+                var rendering = forPreviews ? renderable.Preview : renderable.Rendering;
+                sets[rendering.RenderLayer].Add(rendering);
+            }
+
+            foreach (var set in sets.Values)
+            {
+                set.Sort(comparer);
+                foreach (var rendering in set)
+                {
+                    rendering.Draw(spriteBatch, TextureCache, camera.Transform);
+                }
             }
         }
 

@@ -10,8 +10,10 @@ namespace Engine.Defaults
 {
     public class ItemPopup : IRenderable
     {
+        const int ITEM_SIZE = 30;
         private Vector2 position;
         private string texture;
+        private float DEPTH = -200;
 
         public ItemPopup(string texture, Vector2 position)
         {
@@ -21,7 +23,26 @@ namespace Engine.Defaults
 
         public IRendering Rendering
         {
-            get { return new SizedRendering(texture, PhysicsConstants.MetersToPixels(position), 0, 30, 30); }
+            get
+            {
+                return new BasicRendering(texture)
+                {
+                    Position = PhysicsConstants.MetersToPixels(position),
+                    Size = new Vector2(ITEM_SIZE, ITEM_SIZE),
+                    DepthWithinLayer = DEPTH
+                };
+            }
+        }
+
+
+        public string EditorName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IRendering Preview
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

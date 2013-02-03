@@ -156,7 +156,14 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Rendering
         {
-            get { return new SizedRendering(EDITOR_PREVIEW, PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
+            get
+            {
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
+            }
         }
     }
 }

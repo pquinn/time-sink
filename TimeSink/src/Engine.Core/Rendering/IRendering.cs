@@ -10,6 +10,10 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public interface IRendering
     {
+        RenderLayer RenderLayer { get; set; }
+
+        float DepthWithinLayer { get; set; }
+
         void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform);
 
         NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(IResourceCache<Texture2D> cache, Matrix globalTransform);

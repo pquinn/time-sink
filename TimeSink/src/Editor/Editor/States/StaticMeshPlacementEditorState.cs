@@ -43,7 +43,7 @@ namespace Editor.States
                     var tile = new Tile(
                         textureKey,
                         PhysicsConstants.PixelsToMeters(Vector2.Transform(position, Matrix.Invert(Camera.Transform))),
-                        0, Vector2.One);
+                        0, Vector2.One, RenderLayer.Gameground, .5f);
                     StateMachine.Owner.RegisterTile(tile);
 
                     StateMachine.RevertToPreviousState(true);

@@ -31,6 +31,8 @@ namespace TimeSink.Entities.Enemies
         const string EDITOR_NAME = "Normal Centipede";
         const string CENTIPEDE_DEATH = "Audio/Sounds/CentipedeDeath";
 
+        const float DEPTH = -50f;
+
         private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");
 
         new private static int textureHeight;
@@ -72,12 +74,13 @@ namespace TimeSink.Entities.Enemies
             get
             {
                 var tint = Math.Min(100, 2.55f * health);
-                return new TintedRendering(
-                  CENTIPEDE_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Position),
-                  angle,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));
+                return new BasicRendering(CENTIPEDE_TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Rotation = angle,
+                    TintColor = new Color(255f, tint, tint, 255f),
+                    DepthWithinLayer = DEPTH
+                };
             }
         }
 

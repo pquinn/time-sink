@@ -20,6 +20,7 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.States;
 using XNAControl;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Editor.GUI.Views
 {
@@ -117,7 +118,7 @@ namespace TimeSink.Editor.GUI.Views
                         new Tile(
                             texture.Key,
                             PhysicsConstants.PixelsToMeters(new Vector2((x * width) + (width / 2), (y * height) + (height / 2))),
-                            0, Vector2.One));
+                            0, Vector2.One, RenderLayer.Midground, 1));
                 }
             }
         }

@@ -22,7 +22,7 @@ namespace TimeSink.Entities
     [SerializableEntity("c31fb7ad-f9de-4ca3-a091-521583c6c6bf")]
     public class MovingPlatform : Entity
     {
-        const string WORLD_TEXTURE_NAME = "Textures/Tiles/MovingPlatform";
+        const string TEXTURE = "Textures/Tiles/MovingPlatform";
         const string EDITOR_NAME = "Moving Platform";
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f9de-4ca3-a091-521583c6c6bf");
@@ -95,7 +95,11 @@ namespace TimeSink.Entities
         {
             get
             {
-                return new SizedRendering(WORLD_TEXTURE_NAME, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                return new BasicRendering(TEXTURE)
+                    { 
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height) 
+                    };
             }
         }
 
@@ -154,7 +158,7 @@ namespace TimeSink.Entities
 
         public override void Load(IComponentContext container)
         {
-            var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(WORLD_TEXTURE_NAME);
+            var texture = container.Resolve<IResourceCache<Texture2D>>().GetResource(TEXTURE);
             textureWidth = texture.Width;
             textureHeight = texture.Height;
         }

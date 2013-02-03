@@ -355,7 +355,7 @@ namespace TimeSink.Engine.Core.StateManagement
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
-            currentLevel.RenderManager.Draw(spriteBatch, EngineGame.Instance.Camera);
+            currentLevel.RenderManager.Draw(spriteBatch, EngineGame.Instance.Camera, false);
             
             spriteBatch.Begin();
 

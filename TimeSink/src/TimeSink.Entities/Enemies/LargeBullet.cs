@@ -18,6 +18,7 @@ namespace TimeSink.Entities.Enemies
 {
     public class LargeBullet : Entity
     {
+        const float DEPTH = -50f;
         public LargeBullet(Vector2 position, int width, int height, Vector2 velocity)
         {
             Position = position;
@@ -52,12 +53,20 @@ namespace TimeSink.Entities.Enemies
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
         {
-            get { throw new NotImplementedException(); }
+            get { return Physics.FixtureList; }
         }
 
         public override Engine.Core.Rendering.IRendering Rendering
         {
-            get { return new SizedRendering("Textures/giroux", Position, 0, Width, Height); }
+            get
+            {
+                return new BasicRendering("Textures/Objects/ice beam")
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height),
+                        DepthWithinLayer = DEPTH
+                    };
+            }
         }
 
         private bool initialized;

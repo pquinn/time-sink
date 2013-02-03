@@ -25,6 +25,9 @@ namespace TimeSink.Engine.Core.Rendering
         protected Rectangle? srcRectangle;
         protected Rectangle? destRectangle;
 
+        public RenderLayer RenderLayer { get; set; }
+        public float DepthWithinLayer { get; set; }
+
         public Rectangle? SrcRectangle
         {
             get { return srcRectangle; }
@@ -62,6 +65,8 @@ namespace TimeSink.Engine.Core.Rendering
             this.rotation = rotation;
             this.srcRectangle = srcRect;
             this.scale = scale;
+            this.DepthWithinLayer = .5f;
+            this.RenderLayer = Rendering.RenderLayer.Gameground;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)

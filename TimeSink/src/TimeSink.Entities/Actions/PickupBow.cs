@@ -10,6 +10,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Inventory;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Actons
 {
@@ -20,6 +21,7 @@ namespace TimeSink.Entities.Actons
     {
         const string EDITOR_NAME = "Pickup Bow";
         const  string TEXTURE = "Textures/Weapons/Bow_Neutral";
+        const float DEPTH = 0;
 
         private static readonly Guid guid = new Guid("eaa35946-ea93-4e3b-968c-7e6d0c6dbb34");
 
@@ -43,10 +45,12 @@ namespace TimeSink.Entities.Actons
         {
             get
             {
-                return new SizedRendering(
-                    TEXTURE,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height),
+                    DepthWithinLayer = DEPTH
+                };
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering

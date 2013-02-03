@@ -36,6 +36,7 @@ namespace TimeSink.Entities
 
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
+        const float DEPTH = -100f;
 
         ShieldDamageQueue shieldDamager;
 
@@ -45,7 +46,7 @@ namespace TimeSink.Entities
             #region neutral
             NeutralRight, NeutralLeft,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
-            FacingBack,
+            FacingBack, FacingForward,
             #endregion
             #region walking
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
@@ -111,6 +112,7 @@ namespace TimeSink.Entities
         const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
         #endregion
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
+        const string FACING_FORWARD = "Textures/Sprites/SpriteSheets/Facing_Forward";
         #region Knockback
         const string KNOCKBACK_RIGHT = "Textures/Sprites/SpriteSheets/KnockBackRight";
         const string KNOCKBACK_LEFT = "Textures/Sprites/SpriteSheets/KnockBackLeft";
@@ -217,10 +219,11 @@ namespace TimeSink.Entities
         {
             get
             {
-                return new BasicRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    playerRotation, Vector2.One);
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Rotation = playerRotation
+                };
             }
         }
 
@@ -291,6 +294,7 @@ namespace TimeSink.Entities
         bool damageFlash = false;
         public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
         public Body WheelBody { get; set; }
+        public Body LadderSensor { get; set; }
 
         #region logging metrics
         int numberOfJumps = 0;
@@ -377,12 +381,12 @@ namespace TimeSink.Entities
                 if (RightFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackRight;
-                    Physics.ApplyLinearImpulse(new Vector2(-25, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(-20, 0));
                 }
                 else if (LeftFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackLeft;
-                    Physics.ApplyLinearImpulse(new Vector2(25, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(20, 0));
                 }
 
             }
@@ -395,36 +399,34 @@ namespace TimeSink.Entities
             if (!BridgeHanging())
                 TouchingGround = false;
 
-            var start = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+            var startMid = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
+            var startLeft = WheelBody.Position + new Vector2(-PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
+            var startRight = WheelBody.Position + new Vector2(PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
 
-            game.LevelManager.PhysicsManager.World.RayCast(
-                delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+            RayCastCallback cb = delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+            {
+                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform || fixture.Body.UserData is TutorialBreakBridge)
                 {
-                    if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
+                    if (jumpToggleGuard == false)
                     {
-                        if (jumpToggleGuard == false)
-                        {
-                            jumpImpactSound.Play();
-                        }
-                        jumpToggleGuard = true;
-                        TouchingGround = true;
-                        return 0;
+                        jumpImpactSound.Play();
                     }
-                    else if (fixture.Body.UserData is Ladder)
-                    {
-                        TouchingGround = true;
-                        jumpToggleGuard = true;
-                        Climbing = false;
-                        fixture.Body.IsSensor = false;
-                        return 0;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                },
-                start,
-                start + new Vector2(0, .1f));
+                    jumpToggleGuard = true;
+                    TouchingGround = true;
+                    return 0;
+                }
+                else
+                {
+                    return -1;
+                }
+            };
+
+            var distMid = new Vector2(0, .1f);
+            var distSides = distMid + WheelBody.Position - Physics.Position;
+
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startMid, startMid + distMid);
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startLeft, startLeft + distSides);
+            game.LevelManager.PhysicsManager.World.RayCast(cb, startRight, startRight + distSides);
 
             foreach (DamageOverTimeEffect dot in Dots)
             {
@@ -768,7 +770,12 @@ namespace TimeSink.Entities
                 //Sliding
                 else if (TouchingGround)
                 {
-                    if (TouchingGround && !inHold && !isDucking)
+                    
+                  if (DoorType == DoorType.Down)
+                    {
+                        currentState = BodyStates.FacingForward;
+                    }
+                  else if (TouchingGround && !inHold && !isDucking)
                     {
                         isDucking = true;
 
@@ -789,9 +796,19 @@ namespace TimeSink.Entities
                             1.4f,
                             new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
                             Physics);
+
+
+
+                        r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                        r.CollisionCategories = Category.Cat3;
+                        r.UserData = "Rectangle";
+                        r.Shape.Density = 7;
+
                         Physics.FixedRotation = true;
                         Physics.Position = pos;
                         Physics.BodyType = BodyType.Dynamic;
+                        Physics.Friction = 10.0f;
+                        Physics.IsBullet = true;
 
                         MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
                         MotorJoint.MotorEnabled = true;
@@ -821,81 +838,13 @@ namespace TimeSink.Entities
                     WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
                      * */
                 }
+
             }
 
-            else
-                if (isDucking)
+
+            else if (isDucking)
                 {
-                    Physics.Dispose();
-                    Width = spriteWidth;
-                    Height = spriteHeight;
-                    float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                    float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
-
-                    Physics = BodyFactory.CreateBody(_world, Position, this);
-                    DoorType = DoorType.None;
-
-                   // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
-
-                    var r = FixtureFactory.AttachRectangle(
-                        spriteWidthMeters,
-                        spriteHeightMeters - spriteWidthMeters / 2,
-                        1.4f,
-                        new Vector2(0, -spriteWidthMeters / 4),
-                        Physics);
-
-                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
-                    r.CollisionCategories = Category.Cat3;
-                    r.UserData = "Rectangle";
-
-                    var rSens = r.Clone(r.Body);
-
-                    MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
-                    MotorJoint.MotorEnabled = true;
-                    MotorJoint.MaxMotorTorque = 10;
-
-                    rSens.IsSensor = true;
-                    rSens.Shape.Density = 0;
-
-                    rSens.CollidesWith = Category.All;
-                    rSens.CollisionCategories = Category.Cat2;
-
-                    Physics.BodyType = BodyType.Dynamic;
-                    Physics.FixedRotation = true;
-                    Physics.Friction = 10.0f;
-                    WheelBody.BodyType = BodyType.Dynamic;
-                    WheelBody.Friction = 10.0f;
-                    Physics.IsBullet = true;
-
-                    RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
-
-                    var ropeSensor = FixtureFactory.AttachCircle(
-                        .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
-                    ropeSensor.Friction = 5f;
-                    ropeSensor.Restitution = 1f;
-                    ropeSensor.UserData = this;
-                    ropeSensor.IsSensor = true;
-                    ropeSensor.CollidesWith = Category.Cat4;
-                    ropeSensor.CollisionCategories = Category.Cat4;
-
-                    ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
-                    ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
-
-                    var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
-                    vineSensor.Friction = 5f;
-                    vineSensor.Restitution = 1f;
-                    vineSensor.UserData = this;
-                    vineSensor.IsSensor = true;
-                    vineSensor.CollidesWith = Category.Cat5;
-                    vineSensor.CollisionCategories = Category.Cat5;
-
-                    vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
-                    vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
-
-                    Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
-                    Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
-                    r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
-                    r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+                    ReRegisterPhysics();
                     isDucking = false;
                 }
 
@@ -967,6 +916,11 @@ namespace TimeSink.Entities
             {
                 if (BridgeHanging())
                 {
+                    if (isDucking)
+                    {
+                        ReRegisterPhysics();
+                        isDucking = false;
+                    }
                     vineBridge.ForceSeperation(this);
                     if (!InputManager.Instance.Pressed(Keys.S))
                         PerformJump();
@@ -1301,13 +1255,15 @@ namespace TimeSink.Entities
 
             if (swinging)
                 x_vel = SWING_X_CLAMP;
+            else if (!TouchingGround)
+                x_vel = RUN_X_CLAMP * .8f;
             else if (isRunning)
             {
                 x_vel = RUN_X_CLAMP;
-                if (!TouchingGround)
-                {
-                    x_vel = x_vel * .8f;
-                }
+                //if (!TouchingGround)
+                //{
+                //    x_vel = x_vel * .8f;
+                //}
             }
 
             var accel = 1f;
@@ -1345,7 +1301,7 @@ namespace TimeSink.Entities
         private void PerformJump(float percentOfMax = 1)
         {
             jumpSound.Play();
-            Physics.ApplyLinearImpulse(new Vector2(0, -23.5f * percentOfMax));
+            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
             jumpToggleGuard = false;
 
             if (facing > 0)
@@ -1786,7 +1742,7 @@ namespace TimeSink.Entities
             OnPickup = null;
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
         }
-
+        
         private VineBridge vineBridge;
         bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
         {
@@ -1898,23 +1854,34 @@ namespace TimeSink.Entities
                 BodyStates.NeutralRight,
                 new NewAnimationRendering(
                     NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.NeutralLeft,
                  new NewAnimationRendering(
                     NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(
+                BodyStates.FacingForward,
+                 new NewAnimationRendering(
+                    FACING_FORWARD,
+                    new Vector2(77f, 154f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Idle
@@ -1923,22 +1890,22 @@ namespace TimeSink.Entities
                 BodyStates.IdleRightOpen,
                 new NewAnimationRendering(
                         IDLE_OPEN_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
                         Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(
                 BodyStates.IdleRightClosed,
                 new NewAnimationRendering(
                         IDLE_CLOSED_HAND,
-                        new Vector2(76.8f, 153.6f),
+                        new Vector2(77f, 154f),
                         5,
                         Vector2.Zero,
                         0,
                         Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             #endregion
 
@@ -1947,257 +1914,257 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.WalkingStartRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingEndRight,
                 new NewAnimationRendering(
                     WALKING_RIGHT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingStartLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     5,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.WalkingEndLeft,
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Running
             dictionary.Add(BodyStates.RunningStopLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStopRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStartLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.RunningStartRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT_INTERMEDIATE,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.RunningLeft,
                 new NewAnimationRendering(
                     RUNNING_LEFT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.RunningRight,
                 new NewAnimationRendering(
                     RUNNING_RIGHT,
-                    new Vector2(153.6f, 153.6f),
+                    new Vector2(154f, 154f),
                     8,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
             #region Jumping
 
             dictionary.Add(BodyStates.JumpingRight,
                 new NewAnimationRendering(
                     JUMPING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
                     JUMPING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Climbing
             dictionary.Add(BodyStates.ClimbingBack,
                 new NewAnimationRendering(
                     CLIMBING_BACK,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingBackNeut,
                 new NewAnimationRendering(
                     CLIMBING_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.ClimbingLeft,
                new NewAnimationRendering(
                     CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingRight,
                new NewAnimationRendering(
                     CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingRightNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLeftNeutral,
                new NewAnimationRendering(
                     CLIMBING_NEUTRAL_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLookRight,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.ClimbingLookLeft,
                new NewAnimationRendering(
                     CLIMBING_LOOKING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbLeft,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbRight,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             dictionary.Add(BodyStates.HorizontalClimbRightNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_RIGHT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(BodyStates.HorizontalClimbLeftNeut,
                new NewAnimationRendering(
                     HORIZ_CLIMBING_LEFT_NEUT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     1,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Shooting
@@ -2206,23 +2173,23 @@ namespace TimeSink.Entities
                 BodyStates.ShootingArrowLeft,
                  new NewAnimationRendering(
                     SHOOT_ARROW_LEFT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowRight,
                  new NewAnimationRendering(
                     SHOOT_ARROW_RIGHT,
-                    new Vector2(153.6f, 185f),
+                    new Vector2(154f, 185f),
                     4,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
             #region WalkingShooting
 
@@ -2235,7 +2202,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingDrawnRight,
@@ -2246,7 +2213,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShootLeft,
@@ -2257,7 +2224,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShootRight,
@@ -2268,7 +2235,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Left,
@@ -2279,7 +2246,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot2Right,
@@ -2290,7 +2257,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Left,
@@ -2301,7 +2268,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.WalkingShoot3Right,
@@ -2312,7 +2279,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutLeft,
@@ -2323,7 +2290,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.ShootingArrowNeutRight,
@@ -2334,7 +2301,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Knockback
@@ -2342,23 +2309,23 @@ namespace TimeSink.Entities
                 BodyStates.KnockbackRight,
                 new NewAnimationRendering(
                     KNOCKBACK_RIGHT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.KnockbackLeft,
                 new NewAnimationRendering(
                     KNOCKBACK_LEFT,
-                    new Vector2(76.8f, 153.6f),
+                    new Vector2(77f, 154f),
                     2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Ducking
@@ -2371,7 +2338,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingRight,
@@ -2382,7 +2349,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingLeftBow,
@@ -2393,7 +2360,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckShootLeftBow,
@@ -2404,7 +2371,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckingRightBow,
@@ -2415,7 +2382,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             dictionary.Add(
                 BodyStates.DuckShootRightBow,
@@ -2426,7 +2393,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             #endregion
 
@@ -2439,7 +2406,7 @@ namespace TimeSink.Entities
                     Vector2.Zero,
                     0,
                     Vector2.One,
-                    invulnTint));
+                    invulnTint) { DepthWithinLayer = -100 });
 
             return dictionary;
         }
@@ -2589,6 +2556,16 @@ namespace TimeSink.Entities
                     spriteWidthMeters / 2,
                     1.4f,
                     WheelBody);
+                var l = FixtureFactory.AttachRectangle(
+                    spriteWidthMeters,
+                    spriteHeightMeters,
+                    1.4f,
+                    new Vector2(0, 0),
+                    Physics);
+
+                l.IsSensor = true;
+                l.UserData = "Ladder";
+                l.Shape.Density = 0;
 
                 r.CollidesWith = Category.Cat1 | ~Category.Cat31;
                 r.CollisionCategories = Category.Cat3;
@@ -2710,5 +2687,90 @@ namespace TimeSink.Entities
         }
 
         #endregion
+
+        private void ReRegisterPhysics()
+        {
+            Physics.Dispose();
+            Width = spriteWidth;
+            Height = spriteHeight;
+            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+            Physics = BodyFactory.CreateBody(_world, Position, this);
+            DoorType = DoorType.None;
+
+            // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
+
+            var r = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters - spriteWidthMeters / 2,
+                1.4f,
+                new Vector2(0, -spriteWidthMeters / 4),
+                Physics);
+
+            var l = FixtureFactory.AttachRectangle(
+                spriteWidthMeters,
+                spriteHeightMeters,
+                1.4f,
+                new Vector2(0, 0),
+                Physics);
+
+            l.IsSensor = true;
+            l.UserData = "Ladder";
+            l.Shape.Density = 0;
+
+            r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+            r.CollisionCategories = Category.Cat3;
+            r.UserData = "Rectangle";
+
+            var rSens = r.Clone(r.Body);
+
+            MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+            MotorJoint.MotorEnabled = true;
+            MotorJoint.MaxMotorTorque = 10;
+
+            rSens.IsSensor = true;
+            rSens.Shape.Density = 0;
+
+            rSens.CollidesWith = Category.All;
+            rSens.CollisionCategories = Category.Cat2;
+
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.FixedRotation = true;
+            Physics.Friction = 10.0f;
+            WheelBody.BodyType = BodyType.Dynamic;
+            WheelBody.Friction = 10.0f;
+            Physics.IsBullet = true;
+
+            RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
+
+            var ropeSensor = FixtureFactory.AttachCircle(
+                .08f, 5, Physics, new Vector2(0, RopeAttachHeight));
+            ropeSensor.Friction = 5f;
+            ropeSensor.Restitution = 1f;
+            ropeSensor.UserData = this;
+            ropeSensor.IsSensor = true;
+            ropeSensor.CollidesWith = Category.Cat4;
+            ropeSensor.CollisionCategories = Category.Cat4;
+
+            ropeSensor.RegisterOnCollidedListener<VineBridge>(OnCollidedWith);
+            ropeSensor.RegisterOnSeparatedListener<VineBridge>(OnSeparation);
+
+            var vineSensor = FixtureFactory.AttachCircle(.1f, 5, Physics, Vector2.Zero);
+            vineSensor.Friction = 5f;
+            vineSensor.Restitution = 1f;
+            vineSensor.UserData = this;
+            vineSensor.IsSensor = true;
+            vineSensor.CollidesWith = Category.Cat5;
+            vineSensor.CollisionCategories = Category.Cat5;
+
+            vineSensor.RegisterOnCollidedListener<Vine>(OnCollidedWith);
+            vineSensor.RegisterOnSeparatedListener<Vine>(OnSeparation);
+
+            Physics.RegisterOnCollidedListener<Bramble>(OnCollidedWith);
+            Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
+            r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
+            r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+        }
     }
 }

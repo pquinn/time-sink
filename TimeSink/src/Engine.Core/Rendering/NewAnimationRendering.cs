@@ -13,7 +13,10 @@ namespace TimeSink.Engine.Core.Rendering
         private string spriteSheet;
         private Vector2 srcRectSize;
 
-        private List<TintedRendering> frames;
+        private List<BasicRendering> frames;
+
+        public RenderLayer RenderLayer { get; set; }
+        public float DepthWithinLayer { get; set; }
 
         public NewAnimationRendering(string spriteSheet, Vector2 srcRectSize, int numFrames, 
             Vector2 position, float rotation, Vector2 scale, Color tint)
@@ -27,6 +30,8 @@ namespace TimeSink.Engine.Core.Rendering
             this.CurrentFrame = 0;
             this.Tint = tint;
             this.frames = InitRenderings();
+            this.RenderLayer = Rendering.RenderLayer.Gameground;
+            this.DepthWithinLayer = 0;
         }
 
         public Vector2 Position { get; set; }
@@ -36,21 +41,22 @@ namespace TimeSink.Engine.Core.Rendering
         public int NumFrames { get; set; }
         public Color Tint { get; set; }
 
-        private List<TintedRendering> InitRenderings()
+        private List<BasicRendering> InitRenderings()
         {
-            var renderings = new List<TintedRendering>();
+            var renderings = new List<BasicRendering>();
 
             for (var i = 0; i < NumFrames; i++)
             {
                 renderings.Add(
-                    new TintedRendering(
-                        spriteSheet, Vector2.Zero, 0, Vector2.One,
-                        Tint,
-                        new Rectangle(
+                    new BasicRendering(spriteSheet)
+                    {
+                        TintColor = Tint,
+                        SrcRectangle = new Rectangle(
                             i * (int)srcRectSize.X, 
                             0, 
                             (int)srcRectSize.X, 
-                            (int)srcRectSize.Y)));
+                            (int)srcRectSize.Y)
+                    });
             }
 
             return renderings;
@@ -69,7 +75,7 @@ namespace TimeSink.Engine.Core.Rendering
 
         public void UpdateTint(Color tint)
         {
-            foreach (TintedRendering b in frames)
+            foreach (BasicRendering b in frames)
             {
                 b.TintColor = tint;
             }

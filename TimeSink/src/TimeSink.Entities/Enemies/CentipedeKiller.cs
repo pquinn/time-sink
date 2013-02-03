@@ -11,6 +11,7 @@ namespace TimeSink.Entities.Enemies
     [SerializableEntity("cc365414-a0c7-42f1-b9c1-c716f3f5239a")]
     public class CentipedeKiller : EnemyKiller<NormalCentipede>
     {
+        const float DEPTH = -75f;
         private static readonly Guid guid = new Guid("cc365414-a0c7-42f1-b9c1-c716f3f5239a");
         private static readonly string editorName = "Centipede Killer";
 

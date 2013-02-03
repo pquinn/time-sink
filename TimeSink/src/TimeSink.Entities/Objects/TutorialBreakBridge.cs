@@ -26,6 +26,9 @@ namespace TimeSink.Entities.Objects
     {
         const string TEXTURE = "Textures/Objects/ice bridge";
         const string EDITOR_NAME = "Break Bridge Item";
+        private ItemPopup popupTrigger;
+        private EngineGame engine;
+        private bool registered;
         private static readonly Guid guid = new Guid("e46a6ea6-a61d-40a3-ab2b-57399014dee5");
 
         public override string EditorName
@@ -62,6 +65,7 @@ namespace TimeSink.Entities.Objects
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
@@ -81,24 +85,52 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
+                popupTrigger = new ItemPopup("Textures/Keys/e-Key", new Vector2(Physics.Position.X, 
+                                                                                Physics.Position.Y - PhysicsConstants.PixelsToMeters(100)));
+
                 initialized = true;
             }
         }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            Physics.IgnoreGravity = false;
-            Physics.BodyType = BodyType.Dynamic;
+
+            if (popupTrigger != null && !registered)
+            {
+                engine.LevelManager.RenderManager.RegisterRenderable(popupTrigger);
+                registered = true;
+            }
             return true;
         }
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
 
+            if (popupTrigger != null && !registered)
+            {
+                engine.LevelManager.RenderManager.UnregisterRenderable(popupTrigger);
+                registered = false;
+            }
+
+        }
+        public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
+        {
+            if (InputManager.Instance.IsNewKey(Keys.E) && registered)
+            {
+                Physics.IgnoreGravity = false;
+                Physics.BodyType = BodyType.Dynamic;
+            }
         }
 
         public override Engine.Core.Rendering.IRendering Preview
         {
-            get { return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
+            get
+            {
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Size = new Vector2(Width, Height)
+                };
+            }
         }
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry

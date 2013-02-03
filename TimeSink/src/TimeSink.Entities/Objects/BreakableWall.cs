@@ -13,6 +13,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Entities.Enemies;
+using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Objects
 {
@@ -96,11 +97,23 @@ namespace TimeSink.Entities.Objects
             get
             {
                 if (remainingHits == 3)
-                    return new SizedRendering(TEXTURE1, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                    return new BasicRendering(TEXTURE1)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height)
+                    };
                 else if (remainingHits == 2)
-                    return new SizedRendering(TEXTURE2, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                    return new BasicRendering(TEXTURE2)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height)
+                    };
                 else if (remainingHits == 1)
-                    return new SizedRendering(TEXTURE3, PhysicsConstants.MetersToPixels(Position), 0, Width, Height);
+                    return new BasicRendering(TEXTURE3)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height)
+                    };
                 else
                     return new NullRendering();
             }

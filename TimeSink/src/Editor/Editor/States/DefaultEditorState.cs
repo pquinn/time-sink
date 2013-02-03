@@ -49,7 +49,7 @@ namespace Editor.States
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            StateMachine.Owner.EditorRenderManager.Draw(spriteBatch, Camera);
+            StateMachine.Owner.RenderManager.Draw(spriteBatch, Camera, true);
         }
 
         protected Vector2 GetMousePosition()

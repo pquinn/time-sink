@@ -24,6 +24,7 @@ namespace TimeSink.Entities.Inventory
     {
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
         const string EDITOR_NAME = "Dart";
+        const float DEPTH = 0;
 
         private static readonly Guid GUID = new Guid("158e2984-34ce-4c1f-93ef-fbf81c5fed1f");
 
@@ -71,14 +72,12 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                return Dead 
-                    ? null 
-                    : new BasicRendering(
-                        DART_TEXTURE_NAME,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                    );
+                return Dead ? null : new BasicRendering(DART_TEXTURE_NAME)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                        Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        DepthWithinLayer = DEPTH
+                    };
             }
         }
 

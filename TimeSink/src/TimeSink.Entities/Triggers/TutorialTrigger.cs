@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -32,12 +33,13 @@ namespace TimeSink.Entities.Triggers
 
         private static readonly Guid guid = new Guid("75522a0f-66c2-444e-90bb-88df79c36c29");
 
-        private String tutorialText;
+        private Vector2 previewScale;
         private EngineGame engine;
         private TutorialDisplay display;
+        private UserControlledCharacter character;
 
         public TutorialTrigger()
-            : this(Vector2.Zero, 50, 50, "Enter Text Here")
+            : this(Vector2.Zero, 200, 150, "Enter Text Here")
         {
         }
         public TutorialTrigger(Vector2 position, int width, int height, String text)
@@ -57,14 +59,17 @@ namespace TimeSink.Entities.Triggers
             get { return guid; }
             set { }
         }
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get
             {
-                return new SizedRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = previewScale, 
+                    TintColor = new Color(255, 255, 255, .1f),
+                    DepthWithinLayer = .625f
+                };
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering
@@ -98,6 +103,10 @@ namespace TimeSink.Entities.Triggers
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
+                var cache = engineRegistrations.ResolveOptional<IResourceCache<Texture2D>>();
+                var texture = cache.GetResource(EDITOR_PREVIEW);
+                previewScale = new Vector2(Width / texture.Width, Height / texture.Height);
+
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 display = new TutorialDisplay(TutorialText, PhysicsConstants.MetersToPixels(Position));
 
@@ -121,13 +130,14 @@ namespace TimeSink.Entities.Triggers
             }
         }
 
-
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             engine.LevelManager.RenderManager.RegisterRenderable(display);
+            character = c;
 
             return true;
         }
+
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             engine.LevelManager.RenderManager.UnregisterRenderable(display);

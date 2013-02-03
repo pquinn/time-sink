@@ -24,6 +24,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -36,6 +38,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -48,6 +52,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -60,6 +66,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -72,6 +80,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -84,6 +94,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -96,6 +108,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -108,6 +122,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -120,6 +136,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -132,6 +150,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -144,6 +164,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -156,6 +178,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -168,6 +192,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -180,6 +206,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -192,6 +220,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -204,6 +234,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -216,6 +248,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -228,6 +262,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -240,6 +276,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -252,6 +290,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -264,6 +304,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -276,6 +318,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -288,6 +332,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -300,6 +346,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -312,6 +360,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -324,6 +374,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -336,6 +388,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -348,6 +402,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -360,6 +416,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -372,6 +430,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -384,6 +444,8 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 		<Tile>
 			<Dead>false</Dead>
@@ -396,10 +458,14 @@
 			<Scale>
 				<X>1</X><Y>1</Y>
 			</Scale>
+			<RenderLayer>Background</RenderLayer>
+			<Depth>0</Depth>
 		</Tile>
 	</Midground>
 	<Tiles />
 	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
@@ -870,6 +936,14 @@
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>13.734375</X><Y>22.90625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
 	</GeoSegments>
 	<EntitySerializations>
 		<EntitySerialization>
@@ -1002,7 +1076,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>
-					<Value xsi:type="xsd:int">380</Value>
+					<Value xsi:type="xsd:int">240</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Sideways</Key>
@@ -1023,7 +1097,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>7.59375</X><Y>15.28125</Y>
+						<X>7.59375</X><Y>16.40625</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -1041,7 +1115,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>
-					<Value xsi:type="xsd:int">830</Value>
+					<Value xsi:type="xsd:int">800</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Sideways</Key>
@@ -1271,7 +1345,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>SpawnInterval</Key>
-					<Value xsi:type="xsd:float">4000</Value>
+					<Value xsi:type="xsd:float">4500</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>SpawnAmount</Key>
@@ -1279,7 +1353,7 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">2000</Value>
+					<Value xsi:type="xsd:float">0</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Width</Key>
@@ -1314,24 +1388,8 @@
 			</PropertiesMap>
 		</EntitySerialization>
 		<EntitySerialization>
-			<EntityId>349aaec2-aa55-4c37-aa71-42d0c1616885</EntityId>
+			<EntityId>cc365414-a0c7-42f1-b9c1-c716f3f5239a</EntityId>
 			<PropertiesMap>
-				<PairOfStringObject>
-					<Key>SpawnDirection</Key>
-					<Value xsi:type="xsd:int">1</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnInterval</Key>
-					<Value xsi:type="xsd:float">4000</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnAmount</Key>
-					<Value xsi:type="xsd:int">1</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">0</Value>
-				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Width</Key>
 					<Value xsi:type="xsd:int">50</Value>
@@ -1341,63 +1399,31 @@
 					<Value xsi:type="xsd:int">50</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
-					<Key>MaxSpawn</Key>
-					<Value xsi:type="xsd:int">2</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Health</Key>
-					<Value xsi:type="xsd:float">100</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>InstanceId</Key>
-					<Value xsi:type="xsd:string">spawn1</Value>
+					<Value xsi:type="xsd:string">cent_killer1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>2.546875</X><Y>12.1875</Y>
+						<X>11.40625</X><Y>22.265625</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
 		<EntitySerialization>
-			<EntityId>349aaec2-aa55-4c37-aa71-42d0c1616885</EntityId>
+			<EntityId>cc365414-a0c7-42f1-b9c1-c716f3f5239a</EntityId>
 			<PropertiesMap>
 				<PairOfStringObject>
-					<Key>SpawnDirection</Key>
-					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnInterval</Key>
-					<Value xsi:type="xsd:float">4000</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnAmount</Key>
-					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
 					<Key>Width</Key>
-					<Value xsi:type="xsd:int">50</Value>
+					<Value xsi:type="xsd:int">0</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>
-					<Value xsi:type="xsd:int">50</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>MaxSpawn</Key>
 					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Health</Key>
-					<Value xsi:type="xsd:float">100</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Dead</Key>
@@ -1405,63 +1431,11 @@
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>InstanceId</Key>
-					<Value xsi:type="xsd:string">receive1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>3.28125</X><Y>18.546875</Y>
-					</Value>
-				</PairOfStringObject>
-			</PropertiesMap>
-		</EntitySerialization>
-		<EntitySerialization>
-			<EntityId>349aaec2-aa55-4c37-aa71-42d0c1616885</EntityId>
-			<PropertiesMap>
-				<PairOfStringObject>
-					<Key>SpawnDirection</Key>
-					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnInterval</Key>
-					<Value xsi:type="xsd:float">10000</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnAmount</Key>
-					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>SpawnOffset</Key>
-					<Value xsi:type="xsd:float">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Width</Key>
-					<Value xsi:type="xsd:int">50</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Height</Key>
-					<Value xsi:type="xsd:int">50</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>MaxSpawn</Key>
-					<Value xsi:type="xsd:int">0</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Health</Key>
-					<Value xsi:type="xsd:float">100</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Dead</Key>
-					<Value xsi:type="xsd:boolean">false</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>InstanceId</Key>
-					<Value xsi:type="xsd:string">receive2</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Position</Key>
-					<Value xsi:type="Vector2">
-						<X>11.640625</X><Y>21.9375</Y>
+						<X>1.515625</X><Y>17</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

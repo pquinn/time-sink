@@ -16,7 +16,6 @@ using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Triggers
 {
-
     [EditorEnabled]
     [SerializableEntity("aa70e739-3d5d-454c-bfb1-64b2dc190e3e")]
     public class PlaceTorchTrigger : Entity
@@ -98,7 +97,14 @@ namespace TimeSink.Entities.Triggers
 
         public override Engine.Core.Rendering.IRendering Preview
         {
-            get { return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
+            get
+            {
+                return new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Size = new Vector2(Width, Height)
+                    };
+            }
         }
 
         public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
