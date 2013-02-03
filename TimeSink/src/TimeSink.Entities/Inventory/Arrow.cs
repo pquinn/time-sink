@@ -124,7 +124,7 @@ namespace TimeSink.Entities.Inventory
                 Physics.Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X);
         }
 
-        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
             Arrow arrow = new Arrow(
                 new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
@@ -145,9 +145,9 @@ namespace TimeSink.Entities.Inventory
             arrow.Physics.LinearVelocity += initialVelocity;
         }
 
-        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            Fire(character, world, gameTime, holdTime);
+            Fire(character, world, gameTime, holdTime, charged);
         }
 
         private bool initialized;

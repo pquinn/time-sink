@@ -9,6 +9,6 @@ namespace TimeSink.Entities.Inventory
 {
     public interface IWeapon : IInventoryItem
     {
-        void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime);
+        void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged);
     }
 }

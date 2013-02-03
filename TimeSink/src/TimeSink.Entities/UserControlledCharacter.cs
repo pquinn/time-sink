@@ -198,10 +198,9 @@ namespace TimeSink.Entities
         {
             get
             {
-                if (inventory.Count != 0)
-                    return inventory[activeItem];
-                else 
-                    return null;
+                return inventory.Count != 0
+                    ? inventory[activeItem]
+                    : null;
             }
         }
         private int activeItem;
@@ -434,32 +433,33 @@ namespace TimeSink.Entities
                     TakeDamage(dot.Tick(gameTime));
             }
 
-            if (chargingWeapon)
+            if (!chargingWeapon)
             {
-                if (Mana > 0)
-                {
-                    var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    var manaCost = chargeAmt * CHARGE_MANA_COST;
-                    if (manaCost > Mana)
-                    {
-                        chargeAmt *= Mana / manaCost;
-                    }
-                    var newChargePercent = chargePercent + chargeAmt;
-                    if (newChargePercent > 1)
-                    {
-                        chargePercent = 1;
-                        manaCost *= 1f / newChargePercent;
-                    }
-                    else
-                    {
-                        chargePercent += chargeAmt;
-                    }
-                    Mana -= manaCost;
-                }
-            }
-            else
-            {
-                if (mana < MAX_MANA) Mana += 1; //Recharge
+            //    if (Mana > 0)
+            //    {
+            //        var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //        var manaCost = chargeAmt * CHARGE_MANA_COST;
+            //        //if (manaCost > Mana)
+            //        //{
+            //        //    chargeAmt *= Mana / manaCost;
+            //        //}
+            //        var newChargePercent = chargePercent + chargeAmt;
+            //        if (newChargePercent > 1)
+            //        {
+            //            chargePercent = 1;
+            //            //manaCost /= newChargePercent;
+            //        }
+            //        else
+            //        {
+            //            chargePercent += chargeAmt;
+            //        }
+            //        //Mana -= manaCost;
+            //    }
+            //}
+            //else
+            //{
+                if (mana < MAX_MANA)
+                    Mana += .5f * (float)gameTime.ElapsedGameTime.TotalMilliseconds; //Recharge
             }
 
             if (gameTime.TotalGameTime.TotalMilliseconds >= nextLogTime)
@@ -1063,7 +1063,9 @@ namespace TimeSink.Entities
                     (shotTimer >= shotInterval) && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     arrowSound.Play();
-                    inventory[activeItem].Use(this, world, gameTime, holdTime);
+                    inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
+                    if (chargingWeapon)
+                        Mana -= 50; //TODO: constant? per-weapon? calc?
                     var shooting = animations[currentState].CurrentFrame = 0;
                     if (facing == -1)
                     {
