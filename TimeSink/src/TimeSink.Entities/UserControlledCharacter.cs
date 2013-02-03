@@ -1214,13 +1214,15 @@ namespace TimeSink.Entities
 
             if (swinging)
                 x_vel = SWING_X_CLAMP;
+            else if (!TouchingGround)
+                x_vel = RUN_X_CLAMP * .8f;
             else if (isRunning)
             {
                 x_vel = RUN_X_CLAMP;
-                if (!TouchingGround)
-                {
-                    x_vel = x_vel * .8f;
-                }
+                //if (!TouchingGround)
+                //{
+                //    x_vel = x_vel * .8f;
+                //}
             }
 
             var accel = 1f;
