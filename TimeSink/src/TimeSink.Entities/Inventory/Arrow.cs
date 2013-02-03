@@ -142,6 +142,15 @@ namespace TimeSink.Entities.Inventory
                                        (float)elapsedTime;
 
             Vector2 initialVelocity = PhysicsConstants.PixelsToMeters(speed * character.Direction);
+            if (character.Direction.Y == 0)
+            {
+                var rotation = (float)Math.PI / 32;
+                rotation *= character.Direction.X > 0
+                    ? -1
+                    : 1;
+                initialVelocity = Vector2.Transform(initialVelocity, Matrix.CreateRotationZ(rotation));
+                arrow.Physics.Rotation = rotation;
+            }
             arrow.Physics.LinearVelocity += initialVelocity;
         }
 
@@ -168,11 +177,18 @@ namespace TimeSink.Entities.Inventory
                     PhysicsConstants.PixelsToMeters(Height),
                     1,
                     Position);
+
+                var arrowHead = FixtureFactory.AttachCircle(
+                    PhysicsConstants.PixelsToMeters(Height)/2,
+                    10,
+                    Physics,
+                    new Vector2(PhysicsConstants.PixelsToMeters(Width)/2 - PhysicsConstants.PixelsToMeters(Height)/2, 0));
+
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
                 Physics.UserData = this;
                 Physics.IsSensor = true;
-                Physics.Mass = ARROW_MASS;
+                //Physics.Mass = ARROW_MASS;
                 Physics.CollidesWith = Category.All | ~Category.Cat31;
 
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
