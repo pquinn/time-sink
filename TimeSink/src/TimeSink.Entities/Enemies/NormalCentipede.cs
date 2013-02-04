@@ -32,6 +32,14 @@ namespace TimeSink.Entities.Enemies
         const string CENTIPEDE_DEATH = "Audio/Sounds/CentipedeDeath";
 
         const float DEPTH = -50f;
+        NewAnimationRendering anim = 
+            new NewAnimationRendering(CENTIPEDE_WALK_LEFT, new Vector2(256f, 128f), 2, Vector2.Zero, 0, new Vector2(.5f, .5f), Color.White) 
+            { 
+                DepthWithinLayer = DEPTH
+            };
+        float animTimer = 0f;
+        float animInterval = 100f;
+
 
         private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");
 
@@ -73,15 +81,10 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                var tint = Math.Min(100, 2.55f * health);
-                return new BasicRendering(CENTIPEDE_TEXTURE)
-                {
-                    Position = PhysicsConstants.MetersToPixels(Position),
-                    Rotation = angle,
-                    Scale = new Vector2(PatrolDirection.X > 0 ? -1 : 1, 1),
-                    TintColor = new Color(255f, tint, tint, 255f),
-                    DepthWithinLayer = DEPTH
-                };
+                anim.Scale *= new Vector2(PatrolDirection.X > 0 ? -1 : 1, 1);
+                anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                anim.Rotation = angle;
+                return anim;
             }
         }
 
@@ -126,6 +129,8 @@ namespace TimeSink.Entities.Enemies
         
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+
+            animTimer += (float)time.ElapsedGameTime.TotalMilliseconds;
             base.OnUpdate(time, world);
 
             if (!collided.Any())
@@ -145,18 +150,23 @@ namespace TimeSink.Entities.Enemies
                 if (generalDirection == -1)
                     angle += (float)Math.PI;
             }
+            if (animTimer >= animInterval)
+            {
+                anim.CurrentFrame = (anim.CurrentFrame + 1) % anim.NumFrames;
+                animTimer = 0f;
+            }
         }
 
         public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-            textureCache.LoadResource(CENTIPEDE_TEXTURE);
+            textureCache.LoadResource(CENTIPEDE_WALK_LEFT);
 
         }
 
         protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
         {
-            return textureCache.GetResource(CENTIPEDE_TEXTURE);
+            return textureCache.GetResource(CENTIPEDE_WALK_LEFT);
         }
 
         private bool pinitialized;
@@ -212,7 +222,7 @@ namespace TimeSink.Entities.Enemies
                 var texture = GetTexture(textureCache);
                 var width = PhysicsConstants.PixelsToMeters(texture.Width);
                 var interval = new Vector2(width / (numSegments + 1), 0);
-                var wheelRadius = PhysicsConstants.PixelsToMeters(texture.Height) / 2;
+                var wheelRadius = PhysicsConstants.PixelsToMeters(texture.Height / 2) / 2;
                 var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
 
                 centipedeDeath = soundCache.LoadResource(CENTIPEDE_DEATH);

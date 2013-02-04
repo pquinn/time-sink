@@ -12,9 +12,10 @@ namespace Engine.Defaults
 {
     public class ItemPopup : IRenderable
     {
-        const int ITEM_SIZE = 30;
+        const int ITEM_SIZE = 40;
         private Vector2 position;
         private string texture;
+        public Vector2 OffSet { get; set; }
         private float DEPTH = -200;
         private IResourceCache<Texture2D> textureCache;
 
@@ -22,7 +23,16 @@ namespace Engine.Defaults
         {
             this.texture = texture;
             this.position = position;
-            this.textureCache = textureCache;
+            this.textureCache = textureCache;            
+            OffSet = Vector2.Zero;
+        }
+
+        public ItemPopup(string texture, Vector2 position, IResourceCache<Texture2D> textureCache, Vector2 offSet)
+        {
+            this.texture = texture;
+            this.position = position;            
+            this.textureCache = textureCache;    
+            OffSet = offSet;
         }
 
         public IRendering Rendering
@@ -36,6 +46,11 @@ namespace Engine.Defaults
                     DepthWithinLayer = DEPTH
                 };
             }
+        }
+
+        public void SetPos(Vector2 newPos)
+        {
+            this.position = newPos;
         }
 
         public string EditorName
