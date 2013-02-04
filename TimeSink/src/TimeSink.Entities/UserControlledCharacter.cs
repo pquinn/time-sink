@@ -174,7 +174,7 @@ namespace TimeSink.Entities
         private Ladder canClimb = null;
         private bool climbing = false;
         private PlaceTorchTrigger onTorchGround;
-        public Torch HoldingTorch {get; set;}
+        public Torch HoldingTorch { get; set; }
         private World _world;
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
@@ -184,7 +184,7 @@ namespace TimeSink.Entities
         private Joint vineAttachment;
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
-        public bool Climbing {get {return climbing;} set {climbing = value;}}
+        public bool Climbing { get { return climbing; } set { climbing = value; } }
 
         private bool manaRegenEnabled = true;
         private const float MANA_REGEN_RATE = .2f; //percent/sec
@@ -253,10 +253,10 @@ namespace TimeSink.Entities
         // not sure if these should be public
         private Vector2 direction;
         [SerializableField]
-        public  Vector2 Direction
+        public Vector2 Direction
         {
             get { return direction; }
-             set { direction = value; }
+            set { direction = value; }
         }
         private double holdTime;
         [SerializableField]
@@ -267,7 +267,7 @@ namespace TimeSink.Entities
         }
         private bool inHold;
         [SerializableField]
-        public  bool InHold
+        public bool InHold
         {
             get { return inHold; }
             set { inHold = value; }
@@ -345,7 +345,7 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
-            
+
             shieldDamager = new ShieldDamageQueue(this);
 
             slideTriggers = new HashSet<SlideTrigger>();
@@ -441,29 +441,29 @@ namespace TimeSink.Entities
 
             if (!chargingWeapon)
             {
-            //    if (Mana > 0)
-            //    {
-            //        var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //        var manaCost = chargeAmt * CHARGE_MANA_COST;
-            //        //if (manaCost > Mana)
-            //        //{
-            //        //    chargeAmt *= Mana / manaCost;
-            //        //}
-            //        var newChargePercent = chargePercent + chargeAmt;
-            //        if (newChargePercent > 1)
-            //        {
-            //            chargePercent = 1;
-            //            //manaCost /= newChargePercent;
-            //        }
-            //        else
-            //        {
-            //            chargePercent += chargeAmt;
-            //        }
-            //        //Mana -= manaCost;
-            //    }
-            //}
-            //else
-            //{
+                //    if (Mana > 0)
+                //    {
+                //        var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //        var manaCost = chargeAmt * CHARGE_MANA_COST;
+                //        //if (manaCost > Mana)
+                //        //{
+                //        //    chargeAmt *= Mana / manaCost;
+                //        //}
+                //        var newChargePercent = chargePercent + chargeAmt;
+                //        if (newChargePercent > 1)
+                //        {
+                //            chargePercent = 1;
+                //            //manaCost /= newChargePercent;
+                //        }
+                //        else
+                //        {
+                //            chargePercent += chargeAmt;
+                //        }
+                //        //Mana -= manaCost;
+                //    }
+                //}
+                //else
+                //{
                 if (mana < MAX_MANA)
                     Mana += .5f * (float)gameTime.ElapsedGameTime.TotalMilliseconds; //Recharge
             }
@@ -765,11 +765,11 @@ namespace TimeSink.Entities
                         currentState = BodyStates.ClimbingRight;
                     else
                         currentState = BodyStates.ClimbingLeft;
-                   /*
-                    var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
-                    Physics.Position += v;
-                    WheelBody.Position += v;
-                    */
+                    /*
+                     var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
+                     Physics.Position += v;
+                     WheelBody.Position += v;
+                     */
                     moveDirection.Y += 1.0f;
                     Physics.LinearDamping = 5f;
                 }
@@ -777,24 +777,24 @@ namespace TimeSink.Entities
                 //Sliding
                 else if (TouchingGround)
                 {
-                    
-                  if (DoorType == DoorType.Down)
+
+                    if (DoorType == DoorType.Down)
                     {
                         currentState = BodyStates.FacingForward;
                     }
-                  else if (TouchingGround && !inHold && !isDucking)
+                    else if (TouchingGround && !inHold && !isDucking)
                     {
                         isDucking = true;
 
                         var pos = Physics.Position;
-                        
+
                         Physics.Dispose();
                         _world.RemoveJoint(MotorJoint);
 
                         float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                         float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
-                        
+
 
                         Physics = BodyFactory.CreateBody(_world);
                         var r = FixtureFactory.AttachRectangle(
@@ -850,10 +850,10 @@ namespace TimeSink.Entities
 
 
             else if (isDucking)
-                {
-                    ReRegisterPhysics();
-                    isDucking = false;
-                }
+            {
+                ReRegisterPhysics();
+                isDucking = false;
+            }
 
             #endregion
 
@@ -974,16 +974,16 @@ namespace TimeSink.Entities
                     {
                         if (canClimb.Sideways)
                         {
-                         /*   if (RightFacingBodyState())
-                                currentState = BodyStates.ClimbingRight; //TODO -- Change to sideways climb state
-                            else if (LeftFacingBodyState())
-                                currentState = BodyStates.ClimbingLeft;*/
+                            /*   if (RightFacingBodyState())
+                                   currentState = BodyStates.ClimbingRight; //TODO -- Change to sideways climb state
+                               else if (LeftFacingBodyState())
+                                   currentState = BodyStates.ClimbingLeft;*/
 
 
                             if (Physics.Position.X >= canClimb.Position.X) //We are to the right of the ladder
                             {
                                 currentState = BodyStates.ClimbingLeft;
-                                Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) + 
+                                Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
 
@@ -996,7 +996,7 @@ namespace TimeSink.Entities
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
                             {
                                 currentState = BodyStates.ClimbingRight;
-                                Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) - 
+                                Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                Physics.Position.Y);
                                 WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
@@ -1029,7 +1029,7 @@ namespace TimeSink.Entities
                                                        WheelBody.Position.Y);
                         moveDirection.Y -= 1.0f;
                         Physics.LinearDamping = 5f;
-                    }                    
+                    }
                 }
                 else if (DoorType == DoorType.Up)
                 {
@@ -1051,7 +1051,7 @@ namespace TimeSink.Entities
                         : isDucking
                             ? BodyStates.DuckShootRightBow
                             : BodyStates.ShootingArrowRight;
-                    
+
                     //currentState = BodyStates.ShootingRight;
                     holdTime = gameTime.TotalGameTime.TotalSeconds;
                     inHold = true;
@@ -1107,7 +1107,7 @@ namespace TimeSink.Entities
                         HoldingTorch = (Torch)onPickup;
                         onPickup = null;
                         EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
-                        
+
                     }
                 }
                 else if (onTorchGround != null && HoldingTorch != null)
@@ -1121,7 +1121,7 @@ namespace TimeSink.Entities
                 }
             }
             //No keys are pressed and we're on the ground, we're neutral
-            if(keyboard.GetPressedKeys().GetLength(0) == 0)
+            if (keyboard.GetPressedKeys().GetLength(0) == 0)
             {
                 if (TouchingGround && timer >= interval)
                 {
@@ -1268,8 +1268,8 @@ namespace TimeSink.Entities
 
             float desiredVel = 0;
 
-            MoveDirection d = dir <= 0 
-                ? MoveDirection.Left 
+            MoveDirection d = dir <= 0
+                ? MoveDirection.Left
                 : MoveDirection.Right;
 
             x_vel *= Math.Abs(dir);
@@ -1616,8 +1616,8 @@ namespace TimeSink.Entities
             {
                 var climbing = animations[BodyStates.ClimbingBack];
 
-                    climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
-                 timer = 0f;
+                climbing.CurrentFrame = (climbing.CurrentFrame + 1) % climbing.NumFrames;
+                timer = 0f;
             }
             if (currentState == BodyStates.KnockbackRight && timer >= interval)
             {
@@ -1726,11 +1726,11 @@ namespace TimeSink.Entities
         bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
         {
             OnPickup = torch;
-            currentItemPrompt = new ItemPopup("Textures/Keys/e-Key", torch.Physics.Position - 
+            currentItemPrompt = new ItemPopup("Textures/Keys/e-Key", torch.Physics.Position -
                                               new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2));
 
             EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
-            
+
             return true;
         }
         void OnSeparation(Fixture f1, Torch torch, Fixture f2)
@@ -1738,7 +1738,7 @@ namespace TimeSink.Entities
             OnPickup = null;
             EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
         }
-        
+
         private VineBridge vineBridge;
         bool OnCollidedWith(Fixture f, VineBridge bridge, Fixture vbf, Contact info)
         {
@@ -1765,9 +1765,9 @@ namespace TimeSink.Entities
 
             if (!Invulnerable)
             {
-              /*  this.RegisterDot(bramble.dot);
-                bramble.dot.Active = true;
-                return true;*/
+                /*  this.RegisterDot(bramble.dot);
+                  bramble.dot.Active = true;
+                  return true;*/
                 TakeDamage(10);
                 return true;
             }
@@ -1828,7 +1828,7 @@ namespace TimeSink.Entities
                 {
                     anim.UpdateTint(new Color(0, 0, 0, 0));
                 }
-                else if(damageFlash)
+                else if (damageFlash)
                 {
                     anim.UpdateTint(new Color(255f, 0, 0, .5f));
                 }
@@ -2462,7 +2462,7 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingShoot2Left ||
                     currentState == BodyStates.WalkingShoot3Left ||
                     currentState == BodyStates.ShootingArrowLeft ||
-                    currentState == BodyStates.ShootingArrowNeutLeft||
+                    currentState == BodyStates.ShootingArrowNeutLeft ||
                     currentState == BodyStates.RunningLeft ||
                     currentState == BodyStates.NeutralLeft ||
                     currentState == BodyStates.IdleLeftOpen ||
@@ -2547,7 +2547,7 @@ namespace TimeSink.Entities
                     1.4f,
                     new Vector2(0, -spriteWidthMeters / 4),
                     Physics);
-                
+
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
@@ -2593,7 +2593,7 @@ namespace TimeSink.Entities
                 WheelBody.BodyType = BodyType.Dynamic;
                 WheelBody.Friction = 10.0f;
                 Physics.IsBullet = true;
-                
+
                 RopeAttachHeight = -4 * (PhysicsConstants.PixelsToMeters(Height) / 9);
 
                 var ropeSensor = FixtureFactory.AttachCircle(
