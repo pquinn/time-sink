@@ -306,6 +306,10 @@ namespace TimeSink.Entities
         float totalSprintingTime = 0f;
         #endregion
 
+        /// <summary>
+        /// Can the character slide?
+        /// </summary>
+        public bool CanSlide { get { return slideTriggers.Any(); } }
 
         public override List<Fixture> CollisionGeometry
         {
@@ -343,6 +347,8 @@ namespace TimeSink.Entities
             Dots = new HashSet<DamageOverTimeEffect>();
             
             shieldDamager = new ShieldDamageQueue(this);
+
+            slideTriggers = new HashSet<SlideTrigger>();
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -2761,6 +2767,29 @@ namespace TimeSink.Entities
             Physics.RegisterOnSeparatedListener<Bramble>(OnSeparation);
             r.RegisterOnCollidedListener<Torch>(OnCollidedWith);
             r.RegisterOnSeparatedListener<Torch>(OnSeparation);
+        }
+
+        HashSet<SlideTrigger> slideTriggers;
+
+        public void AddSlideTrigger(SlideTrigger st)
+        {
+            slideTriggers.Add(st);
+        }
+
+        public void RemoveSlideTrigger(SlideTrigger st)
+        {
+            if (slideTriggers.Remove(st) && !CanSlide)
+                StopSliding();
+        }
+
+        void StartSliding()
+        {
+
+        }
+
+        void StopSliding()
+        {
+
         }
     }
 }
