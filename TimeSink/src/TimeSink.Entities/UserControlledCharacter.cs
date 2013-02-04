@@ -176,6 +176,8 @@ namespace TimeSink.Entities
         private PlaceTorchTrigger onTorchGround;
         public Torch HoldingTorch {get; set;}
         private World _world;
+        private IList<ItemPopup> popups = new List<ItemPopup>();
+        public IList<ItemPopup> Popups { get { return popups; } set { popups = value; } }
         private IInventoryItem onPickup;
         public IInventoryItem OnPickup { get { return onPickup; } set { onPickup = value; } }
         public HashSet<DamageOverTimeEffect> Dots { get; set; }
@@ -922,39 +924,60 @@ namespace TimeSink.Entities
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
                     TouchingGround = false;
                     jumpToggleGuard = true;
+                    const float THRESHHOLD = 3;
+                    float playerTopLeft = Physics.Position.Y - PhysicsConstants.PixelsToMeters(Height / 2);
+                    float ladderTopLeft = canClimb.Position.Y - PhysicsConstants.PixelsToMeters(canClimb.Height / 2);
                     if (!canClimb.VineWall)
                     {
                         if (canClimb.Sideways)
                         {
-                         /*   if (RightFacingBodyState())
-                                currentState = BodyStates.ClimbingRight; //TODO -- Change to sideways climb state
-                            else if (LeftFacingBodyState())
-                                currentState = BodyStates.ClimbingLeft;*/
+                            //We are to the right of the ladder
 
-
-                            if (Physics.Position.X >= canClimb.Position.X) //We are to the right of the ladder
+                            if ( playerTopLeft >= ladderTopLeft)
                             {
-                                currentState = BodyStates.ClimbingLeft;
-                                Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) + 
-                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                               Physics.Position.Y);
+                                if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD))
+                                {
+                                    //do nothing;
+                                }
+                                else if (Physics.Position.X >= canClimb.Position.X)
+                                {
+                                    currentState = BodyStates.ClimbingLeft;
+                                    Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
+                                                                                         (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                   Physics.Position.Y);
 
-                                WheelBody.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
-                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                               WheelBody.Position.Y);
-                                movedirection.Y -= 1.0f;
-                                Physics.LinearDamping = 5f;
+                                    WheelBody.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
+                                                                                         (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                   WheelBody.Position.Y);
+                                    movedirection.Y -= 1.0f;
+                                    Physics.LinearDamping = 10f;
+                                }
+                                //We are to the left of the ladder
+                                else if (Physics.Position.X < canClimb.Position.X)
+                                {
+                                    currentState = BodyStates.ClimbingRight;
+                                    Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
+                                                                                         (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                   Physics.Position.Y);
+                                    WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
+                                                                                         (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                   WheelBody.Position.Y);
+                                    movedirection.Y -= 1.0f;
+                                    Physics.LinearDamping = 10f;
+                                }
                             }
-                            else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
+
+                            else
                             {
-                                currentState = BodyStates.ClimbingRight;
-                                Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) - 
-                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                               Physics.Position.Y);
-                                WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
-                                                                                     (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                               WheelBody.Position.Y);
-                                movedirection.Y -= 1.0f;
+                                if(RightFacingBodyState())
+                                {
+                                    currentState = BodyStates.ClimbingRight;
+                                }
+                                else if (LeftFacingBodyState())
+                                {
+                                    currentState = BodyStates.ClimbingLeft;
+                                }
+                                movedirection.Y += 1.0f;
                                 Physics.LinearDamping = 5f;
                             }
                         }
@@ -1797,6 +1820,19 @@ namespace TimeSink.Entities
                     anim.UpdateTint(Color.White);
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 anim.Rotation = Physics.Rotation;
+                if (Popups.Count != 0)
+                {
+                    var stack = new Stack<IRendering>();
+                    foreach(ItemPopup i in Popups)
+                    {
+                        i.SetPos(Physics.Position);
+                        stack.Push(i.Rendering);
+                    }
+
+                    stack.Push(anim);
+                    var ret = new StackableRendering(stack);
+                    return ret;
+                }
                 return anim;
             }
         }
@@ -2478,6 +2514,7 @@ namespace TimeSink.Entities
         public float RopeAttachHeight;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
+            const float SPRITE_OFFSET = 5;
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
@@ -2491,25 +2528,28 @@ namespace TimeSink.Entities
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 DoorType = DoorType.None;
 
-                var wPos = Position + new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2);
+                var wPos = Position + 
+                           new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2 + 
+                           PhysicsConstants.PixelsToMeters(SPRITE_OFFSET));
                 WheelBody = BodyFactory.CreateBody(world, wPos, this);
 
                 var r = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
                     spriteHeightMeters - spriteWidthMeters / 2,
                     1.4f,
-                    new Vector2(0, -spriteWidthMeters / 4),
+                    new Vector2(0, -spriteWidthMeters / 4 + PhysicsConstants.PixelsToMeters(SPRITE_OFFSET)),
                     Physics);
                 
                 var c = FixtureFactory.AttachCircle(
                     spriteWidthMeters / 2,
                     1.4f,
-                    WheelBody);
+                    WheelBody,
+                    new Vector2(0, 0));
                 var l = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
                     spriteHeightMeters,
                     1.4f,
-                    new Vector2(0, 0),
+                    new Vector2(0, PhysicsConstants.PixelsToMeters(SPRITE_OFFSET)),
                     Physics);
 
                 l.IsSensor = true;
@@ -2626,14 +2666,14 @@ namespace TimeSink.Entities
                 spriteWidthMeters,
                 spriteHeightMeters - spriteWidthMeters / 2,
                 1.4f,
-                new Vector2(0, -spriteWidthMeters / 4),
+                new Vector2(0, -spriteWidthMeters / 4 + PhysicsConstants.PixelsToMeters(5)),
                 Physics);
 
             var l = FixtureFactory.AttachRectangle(
                 spriteWidthMeters,
                 spriteHeightMeters,
                 1.4f,
-                new Vector2(0, 0),
+                new Vector2(0, 0 + PhysicsConstants.PixelsToMeters(5)),
                 Physics);
 
             l.IsSensor = true;
