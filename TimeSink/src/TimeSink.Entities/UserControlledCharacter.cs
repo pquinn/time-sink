@@ -791,8 +791,8 @@ namespace TimeSink.Entities
                     {
                         if (CanSlide)
                         {
-                            StartSliding(moveDirection.X >= 0 
-                                ? MoveDirection.Right 
+                            StartSliding(moveDirection.X >= 0
+                                ? MoveDirection.Right
                                 : MoveDirection.Left);
                         }
                         else
@@ -852,12 +852,17 @@ namespace TimeSink.Entities
                     }
                 }
             }
-
-
-            else if (isDucking)
+            else
             {
-                ReRegisterPhysics();
-                isDucking = false;
+                if (isDucking)
+                {
+                    ReRegisterPhysics();
+                    isDucking = false;
+                }
+                if (isSliding)
+                {
+                    StopSliding();
+                }
             }
 
             #endregion
@@ -1240,22 +1245,25 @@ namespace TimeSink.Entities
                 moveDirection.Normalize();
             }
 
-            // Increment animation unless idle.
-            if (amount != 0.0f)
+            if (!isSliding)
             {
-                // Rotate the player towards the controller direction.
-                playerRotation = (float)(Math.Atan2(moveDirection.Y, moveDirection.X) + Math.PI / 2.0);
-
-                if (!ClimbingState())
+                // Increment animation unless idle.
+                if (amount != 0.0f)
                 {
-                    // Move player based on the controller direction and time scale.
-                    //Physics.ApplyLinearImpulse(movedirection * amount);
-                    MovePlayer(moveDirection.X);
-                }
-                else
-                    Physics.ApplyLinearImpulse(moveDirection * climbAmount);
+                    // Rotate the player towards the controller direction.
+                    playerRotation = (float)(Math.Atan2(moveDirection.Y, moveDirection.X) + Math.PI / 2.0);
 
-                MotorJoint.MotorSpeed = moveDirection.X * 10;
+                    if (!ClimbingState())
+                    {
+                        // Move player based on the controller direction and time scale.
+                        //Physics.ApplyLinearImpulse(movedirection * amount);
+                        MovePlayer(moveDirection.X);
+                    }
+                    else
+                        Physics.ApplyLinearImpulse(moveDirection * climbAmount);
+
+                    MotorJoint.MotorSpeed = moveDirection.X * 10;
+                }
             }
 
             //ClampVelocity();
@@ -2826,14 +2834,16 @@ namespace TimeSink.Entities
         void StartSliding(MoveDirection dir)
         {
             MotorJoint.MotorSpeed = dir == MoveDirection.Right
-                ? 50
-                : -50;
+                ? 75
+                : -75;
+            WheelBody.Friction = Single.MaxValue;
             isSliding = true;
         }
 
         void StopSliding()
         {
             MotorJoint.MotorSpeed = 0;
+            WheelBody.Friction = 5f;
             isSliding = false;
         }
     }
