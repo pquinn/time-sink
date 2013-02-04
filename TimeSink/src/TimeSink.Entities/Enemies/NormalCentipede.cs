@@ -46,8 +46,6 @@ namespace TimeSink.Entities.Enemies
         new private static int textureHeight;
         new private static int textureWidth;
 
-        public Func<float, Vector2> PatrolFunction { get; private set; }
-
         public NormalCentipede()
             : this(Vector2.Zero, Vector2.Zero)
         {
@@ -60,9 +58,18 @@ namespace TimeSink.Entities.Enemies
 
         }
 
+        private Vector2 patrolDirection;
         [EditableField("Patrol Direction")]
         [SerializableField]
-        public Vector2 PatrolDirection { get; set; }
+        public Vector2 PatrolDirection 
+        {
+            get { return patrolDirection; }
+            set
+            {
+                anim.Scale *= new Vector2(value.X > 0 ? -1 : 1, 1);
+                patrolDirection = value;
+            }
+        }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -81,7 +88,6 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                anim.Scale *= new Vector2(PatrolDirection.X > 0 ? -1 : 1, 1);
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 anim.Rotation = angle;
                 return anim;
@@ -124,7 +130,6 @@ namespace TimeSink.Entities.Enemies
         private Vector2 xDirectionCast = new Vector2(.1f, 0);
         private Vector2 yDirectionCast = new Vector2(0, .25f);
         private SoundEffect centipedeDeath;
-        private bool initialized = false;
         private bool needToTurnDown;
         
         public override void OnUpdate(GameTime time, EngineGame world)
@@ -169,8 +174,6 @@ namespace TimeSink.Entities.Enemies
             return textureCache.GetResource(CENTIPEDE_WALK_LEFT);
         }
 
-        private bool pinitialized;
-
         private const int numSegments = 1;
         private List<Body> anchors = new List<Body>();
         private HashSet<Body> allBodies = new HashSet<Body>();
@@ -213,7 +216,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            if (force || !pinitialized)
+            if (force || !initialized)
             {
                 var direction = PatrolDirection.X > 0 ? 1 : -1;
 
@@ -301,7 +304,7 @@ namespace TimeSink.Entities.Enemies
                     Physics = wheelBody;
                 }
 
-                pinitialized = true;
+                initialized = true;
             }
 
             base.InitializePhysics(false, engineRegistrations);
@@ -309,8 +312,8 @@ namespace TimeSink.Entities.Enemies
 
         public override void DestroyPhysics()
         {
-            if (!pinitialized) return;
-            pinitialized = false;
+            if (!initialized) return;
+            initialized = false;
             
             if(health <= 0)
                 centipedeDeath.Play();

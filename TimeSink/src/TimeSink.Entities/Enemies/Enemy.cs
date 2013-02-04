@@ -160,7 +160,7 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        private bool initialized;
+        protected bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)

@@ -95,7 +95,6 @@ namespace TimeSink.Entities.Enemies
             world.LevelManager.RegisterEntity(largeBullet);            
         }
 
-        private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)

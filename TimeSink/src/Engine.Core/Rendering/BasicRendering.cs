@@ -33,9 +33,6 @@ namespace TimeSink.Engine.Core.Rendering
         public Rectangle? SrcRectangle { get; set; }
         public Color TintColor { get; set; }
 
-        public Stack<IRendering> Children { get; set; }
-
-
         private float depthClamp;
         public float DepthWithinLayer { get; set; }
 
