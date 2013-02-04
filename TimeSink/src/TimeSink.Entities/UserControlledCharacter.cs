@@ -499,6 +499,9 @@ namespace TimeSink.Entities
             {
                 totalSprintingTime += gameTime.ElapsedGameTime.Milliseconds;
             }
+
+            if (inSlide && !CanSlide)
+                StopSliding();    
         }
 
         private void RemoveInactiveDots()
@@ -784,68 +787,68 @@ namespace TimeSink.Entities
                     }
                     else if (TouchingGround && !inHold && !isDucking)
                     {
-                        isDucking = true;
-
-                        var pos = Physics.Position;
-
-                        Physics.Dispose();
-                        _world.RemoveJoint(MotorJoint);
-
-                        float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                        float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
-
-
-
-                        Physics = BodyFactory.CreateBody(_world);
-                        var r = FixtureFactory.AttachRectangle(
-                            PhysicsConstants.PixelsToMeters(Width),
-                            PhysicsConstants.PixelsToMeters(Height / 2),
-                            1.4f,
-                            new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
-                            Physics);
-
-
-
-                        r.CollidesWith = Category.Cat1 | ~Category.Cat31;
-                        r.CollisionCategories = Category.Cat3;
-                        r.UserData = "Rectangle";
-                        r.Shape.Density = 7;
-
-                        Physics.FixedRotation = true;
-                        Physics.Position = pos;
-                        Physics.BodyType = BodyType.Dynamic;
-                        Physics.Friction = 10.0f;
-                        Physics.IsBullet = true;
-
-                        MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
-                        MotorJoint.MotorEnabled = true;
-                        MotorJoint.MaxMotorTorque = 10;
-
-                        if (LeftFacingBodyState())
+                        if (CanSlide)
                         {
-                            if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
-                            {
-                                currentState = BodyStates.DuckingLeftBow;
-                            }
-                            else
-                                currentState = BodyStates.DuckingLeft;
+                            StartSliding(moveDirection.X >= 0 
+                                ? MoveDirection.Right 
+                                : MoveDirection.Left);
                         }
                         else
                         {
-                            if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                            isDucking = true;
+
+                            var pos = Physics.Position;
+
+                            Physics.Dispose();
+                            _world.RemoveJoint(MotorJoint);
+
+                            float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                            float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                            Physics = BodyFactory.CreateBody(_world);
+                            var r = FixtureFactory.AttachRectangle(
+                                PhysicsConstants.PixelsToMeters(Width),
+                                PhysicsConstants.PixelsToMeters(Height / 2),
+                                1.4f,
+                                new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
+                                Physics);
+
+                            r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                            r.CollisionCategories = Category.Cat3;
+                            r.UserData = "Rectangle";
+                            r.Shape.Density = 7;
+
+                            Physics.FixedRotation = true;
+                            Physics.Position = pos;
+                            Physics.BodyType = BodyType.Dynamic;
+                            Physics.Friction = 10.0f;
+                            Physics.IsBullet = true;
+
+                            MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+                            MotorJoint.MotorEnabled = true;
+                            MotorJoint.MaxMotorTorque = 10;
+
+                            if (LeftFacingBodyState())
                             {
-                                currentState = BodyStates.DuckingRightBow;
+                                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                                {
+                                    currentState = BodyStates.DuckingLeftBow;
+                                }
+                                else
+                                    currentState = BodyStates.DuckingLeft;
                             }
                             else
-                                currentState = BodyStates.DuckingRight;
+                            {
+                                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                                {
+                                    currentState = BodyStates.DuckingRightBow;
+                                }
+                                else
+                                    currentState = BodyStates.DuckingRight;
+                            }
                         }
                     }
-                    /*
-                    Physics.Friction = WheelBody.Friction = .1f;
-                    WheelBody.ApplyLinearImpulse(new Vector2(0, 20));
-                     * */
                 }
-
             }
 
 
@@ -2771,6 +2774,8 @@ namespace TimeSink.Entities
 
         HashSet<SlideTrigger> slideTriggers;
 
+        private bool inSlide;
+
         public void AddSlideTrigger(SlideTrigger st)
         {
             slideTriggers.Add(st);
@@ -2782,14 +2787,18 @@ namespace TimeSink.Entities
                 StopSliding();
         }
 
-        void StartSliding()
+        void StartSliding(MoveDirection dir)
         {
-
+            MotorJoint.MotorSpeed = dir == MoveDirection.Right
+                ? 50
+                : -50;
+            inSlide = true;
         }
 
         void StopSliding()
         {
-
+            MotorJoint.MotorSpeed = 0;
+            inSlide = false;
         }
     }
 }
