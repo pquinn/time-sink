@@ -502,7 +502,7 @@ namespace TimeSink.Entities
                 totalSprintingTime += gameTime.ElapsedGameTime.Milliseconds;
             }
 
-            if (inSlide && !CanSlide)
+            if (isSliding && !CanSlide)
                 StopSliding();    
         }
 
@@ -1711,15 +1711,6 @@ namespace TimeSink.Entities
             }
         }
 
-        //bool OnCollidedWith(Fixture f, WorldGeometry2 world, Fixture wf, Contact info)
-        //{
-        //    Vector2 normal;
-        //    FixedArray2<Vector2> points;
-        //    info.GetWorldManifold(out normal, out points);
-
-        //    return true;
-        //}
-
         bool OnCollidedWith(Fixture f, PlaceTorchTrigger torchGround, Fixture c, Contact info)
         {
             if (HoldingTorch != null)
@@ -2819,7 +2810,7 @@ namespace TimeSink.Entities
 
         HashSet<SlideTrigger> slideTriggers;
 
-        private bool inSlide;
+        private bool isSliding;
 
         public void AddSlideTrigger(SlideTrigger st)
         {
@@ -2837,13 +2828,13 @@ namespace TimeSink.Entities
             MotorJoint.MotorSpeed = dir == MoveDirection.Right
                 ? 50
                 : -50;
-            inSlide = true;
+            isSliding = true;
         }
 
         void StopSliding()
         {
             MotorJoint.MotorSpeed = 0;
-            inSlide = false;
+            isSliding = false;
         }
     }
 }
