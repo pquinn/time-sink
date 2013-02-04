@@ -2569,7 +2569,7 @@ namespace TimeSink.Entities
 
                 MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, WheelBody, Vector2.Zero);
                 MotorJoint.MotorEnabled = true;
-                MotorJoint.MaxMotorTorque = 10;
+                MotorJoint.MaxMotorTorque = 90;
 
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;
