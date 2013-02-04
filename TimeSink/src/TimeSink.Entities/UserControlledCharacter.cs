@@ -989,7 +989,7 @@ namespace TimeSink.Entities
                         {
                             //We are to the right of the ladder
 
-                            if ( playerTopLeft >= ladderTopLeft)
+                            if ( playerTopLeft >= ladderTopLeft || !canClimb.LimitedHeight)
                             {
                                 if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD) && canClimb.LimitedHeight)
                                 {
@@ -1023,7 +1023,7 @@ namespace TimeSink.Entities
                                 }
                             }
 
-                            else
+                            else if(canClimb.LimitedHeight)
                             {
                                 if(RightFacingBodyState())
                                 {
