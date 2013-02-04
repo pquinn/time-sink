@@ -14,6 +14,7 @@ namespace TimeSink.Engine.Core.Rendering
         {
             Parent = parent;
             Children = children;
+            RenderLayer = RenderLayer.Gameground;
         }
 
         public IRendering Parent { get; set; }
@@ -29,9 +30,9 @@ namespace TimeSink.Engine.Core.Rendering
             Parent.Draw(spriteBatch, cache, transform);
 
             var relativeTransform =
-                Matrix.CreateScale(new Vector3(Parent.Position.X, Parent.Position.Y, 1)) *
+                Matrix.CreateScale(new Vector3(Parent.Scale, 1)) *
                 Matrix.CreateRotationZ(Parent.Rotation) *
-                Matrix.CreateTranslation(Parent.Scale.X, Parent.Scale.Y, 0) *
+                Matrix.CreateTranslation(new Vector3(Parent.Position, 0)) *
                 transform;
 
             Children.ForEach(x => x.Draw(spriteBatch, cache, relativeTransform));

@@ -1869,14 +1869,13 @@ namespace TimeSink.Entities
                     var stack = new Stack<IRendering>();
                     foreach(ItemPopup i in Popups)
                     {
-                        i.SetPos(Physics.Position);
                         stack.Push(i.Rendering);
                     }
 
-                    stack.Push(anim);
-                    var ret = new StackableRendering(stack);
+                    var ret = new ParentedRendering(anim, stack);
                     return ret;
                 }
+
                 return anim;
             }
         }
