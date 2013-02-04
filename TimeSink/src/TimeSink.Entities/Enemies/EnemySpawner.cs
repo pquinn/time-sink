@@ -14,11 +14,15 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Inventory;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Enemies
 {
     public abstract class EnemySpawner<T> : Enemy where T : Enemy
     {
+        protected IResourceCache<Texture2D> cache;
+
         [EditableField("Spawn Interval (ms)")]
         [SerializableField]
         public float SpawnInterval { get; set; }
@@ -66,6 +70,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (force || !initialized)
             {
+                cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.BodyType = BodyType.Static;
@@ -81,6 +86,8 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

@@ -56,6 +56,86 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4000.PNG">
+      <Name>Centipede_Cave%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4001.PNG">
+      <Name>Centipede_Cave%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4002.PNG">
+      <Name>Centipede_Cave%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4003.PNG">
+      <Name>Centipede_Cave%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4010.PNG">
+      <Name>Centipede_Cave%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4011.PNG">
+      <Name>Centipede_Cave%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4012.PNG">
+      <Name>Centipede_Cave%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4013.PNG">
+      <Name>Centipede_Cave%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4020.PNG">
+      <Name>Centipede_Cave%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4021.PNG">
+      <Name>Centipede_Cave%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4022.PNG">
+      <Name>Centipede_Cave%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4023.PNG">
+      <Name>Centipede_Cave%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4030.PNG">
+      <Name>Centipede_Cave%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4031.PNG">
+      <Name>Centipede_Cave%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4032.PNG">
+      <Name>Centipede_Cave%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4033.PNG">
+      <Name>Centipede_Cave%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Levels\Centipede_Nests\Centipede_Nests%4000.PNG">
       <Name>Centipede_Nests%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -725,88 +805,6 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\Backward.png">
       <Name>Backward</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4000.PNG">
-      <Name>Centipede_Cave%4000</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4001.PNG">
-      <Name>Centipede_Cave%4001</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4002.PNG">
-      <Name>Centipede_Cave%4002</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4003.PNG">
-      <Name>Centipede_Cave%4003</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4010.PNG">
-      <Name>Centipede_Cave%4010</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4011.PNG">
-      <Name>Centipede_Cave%4011</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4012.PNG">
-      <Name>Centipede_Cave%4012</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4013.PNG">
-      <Name>Centipede_Cave%4013</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4020.PNG">
-      <Name>Centipede_Cave%4020</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4021.PNG">
-      <Name>Centipede_Cave%4021</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4022.PNG">
-      <Name>Centipede_Cave%4022</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4023.PNG">
-      <Name>Centipede_Cave%4023</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4030.PNG">
-      <Name>Centipede_Cave%4030</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4031.PNG">
-      <Name>Centipede_Cave%4031</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4032.PNG">
-      <Name>Centipede_Cave%4032</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Levels\Centipede_Cave\Centipede_Cave%4033.PNG">
-      <Name>Centipede_Cave%4033</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

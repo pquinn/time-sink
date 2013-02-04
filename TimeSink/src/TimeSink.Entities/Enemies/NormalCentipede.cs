@@ -78,6 +78,7 @@ namespace TimeSink.Entities.Enemies
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     Rotation = angle,
+                    Scale = new Vector2(PatrolDirection.X > 0 ? -1 : 1, 1),
                     TintColor = new Color(255f, tint, tint, 255f),
                     DepthWithinLayer = DEPTH
                 };
@@ -292,6 +293,8 @@ namespace TimeSink.Entities.Enemies
 
                 pinitialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

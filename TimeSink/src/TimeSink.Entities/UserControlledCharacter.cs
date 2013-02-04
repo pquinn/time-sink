@@ -1258,7 +1258,7 @@ namespace TimeSink.Entities
         private void PerformJump(float percentOfMax = 1)
         {
             jumpSound.Play();
-            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
+            Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
             jumpToggleGuard = false;
 
             if (facing > 0)
@@ -1660,7 +1660,7 @@ namespace TimeSink.Entities
             if (HoldingTorch != null)
             {
                 currentItemPrompt = new ItemPopup("Textures/Keys/e-Key",
-                                                    torchGround.Physics.Position);
+                                                    torchGround.Physics.Position, textureCache);
 
                 EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
             }
@@ -1687,8 +1687,10 @@ namespace TimeSink.Entities
         bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
         {
             OnPickup = torch;
-            currentItemPrompt = new ItemPopup("Textures/Keys/e-Key", torch.Physics.Position - 
-                                              new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2));
+            currentItemPrompt = new ItemPopup(
+                "Textures/Keys/e-Key", 
+                torch.Physics.Position - new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2),
+                textureCache);
 
             EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
             
@@ -2582,6 +2584,8 @@ namespace TimeSink.Entities
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

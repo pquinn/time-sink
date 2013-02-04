@@ -156,6 +156,8 @@ namespace TimeSink.Entities.Inventory
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

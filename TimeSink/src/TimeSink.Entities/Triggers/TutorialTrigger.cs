@@ -128,6 +128,8 @@ namespace TimeSink.Entities.Triggers
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)

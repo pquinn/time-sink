@@ -199,6 +199,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         protected virtual Texture2D GetTexture(IResourceCache<Texture2D> textureCache)

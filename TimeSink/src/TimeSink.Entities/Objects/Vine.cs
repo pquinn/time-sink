@@ -103,6 +103,8 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

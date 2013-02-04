@@ -15,12 +15,16 @@ using Autofac;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Engine.Core
 {
     public abstract class Entity
         : IPhysicsEnabledBody, IRenderable, IEditorPreviewable, IKeyboardControllable
     {
+        protected IResourceCache<Texture2D> textureCache;
+
         internal void Update(GameTime time, EngineGame world)
         {
             OnUpdate(time, world);
@@ -42,7 +46,10 @@ namespace TimeSink.Engine.Core
 
         public abstract string EditorName { get; }
 
-        public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) { }
+        public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) 
+        {
+            textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+        }
 
         public abstract Guid Id { get; set; }
 

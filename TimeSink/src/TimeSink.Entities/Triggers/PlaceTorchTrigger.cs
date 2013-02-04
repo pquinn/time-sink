@@ -85,6 +85,8 @@ namespace TimeSink.Entities.Triggers
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -102,7 +104,7 @@ namespace TimeSink.Entities.Triggers
                 return new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Size = new Vector2(Width, Height)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, textureCache)
                     };
             }
         }

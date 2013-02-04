@@ -132,6 +132,7 @@ namespace TimeSink.Entities.Actons
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -154,11 +155,17 @@ namespace TimeSink.Entities.Actons
 
                 if (DoorType == DoorType.Up)
                 {
-                    popup = new ItemPopup(UP_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                    popup = new ItemPopup(
+                        UP_POPUP, 
+                        Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)),
+                        cache);
                 }
                 else if (DoorType == DoorType.Down)
                 {
-                    popup = new ItemPopup(DOWN_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                    popup = new ItemPopup(
+                        DOWN_POPUP, 
+                        Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)),
+                        cache);
                 }
                 else
                 {
@@ -167,6 +174,8 @@ namespace TimeSink.Entities.Actons
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -213,7 +222,7 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(tex)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, tex, textureCache),
                     DepthWithinLayer = DEPTH,
                     TintColor = (DoorType == DoorType.Down) ? new Color(255, 255, 255, .5f) : Color.White
                 };
