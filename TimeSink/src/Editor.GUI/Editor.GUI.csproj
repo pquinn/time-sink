@@ -49,6 +49,7 @@
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -79,6 +80,9 @@
     <Compile Include="ViewModels\PopUpViewModel.cs" />
     <Compile Include="ViewModels\TileSelectorViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\DialogueEdit.xaml.cs">
+      <DependentUpon>DialogueEdit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EntityCreateWindow.xaml.cs">
       <DependentUpon>EntityCreateWindow.xaml</DependentUpon>
     </Compile>
@@ -108,6 +112,10 @@
     <Page Include="Views\Collisions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DialogueEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\EntityCreateWindow.xaml">
       <SubType>Designer</SubType>
@@ -203,6 +211,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

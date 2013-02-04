@@ -135,7 +135,7 @@ namespace TimeSink.Entities.Objects
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, textureCache)
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
                 };
             }
         }

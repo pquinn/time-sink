@@ -228,7 +228,7 @@ namespace TimeSink.Entities.Objects
                 return new BasicRendering(EDITOR_PREVIEW)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, textureCache),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache),
                     DepthWithinLayer = DEPTH
                 };
             }

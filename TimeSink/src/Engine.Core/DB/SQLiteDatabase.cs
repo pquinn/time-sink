@@ -130,7 +130,9 @@ namespace TimeSink.Engine.Core.DB
             }
             try
             {
-                this.ExecuteNonQuery(String.Format("update {0} set {1} where {2};", tableName, vals, where));
+                var qs = String.Format("UPDATE {0} SET {1} WHERE {2};", tableName, vals, where);
+                this.ExecuteNonQuery(qs);
+                Console.WriteLine(qs);
             }
             catch
             {
@@ -229,6 +231,11 @@ namespace TimeSink.Engine.Core.DB
             {
                 return false;
             }
+        }
+
+        public static string BooleanToDBValue(bool input)
+        {
+            return input ? "1" : "0";
         }
     }
 }

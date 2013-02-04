@@ -222,7 +222,7 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(tex)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, tex, textureCache),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, tex, TextureCache),
                     DepthWithinLayer = DEPTH,
                     TintColor = (DoorType == DoorType.Down) ? new Color(255, 255, 255, .5f) : Color.White
                 };

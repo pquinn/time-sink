@@ -179,7 +179,7 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, textureCache),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
                     DepthWithinLayer = DEPTH
                 };
             }

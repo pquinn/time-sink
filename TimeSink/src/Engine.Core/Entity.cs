@@ -23,8 +23,6 @@ namespace TimeSink.Engine.Core
     public abstract class Entity
         : IPhysicsEnabledBody, IRenderable, IEditorPreviewable, IKeyboardControllable
     {
-        protected IResourceCache<Texture2D> textureCache;
-
         internal void Update(GameTime time, EngineGame world)
         {
             OnUpdate(time, world);
@@ -48,7 +46,7 @@ namespace TimeSink.Engine.Core
 
         public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) 
         {
-            textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            TextureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
         }
 
         public abstract Guid Id { get; set; }
@@ -97,6 +95,9 @@ namespace TimeSink.Engine.Core
         {
             get;
         }
+
+        [XmlIgnore]
+        public IResourceCache<Texture2D> TextureCache { get; set; }
 
         [XmlIgnore]
         public abstract List<Fixture> CollisionGeometry
