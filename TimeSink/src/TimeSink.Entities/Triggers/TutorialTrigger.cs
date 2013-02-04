@@ -107,9 +107,9 @@ namespace TimeSink.Entities.Triggers
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
-                var cache = engineRegistrations.ResolveOptional<IResourceCache<Texture2D>>();
                 var texture = cache.GetResource(EDITOR_PREVIEW);
                 previewScale = new Vector2(Width / texture.Width, Height / texture.Height);
 
@@ -120,7 +120,7 @@ namespace TimeSink.Entities.Triggers
 
                 if (!Key2.Equals("blank"))
                 {
-                    display2 = new ItemPopup(Key2, Vector2.Zero, TextureCache, new Vector2(40, -90));
+                    display2 = new ItemPopup(Key2, Vector2.Zero, cache, new Vector2(40, -90));
                 }
                 //else
                 //{
@@ -128,7 +128,7 @@ namespace TimeSink.Entities.Triggers
 
                 //    display1 = new ItemPopup(Key1, Vector2.Zero, new Vector2(0, -90));
                 //}
-                display1 = new ItemPopup(Key1, Vector2.Zero, TextureCache, new Vector2(-40, -90));
+                display1 = new ItemPopup(Key1, Vector2.Zero, cache, new Vector2(-40, -90));
 
 
                 var rect = FixtureFactory.AttachRectangle(
