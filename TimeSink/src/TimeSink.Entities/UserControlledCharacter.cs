@@ -1330,9 +1330,10 @@ namespace TimeSink.Entities
 
         private void PerformJump(float percentOfMax = 1)
         {
+
+            jumpToggleGuard = false;
             jumpSound.Play();
             Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
-            jumpToggleGuard = false;
 
             if (facing > 0)
             {
