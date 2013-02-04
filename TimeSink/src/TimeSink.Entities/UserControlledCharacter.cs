@@ -282,7 +282,7 @@ namespace TimeSink.Entities
         float idleInterval = 2000f;
         float interval = 200f;
         float bowInterval = 150f;
-        float shotInterval = 500f;
+        float shotInterval = 1000f;
         int currentFrame = 0;
         int spriteWidth = 35;
         int spriteHeight = 130;
@@ -510,13 +510,14 @@ namespace TimeSink.Entities
         {
             sourceRect = new Rectangle(currentFrame * spriteWidth, 0, spriteWidth, spriteHeight);
             // Get the gamepad state.
-            var gamepadstate = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+            var gamepadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
 
             // Get the time scale since the last update call.
-            var timeframe = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var timeFrame = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var timeFrame_ms = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             var amount = 1f;
             var climbAmount = 6f;
-            var movedirection = new Vector2();
+            var moveDirection = new Vector2();
 
             // Grab the keyboard state.
             var keyboard = Keyboard.GetState();
@@ -525,14 +526,14 @@ namespace TimeSink.Entities
             var a = InputManager.Instance.Pressed(Keys.A);
 
             //Update the animation timer by the timeframe in milliseconds
-            timer += (timeframe * 1000);
-            shotTimer += (timeframe * 1000);
+            timer += timeFrame_ms;
+            shotTimer += timeFrame_ms;
             if (Invulnerable)
             {
-                invulnTimer += (timeframe * 1000);
+                invulnTimer += timeFrame_ms;
                 if (damageFlash)
                 {
-                    damageTimer += (timeframe * 1000);
+                    damageTimer += timeFrame_ms;
                 }
 
                 if ((int)invulnTimer % 10 == 0 && damageTimer == 0)
@@ -550,7 +551,7 @@ namespace TimeSink.Entities
             #region gamepad
             if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
             {
-                movedirection.X -= 1.0f;
+                moveDirection.X -= 1.0f;
                 if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
@@ -558,7 +559,7 @@ namespace TimeSink.Entities
             }
             if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
             {
-                movedirection.X += 1.0f;
+                moveDirection.X += 1.0f;
                 if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
@@ -566,7 +567,7 @@ namespace TimeSink.Entities
             }
             if (gamepad.ThumbSticks.Left.X != 0)
             {
-                movedirection.X += gamepad.ThumbSticks.Left.X;
+                moveDirection.X += gamepad.ThumbSticks.Left.X;
                 if (TouchingGround)
                 {
                     currentState = BodyStates.WalkingRight;
@@ -601,7 +602,7 @@ namespace TimeSink.Entities
 
                 if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
                 {
-                    movedirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
                     Physics.LinearDamping = 5f;
                 }
 
@@ -620,7 +621,7 @@ namespace TimeSink.Entities
                 else
                 {
                     if (!swinging || Physics.LinearVelocity.X <= 0)
-                        movedirection.X -= 1.0f;
+                        moveDirection.X -= 1.0f;
 
                     if (TouchingGround)
                     {
@@ -673,7 +674,7 @@ namespace TimeSink.Entities
 
                 if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
                 {
-                    movedirection.X += 1.0f;// Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                    moveDirection.X += 1.0f;// Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
                     Physics.LinearDamping = 5f;
                 }
                 else if (currentState == BodyStates.ClimbingBack)
@@ -691,7 +692,7 @@ namespace TimeSink.Entities
                 else
                 {
                     if (!swinging || Physics.LinearVelocity.X >= 0)
-                        movedirection.X += 1.0f;
+                        moveDirection.X += 1.0f;
 
                     if (TouchingGround)
                     {
@@ -763,7 +764,7 @@ namespace TimeSink.Entities
                     Physics.Position += v;
                     WheelBody.Position += v;
                     */
-                    movedirection.Y += 1.0f;
+                    moveDirection.Y += 1.0f;
                     Physics.LinearDamping = 5f;
                 }
                 #endregion
@@ -983,7 +984,7 @@ namespace TimeSink.Entities
                                 WheelBody.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                WheelBody.Position.Y);
-                                movedirection.Y -= 1.0f;
+                                moveDirection.Y -= 1.0f;
                                 Physics.LinearDamping = 5f;
                             }
                             else if (Physics.Position.X < canClimb.Position.X) //We are to the left of the ladder
@@ -995,7 +996,7 @@ namespace TimeSink.Entities
                                 WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
                                                                                      (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                WheelBody.Position.Y);
-                                movedirection.Y -= 1.0f;
+                                moveDirection.Y -= 1.0f;
                                 Physics.LinearDamping = 5f;
                             }
                         }
@@ -1008,7 +1009,7 @@ namespace TimeSink.Entities
 
                             WheelBody.Position = new Vector2(canClimb.Position.X,
                                                            WheelBody.Position.Y);
-                            movedirection.Y -= 1.0f;
+                            moveDirection.Y -= 1.0f;
                             Physics.LinearDamping = 5f;
                         }
                     }
@@ -1020,7 +1021,7 @@ namespace TimeSink.Entities
 
                         WheelBody.Position = new Vector2(WheelBody.Position.X,
                                                        WheelBody.Position.Y);
-                        movedirection.Y -= 1.0f;
+                        moveDirection.Y -= 1.0f;
                         Physics.LinearDamping = 5f;
                     }                    
                 }
@@ -1035,23 +1036,16 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                if (shotTimer >= shotInterval && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
-                    if (facing == -1)
-                        if (isDucking)
-                        {
-                            currentState = BodyStates.DuckShootLeftBow;
-                        }
-                        else
-                            currentState = BodyStates.ShootingArrowLeft;
-                    else
-
-                        if (isDucking)
-                        {
-                            currentState = BodyStates.DuckShootRightBow;
-                        }
-                        else
-                            currentState = BodyStates.ShootingArrowRight;
+                    currentState = facing == -1
+                        ? isDucking
+                            ? BodyStates.DuckShootLeftBow
+                            : BodyStates.ShootingArrowLeft
+                        : isDucking
+                            ? BodyStates.DuckShootRightBow
+                            : BodyStates.ShootingArrowRight;
+                    
                     //currentState = BodyStates.ShootingRight;
                     holdTime = gameTime.TotalGameTime.TotalSeconds;
                     inHold = true;
@@ -1060,31 +1054,25 @@ namespace TimeSink.Entities
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
-                    (shotTimer >= shotInterval) && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                    shotTimer >= shotInterval && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
                     arrowSound.Play();
                     inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
                     if (chargingWeapon)
                         Mana -= 50; //TODO: constant? per-weapon? calc?
                     var shooting = animations[currentState].CurrentFrame = 0;
-                    if (facing == -1)
-                    {
-                        if (isDucking)
-                        {
-                            currentState = BodyStates.DuckingLeftBow;
-                        }
-                        else
-                            currentState = BodyStates.ShootingArrowNeutLeft;
-                    }
-                    else
-                        if (isDucking)
-                        {
-                            currentState = BodyStates.DuckingRightBow;
-                        }
-                        else
-                            currentState = BodyStates.ShootingArrowNeutRight;
-                    shotTimer = 0f;
+
+                    currentState = facing == -1
+                        ? isDucking
+                            ? BodyStates.DuckingLeftBow
+                            : BodyStates.ShootingArrowNeutLeft
+                        : isDucking
+                            ? BodyStates.DuckingRightBow
+                            : BodyStates.ShootingArrowNeutRight;
                 }
+
+                inHold = false;
+                shotTimer = 0f;
             }
 
             if (InputManager.Instance.IsNewKey(Keys.G))
@@ -1214,28 +1202,28 @@ namespace TimeSink.Entities
                 }
             }
 
-            if (movedirection != Vector2.Zero)
+            if (moveDirection != Vector2.Zero)
             {
                 // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-                movedirection.Normalize();
+                moveDirection.Normalize();
             }
 
             // Increment animation unless idle.
             if (amount != 0.0f)
             {
                 // Rotate the player towards the controller direction.
-                playerRotation = (float)(Math.Atan2(movedirection.Y, movedirection.X) + Math.PI / 2.0);
+                playerRotation = (float)(Math.Atan2(moveDirection.Y, moveDirection.X) + Math.PI / 2.0);
 
                 if (!ClimbingState())
                 {
                     // Move player based on the controller direction and time scale.
                     //Physics.ApplyLinearImpulse(movedirection * amount);
-                    MovePlayer(movedirection.X);
+                    MovePlayer(moveDirection.X);
                 }
                 else
-                    Physics.ApplyLinearImpulse(movedirection * climbAmount);
+                    Physics.ApplyLinearImpulse(moveDirection * climbAmount);
 
-                MotorJoint.MotorSpeed = movedirection.X * 10;
+                MotorJoint.MotorSpeed = moveDirection.X * 10;
             }
 
             //ClampVelocity();
