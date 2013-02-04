@@ -99,24 +99,14 @@ namespace TimeSink.Entities.Enemies
         {
             base.OnUpdate(time, world);
 
-            if (first)
-            {
-                tZero = (float)time.TotalGameTime.TotalSeconds;
-                first = false;
-            }
+            var transform = StartPosition - EndPosition;
 
-            float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
-            var stepAmt = currentStep / TimeSpan;
-            var dir = Math.Sin(stepAmt * 2 * Math.PI);
-            var offset = EndPosition - StartPosition;
-            var len = offset.Length();
-            offset.Normalize();
-            if (dir > 0)
-                Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else if (dir < 0)
-                Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else
-                Physics.LinearVelocity = Vector2.Zero;
+            var timeScale = Math.PI * 2 / TimeSpan;
+            var theta = timeScale * time.TotalGameTime.TotalSeconds;
+
+            var targetPosition = StartPosition + transform * (-.5f * (float)Math.Cos(theta) - .5f) * Vector2.One;
+
+            Physics.LinearVelocity = (targetPosition - Position) / (float)time.ElapsedGameTime.TotalSeconds;
         }
 
         public override void Load(IComponentContext engineRegistrations)

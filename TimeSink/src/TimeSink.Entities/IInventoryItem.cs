@@ -9,6 +9,6 @@ namespace TimeSink.Entities
 {
     public interface IInventoryItem : IMenuItem
     {
-        void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime);
+        void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged);
     }
 }

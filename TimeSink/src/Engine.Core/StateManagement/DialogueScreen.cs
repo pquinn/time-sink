@@ -145,6 +145,7 @@ namespace TimeSink.Engine.Core.StateManagement
             if (openingPrompt.Prompt.ResponseRequired)
             {
                 openingPrompt.Responses = openingPrompt.FindResponses(id);
+                openingPrompt.AttachResponseEvents();
             }
             else
             {
@@ -215,7 +216,13 @@ namespace TimeSink.Engine.Core.StateManagement
                 }
 
                 Boolean responseRequired = (Boolean)result["response"];
+
                 NPCPrompt prompt = new NPCPrompt(id, speaker, body, promptActions, responseRequired);
+
+                if (responseRequired)
+                {
+                    prompt.Responses = FindResponses(id);
+                }
                 return prompt;
 
             }
@@ -283,12 +290,6 @@ namespace TimeSink.Engine.Core.StateManagement
                 error += e.Message.ToString() + "\n";
                 Console.WriteLine(error);
                 responses.Add(new Response("error: " + error, new Guid()));
-            }
-
-            // attach event handlers
-            foreach (Response response in responses)
-            {
-                response.Selected += ResponseSelected;
             }
 
             return responses;
@@ -375,6 +376,13 @@ namespace TimeSink.Engine.Core.StateManagement
 
         #endregion
 
+        void AttachResponseEvents()
+        {
+            foreach (Response response in Responses)
+            {
+                response.Selected += ResponseSelected;
+            }
+        }
 
         #region Update and Draw
 
