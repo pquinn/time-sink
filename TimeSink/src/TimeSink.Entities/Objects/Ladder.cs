@@ -40,17 +40,18 @@ namespace TimeSink.Entities.Objects
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
         public Ladder()
-            : this(Vector2.Zero, 75, 200, true, false)
+            : this(Vector2.Zero, 75, 200, true, false, true)
         {
         }
 
-        public Ladder(Vector2 position, int width, int height, bool sideways, bool vinewall)
+        public Ladder(Vector2 position, int width, int height, bool sideways, bool vinewall, bool limitedheight)
         {
             Position = position;
             this.Width = width;
             this.Height = height;
             this.Sideways = sideways;
             this.VineWall = vinewall;
+            this.LimitedHeight = limitedheight;
         }
 
         public override string EditorName
@@ -76,6 +77,10 @@ namespace TimeSink.Entities.Objects
         [SerializableField]
         [EditableField("VineWall")]
         public bool VineWall { get; set; }
+
+        [SerializableField]
+        [EditableField("LimitedHeight")]
+        public bool LimitedHeight { get; set; }
 
         public override void Load(IComponentContext container)
         {

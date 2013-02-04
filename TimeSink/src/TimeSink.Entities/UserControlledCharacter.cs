@@ -991,7 +991,7 @@ namespace TimeSink.Entities
 
                             if ( playerTopLeft >= ladderTopLeft)
                             {
-                                if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD))
+                                if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD) && canClimb.LimitedHeight)
                                 {
                                     //do nothing;
                                 }
