@@ -1,0 +1,42 @@
+## sequence 1
+prompt 1 "Doctor 1" "A little longer and we would have lost her." yes
+response 1 "..." 2
+prompt 2 "Doctor 2" "I’m still not convinced we haven’t." yes
+response 2 "..." 3
+prompt 3 "Doctor 1" "The arm should be able to contain the energy for the time being." yes
+response 3 "..." 4
+prompt 4 "Doctor 2" "Let’s hope you’re right. How should we proceed?" yes
+response 4 "..." 5
+prompt 5 "Doctor 1" "I’m still very curious as to the circumstances that brought her here in the first place. Let’s see if we can get a memory reading." yes
+response 5 "..." 6
+prompt 6 "Doctor 2" "Sure." no
+## sequence 2
+prompt 7 "Town Guard" "How many times have I had to tell you? This kind of behavior will NOT be tolerated in my town." yes
+response 7 "..." 8
+prompt 8 "Town Guard" "What do you have to say for yourself?" yes
+response 8 "..." 9
+prompt 9 "Town Guard" "That's it. I've had enough of this. Get out of here." no
+## sequence 3
+prompt 10 "Friend" "I heard what happened. Are you okay? What are you going to do now?" yes
+response 10 "..." 11
+prompt 11 "Friend" "Figured as much. Anyway, you should probably lay low for a while. Maybe kick around for a little while on the outskirts of town. Be careful, though. I've heard about a lot of weird stuff going on lately." no
+## sequence 4
+prompt 12 "Doctor 1" "Hmm... Interesting, but there has to be more to this story. See if we can progress the timeline a little further." no
+## sequence 5
+prompt 13 "Doctor 2" "Was that what I thought it was?" yes
+response 13 "..." 14
+prompt 14 "Doctor 1" "It would appear so." yes
+response 14 "..." 15
+prompt 15 "Doctor 2" "Does that make her the...?" yes
+response 15 "..." 16
+prompt 16 "Doctor 1" "Indeed. We have to send her back. The energy should be subdued as long as the arm is intact." yes
+response 16 "..." 17
+prompt 17 "Doctor 2" "Where do you propose we send her?" yes
+response 17 "..." 18
+prompt 18 "Doctor 1" "Anywhere that isn’t here. Use your imagination." yes
+response 18 "..." 19
+prompt 19 "Doctor 2" "Alright. I’ll get dispatch to bring her back to the machine." yes
+response 19 "..." 20
+prompt 20 "Doctor 1" "Hey, before you go, find a tech to send over as well. We need to ensure she is unable to return to our time. We wouldn’t want another mishap like that one, would we?" yes
+response 20 "..." 21
+prompt 21 "Doctor 2" "Will do." no

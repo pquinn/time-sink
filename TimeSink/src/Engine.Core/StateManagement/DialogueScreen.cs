@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using DialoguePrototype;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.StateManagement;
 
@@ -102,7 +101,7 @@ namespace TimeSink.Engine.Core.StateManagement
             : base()
         {
             this.scale = 0.75f;
-            this.prompt = FindPrompt(id);
+            this.prompt = EngineGame.Instance.Database.FindPrompt(id);
             this.responses = new List<Response>();
             IsPopup = false;
             InitializeActions();
@@ -144,7 +143,7 @@ namespace TimeSink.Engine.Core.StateManagement
             DialogueScreen openingPrompt = new DialogueScreen(id);
             if (openingPrompt.Prompt.ResponseRequired)
             {
-                openingPrompt.Responses = openingPrompt.FindResponses(id);
+                openingPrompt.Responses = EngineGame.Instance.Database.FindResponses(id);
                 openingPrompt.AttachResponseEvents();
             }
             else
@@ -175,128 +174,6 @@ namespace TimeSink.Engine.Core.StateManagement
         }
 
         #endregion
-
-
-        #region Database Interactions
-
-        /// <summary>
-        /// Retrieves the appropriate <see cref="NPCPrompt"/>NPCPrompt</see> from the database.
-        /// </summary>
-        /// <param name="id">The GUID of the <see cref="NPCPrompt"/>NPCPrompt</see></param>
-        /// <returns>The <see cref="NPCPrompt"/>NPCPrompt</see></returns>
-        private NPCPrompt FindPrompt(Guid id)
-        {
-            List<IDialogueAction> promptActions = new List<IDialogueAction>();
-            try
-            {
-                DataTable entry;
-                String query = "select speaker \"speaker\", entry \"entry\", ";
-                query += "animation \"animation\", sound \"sound\", quest \"quest\", ";
-                query += "response_required \"response\" ";
-                query += "from Prompt where id = \"" + id.ToString() + "\";";
-                entry = EngineGame.Instance.database.GetDataTable(query);
-                // only take the first result (there should only be one anyway)
-                DataRow result = entry.Rows[0];
-                String speaker = (String)result["speaker"];
-                String body = (String)result["entry"];
-
-                if (!DBNull.Value.Equals(result["animation"]))
-                {
-                    promptActions.Add(new AnimationAction((String)result["animation"]));
-                }
-
-                if (!DBNull.Value.Equals(result["sound"]))
-                {
-                    promptActions.Add(new SoundAction((String)result["sound"]));
-                }
-
-                if (!DBNull.Value.Equals(result["quest"]))
-                {
-                    promptActions.Add(new QuestAction((String)result["quest"]));
-                }
-
-                Boolean responseRequired = (Boolean)result["response"];
-
-                NPCPrompt prompt = new NPCPrompt(id, speaker, body, promptActions, responseRequired);
-
-                if (responseRequired)
-                {
-                    prompt.Responses = FindResponses(id);
-                }
-                return prompt;
-
-            }
-            catch (Exception e)
-            {
-                String error = "The following error has occurred:\n";
-                error += e.Message.ToString() + "\n";
-                Console.WriteLine(error);
-                return new NPCPrompt(id, "error", error, promptActions, false);
-            }
-        }
-
-        /// <summary>
-        /// Finds the appropriate <see cref="Response"/>Response</see> in the database. 
-        /// </summary>
-        /// <param name="id">the GUID of the <see cref="Response"/>Response</see></param>
-        /// <returns>the <see cref="Response"/>Response</see> object</returns>
-        private Response FindResponse(Guid id)
-        {
-            try
-            {
-                DataTable entry;
-                String query = "select entry \"entry\", ";
-                query += "next_entry \"next_entry\" ";
-                query += "from Response where ID = \"" + id.ToString() + "\";";
-                entry = EngineGame.Instance.database.GetDataTable(query); 
-                // again, there should only be one result
-                DataRow result = entry.Rows[0];
-                String entryText = (String)result["entry"];
-                Guid nextEntry = new Guid((String)result["next_entry"]);
-                return new Response(entryText, nextEntry);
-            }
-            catch (Exception e)
-            {
-                String error = "The following error has occurred:\n";
-                error += e.Message.ToString() + "\n";
-                Console.WriteLine(error);
-                return new Response("error: " + error, new Guid());
-            }
-        }
-
-        /// <summary>
-        /// Finds the <see cref="Response"/>Responses</see> to the <see cref="NPCPrompt"/>Prompt</see>
-        /// based on the mapping in the Response_Map table
-        /// </summary>
-        /// <param name="id">the GUID of the <see cref="NPCPrompt"/>Prompt</see></param>
-        /// <returns>the list of <see cref="Response"/>Responses</see></returns>
-        private List<Response> FindResponses(Guid id)
-        {
-            List<Response> responses = new List<Response>();
-            try
-            {
-                DataTable entry;
-                String query = "select toID \"to\" ";
-                query += "from Response_Map where fromID = \"" + id.ToString() + "\";";
-                entry = EngineGame.Instance.database.GetDataTable(query);
-                foreach (DataRow r in entry.Rows)
-                {
-                    responses.Add(FindResponse(new Guid((String)r["to"])));
-                }
-            }
-            catch (Exception e)
-            {
-                String error = "The following error has occurred:\n";
-                error += e.Message.ToString() + "\n";
-                Console.WriteLine(error);
-                responses.Add(new Response("error: " + error, new Guid()));
-            }
-
-            return responses;
-        }
-
-        #endregion
-
 
         #region Handle Input
 

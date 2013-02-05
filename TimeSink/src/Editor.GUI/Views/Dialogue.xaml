@@ -4,28 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:my="clr-namespace:TimeSink.Editor.GUI.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             mc:Ignorable="d"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
-             x:Name="myWin">
+             x:Name="myWin" Height="421" Width="583">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="85*"/>
+            <ColumnDefinition Width="327*"/>
+        </Grid.ColumnDefinitions> 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" MinHeight="168" />
-            <RowDefinition Height="Auto" MinHeight="1" />
-            <RowDefinition Height="Auto" MinHeight="129" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="Dialogue" Margin="5" />
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="Prompt Id" Margin="5" />
-        <ListBox Grid.Column="1" Grid.Row="1" x:Name="dialogueIds" Margin="5,10" SelectionChanged="Id_Selected"
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Prompts" Margin="5,5,4,5" />
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Prompt Id" Margin="5,5,4,5" />
+        <ListBox Grid.Column="1" Grid.Row="1" x:Name="dialogueIds" Margin="6,11,3,11" SelectionChanged="Id_Selected"
                   ItemsSource="{Binding Path=DialogueIds}" DataContext="{Binding}" Width="Auto" MinWidth="100" 
                  SelectionMode="Single" RenderTransformOrigin="0.475,-0.34" Height="150"/>
-        <my:DialogueEdit Grid.ColumnSpan="2" Grid.Row="2" x:Name="dialogueEdit" Margin="0,0,0,1"/>
-        <Button Grid.ColumnSpan="2" Grid.Row="3" Content="Apply" HorizontalAlignment="Right" Margin="5"
-                Click="Button_Click" Height="20"/>
+        <my:DialogueEdit Grid.ColumnSpan="3" Grid.Row="2" x:Name="dialogueEdit" Margin="5,0,34,1"/>
+        <Button Grid.Row="3" Content="Apply" HorizontalAlignment="Right" Margin="0,7,3,5"
+                Click="Button_Click" Grid.Column="1" Width="37"/>
+        <TextBlock Grid.Column="2" Grid.Row="0" Text="Responses" Margin="5,5,4,5" />
+        <TextBlock Grid.Column="2" Grid.Row="1" Text="Response Id" Margin="5,5,4,5" />
     </Grid>
 </UserControl>

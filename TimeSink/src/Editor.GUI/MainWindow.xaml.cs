@@ -21,7 +21,7 @@ namespace TimeSink.Editor.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string fileName;
+        public string FileName { get; set; }
 
         public MainWindow()
         {
@@ -58,11 +58,11 @@ namespace TimeSink.Editor.GUI
         }
         private void Save()
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(FileName))
                 SaveAs();
             else
             {
-                editor.SaveAs(fileName);
+                editor.SaveAs(FileName);
             }
         }
 
@@ -113,7 +113,10 @@ namespace TimeSink.Editor.GUI
                 // Open document 
                 editor.Open(dlg.FileName);
 
-                fileName = dlg.FileName;
+                FileName = dlg.FileName;
+
+                var databaseLocation = System.IO.Directory.GetParent(dlg.FileName).ToString() + @"\..\..\DialoguePrototypeTestDB.s3db";
+                editor.Game.Database.SetDBConnectionPath(databaseLocation);
 
                 if (LevelChanged != null)
                     LevelChanged();
@@ -130,7 +133,7 @@ namespace TimeSink.Editor.GUI
             if (!PromptOk())
                 return;
 
-            fileName = null;
+            FileName = null;
 
             editor.New();
 

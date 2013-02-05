@@ -35,7 +35,8 @@ namespace TimeSink.Engine.Core
         public InMemoryResourceCache<Texture2D> TextureCache { get; private set; }
         public InMemoryResourceCache<SoundEffect> SoundCache { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
-        public SQLiteDatabase database;
+        public SQLiteDatabase Database { get; private set; }
+        //public SQLiteDatabase database;
 
         public static readonly ILog Logger = LogManager.GetLogger(typeof(EngineGame));
 
@@ -69,7 +70,7 @@ namespace TimeSink.Engine.Core
             Content.RootDirectory = "Content";
 
             ScreenManager = new ScreenManager(this);
-            this.database = new SQLiteDatabase();
+            Database = Container.Resolve<SQLiteDatabase>();
 
             Instance = this;
         }
@@ -117,6 +118,8 @@ namespace TimeSink.Engine.Core
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
+
+            builder.RegisterType<SQLiteDatabase>().AsSelf().SingleInstance();
 
             builder.RegisterInstance(this).As<EngineGame>();
 
