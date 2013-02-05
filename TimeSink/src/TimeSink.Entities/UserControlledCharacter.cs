@@ -381,7 +381,7 @@ namespace TimeSink.Entities
                     Logger.Info(String.Format("DAMAGED: {0}", val));
 
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
-                    takeDamageSound.Play();
+                    PlaySound(takeDamageSound);
                 }
                 if (RightFacingBodyState())
                 {
@@ -414,7 +414,7 @@ namespace TimeSink.Entities
                 {
                     if (jumpToggleGuard == false)
                     {
-                        jumpImpactSound.Play();
+                        PlaySound(jumpImpactSound);
                     }
                     jumpToggleGuard = true;
                     TouchingGround = true;
@@ -1091,7 +1091,7 @@ namespace TimeSink.Entities
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
                     shotTimer >= shotInterval && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
                 {
-                    arrowSound.Play();
+                    PlaySound(arrowSound);
                     inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
                     if (chargingWeapon)
                         Mana -= 50; //TODO: constant? per-weapon? calc?
@@ -1328,9 +1328,10 @@ namespace TimeSink.Entities
 
         private void PerformJump(float percentOfMax = 1)
         {
-            jumpSound.Play();
-            Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
+
             jumpToggleGuard = false;
+            PlaySound(jumpSound);
+            Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
 
             if (facing > 0)
             {

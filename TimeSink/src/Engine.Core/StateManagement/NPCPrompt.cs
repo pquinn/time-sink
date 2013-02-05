@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using DialoguePrototype;
 using TimeSink.Engine.Core.DB;
 using TimeSink.Engine.Core.Editor;
 
@@ -56,7 +55,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// <summary>
         /// Gets the ID.
         /// </summary>
-        //[EditableField("Id")]
+        [EditableField("Id")]
         public Guid Id
         {
             get { return id; }
@@ -103,6 +102,7 @@ namespace TimeSink.Engine.Core.StateManagement
             set { promptActions = value; }
         }
 
+        [EditableField("Responses")]
         public List<Response> Responses
         {
             get { return responses; }
@@ -140,20 +140,6 @@ namespace TimeSink.Engine.Core.StateManagement
         internal void IncludeUsageText()
         {
             this.body = this.body + usageText;
-        }
-
-        public void UpdatePrompt()
-        {
-            Dictionary<string, string> data = new Dictionary<string,string>();
-            //data.Add("ID", Id.ToString());
-            data.Add("speaker", Speaker);
-            data.Add("entry", Body);
-            data.Add("animation", "null");
-            data.Add("sound", "null");
-            data.Add("quest", "null");
-            data.Add("response_required", SQLiteDatabase.BooleanToDBValue(ResponseRequired));
-            string where = String.Format("id = {0}", Id.ToString());
-            EngineGame.Instance.database.Update(TABLE_NAME, data, where);
         }
     }
 }

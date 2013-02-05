@@ -88,9 +88,9 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
-                anim.Rotation = angle;
-                return anim;
+                    anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                    anim.Rotation = angle;
+                    return anim;
             }
         }
 
@@ -98,7 +98,7 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return Rendering;
+                return new BasicRendering(CENTIPEDE_TEXTURE);
             }
         }
 

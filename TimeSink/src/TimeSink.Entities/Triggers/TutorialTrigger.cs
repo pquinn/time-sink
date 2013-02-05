@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
 using TimeSink.Engine.Core.Caching;
+using TimeSink.Entities.Enemies;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -40,16 +41,17 @@ namespace TimeSink.Entities.Triggers
         private UserControlledCharacter character;
 
         public TutorialTrigger()
-            : this(Vector2.Zero, 200, 150, "", "")
+            : this(Vector2.Zero, 200, 150, "Textures/Objects/tutorial", "blank", true)
         {
         }
-        public TutorialTrigger(Vector2 position, int width, int height, String key1, String key2)
+        public TutorialTrigger(Vector2 position, int width, int height, String key1, String key2, bool initiallyActive)
         {
             Position = position;
             Width = width;
             Height = height;
             Key1 = key1;
             Key2 = key2;
+            Active = initiallyActive;
         }
         public override string EditorName
         {
@@ -97,6 +99,10 @@ namespace TimeSink.Entities.Triggers
         [SerializableField]
         [EditableField("Key2")]
         public String Key2 { get; set; }
+
+        [SerializableField]
+        [EditableField("Active")]
+        public bool Active { get; set; }
 
         public override List<Fixture> CollisionGeometry
         {
@@ -152,30 +158,58 @@ namespace TimeSink.Entities.Triggers
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            if (!c.Popups.Contains(display1))
+            if (Active)
             {
-                c.Popups.Add(display1);
-            }
-            //engine.LevelManager.RenderManager.RegisterRenderable(display1);
-
-            if (display2 != null)
-            {
-                if (!c.Popups.Contains(display2))
+                if (!c.Popups.Contains(display1))
                 {
-                    c.Popups.Add(display2);
+                    c.Popups.Add(display1);
+                }
+                //engine.LevelManager.RenderManager.RegisterRenderable(display1);
+
+                if (display2 != null)
+                {
+                    if (!c.Popups.Contains(display2))
+                    {
+                        c.Popups.Add(display2);
+                    }
                 }
             }
-            character = c;
+                character = c;
 
             return true;
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            c.Popups.Remove(display1);
-            if (display2 != null)
+            if (Active)
             {
-                c.Popups.Remove(display2);
+                c.Popups.Remove(display1);
+                if (display2 != null)
+                {
+                    c.Popups.Remove(display2);
+                }
+            }
+            character = null;
+        }
+
+        internal void RecheckCollision()
+        {
+            if (character != null)
+            {
+
+                if (!character.Popups.Contains(display1))
+                {
+                    character.Popups.Add(display1);
+                }
+                //engine.LevelManager.RenderManager.RegisterRenderable(display1);
+
+                if (display2 != null)
+                {
+                    if (!character.Popups.Contains(display2))
+                    {
+                        character.Popups.Add(display2);
+                    }
+                }
             }
         }
     }

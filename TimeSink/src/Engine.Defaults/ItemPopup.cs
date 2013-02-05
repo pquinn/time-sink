@@ -41,7 +41,7 @@ namespace Engine.Defaults
             {
                 return new BasicRendering(texture)
                 {
-                    Position = PhysicsConstants.MetersToPixels(position),
+                    Position = PhysicsConstants.MetersToPixels(position) + OffSet,
                     Scale = BasicRendering.CreateScaleFromSize(ITEM_SIZE, ITEM_SIZE, texture, textureCache),
                     DepthWithinLayer = DEPTH
                 };

@@ -17,6 +17,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Entities;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Engine.Core
 {
@@ -30,6 +31,15 @@ namespace TimeSink.Engine.Core
             if (Physics != null)
             {
                 PreviousPosition = new Vector2(Position.X, Position.Y);
+            }
+        }
+
+
+        public void PlaySound(SoundEffect sound)
+        {
+            if (EngineGame.Instance.SoundsEnabled)
+            {
+                sound.Play();
             }
         }
 

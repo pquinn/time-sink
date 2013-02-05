@@ -13,6 +13,7 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Entities.Objects;
+using TimeSink.Entities.Triggers;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -76,6 +77,17 @@ namespace TimeSink.Entities.Enemies
             if (!initialized || force)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                var level = engineRegistrations.Resolve<LevelManager>().Level;
+
+                foreach (Entity e in level.Entities)
+                {
+                    if (e is TutorialTrigger)
+                    {
+                        var trigger = (TutorialTrigger)e;
+                        trigger.Active = true;
+                        trigger.RecheckCollision();
+                    }
+                }
 
                 Physics = BodyFactory.CreateRectangle(
                     world, 

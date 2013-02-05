@@ -20,7 +20,6 @@ using TimeSink.Engine;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.StateManagement.HUD;
-using DialoguePrototype;
 using FarseerPhysics.Collision.Shapes;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Entities;

@@ -8,10 +8,11 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.StateManagement;
 #endregion
 
-namespace DialoguePrototype
+namespace TimeSink.Engine.Core.StateManagement
 {
     /// <summary>
     /// Holds the data for a player response in the Dialogue engine
@@ -59,9 +60,13 @@ namespace DialoguePrototype
 
         #region Properties
 
+        [EditableField("ID")]
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Gets or sets the text of this menu entry.
         /// </summary>
+        [EditableField("Text")]
         public String Text
         {
             get { return text; }
@@ -89,6 +94,7 @@ namespace DialoguePrototype
         /// <summary>
         /// Gets the GUID of the following NPC prompt.
         /// </summary>
+        [EditableField("Next Entry ID")]
         public Guid NextEntry
         {
             get { return nextEntry; }
@@ -121,8 +127,9 @@ namespace DialoguePrototype
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public Response(string text, Guid nextEntry)
+        public Response(Guid id, string text, Guid nextEntry)
         {
+            this.Id = id;
             this.text = text;
             this.nextEntry = nextEntry;
             this.selectedText = text + usageText;
@@ -200,7 +207,11 @@ namespace DialoguePrototype
             return (int)screen.ScreenManager.Font.MeasureString(Text).X;
         }
 
-
         #endregion
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
     }
 }

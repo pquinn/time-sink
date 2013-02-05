@@ -23,6 +23,9 @@ namespace TimeSink.Engine.Core.StateManagement
     /// </summary>
     class PauseMenuScreen : MenuScreen
     {
+        #region fields
+        MenuEntry optionsEntry;
+        #endregion
         #region Initialization
 
         /// <summary>
@@ -32,15 +35,18 @@ namespace TimeSink.Engine.Core.StateManagement
             : base("Paused")
         {
             // Create our menu entries.
+            optionsEntry = new MenuEntry("Options");
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");
             MenuEntry quitGameMenuEntry = new MenuEntry("Quit Game");
 
             // Hook up menu event handlers.
             resumeGameMenuEntry.Selected += OnCancel;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
+            optionsEntry.Selected += OptionsEntrySelected;
 
             // Add entries to the menu.
             MenuEntries.Add(resumeGameMenuEntry);
+            MenuEntries.Add(optionsEntry);
             MenuEntries.Add(quitGameMenuEntry);
 
             HudElements = target;
@@ -74,6 +80,11 @@ namespace TimeSink.Engine.Core.StateManagement
         {
             LoadingScreen.Load(ScreenManager, false, e.PlayerIndex, new BackgroundScreen(),
                                                                     new MainMenuScreen());
+        }
+
+        void OptionsEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new OptionsMenuScreen(), e.PlayerIndex);
         }
 
 
