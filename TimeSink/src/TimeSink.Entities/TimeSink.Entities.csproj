@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />
+    <Compile Include="Enemies\FlowerEnemy.cs" />
     <Compile Include="Enemies\EnemyKiller.cs" />
     <Compile Include="Enemies\LungingCentipede.cs" />
     <Compile Include="Enemies\TutorialMonster.cs" />

@@ -1617,9 +1617,9 @@
     </Compile>
     <Compile Include="Textures\Tiles\Male_Guard.png">
       <Name>Male_Guard</Name>
-	  <Importer>TextureImporter</Importer>
+      <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-	</Compile>
+    </Compile>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4040.PNG">
       <Name>Hub_East%4040</Name>
       <Importer>TextureImporter</Importer>
@@ -1657,6 +1657,13 @@
     </Compile>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4053.PNG">
       <Name>Hub_East%4053</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Enemies\Flower_Neutral.png">
+      <Name>Flower_Neutral</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
