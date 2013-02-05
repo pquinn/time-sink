@@ -70,7 +70,6 @@ namespace TimeSink.Engine.Core
             Content.RootDirectory = "Content";
 
             ScreenManager = new ScreenManager(this);
-            Database = Container.Resolve<SQLiteDatabase>();
 
             Instance = this;
         }
@@ -89,6 +88,8 @@ namespace TimeSink.Engine.Core
             debugView.LoadContent(GraphicsDevice, Content);
 
             log4net.Config.XmlConfigurator.Configure();
+
+            Database = Container.Resolve<SQLiteDatabase>();
 
             Logger.Info("EngineGame initialized");
             

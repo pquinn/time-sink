@@ -96,7 +96,7 @@ namespace TimeSink.Entities
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            if (collided)
+            if (collided && DialogueRootsList.Count > 0)
             {
                 if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
                 {
