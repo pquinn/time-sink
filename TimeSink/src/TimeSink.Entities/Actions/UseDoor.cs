@@ -30,7 +30,10 @@ namespace TimeSink.Entities.Actons
     {
         const string EDITOR_NAME = "Use Door";
         const string TEXTURE = "Materials/blank";
-        const string EDITOR_PREVIEW = "Textures/Objects/ladder";
+        const string EDITOR_PREVIEW_FORWARD = "Textures/Objects/Kyles_SpecialDoorForward";
+        const string EDITOR_PREVIEW_BACKGROUND = "Textures/Objects/Kyles_SpecialDoorBackward";
+        const string EDITOR_PREVIEW_SIDE = "Textures/Objects/Kyles_SpecialDoorForward";
+        const float DEPTH = 0;
 
         const string UP_POPUP = "Textures/Keys/w-key";
         const string DOWN_POPUP = "Textures/Keys/s-key";
@@ -96,6 +99,10 @@ namespace TimeSink.Entities.Actons
             {
                 c.DoorType = DoorType.Up;
             }
+            if (DoorType == DoorType.Down)
+            {
+                c.DoorType = DoorType.Down;
+            }
 
             collided = true;
 
@@ -125,6 +132,7 @@ namespace TimeSink.Entities.Actons
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -147,11 +155,17 @@ namespace TimeSink.Entities.Actons
 
                 if (DoorType == DoorType.Up)
                 {
-                    popup = new ItemPopup(UP_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                    popup = new ItemPopup(
+                        UP_POPUP, 
+                        Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)),
+                        cache);
                 }
                 else if (DoorType == DoorType.Down)
                 {
-                    popup = new ItemPopup(DOWN_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)));
+                    popup = new ItemPopup(
+                        DOWN_POPUP, 
+                        Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2)),
+                        cache);
                 }
                 else
                 {
@@ -160,6 +174,8 @@ namespace TimeSink.Entities.Actons
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -199,11 +215,17 @@ namespace TimeSink.Entities.Actons
         public override IRendering Preview
         {
             get 
-            { 
-                return new SizedRendering(
-                    EDITOR_PREVIEW, 
-                    PhysicsConstants.MetersToPixels(Position), 
-                    0, Width, Height); 
+            {
+                var tex = EDITOR_PREVIEW_SIDE;
+                if (DoorType == DoorType.Up) tex = EDITOR_PREVIEW_FORWARD;
+                if (DoorType == DoorType.Down) tex = EDITOR_PREVIEW_BACKGROUND;
+                return new BasicRendering(tex)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, tex, TextureCache),
+                    DepthWithinLayer = DEPTH,
+                    TintColor = (DoorType == DoorType.Down) ? new Color(255, 255, 255, .5f) : Color.White
+                };
             }
         }
 

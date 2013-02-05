@@ -8,7 +8,5 @@ namespace TimeSink.Engine.Core.Editor
 {
     public interface IEditorPreviewable
     {
-        string EditorName  { get; }
-        IRendering Preview { get; }
     }
 }

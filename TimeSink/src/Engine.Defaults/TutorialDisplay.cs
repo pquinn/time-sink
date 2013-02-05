@@ -10,6 +10,7 @@ namespace Engine.Defaults
 {
    public class TutorialDisplay : IRenderable
     {
+       const float DEPTH = -200;
        private Vector2 position;
        private String text;
 
@@ -25,7 +26,24 @@ namespace Engine.Defaults
 
         public IRendering Rendering
         {
-            get { return new TextRendering(text, new Vector2(100, 100), 0, Vector2.One, Color.DarkGoldenrod); }
+            get 
+            {
+                return new TextRendering(text, new Vector2(100, 100), 0, Vector2.One, Color.DarkGoldenrod)
+                    {
+                        DepthWithinLayer = DEPTH
+                    };
+            }
+        }
+
+
+        public string EditorName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IRendering Preview
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

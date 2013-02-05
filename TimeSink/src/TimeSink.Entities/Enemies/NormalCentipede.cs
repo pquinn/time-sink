@@ -31,12 +31,20 @@ namespace TimeSink.Entities.Enemies
         const string EDITOR_NAME = "Normal Centipede";
         const string CENTIPEDE_DEATH = "Audio/Sounds/CentipedeDeath";
 
+        const float DEPTH = -50f;
+        NewAnimationRendering anim = 
+            new NewAnimationRendering(CENTIPEDE_WALK_LEFT, new Vector2(256f, 128f), 2, Vector2.Zero, 0, new Vector2(.5f, .5f), Color.White) 
+            { 
+                DepthWithinLayer = DEPTH
+            };
+        float animTimer = 0f;
+        float animInterval = 100f;
+
+
         private static readonly Guid GUID = new Guid("849aaec2-7155-4c37-aa71-42d0c1611881");
 
         new private static int textureHeight;
         new private static int textureWidth;
-
-        public Func<float, Vector2> PatrolFunction { get; private set; }
 
         public NormalCentipede()
             : this(Vector2.Zero, Vector2.Zero)
@@ -50,9 +58,18 @@ namespace TimeSink.Entities.Enemies
 
         }
 
+        private Vector2 patrolDirection;
         [EditableField("Patrol Direction")]
         [SerializableField]
-        public Vector2 PatrolDirection { get; set; }
+        public Vector2 PatrolDirection 
+        {
+            get { return patrolDirection; }
+            set
+            {
+                anim.Scale *= new Vector2(value.X > 0 ? -1 : 1, 1);
+                patrolDirection = value;
+            }
+        }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -71,13 +88,9 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                var tint = Math.Min(100, 2.55f * health);
-                return new TintedRendering(
-                  CENTIPEDE_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Position),
-                  angle,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));
+                anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                anim.Rotation = angle;
+                return anim;
             }
         }
 
@@ -117,11 +130,12 @@ namespace TimeSink.Entities.Enemies
         private Vector2 xDirectionCast = new Vector2(.1f, 0);
         private Vector2 yDirectionCast = new Vector2(0, .25f);
         private SoundEffect centipedeDeath;
-        private bool initialized = false;
         private bool needToTurnDown;
         
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+
+            animTimer += (float)time.ElapsedGameTime.TotalMilliseconds;
             base.OnUpdate(time, world);
 
             if (!collided.Any())
@@ -141,21 +155,24 @@ namespace TimeSink.Entities.Enemies
                 if (generalDirection == -1)
                     angle += (float)Math.PI;
             }
+            if (animTimer >= animInterval)
+            {
+                anim.CurrentFrame = (anim.CurrentFrame + 1) % anim.NumFrames;
+                animTimer = 0f;
+            }
         }
 
         public override void Load(IComponentContext engineRegistrations)
         {
             var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-            textureCache.LoadResource(CENTIPEDE_TEXTURE);
+            textureCache.LoadResource(CENTIPEDE_WALK_LEFT);
 
         }
 
         protected override Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
         {
-            return textureCache.GetResource(CENTIPEDE_TEXTURE);
+            return textureCache.GetResource(CENTIPEDE_WALK_LEFT);
         }
-
-        private bool pinitialized;
 
         private const int numSegments = 1;
         private List<Body> anchors = new List<Body>();
@@ -199,7 +216,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
-            if (force || !pinitialized)
+            if (force || !initialized)
             {
                 var direction = PatrolDirection.X > 0 ? 1 : -1;
 
@@ -208,7 +225,7 @@ namespace TimeSink.Entities.Enemies
                 var texture = GetTexture(textureCache);
                 var width = PhysicsConstants.PixelsToMeters(texture.Width);
                 var interval = new Vector2(width / (numSegments + 1), 0);
-                var wheelRadius = PhysicsConstants.PixelsToMeters(texture.Height) / 2;
+                var wheelRadius = PhysicsConstants.PixelsToMeters(texture.Height / 2) / 2;
                 var soundCache = engineRegistrations.Resolve<IResourceCache<SoundEffect>>();
 
                 centipedeDeath = soundCache.LoadResource(CENTIPEDE_DEATH);
@@ -287,14 +304,16 @@ namespace TimeSink.Entities.Enemies
                     Physics = wheelBody;
                 }
 
-                pinitialized = true;
+                initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
         {
-            if (!pinitialized) return;
-            pinitialized = false;
+            if (!initialized) return;
+            initialized = false;
             
             if(health <= 0)
                 centipedeDeath.Play();

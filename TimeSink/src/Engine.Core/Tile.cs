@@ -30,12 +30,14 @@ namespace TimeSink.Engine.Core
         {
         }
 
-        public Tile(string texture, Vector2 position, float rotation, Vector2 scale)
+        public Tile(string texture, Vector2 position, float rotation, Vector2 scale, RenderLayer layer, float depth)
         {
             this.Texture = texture;
             this.Position = position;
             this.Rotation = rotation;
             this.Scale = scale;
+            this.RenderLayer = layer;
+            this.Depth = depth;
         }
 
         [SerializableField]
@@ -49,6 +51,12 @@ namespace TimeSink.Engine.Core
 
         [SerializableField]
         public Vector2 Scale { get; set; }
+
+        [SerializableField]
+        public RenderLayer RenderLayer { get; set; }
+
+        [SerializableField]
+        public float Depth { get; set; }
 
         public override string EditorName
         {
@@ -69,7 +77,14 @@ namespace TimeSink.Engine.Core
         {
             get
             {
-                return new BasicRendering(Texture, PhysicsConstants.MetersToPixels(Position), Rotation, Scale);
+                return new BasicRendering(Texture)
+                { 
+                    Position = PhysicsConstants.MetersToPixels(Position), 
+                    Rotation = Rotation, 
+                    Scale = Scale,
+                    RenderLayer = RenderLayer,
+                    DepthWithinLayer = Depth
+                };
             }
         }
 

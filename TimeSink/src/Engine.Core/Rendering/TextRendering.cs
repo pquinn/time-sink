@@ -11,25 +11,36 @@ namespace TimeSink.Engine.Core.Rendering
     public class TextRendering : IRendering
     {
         protected String text;
-        Vector2 parentPosition;
-        float parentRotation;
-        Vector2 parentScale;
         Color color;
+
+        public RenderLayer RenderLayer { get; set; }
+        private float wtf;
+        public float DepthWithinLayer 
+        { 
+            get { return wtf; } 
+            set { wtf = value; } }
 
         public TextRendering(String text, Vector2 position, float rotation, Vector2 scale, Color color)
         {
             this.text = text;
-            this.parentPosition = position;
-            this.parentRotation = rotation;
-            this.parentScale = scale;
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
             this.color = color;
+            this.DepthWithinLayer = 0;
+            this.RenderLayer = RenderLayer.Gameground;
         }
+
+        public Vector2 Position { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Scale { get; set; }
+
         public virtual void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
             var relativeTransform =
-                Matrix.CreateScale(new Vector3(parentScale.X, parentScale.Y, 1)) *
-                Matrix.CreateRotationZ(parentRotation) *
-                Matrix.CreateTranslation(parentPosition.X, parentPosition.Y, 0) *
+                Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
+                Matrix.CreateRotationZ(Rotation) *
+                Matrix.CreateTranslation(Position.X, Position.Y, 0) *
                 globalTransform;
 
 
@@ -45,7 +56,7 @@ namespace TimeSink.Engine.Core.Rendering
 
 
 
-            spriteBatch.DrawString(EngineGame.Instance.ScreenManager.Font, text, parentPosition, color);
+            spriteBatch.DrawString(EngineGame.Instance.ScreenManager.Font, text, Position, color);
             spriteBatch.End();
         }
 

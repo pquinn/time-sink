@@ -23,7 +23,7 @@ namespace TimeSink.Entities.Enemies
         const float CENTIPEDE_MASS = 100f;
         const string CENTIPEDE_TEXTURE = "Textures/Enemies/Flying Centipede/Flying01"; //temporary
         const string EDITOR_NAME = "Flying Centipede";
-
+        const float DEPTH = -50;
         private static readonly Guid GUID = new Guid("bb7f91f9-af92-41cc-a985-bd1e85066403");
 
         private static int textureHeight;
@@ -78,12 +78,12 @@ namespace TimeSink.Entities.Enemies
             get
             {
                 var tint = Math.Min(100, 2.55f * health);
-                return new TintedRendering(
-                  CENTIPEDE_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Position),
-                  0,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));
+                return new BasicRendering(CENTIPEDE_TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    TintColor = new Color(255f, tint, tint, 255f),
+                    DepthWithinLayer = DEPTH
+                };
             }
         }
 
@@ -99,24 +99,14 @@ namespace TimeSink.Entities.Enemies
         {
             base.OnUpdate(time, world);
 
-            if (first)
-            {
-                tZero = (float)time.TotalGameTime.TotalSeconds;
-                first = false;
-            }
+            var transform = StartPosition - EndPosition;
 
-            float currentStep = ((float)time.TotalGameTime.TotalSeconds - tZero) % TimeSpan;
-            var stepAmt = currentStep / TimeSpan;
-            var dir = Math.Sin(stepAmt * 2 * Math.PI);
-            var offset = EndPosition - StartPosition;
-            var len = offset.Length();
-            offset.Normalize();
-            if (dir > 0)
-                Physics.LinearVelocity = Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else if (dir < 0)
-                Physics.LinearVelocity = -Vector2.Multiply(offset, (float)(len / (TimeSpan / 2)));
-            else
-                Physics.LinearVelocity = Vector2.Zero;
+            var timeScale = Math.PI * 2 / TimeSpan;
+            var theta = timeScale * time.TotalGameTime.TotalSeconds;
+
+            var targetPosition = StartPosition + transform * (-.5f * (float)Math.Cos(theta) - .5f) * Vector2.One;
+
+            Physics.LinearVelocity = (targetPosition - Position) / (float)time.ElapsedGameTime.TotalSeconds;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -132,7 +122,6 @@ namespace TimeSink.Entities.Enemies
             return textureCache.GetResource(CENTIPEDE_TEXTURE);
         }
 
-        private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -162,6 +151,8 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

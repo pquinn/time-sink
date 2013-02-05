@@ -24,6 +24,14 @@ namespace TimeSink.Entities.Enemies
 
         private UserControlledCharacter character;
 
+        public override string EditorName
+        {
+            get
+            {
+                return "Jumping Centipede";
+            }
+        }
+
         public override Guid Id
         {
             get
@@ -38,8 +46,6 @@ namespace TimeSink.Entities.Enemies
 
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
-            base.InitializePhysics(force, engineRegistrations);
-
             if (force || !initialized)
             {
                 var sensor = FixtureFactory.AttachCircle(
@@ -54,6 +60,8 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         void LeftWorld(Fixture wheel, WorldGeometry2 w, Fixture wFix)

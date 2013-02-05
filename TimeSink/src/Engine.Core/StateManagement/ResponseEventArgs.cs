@@ -30,7 +30,7 @@ namespace TimeSink.Engine.Core.StateManagement
 
 
         /// <summary>
-        /// Gets the index of the player who triggered this event.
+        /// Gets the GUID of the following prompt from this response.
         /// </summary>
         public Guid NextEntry
         {

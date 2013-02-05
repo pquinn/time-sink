@@ -44,15 +44,23 @@ namespace TimeSink.Engine.Game
         SoundObject backgroundTrack;
         SoundEffect backHolder;
 
+        float levelTime;
+        bool levelStarted;
+
         public UserControlledCharacter Character
         {
             get;
             set;
         }
 
+        private Vector2 cameraVel;
+
         public TimeSinkGame()
             : base(1280, 720)
         {
+            levelTime = 0f;
+            levelStarted = false;
+
             RenderDebugGeometry = true;
 
             AddInitialScreens();
@@ -122,7 +130,15 @@ namespace TimeSink.Engine.Game
                 this.Exit();
 
             if (!string.IsNullOrEmpty(loadLevel))
+            {
                 LoadLevel();
+                
+            }
+
+            if (levelStarted)
+            {
+                levelTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
 
             view = ProcessControllerInput(gameTime);
 
@@ -158,10 +174,29 @@ namespace TimeSink.Engine.Game
                     rightClamp = right;
             }
 
-            var pos = Character != null ? Character.Position : Vector2.Zero;
-            var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
-                new Vector3(PhysicsConstants.MetersToPixels(pos), 0);
+            if (InputManager.Instance.Pressed(Keys.D9))
+            {
+            }
 
+            var velMaxX = GraphicsDevice.Viewport.Width * .1f;
+            var velMaxY = GraphicsDevice.Viewport.Height * .1f;
+            var pos = Character != null ? Character.Position : Vector2.Zero;
+            var vel = new Vector2(
+                (Character.Physics.LinearVelocity.X <= 1 && Character.Physics.LinearVelocity.X >= -1) ?
+                    0 : Character.Physics.LinearVelocity.X,
+                (Character.Physics.LinearVelocity.Y <= 1 && Character.Physics.LinearVelocity.Y >= -1) ?
+                    0 : Character.Physics.LinearVelocity.Y);
+            if (vel != Vector2.Zero) vel.Normalize();
+
+            cameraVel = Vector2.Clamp(
+                cameraVel + gameTime.ElapsedGameTime.Milliseconds * new Vector2(.35f, .125f) * vel,
+                new Vector2(-velMaxX, -velMaxY),
+                new Vector2(velMaxX, velMaxY));
+
+            var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
+                new Vector3(PhysicsConstants.MetersToPixels(pos) + cameraVel, 0);
+
+            #region clamping
             //if (hasBackground)
             //{
             //    if (camPos.X < leftClamp)
@@ -174,6 +209,7 @@ namespace TimeSink.Engine.Game
             //    else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
             //        camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
             //}
+            #endregion
 
             Camera.MoveCameraTo(camPos);
 
@@ -191,9 +227,18 @@ namespace TimeSink.Engine.Game
         /// <param name="gametime"></param>
         private void HandleInput(GameTime gametime)
         {
-            if (InputManager.Instance.Pressed(Keys.M))
+            if (InputManager.Instance.IsNewKey(Keys.M))
             {
-                backgroundTrack.TogglePauseSound();
+                if (MusicEnabled)
+                {
+                    backgroundTrack.Dynamic.Volume = 0;
+                    MusicEnabled = false;
+                }
+                else
+                {
+                    backgroundTrack.Dynamic.Volume = 1;
+                    MusicEnabled = true;
+                }
             }
 
             if (InputManager.Instance.IsNewKey(Keys.C))
@@ -235,6 +280,14 @@ namespace TimeSink.Engine.Game
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
+            if (Character != null) Character.LogLevelSummary();
+           // backgroundTrack.PlaySound(); Should get baked into the levels, not the timesink game
+
+
+            Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
+            levelTime = 0f;
+            levelStarted = true;
+            Logger.Info("Level loaded.");
             
             Character = new UserControlledCharacter(
                 spawnPoint >= 0 ? 

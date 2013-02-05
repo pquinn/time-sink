@@ -13,12 +13,12 @@ namespace TimeSink.Engine.Core.Rendering
         private Color tintColor;
 
         public TintedRendering(string textureKey, Vector2 position, float rotation, Vector2 scale, Color tintColor)
-            : base(textureKey, position, rotation, scale, null)
+            :base(textureKey)
         {
             this.tintColor = tintColor;
         }
         public TintedRendering(string textureKey, Vector2 position, float rotation, Vector2 scale, Color tintColor, Rectangle? rect)
-            : base(textureKey, position, rotation, scale, rect)
+            : base(textureKey)
         {
             this.tintColor = tintColor;
         }
@@ -26,11 +26,11 @@ namespace TimeSink.Engine.Core.Rendering
 
         public override void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix globalTransform)
         {
-            var texture = cache.GetResource(textureKey);
+            var texture = cache.GetResource(TextureKey);
 
             Vector2 origin;
-            if (srcRectangle.HasValue)
-                origin = new Vector2(srcRectangle.Value.Width / 2, srcRectangle.Value.Height / 2);
+            if (SrcRectangle.HasValue)
+                origin = new Vector2(SrcRectangle.Value.Width / 2, SrcRectangle.Value.Height / 2);
             else
                 origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
@@ -45,12 +45,12 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(
                 texture,
-                position,
-                srcRectangle,
+                Position,
+                SrcRectangle,
                 tintColor,
-                (float)rotation,
+                Rotation,
                 origin,
-                scale,
+                Scale,
                 SpriteEffects.None,
                 0
             );

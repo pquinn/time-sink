@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using DialoguePrototype;
+using TimeSink.Engine.Core.DB;
+using TimeSink.Engine.Core.Editor;
 
 namespace TimeSink.Engine.Core.StateManagement
 {
@@ -12,6 +16,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// <summary>
         /// The GUID of the entry.
         /// </summary>
+        
         Guid id;
 
         /// <summary>
@@ -40,6 +45,10 @@ namespace TimeSink.Engine.Core.StateManagement
         /// </summary>
         const string usageText = "\n{enter}...";
 
+        public const string TABLE_NAME = "Prompt";
+
+        List<Response> responses; 
+
         #endregion
 
         #region Properties
@@ -47,6 +56,7 @@ namespace TimeSink.Engine.Core.StateManagement
         /// <summary>
         /// Gets the ID.
         /// </summary>
+        //[EditableField("Id")]
         public Guid Id
         {
             get { return id; }
@@ -55,26 +65,32 @@ namespace TimeSink.Engine.Core.StateManagement
         /// <summary>
         /// Gets the speaker.
         /// </summary>
+        [EditableField("Speaker")]
         public String Speaker
         {
             get { return speaker; }
+            set { speaker = value; }
         }
 
 
         /// <summary>
         /// Gets the Body.
         /// </summary>
+        [EditableField("Body Text")]
         public String Body
         {
             get { return body; }
+            set { body = value; }
         }
 
         /// <summary>
         /// Gets the responseRequired flag.
         /// </summary>
+        [EditableField("Response Required?")]
         public Boolean ResponseRequired
         {
             get { return responseRequired; }
+            set { responseRequired = value; }
         }
 
         /// <summary>
@@ -87,25 +103,29 @@ namespace TimeSink.Engine.Core.StateManagement
             set { promptActions = value; }
         }
 
+        public List<Response> Responses
+        {
+            get { return responses; }
+            set { responses = value; }
+        }
+
         #endregion
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">the GUID of this prompt in the database.</param>
-        /// <param name="speaker">a String representing the name of the speaker</param>
-        /// <param name="body">a String representing the body of this prompt</param>
-        /// <param name="promptActions">
-        /// a list of <see cref="IDialogueAction"/>Actions</see> to be executed when this prompt is displayed
-        /// </param>
-        /// <param name="responseRequired">whether or not the prompt has responses</param>
+        public NPCPrompt() : this(Guid.Empty, String.Empty, String.Empty, new List<IDialogueAction>(), false) { }
+
         public NPCPrompt(Guid id, String speaker, String body, List<IDialogueAction> promptActions, Boolean responseRequired)
+            : this(id, speaker, body, promptActions, responseRequired, new List<Response>())
+        {
+        }
+
+        public NPCPrompt(Guid id, String speaker, String body, List<IDialogueAction> promptActions, Boolean responseRequired, List<Response> responses)
         {
             this.id = id;
             this.speaker = speaker;
             this.body = body;
             this.promptActions = promptActions;
             this.responseRequired = responseRequired;
+            this.responses = responses;
         }
 
         public override string ToString()
@@ -120,6 +140,20 @@ namespace TimeSink.Engine.Core.StateManagement
         internal void IncludeUsageText()
         {
             this.body = this.body + usageText;
+        }
+
+        public void UpdatePrompt()
+        {
+            Dictionary<string, string> data = new Dictionary<string,string>();
+            //data.Add("ID", Id.ToString());
+            data.Add("speaker", Speaker);
+            data.Add("entry", Body);
+            data.Add("animation", "null");
+            data.Add("sound", "null");
+            data.Add("quest", "null");
+            data.Add("response_required", SQLiteDatabase.BooleanToDBValue(ResponseRequired));
+            string where = String.Format("id = {0}", Id.ToString());
+            EngineGame.Instance.database.Update(TABLE_NAME, data, where);
         }
     }
 }

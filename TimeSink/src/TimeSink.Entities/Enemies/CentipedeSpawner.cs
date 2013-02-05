@@ -17,6 +17,8 @@ namespace TimeSink.Entities.Enemies
     {
         const string TEXTURE = "Textures/Enemies/Nest";
         const string EDITOR_NAME = "Centipede Spawner";
+        const float DEPTH = -75f;
+
         public CentipedeSpawner() : base() { }
         public CentipedeSpawner(float interval, float offset, int max, int width, int height, int dir) : base(interval, offset, max, width, height)
         {
@@ -36,7 +38,12 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Height, Width);
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
+                    DepthWithinLayer = DEPTH
+                };
             }
         }
         public override IRendering Preview

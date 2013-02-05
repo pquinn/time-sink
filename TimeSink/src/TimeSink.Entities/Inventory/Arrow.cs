@@ -33,6 +33,9 @@ namespace TimeSink.Entities.Inventory
         const float MAX_ARROW_HOLD = 1;
         const float MIN_ARROW_INIT_SPEED = 1000;
         const float MAX_ARROW_INIT_SPEED = 2000;
+
+        const float DEPTH = 150;
+
         public bool OnFire { get; set; }
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
@@ -74,22 +77,12 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                if (!OnFire)
+                return new BasicRendering(!OnFire ? ARROW_TEXTURE_NAME : FLAME_TEXTURE)
                 {
-                    return new BasicRendering(
-                        ARROW_TEXTURE_NAME,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                    );
-                }
-                else
-                    return new BasicRendering(
-                        FLAME_TEXTURE,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                        );
+                    Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                    Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                    DepthWithinLayer = .1f
+                };
             }
         }
 
@@ -131,7 +124,7 @@ namespace TimeSink.Entities.Inventory
                 Physics.Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X);
         }
 
-        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
             Arrow arrow = new Arrow(
                 new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
@@ -149,12 +142,21 @@ namespace TimeSink.Entities.Inventory
                                        (float)elapsedTime;
 
             Vector2 initialVelocity = PhysicsConstants.PixelsToMeters(speed * character.Direction);
+            if (character.Direction.Y == 0)
+            {
+                var rotation = (float)Math.PI / 32;
+                rotation *= character.Direction.X > 0
+                    ? -1
+                    : 1;
+                initialVelocity = Vector2.Transform(initialVelocity, Matrix.CreateRotationZ(rotation));
+                arrow.Physics.Rotation = rotation;
+            }
             arrow.Physics.LinearVelocity += initialVelocity;
         }
 
-        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            Fire(character, world, gameTime, holdTime);
+            Fire(character, world, gameTime, holdTime, charged);
         }
 
         private bool initialized;
@@ -175,11 +177,18 @@ namespace TimeSink.Entities.Inventory
                     PhysicsConstants.PixelsToMeters(Height),
                     1,
                     Position);
+
+                var arrowHead = FixtureFactory.AttachCircle(
+                    PhysicsConstants.PixelsToMeters(Height)/2,
+                    10,
+                    Physics,
+                    new Vector2(PhysicsConstants.PixelsToMeters(Width)/2 - PhysicsConstants.PixelsToMeters(Height)/2, 0));
+
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.IsBullet = true;
                 Physics.UserData = this;
                 Physics.IsSensor = true;
-                Physics.Mass = ARROW_MASS;
+                //Physics.Mass = ARROW_MASS;
                 Physics.CollidesWith = Category.All | ~Category.Cat31;
 
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
@@ -187,6 +196,8 @@ namespace TimeSink.Entities.Inventory
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

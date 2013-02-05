@@ -30,6 +30,7 @@ namespace TimeSink.Entities
         const string DEFAULT_TEXTURE = "Textures/Enemies/Dummy";
         const string ACTION_POPUP = "Textures/Keys/x-Key";
         const int POPUP_OFFSET = 20;
+        const float DEPTH = .25f;
 
         private static readonly Guid GUID = new Guid("57eb5766-5ce2-4694-ad4b-e019d4817985");
 
@@ -127,7 +128,8 @@ namespace TimeSink.Entities
         {
             if (force || !initialized)
             {
-                var texture = engineRegistrations.Resolve<IResourceCache<Texture2D>>().GetResource(TextureName);
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+                var texture = cache.GetResource(TextureName);
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
 
@@ -156,10 +158,13 @@ namespace TimeSink.Entities
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
                 popup = new ItemPopup(ACTION_POPUP, 
-                    Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)));
+                    Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)),
+                    cache);
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override List<Fixture> CollisionGeometry
@@ -175,12 +180,12 @@ namespace TimeSink.Entities
         {
             get
             {
-                return new SizedRendering(
-                  TextureName,
-                  PhysicsConstants.MetersToPixels(Position),
-                  0,
-                  Width, 
-                  Height);
+                return new BasicRendering(TextureName)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TextureName, TextureCache),
+                    DepthWithinLayer = DEPTH
+                };
             }
         }
     }

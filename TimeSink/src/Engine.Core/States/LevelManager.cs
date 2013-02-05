@@ -22,11 +22,10 @@ namespace TimeSink.Engine.Core.States
 
     public class LevelManager
     {
-        public LevelManager(PhysicsManager physicsManager, RenderManager renderManager, EditorRenderManager editorRenderManager, IComponentContext container)
+        public LevelManager(PhysicsManager physicsManager, RenderManager renderManager, IComponentContext container)
         {
             PhysicsManager = physicsManager;
             RenderManager = renderManager;
-            EditorRenderManager = editorRenderManager;
             Container = container;
             Level = new Level();
 
@@ -36,8 +35,6 @@ namespace TimeSink.Engine.Core.States
         public PhysicsManager PhysicsManager { get; private set; }
 
         public RenderManager RenderManager { get; private set; }
-
-        public EditorRenderManager EditorRenderManager { get; private set; }
 
         public IComponentContext Container { get; private set; }
 
@@ -51,7 +48,6 @@ namespace TimeSink.Engine.Core.States
         {
             Level.Midground.Add(tile);
             RenderManager.RegisterRenderable(tile);
-            EditorRenderManager.RegisterPreviewable(tile);
         }
 
         public void RegisterMidground(IEnumerable<Tile> tiles)
@@ -63,7 +59,6 @@ namespace TimeSink.Engine.Core.States
         {
             Level.Tiles.Add(tile);
             RenderManager.RegisterRenderable(tile);
-            EditorRenderManager.RegisterPreviewable(tile);
         }
 
         public void RegisterTiles(IEnumerable<Tile> tiles)
@@ -73,7 +68,6 @@ namespace TimeSink.Engine.Core.States
 
         public void UnregisterTile(Tile tile)
         {
-            EditorRenderManager.UnregisterPreviewable(tile);
             RenderManager.UnregisterRenderable(tile);
             Level.Tiles.Remove(tile);
         }
@@ -88,7 +82,6 @@ namespace TimeSink.Engine.Core.States
             Level.Entities.Add(entity);
             PhysicsManager.RegisterPhysicsBody(entity);
             RenderManager.RegisterRenderable(entity);
-            EditorRenderManager.RegisterPreviewable(entity);
         }
 
         public void RegisterEntities(IEnumerable<Entity> entities)
@@ -101,7 +94,6 @@ namespace TimeSink.Engine.Core.States
             Level.Entities.Remove(entity);
             PhysicsManager.UnregisterPhysicsBody(entity);
             RenderManager.UnregisterRenderable(entity);
-            EditorRenderManager.UnregisterPreviewable(entity);
         }
 
         public void UnregisterEntities(IEnumerable<Entity> entities)
@@ -154,7 +146,6 @@ namespace TimeSink.Engine.Core.States
             Level = new Level();
             PhysicsManager.Clear();
             RenderManager.Clear();
-            EditorRenderManager.Clear();
             ResetGeometry();
         }
 
@@ -171,14 +162,12 @@ namespace TimeSink.Engine.Core.States
                 x =>
                 {
                     RenderManager.RegisterRenderable(x);
-                    EditorRenderManager.RegisterPreviewable(x);
                 });
 
             Level.Tiles.ForEach(
                 x =>
                 {
                     RenderManager.RegisterRenderable(x);
-                    EditorRenderManager.RegisterPreviewable(x);
                 });
 
             //Level.Entities.ForEach(
@@ -188,7 +177,6 @@ namespace TimeSink.Engine.Core.States
                 {
                     PhysicsManager.RegisterPhysicsBody(x);
                     RenderManager.RegisterRenderable(x);
-                    EditorRenderManager.RegisterPreviewable(x);
                 });
 
 

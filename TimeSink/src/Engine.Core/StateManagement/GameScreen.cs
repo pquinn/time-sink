@@ -34,7 +34,7 @@ namespace TimeSink.Engine.Core.StateManagement
     /// want to quit" message box, and the main game itself are all implemented
     /// as screens.
     /// </summary>
-    public abstract class GameScreen : IRenderable
+    public abstract class GameScreen
     {
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -353,11 +353,6 @@ namespace TimeSink.Engine.Core.StateManagement
                 // Otherwise flag that it should transition off and then exit.
                 isExiting = true;
             }
-        }
-
-        public virtual IRendering Rendering
-        {
-            get { throw new NotImplementedException(); }
         }
     }
 }

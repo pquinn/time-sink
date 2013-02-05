@@ -88,12 +88,11 @@ namespace TimeSink.Entities.Enemies
             get
             {
                 var tint = Math.Min(100, 2.55f * health);
-                return new TintedRendering(
-                  DUMMY_TEXTURE,
-                  PhysicsConstants.MetersToPixels(Position),
-                  0,
-                  Vector2.One,
-                  new Color(255f, tint, tint, 255f));//Math.Max(2.55f * health, 155)));
+                return new BasicRendering(DUMMY_TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    TintColor = new Color(255f, tint, tint, 255f)
+                };
             }
         }
 
@@ -161,7 +160,7 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        private bool initialized;
+        protected bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -200,6 +199,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         protected virtual Texture2D GetTexture(IResourceCache<Texture2D> textureCache)

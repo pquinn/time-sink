@@ -42,6 +42,11 @@ namespace TimeSink.Engine.Core
         public ScreenManager ScreenManager { get; private set; }
         public ScreenFactory ScreenFactory { get; private set; }
 
+        private bool musicEnabled = true;
+
+        public bool MusicEnabled { get { return musicEnabled; } set { musicEnabled = value; } }
+        public bool SoundsEnabled { get; set; }
+
         public bool RenderDebugGeometry { get; set; }
 
         public static EngineGame Instance;
@@ -111,7 +116,6 @@ namespace TimeSink.Engine.Core
 
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
-            builder.RegisterType<EditorRenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
 
             builder.RegisterInstance(this).As<EngineGame>();

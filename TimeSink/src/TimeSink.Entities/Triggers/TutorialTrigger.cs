@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
+using TimeSink.Engine.Core.Caching;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -32,20 +33,23 @@ namespace TimeSink.Entities.Triggers
 
         private static readonly Guid guid = new Guid("75522a0f-66c2-444e-90bb-88df79c36c29");
 
-        private String tutorialText;
+        private Vector2 previewScale;
         private EngineGame engine;
-        private TutorialDisplay display;
+        private ItemPopup display1;
+        private ItemPopup display2;
+        private UserControlledCharacter character;
 
         public TutorialTrigger()
-            : this(Vector2.Zero, 50, 50, "Enter Text Here")
+            : this(Vector2.Zero, 200, 150, "", "")
         {
         }
-        public TutorialTrigger(Vector2 position, int width, int height, String text)
+        public TutorialTrigger(Vector2 position, int width, int height, String key1, String key2)
         {
             Position = position;
             Width = width;
             Height = height;
-            TutorialText = text;
+            Key1 = key1;
+            Key2 = key2;
         }
         public override string EditorName
         {
@@ -57,14 +61,17 @@ namespace TimeSink.Entities.Triggers
             get { return guid; }
             set { }
         }
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get
             {
-                return new SizedRendering(
-                    EDITOR_PREVIEW,
-                    PhysicsConstants.MetersToPixels(Position),
-                    0, Width, Height);
+                return new BasicRendering(EDITOR_PREVIEW)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = previewScale, 
+                    TintColor = new Color(255, 255, 255, .1f),
+                    DepthWithinLayer = .625f
+                };
             }
         }
         public override Engine.Core.Rendering.IRendering Rendering
@@ -84,8 +91,12 @@ namespace TimeSink.Entities.Triggers
         public override int Height { get; set; }
 
         [SerializableField]
-        [EditableField("TutorialText")]
-        public String TutorialText { get; set; }
+        [EditableField("Key1")]
+        public String Key1 { get; set; }
+
+        [SerializableField]
+        [EditableField("Key2")]
+        public String Key2 { get; set; }
 
         public override List<Fixture> CollisionGeometry
         {
@@ -96,13 +107,29 @@ namespace TimeSink.Entities.Triggers
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
+                var texture = cache.GetResource(EDITOR_PREVIEW);
+                previewScale = new Vector2(Width / texture.Width, Height / texture.Height);
+
                 Physics = BodyFactory.CreateBody(world, Position, this);
-                display = new TutorialDisplay(TutorialText, PhysicsConstants.MetersToPixels(Position));
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                if (!Key2.Equals("blank"))
+                {
+                    display2 = new ItemPopup(Key2, Vector2.Zero, cache, new Vector2(40, -90));
+                }
+                //else
+                //{
+                //    display2 = null;
+
+                //    display1 = new ItemPopup(Key1, Vector2.Zero, new Vector2(0, -90));
+                //}
+                display1 = new ItemPopup(Key1, Vector2.Zero, cache, new Vector2(-40, -90));
+
 
                 var rect = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
@@ -119,18 +146,37 @@ namespace TimeSink.Entities.Triggers
 
                 initialized = true;
             }
-        }
 
+            base.InitializePhysics(false, engineRegistrations);
+        }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            engine.LevelManager.RenderManager.RegisterRenderable(display);
+            if (!c.Popups.Contains(display1))
+            {
+                c.Popups.Add(display1);
+            }
+            //engine.LevelManager.RenderManager.RegisterRenderable(display1);
+
+            if (display2 != null)
+            {
+                if (!c.Popups.Contains(display2))
+                {
+                    c.Popups.Add(display2);
+                }
+            }
+            character = c;
 
             return true;
         }
+
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            engine.LevelManager.RenderManager.UnregisterRenderable(display);
+            c.Popups.Remove(display1);
+            if (display2 != null)
+            {
+                c.Popups.Remove(display2);
+            }
         }
     }
 }

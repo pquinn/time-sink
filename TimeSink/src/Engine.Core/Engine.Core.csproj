@@ -130,7 +130,6 @@
     <Compile Include="EditorProperties.cs" />
     <Compile Include="Editor\EditableFieldAttribute.cs" />
     <Compile Include="Editor\EditorEnabledAttribute.cs" />
-    <Compile Include="Editor\EditorRenderManager.cs" />
     <Compile Include="Editor\GameProject.cs" />
     <Compile Include="Editor\IEditorPreviewable.cs" />
     <Compile Include="EngineGame.cs" />
@@ -138,11 +137,13 @@
     <Compile Include="IMenuItem.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Rendering\ParentedRendering.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />
-    <Compile Include="Rendering\EmptyPreviewRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
+    <Compile Include="Rendering\RenderComparer.cs" />
+    <Compile Include="Rendering\RenderLayer.cs" />
     <Compile Include="Rendering\TextRendering.cs" />
-    <Compile Include="Rendering\ZRendering.cs" />
+    <Compile Include="StateManagement\SoundOptionsScreen.cs" />
     <Compile Include="States\EntitySerialization.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="States\SerializableEntityAttribute.cs" />
@@ -186,8 +187,6 @@
     <Compile Include="Physics\PhysicsManager.cs" />
     <Compile Include="Physics\PhysicsConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\Animation.cs" />
-    <Compile Include="Rendering\AnimationRendering.cs" />
     <Compile Include="Rendering\BasicRendering.cs" />
     <Compile Include="Rendering\BoundingBox.cs" />
     <Compile Include="Rendering\Camera.cs" />
@@ -198,7 +197,6 @@
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\IRendering.cs" />
     <Compile Include="Rendering\RenderManager.cs" />
-    <Compile Include="Rendering\TintedRendering.cs" />
     <Compile Include="Sound\SoundObject.cs" />
     <Compile Include="States\LevelManager.cs" />
     <Compile Include="States\State.cs" />

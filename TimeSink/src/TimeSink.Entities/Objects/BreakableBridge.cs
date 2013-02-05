@@ -101,6 +101,8 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture cFix, Contact info)
@@ -108,12 +110,19 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
-            get { return new SizedRendering(TEXTURE, PhysicsConstants.MetersToPixels(Position), 0, Width, Height); }
+            get
+            {
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                };
+            }
         }
 
-        public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
         }

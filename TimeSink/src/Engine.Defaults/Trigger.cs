@@ -92,6 +92,8 @@ namespace Engine.Defaults
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         protected abstract void RegisterCollisions();

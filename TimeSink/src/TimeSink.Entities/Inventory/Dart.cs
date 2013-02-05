@@ -24,6 +24,7 @@ namespace TimeSink.Entities.Inventory
     {
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
         const string EDITOR_NAME = "Dart";
+        const float DEPTH = 0;
 
         private static readonly Guid GUID = new Guid("158e2984-34ce-4c1f-93ef-fbf81c5fed1f");
 
@@ -71,14 +72,12 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                return Dead 
-                    ? null 
-                    : new BasicRendering(
-                        DART_TEXTURE_NAME,
-                        PhysicsConstants.MetersToPixels(Physics.Position),
-                        (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        Vector2.One
-                    );
+                return Dead ? null : new BasicRendering(DART_TEXTURE_NAME)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                        Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        DepthWithinLayer = DEPTH
+                    };
             }
         }
 
@@ -116,7 +115,7 @@ namespace TimeSink.Entities.Inventory
             }
         }
 
-        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
             Dart dart = new Dart(
                             new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
@@ -128,9 +127,9 @@ namespace TimeSink.Entities.Inventory
             dart.Physics.LinearVelocity += initialVelocity;
         }
 
-        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            Fire(character, world, gameTime, holdTime);
+            Fire(character, world, gameTime, holdTime, charged);
         }
 
         private bool initialized;
@@ -157,6 +156,8 @@ namespace TimeSink.Entities.Inventory
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
