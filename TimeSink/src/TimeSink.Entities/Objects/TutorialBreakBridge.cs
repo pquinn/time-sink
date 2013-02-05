@@ -76,7 +76,7 @@ namespace TimeSink.Entities.Objects
 
                 var rect = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
-                    spriteHeightMeters,
+                    PhysicsConstants.PixelsToMeters(10),
                     1.4f,
                     Vector2.Zero,
                     Physics);
