@@ -26,11 +26,26 @@ namespace TimeSink.Editor.GUI.Views
     /// </summary>
     public partial class DialogueEdit : UserControl
     {
+        private bool isLoaded;
+
         public DialogueEdit()
         {
             InitializeComponent();
+            this.Loaded += new RoutedEventHandler(Dialogue_Edit_Loaded);
         }
 
+        public EditorGame Game { get; set; }
+
+        void Dialogue_Edit_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded)
+            {
+                var mainWindow = this.TryFindParent<MainWindow>();
+                Game = mainWindow.editor.Game;
+
+                isLoaded = true;
+            }
+        }
         
         public void InitGrid(NPCPrompt entity)
         {
@@ -189,7 +204,8 @@ namespace TimeSink.Editor.GUI.Views
             data.Add("quest", "null");
             data.Add("response_required", SQLiteDatabase.BooleanToDBValue(prompt.ResponseRequired));
             string where = String.Format("ID = '{0}'", prompt.Id.ToString());
-            EditorGame.Database.Update(NPCPrompt.TABLE_NAME, data, where);
+            //var temp = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+            Game.Database.Update(NPCPrompt.TABLE_NAME, data, where);
         }
     }
 }

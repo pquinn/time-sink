@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -46,12 +47,9 @@ namespace Editor
         private DebugViewXNA debugView;
         private SpriteFont spriteFont;
 
-        private static SQLiteDatabase database;
-
         public EditorGame(IntPtr handle, int width, int height)
             : base(handle, "Content", width, height)
         {
-            database = new SQLiteDatabase();
         }
 
         public LevelManager LevelManager { get; private set; }
@@ -64,11 +62,7 @@ namespace Editor
 
         public IComponentContext Container { get; set; }
 
-        public static SQLiteDatabase Database
-        {
-            get { return database; }
-            private set { database = value; }
-        }
+        public SQLiteDatabase Database { get; private set; }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -118,6 +112,8 @@ namespace Editor
             stateMachine = new StateMachine<LevelManager>(initState, LevelManager);
             initState.StateMachine = stateMachine;
 
+            Database = Container.Resolve<SQLiteDatabase>();
+
             // this is a hack to activate the game inside a wpf control automatically
             typeof(Game).GetMethod("HostActivated", BindingFlags.NonPublic | BindingFlags.Instance)
                 .Invoke(this, new object[] { this, null });
@@ -155,6 +151,8 @@ namespace Editor
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
+
+            builder.RegisterType<SQLiteDatabase>().AsSelf().SingleInstance();
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDeviceManager.GraphicsDevice);
