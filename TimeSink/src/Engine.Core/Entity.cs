@@ -15,6 +15,9 @@ using Autofac;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeSink.Engine.Core
 {
@@ -31,6 +34,15 @@ namespace TimeSink.Engine.Core
             }
         }
 
+
+        public void PlaySound(SoundEffect sound)
+        {
+            if (EngineGame.Instance.SoundsEnabled)
+            {
+                sound.Play();
+            }
+        }
+
         public virtual void OnUpdate(GameTime time, EngineGame world) { }
 
         [SerializableField]
@@ -42,7 +54,10 @@ namespace TimeSink.Engine.Core
 
         public abstract string EditorName { get; }
 
-        public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) { }
+        public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) 
+        {
+            TextureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+        }
 
         public abstract Guid Id { get; set; }
 
@@ -90,6 +105,9 @@ namespace TimeSink.Engine.Core
         {
             get;
         }
+
+        [XmlIgnore]
+        public IResourceCache<Texture2D> TextureCache { get; set; }
 
         [XmlIgnore]
         public abstract List<Fixture> CollisionGeometry

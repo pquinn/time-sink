@@ -196,6 +196,7 @@ namespace TimeSink.Editor.GUI.Views
                     {
                         x.Load(Game.Container);
                         Game.LevelManager.RenderManager.RegisterRenderable(x);
+                        x.TextureCache = Game.TextureCache;
                         //Game.LevelManager.RegisterEntity(x);
                     });
                 var entityWindow = new EntitySelector(entities, Game.TextureCache);

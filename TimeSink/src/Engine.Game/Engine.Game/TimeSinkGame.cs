@@ -227,9 +227,18 @@ namespace TimeSink.Engine.Game
         /// <param name="gametime"></param>
         private void HandleInput(GameTime gametime)
         {
-            if (InputManager.Instance.Pressed(Keys.M))
+            if (InputManager.Instance.IsNewKey(Keys.M))
             {
-                backgroundTrack.TogglePauseSound();
+                if (MusicEnabled)
+                {
+                    backgroundTrack.Dynamic.Volume = 0;
+                    MusicEnabled = false;
+                }
+                else
+                {
+                    backgroundTrack.Dynamic.Volume = 1;
+                    MusicEnabled = true;
+                }
             }
 
             if (InputManager.Instance.IsNewKey(Keys.C))
@@ -271,8 +280,8 @@ namespace TimeSink.Engine.Game
         protected override void LevelLoaded()
         {
             base.LevelLoaded();
-
             if (Character != null) Character.LogLevelSummary();
+           // backgroundTrack.PlaySound(); Should get baked into the levels, not the timesink game
 
 
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));

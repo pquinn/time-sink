@@ -1,0 +1,6 @@
+prompt 1 speaker1 "this is the body of prompt 1" yes
+response 1 "response 1 -> 2" 2
+response 1 "response 2 -> 2" 2
+response 1 "response 3 -> 3" 3
+prompt 2 speaker2 "this is actually prompt 2 now" no
+prompt 3 speaker3 "and now this is prompt 3" no

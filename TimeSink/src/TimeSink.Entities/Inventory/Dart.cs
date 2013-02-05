@@ -115,7 +115,7 @@ namespace TimeSink.Entities.Inventory
             }
         }
 
-        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
             Dart dart = new Dart(
                             new Vector2(character.Physics.Position.X + UserControlledCharacter.X_OFFSET,
@@ -127,9 +127,9 @@ namespace TimeSink.Entities.Inventory
             dart.Physics.LinearVelocity += initialVelocity;
         }
 
-        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            Fire(character, world, gameTime, holdTime);
+            Fire(character, world, gameTime, holdTime, charged);
         }
 
         private bool initialized;
@@ -156,6 +156,8 @@ namespace TimeSink.Entities.Inventory
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

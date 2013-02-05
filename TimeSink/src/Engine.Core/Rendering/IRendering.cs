@@ -14,6 +14,12 @@ namespace TimeSink.Engine.Core.Rendering
 
         float DepthWithinLayer { get; set; }
 
+        Vector2 Position { get; set; }
+
+        float Rotation { get; set; }
+
+        Vector2 Scale { get; set; }
+
         void Draw(SpriteBatch spriteBatch, IResourceCache<Texture2D> cache, Matrix transform);
 
         NonAxisAlignedBoundingBox GetNonAxisAlignedBoundingBox(IResourceCache<Texture2D> cache, Matrix globalTransform);

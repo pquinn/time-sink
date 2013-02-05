@@ -134,6 +134,8 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -161,7 +163,7 @@ namespace TimeSink.Entities.Objects
                 return new BasicRendering(EDITOR_PREVIEW)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache)
                 };
             }
         }

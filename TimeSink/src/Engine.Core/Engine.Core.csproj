@@ -137,11 +137,13 @@
     <Compile Include="IMenuItem.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Rendering\ParentedRendering.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />
     <Compile Include="Rendering\NullRendering.cs" />
     <Compile Include="Rendering\RenderComparer.cs" />
     <Compile Include="Rendering\RenderLayer.cs" />
     <Compile Include="Rendering\TextRendering.cs" />
+    <Compile Include="StateManagement\SoundOptionsScreen.cs" />
     <Compile Include="States\EntitySerialization.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="States\SerializableEntityAttribute.cs" />

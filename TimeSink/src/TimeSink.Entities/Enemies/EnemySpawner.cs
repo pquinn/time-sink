@@ -14,6 +14,8 @@ using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Inventory;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -60,8 +62,6 @@ namespace TimeSink.Entities.Enemies
 
         }
 
-        private bool initialized;
-
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -81,6 +81,8 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()

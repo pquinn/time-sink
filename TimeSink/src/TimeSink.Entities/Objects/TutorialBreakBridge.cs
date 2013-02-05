@@ -17,6 +17,8 @@ using TimeSink.Engine.Core.Input;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
+using TimeSink.Engine.Core.Caching;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeSink.Entities.Objects
 {
@@ -64,6 +66,7 @@ namespace TimeSink.Entities.Objects
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -73,7 +76,7 @@ namespace TimeSink.Entities.Objects
 
                 var rect = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
-                    spriteHeightMeters,
+                    PhysicsConstants.PixelsToMeters(10),
                     1.4f,
                     Vector2.Zero,
                     Physics);
@@ -85,11 +88,15 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
-                popupTrigger = new ItemPopup("Textures/Keys/e-Key", new Vector2(Physics.Position.X, 
-                                                                                Physics.Position.Y - PhysicsConstants.PixelsToMeters(100)));
+                popupTrigger = new ItemPopup(
+                    "Textures/Keys/e-Key", 
+                    new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(100)),
+                    cache);
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
@@ -128,7 +135,7 @@ namespace TimeSink.Entities.Objects
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height)
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
                 };
             }
         }

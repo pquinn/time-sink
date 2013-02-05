@@ -108,6 +108,7 @@ namespace TimeSink.Entities.Actons
         {
             if (force || !initialized)
             {
+                var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
@@ -128,10 +129,14 @@ namespace TimeSink.Entities.Actons
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
-                popup = new ItemPopup(ACTION_POPUP, Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)));
+                popup = new ItemPopup(ACTION_POPUP, 
+                    Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)),
+                    cache);
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -174,7 +179,7 @@ namespace TimeSink.Entities.Actons
                 return new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
-                    Size = new Vector2(Width, Height),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
                     DepthWithinLayer = DEPTH
                 };
             }

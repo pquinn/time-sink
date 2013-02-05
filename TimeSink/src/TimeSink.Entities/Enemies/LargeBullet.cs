@@ -18,6 +18,7 @@ namespace TimeSink.Entities.Enemies
 {
     public class LargeBullet : Entity
     {
+        const string TEXTURE = "Textures/Objects/ice beam";
         const float DEPTH = -50f;
         public LargeBullet(Vector2 position, int width, int height, Vector2 velocity)
         {
@@ -60,10 +61,10 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return new BasicRendering("Textures/Objects/ice beam")
+                return new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Size = new Vector2(Width, Height),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
                         DepthWithinLayer = DEPTH
                     };
             }
@@ -97,6 +98,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<BreakableWall>(OnCollidedWith);
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)

@@ -18,9 +18,7 @@ namespace TimeSink.Engine.Core.Rendering
     public class PivotedRendering : IRendering
     {
         protected string textureKey;
-        protected Vector2 position;
         protected Vector2 pivotPosition;
-        protected float rotation;
         protected Vector2 scale;
         protected Rectangle? srcRectangle;
         protected Rectangle? destRectangle;
@@ -39,6 +37,9 @@ namespace TimeSink.Engine.Core.Rendering
             set { scale = value; }
         }
 
+        public Vector2 Position { get; set; }
+        public float Rotation { get; set; }
+
         public PivotedRendering(string textureKey)
             : this(textureKey, Vector2.Zero, 0.0f, Vector2.One)
         { }
@@ -51,8 +52,8 @@ namespace TimeSink.Engine.Core.Rendering
             : this (textureKey, position, position, rotation, scale, srcRect)
         {
             this.textureKey = textureKey;
-            this.position = position;
-            this.rotation = rotation;
+            this.Position = position;
+            this.Rotation = rotation;
             this.srcRectangle = srcRect;
             this.scale = scale;
         }
@@ -60,9 +61,9 @@ namespace TimeSink.Engine.Core.Rendering
         public PivotedRendering(string textureKey, Vector2 position, Vector2 pivotPosition, float rotation, Vector2 scale, Rectangle? srcRect)
         {
             this.textureKey = textureKey;
-            this.position = position;
+            this.Position = position;
             this.pivotPosition = pivotPosition;
-            this.rotation = rotation;
+            this.Rotation = rotation;
             this.srcRectangle = srcRect;
             this.scale = scale;
             this.DepthWithinLayer = .5f;
@@ -96,10 +97,10 @@ namespace TimeSink.Engine.Core.Rendering
 
             spriteBatch.Draw(
                 texture,
-                position - new Vector2(0, texture.Height/4),
+                Position - new Vector2(0, texture.Height / 4),
                 srcRectangle,
                 Color.White,
-                (float)rotation,
+                (float)Rotation,
                 origin,
                 scale,
                 SpriteEffects.None,
@@ -115,8 +116,8 @@ namespace TimeSink.Engine.Core.Rendering
 
             var relativeTransform =
                 Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
-                Matrix.CreateRotationZ(rotation) *
-                Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
+                Matrix.CreateRotationZ(Rotation) *
+                Matrix.CreateTranslation(new Vector3(Position.X, Position.Y, 0)) *
                 globalTransform;
 
             var topLeft = Vector2.Transform(
@@ -146,8 +147,8 @@ namespace TimeSink.Engine.Core.Rendering
 
             var relativeTransform =
                 Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
-                Matrix.CreateRotationZ(rotation) *
-                Matrix.CreateTranslation(new Vector3(position.X, position.Y, 0)) *
+                Matrix.CreateRotationZ(Rotation) *
+                Matrix.CreateTranslation(new Vector3(Position.X, Position.Y, 0)) *
                 transform;
 
             var pointInRenderCoordinates =
@@ -163,7 +164,7 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(textureKey);
 
-            return Vector2.Transform(position, transform);
+            return Vector2.Transform(Position, transform);
         }
     }
 }

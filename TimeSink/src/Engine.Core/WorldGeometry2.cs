@@ -110,6 +110,8 @@ namespace TimeSink.Engine.Core
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

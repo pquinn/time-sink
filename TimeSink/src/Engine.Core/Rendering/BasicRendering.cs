@@ -29,8 +29,7 @@ namespace TimeSink.Engine.Core.Rendering
         public String TextureKey { get; set; }
         public Vector2 Position { get; set; }
         public float Rotation { get; set; }
-        public Vector2 Scale { get; set; }
-        public Vector2 Size { get; set; }       
+        public Vector2 Scale { get; set; }  
         public Rectangle? SrcRectangle { get; set; }
         public Color TintColor { get; set; }
 
@@ -45,7 +44,6 @@ namespace TimeSink.Engine.Core.Rendering
             this.Position = Vector2.Zero;
             this.Rotation = 0.0f;
             this.Scale = Vector2.One;
-            this.Size = Vector2.Zero;
             this.RenderLayer = Rendering.RenderLayer.Gameground;
             this.DepthWithinLayer = 0;
             this.TintColor = Color.White;
@@ -61,11 +59,6 @@ namespace TimeSink.Engine.Core.Rendering
             else
                 origin = new Vector2(texture.Width / 2, texture.Height / 2);
 
-            var scale = Size / new Vector2(texture.Width, texture.Height);
-            if (scale == Vector2.Zero)
-                scale = Vector2.One;
-            scale *= Scale;
-
             if (InputManager.Instance.Pressed(Keys.B))
             {
                 //Debugger.Break();
@@ -76,7 +69,7 @@ namespace TimeSink.Engine.Core.Rendering
                 BlendState.AlphaBlend,
                 null,
                 null,
-                null,
+                RasterizerState.CullNone,
                 null,
                 globalTransform);
 
@@ -87,7 +80,7 @@ namespace TimeSink.Engine.Core.Rendering
                 TintColor,
                 Rotation,
                 origin,
-                scale,
+                Scale,
                 SpriteEffects.None,
                 0
             );
@@ -99,9 +92,8 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(TextureKey);
 
-            var scale = (Size != Vector2.Zero) ? Size * Scale : Scale;
             var relativeTransform =
-                Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
+                Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
                 Matrix.CreateRotationZ(Rotation) *
                 Matrix.CreateTranslation(new Vector3(Position.X, Position.Y, 0)) *
                 globalTransform;
@@ -131,9 +123,8 @@ namespace TimeSink.Engine.Core.Rendering
         {
             var texture = cache.GetResource(TextureKey);
 
-            var scale = (Size != Vector2.Zero) ? Size * Scale : Scale;
             var relativeTransform =
-                Matrix.CreateScale(new Vector3(scale.X, scale.Y, 1)) *
+                Matrix.CreateScale(new Vector3(Scale.X, Scale.Y, 1)) *
                 Matrix.CreateRotationZ(Rotation) *
                 Matrix.CreateTranslation(new Vector3(Position.X, Position.Y, 0)) *
                 transform;
@@ -152,6 +143,12 @@ namespace TimeSink.Engine.Core.Rendering
             var texture = cache.GetResource(TextureKey);
 
             return Vector2.Transform(Position, transform);
+        }
+
+        public static Vector2 CreateScaleFromSize(int width, int height, string textureKey, IResourceCache<Texture2D> cache)
+        {
+            var texture = cache.GetResource(textureKey);
+            return new Vector2((float)width / texture.Width, (float)height / texture.Height);
         }
     }
 }

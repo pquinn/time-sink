@@ -107,6 +107,8 @@ namespace TimeSink.Entities.Inventory
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override void DestroyPhysics()
@@ -152,7 +154,7 @@ namespace TimeSink.Entities.Inventory
             }
         }
 
-        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime)
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
         }
 

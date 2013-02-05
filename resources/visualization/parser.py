@@ -57,7 +57,7 @@ def print_data_points(points):
 def init_graph(times):
     plt.xlabel('Time')
     plt.ylabel('Player Health')
-    plt.title('Player Health over Time')
+    plt.title('Player Metrics over Time')
     plt.xlim(0, get_time_span(times))
     plt.ylim(0, 100)
 
@@ -66,9 +66,12 @@ def graph_snapshots(snapshots):
     print "len of times: {len}".format(len=len(times))
     health_values = get_health_values(snapshots)
     print "len of healths: {len}".format(len=len(health_values))
+    mana_values = get_mana_values(snapshots)
     init_graph(times)
-    
-    plt.plot(times, health_values)
+
+    plt.plot(times, health_values, label='Health')
+    plt.plot(times, mana_values, marker='o', linestyle='--', color='r', label='Mana')
+    plt.legend()
     plt.show()
 
 def get_times(snapshots):
@@ -93,6 +96,14 @@ def get_health_values(snapshots):
         values.append(snapshot.get_health())
 
     return values
+
+def get_mana_values(snapshots):
+    values = []
+    for snapshot in snapshots:
+        values.append(snapshot.get_mana())
+
+    return values
+
 if __name__ == '__main__':
     import sys
     file_path = sys.argv[1]

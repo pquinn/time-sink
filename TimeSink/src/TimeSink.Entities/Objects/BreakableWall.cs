@@ -80,6 +80,8 @@ namespace TimeSink.Entities.Objects
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public bool BulletHit()
@@ -100,19 +102,19 @@ namespace TimeSink.Entities.Objects
                     return new BasicRendering(TEXTURE1)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Size = new Vector2(Width, Height)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE1, TextureCache)
                     };
                 else if (remainingHits == 2)
                     return new BasicRendering(TEXTURE2)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Size = new Vector2(Width, Height)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE2, TextureCache)
                     };
                 else if (remainingHits == 1)
                     return new BasicRendering(TEXTURE3)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Size = new Vector2(Width, Height)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE3, TextureCache)
                     };
                 else
                     return new NullRendering();
