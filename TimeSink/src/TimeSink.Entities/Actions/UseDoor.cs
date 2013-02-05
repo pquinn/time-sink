@@ -33,6 +33,7 @@ namespace TimeSink.Entities.Actons
         const string EDITOR_PREVIEW_FORWARD = "Textures/Objects/Kyles_SpecialDoorForward";
         const string EDITOR_PREVIEW_BACKGROUND = "Textures/Objects/Kyles_SpecialDoorBackward";
         const string EDITOR_PREVIEW_SIDE = "Textures/Objects/Kyles_SpecialDoorForward";
+        const string IN_OVERLAY = "Textures/Objects/Inner_Door_Overlay";
         const float DEPTH = 0;
 
         const string UP_POPUP = "Textures/Keys/w-key";
@@ -236,7 +237,21 @@ namespace TimeSink.Entities.Actons
 
         public override IRendering Rendering
         {
-            get { return new NullRendering(); }
+            get 
+            {
+                if (DoorType == DoorType.Down)
+                {
+                    return new BasicRendering(IN_OVERLAY)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
+                        DepthWithinLayer = -200,
+                        TintColor = Color.White
+                    };
+                }
+                else
+                    return new NullRendering();
+            }
         }
     }
 }
