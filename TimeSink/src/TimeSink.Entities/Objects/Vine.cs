@@ -81,7 +81,7 @@ namespace TimeSink.Entities.Objects
 
                 //anchor point
                 var offset = new Vector2(0, PhysicsConstants.PixelsToMeters((int)(Height * .1)));
-                Physics = BodyFactory.CreateBody(world, Position - offset, this);
+                Physics = BodyFactory.CreateBody(world, Position, this);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
 
