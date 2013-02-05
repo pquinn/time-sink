@@ -183,8 +183,6 @@ namespace TimeSink.Entities
         public HashSet<DamageOverTimeEffect> Dots { get; set; }
         public DoorType DoorType { get; set; }
 
-        private Joint vineAttachment;
-
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
         public bool Climbing { get { return climbing; } set { climbing = value; } }
 
@@ -945,7 +943,7 @@ namespace TimeSink.Entities
                 else if (swinging)
                 {
                     ForceVineSeperate();
-                    PerformJump(.5f);
+                    PerformJump(.2f);
                 }
                 else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
                 {

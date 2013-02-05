@@ -411,6 +411,10 @@
 					<Value xsi:type="xsd:string">blank</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
+					<Key>Active</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -444,6 +448,10 @@
 				<PairOfStringObject>
 					<Key>Key2</Key>
 					<Value xsi:type="xsd:string">blank</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Active</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Dead</Key>

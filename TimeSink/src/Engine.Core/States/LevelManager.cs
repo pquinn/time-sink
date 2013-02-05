@@ -150,14 +150,7 @@ namespace TimeSink.Engine.Core.States
         }
 
         private void RegisterLevelComponents()
-        {
-            //var width = PhysicsConstants.PixelsToMeters(640);
-            //var height = PhysicsConstants.PixelsToMeters(360);
-            //var mat =
-            //    Matrix.CreateTranslation(new Vector3(width, height, 0));
-
-            //Level.PlayerStart = Vector2.Transform(Level.PlayerStart, mat);
-
+        {   
             Level.Midground.ForEach(
                 x =>
                 {
@@ -170,8 +163,6 @@ namespace TimeSink.Engine.Core.States
                     RenderManager.RegisterRenderable(x);
                 });
 
-            //Level.Entities.ForEach(
-            //    x => x.Position = Vector2.Transform(x.Position, mat));
             Level.Entities.ForEach(
                 x =>
                 {
@@ -179,12 +170,6 @@ namespace TimeSink.Engine.Core.States
                     RenderManager.RegisterRenderable(x);
                 });
 
-
-            //Level.GeoSegments = Level.GeoSegments.Select(
-            //    x => x.Select(
-            //        y => new WorldCollisionGeometrySegment(
-            //                Vector2.Transform(y.EndPoint, mat),
-            //                y.IsOneWay)).ToList()).ToList();
             RegisterEntity(new WorldGeometry2() { GeoChains = Level.GeoSegments });
         }
 

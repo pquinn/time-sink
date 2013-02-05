@@ -87,6 +87,8 @@ namespace TimeSink.Engine.Core
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
 
+            Database = Container.Resolve<SQLiteDatabase>();
+
             log4net.Config.XmlConfigurator.Configure();
 
             Database = Container.Resolve<SQLiteDatabase>();
