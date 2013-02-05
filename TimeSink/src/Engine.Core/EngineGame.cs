@@ -70,7 +70,6 @@ namespace TimeSink.Engine.Core
             Content.RootDirectory = "Content";
 
             ScreenManager = new ScreenManager(this);
-            Database = Container.Resolve<SQLiteDatabase>();
 
             Instance = this;
         }
@@ -87,6 +86,8 @@ namespace TimeSink.Engine.Core
 
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
+
+            Database = Container.Resolve<SQLiteDatabase>();
 
             log4net.Config.XmlConfigurator.Configure();
 
