@@ -605,16 +605,21 @@ namespace TimeSink.Entities
 
             if (keyboard.IsKeyDown(Keys.A))
             {
+                float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
                 facing = -1;
                 if (ClimbingState())
                 {
                     Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
                 }
 
-                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) && 
+                     canClimb != null && canClimb.VineWall)
                 {
-                    moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
-                    Physics.LinearDamping = 5f;
+                    if (Physics.Position.X >= (canClimb.Position.X - (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) + THRESHHOLD)
+                    {
+                        moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                        Physics.LinearDamping = 10f;
+                    }
                 }
 
                 else if (currentState == BodyStates.ClimbingBack)
@@ -676,6 +681,7 @@ namespace TimeSink.Entities
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
+                float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
                 facing = 1;
 
                 if (ClimbingState())
@@ -683,10 +689,14 @@ namespace TimeSink.Entities
                     Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
                 }
 
-                if (currentState == BodyStates.ClimbingBack && canClimb != null && canClimb.VineWall)
+                if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) && 
+                     canClimb != null && canClimb.VineWall)
                 {
-                    moveDirection.X += 1.0f;// Physics.Position = new Vector2(Physics.Position.X + PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
-                    Physics.LinearDamping = 5f;
+                    if (Physics.Position.X <= (canClimb.Position.X + (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) - THRESHHOLD)
+                    {
+                        moveDirection.X += 1.0f;
+                        Physics.LinearDamping = 10f;
+                    }
                 }
                 else if (currentState == BodyStates.ClimbingBack)
                 {
@@ -1144,6 +1154,7 @@ namespace TimeSink.Entities
                 else if (onTorchGround != null && HoldingTorch != null)
                 {
                     ((Torch)HoldingTorch).PlaceTorch(this, onTorchGround);
+                    onPickup = HoldingTorch;
                     inventory.Remove(HoldingTorch);
                     activeItem = 0;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
@@ -2516,6 +2527,7 @@ namespace TimeSink.Entities
         public bool ClimbingState()
         {
             return (currentState == BodyStates.ClimbingBack ||
+                    currentState == BodyStates.ClimbingBackNeut ||
                     currentState == BodyStates.ClimbingLeft ||
                     currentState == BodyStates.ClimbingRight ||
                     currentState == BodyStates.ClimbingLeftNeutral ||

@@ -777,6 +777,8 @@
   <ItemGroup>
     <Compile Include="Textures\Objects\HorizontalVine.png">
       <Name>HorizontalVine</Name>
+      <Processor>TextureProcessor</Processor>
+      <Importer>TextureImporter</Importer>
     </Compile>
     <Compile Include="Textures\Sprites\SpriteSheets\ClimbingLeft.PNG">
       <Name>ClimbingLeft</Name>
