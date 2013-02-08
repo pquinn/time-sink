@@ -91,6 +91,8 @@ namespace TimeSink.Engine.Core
 
             log4net.Config.XmlConfigurator.Configure();
 
+            Database = Container.Resolve<SQLiteDatabase>();
+
             Logger.Info("EngineGame initialized");
             
             ScreenManager.Initialize();
