@@ -75,6 +75,7 @@ namespace TimeSink.Engine.Game
         protected override void Initialize()
         {
             base.Initialize();
+            LevelManager.LevelCache.ReplaceOrAdd("Save", new Save(String.Empty, Vector2.Zero, 100, 100, new List<IInventoryItem>()));
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
         }
 
@@ -283,16 +284,21 @@ namespace TimeSink.Engine.Game
             if (Character != null) Character.LogLevelSummary();
            // backgroundTrack.PlaySound(); Should get baked into the levels, not the timesink game
 
-
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
             levelTime = 0f;
             levelStarted = true;
             Logger.Info("Level loaded.");
             
+            var save = ((Save)LevelManager.LevelCache["Save"]);
             Character = new UserControlledCharacter(
-                spawnPoint >= 0 ? 
-                    LevelManager.Level.SpawnPoints[spawnPoint] : 
-                    LevelManager.Level.DefaultStart);
+                spawnPoint >= 0 ?
+                    LevelManager.Level.SpawnPoints[spawnPoint] :
+                    LevelManager.Level.DefaultStart)
+                    {
+                        Health = save.PlayerHealth,
+                        Mana = save.PlayerMana,
+                        Inventory = save.Inventory
+                    };
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
             spawnPoint = -1;

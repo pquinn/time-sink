@@ -28,6 +28,7 @@ namespace TimeSink.Engine.Core.States
             RenderManager = renderManager;
             Container = container;
             Level = new Level();
+            LevelCache = new Dictionary<string, object>();
 
             Physics = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
         }
@@ -40,9 +41,13 @@ namespace TimeSink.Engine.Core.States
 
         public Level Level { get; set; }
 
+        public string LevelPath { get; set; }
+
         public LevelLoadedEventHandler LevelLoaded { get; set; }
 
         public GeometryResetEventHandler GeometryReset { get; set; }
+
+        public Dictionary<string, object> LevelCache { get; set; }
 
         public void RegisterMidground(Tile tile)
         {
@@ -123,6 +128,7 @@ namespace TimeSink.Engine.Core.States
         {
             if (File.Exists(fileName))
             {
+                LevelPath = fileName;
                 using (var xmlReader = XmlReader.Create(fileName))
                 {
                     var deserializer = new XmlSerializer(typeof(Level));

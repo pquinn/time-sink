@@ -72,6 +72,8 @@ namespace TimeSink.Editor.GUI
         }
         private void SaveAs()
         {
+            editor.Game.LevelManager.Level.Name = FileName;
+
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.FileName = "Document"; // Default file name

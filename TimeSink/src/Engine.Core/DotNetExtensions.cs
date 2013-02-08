@@ -14,5 +14,16 @@ namespace TimeSink.Engine.Core
                 action(item);
             }
         }
+
+        public static void ReplaceOrAdd(this Dictionary<string, object> dict, string key, object value)
+        {
+            object obj = null;
+            var has = dict.TryGetValue(key, out obj);
+
+            if (has)
+                dict[key] = value;
+            else
+                dict.Add(key, value);
+        }
     }
 }

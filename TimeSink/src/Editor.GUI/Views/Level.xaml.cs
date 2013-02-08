@@ -30,6 +30,7 @@ namespace TimeSink.Editor.GUI.Views
     public partial class LevelProperties : UserControl
     {
         private bool isLoaded;
+        private MainWindow mainWindow;
 
         public LevelProperties()
         {
@@ -43,7 +44,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             if (!isLoaded)
             {
-                var mainWindow = this.TryFindParent<MainWindow>();
+                mainWindow = this.TryFindParent<MainWindow>();
                 Game = mainWindow.editor.Game;
 
                 Game.LevelManager.LevelLoaded += new LevelLoadedEventHandler(Level_Loaded);
