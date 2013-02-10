@@ -36,6 +36,7 @@ namespace TimeSink.Engine.Game
     /// </summary>
     public class TimeSinkGame : EngineGame
     {
+        public static readonly string PathToProject = "..//..//..//..//Engine.GameContent";
         const float viewWidth = 2f;
 
         // Controller related.
@@ -46,6 +47,8 @@ namespace TimeSink.Engine.Game
 
         float levelTime;
         bool levelStarted;
+
+        private Save defaultSave;
 
         public UserControlledCharacter Character
         {
@@ -62,8 +65,6 @@ namespace TimeSink.Engine.Game
             levelStarted = false;
 
             RenderDebugGeometry = true;
-
-            AddInitialScreens();
         }
 
         /// <summary>
@@ -75,7 +76,11 @@ namespace TimeSink.Engine.Game
         protected override void Initialize()
         {
             base.Initialize();
-            LevelManager.LevelCache.ReplaceOrAdd("Save", new Save(String.Empty, Vector2.Zero, 100, 100, new List<IInventoryItem>()));
+            
+            AddInitialScreens();
+            
+            defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 30, 100, new List<IInventoryItem>());
+            LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
         }
 
@@ -88,7 +93,10 @@ namespace TimeSink.Engine.Game
 #if WINDOWS_PHONE
             screenManager.AddScreen(new PhoneMainMenuScreen(), null);
 #else
-            ScreenManager.AddScreen(new MainMenuScreen(), null);
+            var mainMenuScreen = new MainMenuScreen();
+            mainMenuScreen.PlayGame += new PlayGameEventHandler(() => 
+                ScreenManager.CurrentGameplay.UpdateHealth(Character.Health));
+            ScreenManager.AddScreen(mainMenuScreen, null);
 #endif
         }
 
@@ -133,7 +141,7 @@ namespace TimeSink.Engine.Game
             if (!string.IsNullOrEmpty(loadLevel))
             {
                 LoadLevel();
-                
+                loadLevel = null;
             }
 
             if (levelStarted)
@@ -270,12 +278,19 @@ namespace TimeSink.Engine.Game
             this.spawnPoint = spawnPoint;
         }
 
+        public override void LoadLevel(string levelToLoad)
+        {
+            LevelManager.Clear();
+            LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
+            var path = "..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\Levels\\" + levelToLoad + ".txt";
+            LevelManager.DeserializeLevel(path);
+        }
+
         private void LoadLevel()
         {
             LevelManager.Clear();
             var path = "..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\Levels\\" + loadLevel + ".txt";
             LevelManager.DeserializeLevel(path);
-            loadLevel = null;
         }
 
         protected override void LevelLoaded()

@@ -18,6 +18,8 @@ using Microsoft.Win32;
 
 namespace TimeSink.Engine.Core.StateManagement
 {
+    public delegate void PlayGameEventHandler();
+
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.
     /// </summary>
@@ -83,6 +85,8 @@ namespace TimeSink.Engine.Core.StateManagement
 
         #region Handle Input
 
+        public PlayGameEventHandler PlayGame { get; set; }
+
         /// <summary>
         /// Event handler for when the Play Game menu entry is selected.
         /// </summary>
@@ -92,6 +96,11 @@ namespace TimeSink.Engine.Core.StateManagement
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                                gp);
             ScreenManager.CurrentGameplay = gp;
+
+            if (PlayGame != null)
+            {
+                PlayGame();
+            }
         }
        
         /// <summary>
@@ -141,7 +150,9 @@ namespace TimeSink.Engine.Core.StateManagement
             {
                 // Open document  
                 ScreenManager.GameWorld.LevelManager.Clear();
-                ScreenManager.GameWorld.LevelManager.DeserializeLevel(dlg.FileName);
+                var levelWithExt = dlg.FileName.Split(new string[] { "Levels\\" }, StringSplitOptions.None)[1];
+                var level = levelWithExt.Substring(0, levelWithExt.IndexOf('.'));
+                ScreenManager.GameWorld.LoadLevel(level);
             }
         }
         #endregion

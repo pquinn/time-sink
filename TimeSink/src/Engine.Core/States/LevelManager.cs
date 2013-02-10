@@ -128,7 +128,8 @@ namespace TimeSink.Engine.Core.States
         {
             if (File.Exists(fileName))
             {
-                LevelPath = fileName;
+                var levelWithExt = fileName.Split(new string[]{ "Levels\\" }, StringSplitOptions.None)[1];
+                LevelPath = levelWithExt.Substring(0, levelWithExt.IndexOf('.'));
                 using (var xmlReader = XmlReader.Create(fileName))
                 {
                     var deserializer = new XmlSerializer(typeof(Level));

@@ -36,6 +36,7 @@ namespace Editor
     /// </summary>
     public class EditorGame : XNAControlGame
     {
+        public static readonly string PathToProject = "..//..//..//Engine.Game//Engine.GameContent";
         SpriteBatch spriteBatch;
 
         Camera camera;
