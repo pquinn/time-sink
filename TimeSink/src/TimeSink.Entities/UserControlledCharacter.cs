@@ -343,7 +343,7 @@ namespace TimeSink.Entities
             //    GravityEnabled = true
             //};
             Position = position;
-            health = 100;
+            health = 30;  //@update
             direction = new Vector2(1, 0);
 
             // this seems stupid
@@ -509,7 +509,13 @@ namespace TimeSink.Entities
             }
 
             if (isSliding && !CanSlide)
-                StopSliding();    
+                StopSliding();
+
+            if (health <= 0)
+            {
+                var save = (Save)Engine.LevelManager.LevelCache["Save"];
+                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
+            }
         }
 
         private void RemoveInactiveDots()

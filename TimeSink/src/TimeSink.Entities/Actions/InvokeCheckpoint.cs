@@ -14,7 +14,7 @@ namespace TimeSink.Entities.Actions
     [SerializableEntity("5487de5f-acba-42c9-9404-b05ddea64b02")]
     public class InvokeCheckpoint : InteractableItem
     {
-        const string EDITOR_NAME = "Open Chest";
+        const string EDITOR_NAME = "Checkpoint";
         private static readonly Guid guid = new Guid("5487de5f-acba-42c9-9404-b05ddea64b02");
 
         public InvokeCheckpoint()
@@ -38,11 +38,15 @@ namespace TimeSink.Entities.Actions
             get { return EDITOR_NAME; }
         }
 
+        [SerializableField]
+        [EditableField("Spawn Point")]
+        public int SpawnPoint { get; set; }
+
         protected override void ExecuteAction()
         {
             engine.LevelManager.LevelCache.ReplaceOrAdd(
                 "Save",
-                new Save("test", Position, Character.Health, Character.Mana, Character.Inventory));
+                new Save(Engine.LevelManager.LevelPath, SpawnPoint, Character.Health, Character.Mana, Character.Inventory));
         }
     }
 }

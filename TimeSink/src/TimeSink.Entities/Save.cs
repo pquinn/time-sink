@@ -8,7 +8,7 @@ namespace TimeSink.Entities
 {
     public class Save
     {
-        public Save(string levelPath, Vector2 spawnPoint, float playerHealth, float playerMana, List<IInventoryItem> inventory)
+        public Save(string levelPath, int spawnPoint, float playerHealth, float playerMana, List<IInventoryItem> inventory)
         {
             LevelPath = levelPath;
             SpawnPoint = spawnPoint;
@@ -18,7 +18,7 @@ namespace TimeSink.Entities
         }
 
         public string LevelPath { get; set; }
-        public Vector2 SpawnPoint { get; set; }
+        public int SpawnPoint { get; set; }
         public float PlayerHealth { get; set; }
         public float PlayerMana { get; set; }
         public List<IInventoryItem> Inventory { get; set; }

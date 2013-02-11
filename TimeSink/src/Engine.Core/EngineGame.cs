@@ -170,6 +170,10 @@ namespace TimeSink.Engine.Core
             base.Draw(gameTime);
         }
 
+        public virtual void LoadLevel(string levelName)
+        {
+        }
+
         protected virtual void LevelLoaded() 
         {
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
