@@ -289,7 +289,7 @@ namespace TimeSink.Engine.Core.StateManagement
 
         public void UpdateHealth(float val)
         {
-            if (hudHealth != null)
+            if (hudHealth == null)
             {
                 hudHealth.TakeDamage(val, 100);
             }

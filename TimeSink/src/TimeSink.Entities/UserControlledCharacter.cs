@@ -193,13 +193,13 @@ namespace TimeSink.Entities
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
 
-        private List<IInventoryItem> inventory;
+        public List<IInventoryItem> Inventory { get; set; }
         public override IMenuItem InventoryItem
         {
             get
             {
-                return inventory.Count != 0
-                    ? inventory[activeItem]
+                return Inventory.Count != 0
+                    ? Inventory[activeItem]
                     : null;
             }
         }
@@ -334,12 +334,12 @@ namespace TimeSink.Entities
             //    GravityEnabled = true
             //};
             Position = position;
-            health = 100;
+            health = 30;  //@update
             direction = new Vector2(1, 0);
 
             // this seems stupid
             activeItem = 0;
-            inventory = new List<IInventoryItem>();
+            Inventory = new List<IInventoryItem>();
             //inventory.Add(new Dart());
 
             animations = CreateAnimations();
@@ -393,7 +393,6 @@ namespace TimeSink.Entities
                     currentState = BodyStates.KnockbackLeft;
                     Physics.ApplyLinearImpulse(new Vector2(20, 0));
                 }
-
             }
         }
 
@@ -501,7 +500,13 @@ namespace TimeSink.Entities
             }
 
             if (isSliding && !CanSlide)
-                StopSliding();    
+                StopSliding();
+
+            if (health <= 0)
+            {
+                var save = (Save)Engine.LevelManager.LevelCache["Save"];
+                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
+            }
         }
 
         private void RemoveInactiveDots()
@@ -511,8 +516,8 @@ namespace TimeSink.Entities
 
         public void AddInventoryItem(IInventoryItem item)
         {
-            inventory.Add(item);
-            activeItem = inventory.IndexOf(item);
+            Inventory.Add(item);
+            activeItem = Inventory.IndexOf(item);
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -840,7 +845,7 @@ namespace TimeSink.Entities
 
                             if (LeftFacingBodyState())
                             {
-                                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                                if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
                                 {
                                     currentState = BodyStates.DuckingLeftBow;
                                 }
@@ -849,7 +854,7 @@ namespace TimeSink.Entities
                             }
                             else
                             {
-                                if (HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                                if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
                                 {
                                     currentState = BodyStates.DuckingRightBow;
                                 }
@@ -1081,7 +1086,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.F))
             {
-                if (shotTimer >= shotInterval && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
                 {
                     currentState = facing == -1
                         ? isDucking
@@ -1099,10 +1104,10 @@ namespace TimeSink.Entities
             else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
             {
                 if (!ClimbingState() && !swinging && !VineBridgeState() &&
-                    shotTimer >= shotInterval && HoldingTorch == null && inventory.Count != 0 && inventory[activeItem] is Arrow)
+                    shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
                 {
                     PlaySound(arrowSound);
-                    inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
+                    Inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
                     if (chargingWeapon)
                         Mana -= 50; //TODO: constant? per-weapon? calc?
                     var shooting = animations[currentState].CurrentFrame = 0;
@@ -1122,7 +1127,7 @@ namespace TimeSink.Entities
 
             if (InputManager.Instance.IsNewKey(Keys.G))
             {
-                if (activeItem == inventory.Count - 1)
+                if (activeItem == Inventory.Count - 1)
                 {
                     activeItem = 0;
                 }
@@ -1141,7 +1146,7 @@ namespace TimeSink.Entities
                 {
                     if (onPickup is Torch)
                     {
-                        inventory.Add(onPickup);
+                        Inventory.Add(onPickup);
                         ((Torch)onPickup).WeldToPlayer(this);
                         HoldingTorch = (Torch)onPickup;
                         onPickup = null;
@@ -1153,7 +1158,7 @@ namespace TimeSink.Entities
                 {
                     ((Torch)HoldingTorch).PlaceTorch(this, onTorchGround);
                     onPickup = HoldingTorch;
-                    inventory.Remove(HoldingTorch);
+                    Inventory.Remove(HoldingTorch);
                     activeItem = 0;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
                     HoldingTorch = null;

@@ -68,6 +68,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\InvokeCheckpoint.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />
     <Compile Include="Enemies\FlowerEnemy.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="NonPlayerCharacter.cs" />
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Inventory\Torch.cs" />
+    <Compile Include="Save.cs" />
     <Compile Include="Triggers\PlaceTorchTrigger.cs" />
     <Compile Include="Triggers\SlideTrigger.cs" />
     <Compile Include="Triggers\TutorialTrigger.cs" />

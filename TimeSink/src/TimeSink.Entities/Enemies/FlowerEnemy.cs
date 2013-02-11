@@ -100,7 +100,7 @@ namespace TimeSink.Entities.Enemies
         }
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
-         {
+        {
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;

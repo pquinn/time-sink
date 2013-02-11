@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{B3ABC81E-B8BB-4FA0-98E6-AC1647F771AB}</ProjectGuid>
@@ -1666,11 +1666,18 @@
   <ItemGroup>
     <Compile Include="Textures\Enemies\Flower_Neutral.png">
       <Name>Flower_Neutral</Name>
- 	 <Importer>TextureImporter</Importer>
+      <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="Textures\Objects\Inner_Door_Overlay.png">
       <Name>Inner_Door_Overlay</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Tiles\Climbing vine.png">
+      <Name>Climbing vine</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

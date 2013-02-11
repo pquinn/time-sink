@@ -57,6 +57,7 @@ namespace TimeSink.Engine.Core
         public virtual void InitializePhysics(bool force, IComponentContext engineRegistrations) 
         {
             TextureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            Engine = engineRegistrations.Resolve<EngineGame>();
         }
 
         public abstract Guid Id { get; set; }
@@ -108,6 +109,9 @@ namespace TimeSink.Engine.Core
 
         [XmlIgnore]
         public IResourceCache<Texture2D> TextureCache { get; set; }
+
+        [XmlIgnore]
+        public EngineGame Engine { get; set; }
 
         [XmlIgnore]
         public abstract List<Fixture> CollisionGeometry
