@@ -45,6 +45,7 @@ namespace TimeSink.Entities
         {
             #region neutral
             NeutralRight, NeutralLeft,
+            NeutralRightTorch, NeutralLeftTorch,
             IdleRightOpen, IdleRightClosed, IdleLeftOpen, IdleLeftClosed,
             FacingBack, FacingForward,
             #endregion
@@ -52,6 +53,8 @@ namespace TimeSink.Entities
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
             WalkingShootRight, WalkingShoot2Right, WalkingShoot3Right, WalkingDrawnRight,
             WalkingShootLeft, WalkingShoot2Left, WalkingShoot3Left, WalkingDrawnLeft,
+            WalkingTorchRight, WalkingTorchLeft, WalkingTorchStartLeft, WalkingTorchStartRight, 
+            WalkingTorchEndLeft, WalkingTorchEndRight,
             #endregion
             #region running
             RunningStartRight, RunningRight, RunningStopRight, RunningStartLeft, RunningLeft, RunningStopLeft,
@@ -94,12 +97,18 @@ namespace TimeSink.Entities
         const string NEUTRAL_LEFT = "Textures/Sprites/SpriteSheets/Neutral_Left";
         const string IDLE_CLOSED_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
         const string IDLE_OPEN_HAND = "Textures/Sprites/SpriteSheets/Idle_OpenHand";
+        const string NEUTRAL_RIGHT_TORCH = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Torch_Neut";
+        const string NEUTRAL_LEFT_TORCH = "Textures/Sprites/SpriteSheets/Body_Walking_Left_Torch_Neut";
         #endregion
         #region walking
         const string WALKING_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Intermediate";
         const string WALKING_RIGHT = "Textures/Sprites/SpriteSheets/Body_Walking_Right";
         const string WALKING_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Intermediate_Left";
         const string WALKING_LEFT = "Textures/Sprites/SpriteSheets/BodyWalkLeft";
+        const string WALKING_TORCH_RIGHT = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Torch";
+        const string WALKING_TORCH_LEFT = "Textures/Sprites/SpriteSheets/Body_Walking_Left_Torch";
+        const string WALKING_TORCH_RIGHT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Right_Torch_Intermediate";
+        const string WALKING_TORCH_LEFT_INTERMEDIATE = "Textures/Sprites/SpriteSheets/Body_Walking_Left_Torch_Intermediate";
         #endregion
         #region Running
         const string RUNNING_RIGHT = "Textures/Sprites/SpriteSheets/RunningRight";
@@ -729,7 +738,7 @@ namespace TimeSink.Entities
                             }
                         }
 
-                        else if (InventoryItem is Arrow)
+                        else if (InventoryItem is Arrow && HoldingTorch == null)
                         {
                             if (currentState != BodyStates.WalkingShootRight &&
                                 currentState != BodyStates.WalkingShoot2Right &&
@@ -740,14 +749,23 @@ namespace TimeSink.Entities
                                 currentState = BodyStates.WalkingShootRight;
                             }
                         }
-                        else if (currentState != BodyStates.WalkingRight)
+                        else if (currentState != BodyStates.WalkingTorchRight && HoldingTorch != null)
+                        {
+                            animations[BodyStates.WalkingTorchRight].CurrentFrame = 0;
+                            currentState = BodyStates.WalkingTorchStartRight;
+                        }
+                        else if (currentState != BodyStates.WalkingRight && HoldingTorch == null)
                         {
                             animations[BodyStates.WalkingRight].CurrentFrame = 0;
                             currentState = BodyStates.WalkingStartRight;
                         }
-                        else
+                        else if (HoldingTorch == null)
                         {
                             currentState = BodyStates.WalkingRight;
+                        }
+                        else
+                        {
+                            currentState = BodyStates.WalkingTorchRight;
                         }
                     }
                     else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
@@ -1151,6 +1169,7 @@ namespace TimeSink.Entities
                         HoldingTorch = (Torch)onPickup;
                         onPickup = null;
                         EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
+                        currentState = BodyStates.NeutralRightTorch;
 
                     }
                 }
@@ -1162,6 +1181,19 @@ namespace TimeSink.Entities
                     activeItem = 0;
                     EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
                     HoldingTorch = null;
+                    if (InventoryItem is Arrow)
+                    {
+                        if (RightFacingBodyState())
+                        {
+                            currentState = BodyStates.WalkingShootRight;
+                        }
+                        else
+                            currentState = BodyStates.WalkingShootRight;
+                    }
+                    else if(RightFacingBodyState())
+                        currentState = BodyStates.NeutralRight;
+                    else
+                        currentState = BodyStates.NeutralLeft;
 
                 }
             }
@@ -1178,6 +1210,11 @@ namespace TimeSink.Entities
                     else if (currentState == BodyStates.WalkingLeft)
                     {
                         currentState = BodyStates.WalkingEndLeft;
+                        timer = 0f;
+                    }
+                    else if (currentState == BodyStates.WalkingTorchRight)
+                    {
+                        currentState = BodyStates.WalkingTorchEndRight;
                         timer = 0f;
                     }
                     else if (currentState == BodyStates.NeutralLeft)
@@ -1379,6 +1416,12 @@ namespace TimeSink.Entities
                 currentState = BodyStates.IdleRightOpen;
                 timer = 0f;
             }
+            else if (currentState == BodyStates.NeutralRightTorch && timer >= interval)
+            {
+                var idle = animations[BodyStates.NeutralRightTorch];
+                idle.CurrentFrame = (idle.CurrentFrame + 1) % idle.NumFrames;
+                timer = 0f;
+            }
 
             else if (currentState == BodyStates.WalkingRight && timer >= interval)
             {
@@ -1392,16 +1435,34 @@ namespace TimeSink.Entities
                 walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
                 timer = 0f;
             }
+            else if (currentState == BodyStates.WalkingTorchRight && timer >= interval)
+            {
+                var walking = animations[BodyStates.WalkingTorchRight];
+                walking.CurrentFrame = (walking.CurrentFrame + 1) % walking.NumFrames;
+                timer = 0f;
+            }
             else if (currentState == BodyStates.WalkingStartRight && timer >= interval)
             {
                 var walking = animations[BodyStates.WalkingRight].CurrentFrame = 0;
                 currentState = BodyStates.WalkingRight;
                 timer = 0f;
             }
+            else if (currentState == BodyStates.WalkingTorchStartRight && timer >= interval)
+            {
+                var walking = animations[BodyStates.WalkingTorchRight].CurrentFrame = 0;
+                currentState = BodyStates.WalkingTorchRight;
+                timer = 0f;
+            }
             else if ((currentState == BodyStates.WalkingEndRight ||
                       currentState == BodyStates.RunningStopRight) && timer >= interval)
             {
                 currentState = BodyStates.NeutralRight;
+                timer = 0f;
+            }
+
+            else if (currentState == BodyStates.WalkingTorchEndRight && timer >= interval)
+            {
+                currentState = BodyStates.NeutralRightTorch;
                 timer = 0f;
             }
 
@@ -1933,6 +1994,17 @@ namespace TimeSink.Entities
                     0,
                     Vector2.One,
                     invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(
+                BodyStates.NeutralRightTorch,
+                new NewAnimationRendering(
+                    NEUTRAL_RIGHT_TORCH,
+                    new Vector2(93f, 180f),
+                    2,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
             #endregion
 
             #region Idle
@@ -2016,6 +2088,39 @@ namespace TimeSink.Entities
                 new NewAnimationRendering(
                     WALKING_LEFT_INTERMEDIATE,
                     new Vector2(77f, 154f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(
+                BodyStates.WalkingTorchRight,
+                new NewAnimationRendering(
+                    WALKING_TORCH_RIGHT,
+                    new Vector2(93f, 180f),
+                    5,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(
+                BodyStates.WalkingTorchStartRight,
+                new NewAnimationRendering(
+                    WALKING_TORCH_RIGHT_INTERMEDIATE,
+                    new Vector2(93f, 180f),
+                    1,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(
+                BodyStates.WalkingTorchEndRight,
+                new NewAnimationRendering(
+                    WALKING_TORCH_RIGHT_INTERMEDIATE,
+                    new Vector2(93f, 180f),
                     1,
                     Vector2.Zero,
                     0,
@@ -2493,10 +2598,14 @@ namespace TimeSink.Entities
                     currentState == BodyStates.WalkingShootRight ||
                     currentState == BodyStates.WalkingShoot2Right ||
                     currentState == BodyStates.WalkingShoot3Right ||
+                    currentState == BodyStates.WalkingTorchRight ||
+                    currentState == BodyStates.WalkingTorchStartRight ||
+                    currentState == BodyStates.WalkingTorchEndRight ||
                     currentState == BodyStates.ShootingArrowRight ||
                     currentState == BodyStates.ShootingArrowNeutRight ||
                     currentState == BodyStates.RunningRight ||
                     currentState == BodyStates.NeutralRight ||
+                    currentState == BodyStates.NeutralRightTorch ||
                     currentState == BodyStates.IdleRightOpen ||
                     currentState == BodyStates.IdleRightClosed ||
                     currentState == BodyStates.DuckingRight ||
