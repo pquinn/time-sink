@@ -16,6 +16,7 @@ using FarseerPhysics.Dynamics.Joints;
 using TimeSink.Engine.Core;
 using Engine.Defaults;
 using TimeSink.Engine.Core.Rendering;
+using TimeSink.Entities.Inventory;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -27,6 +28,9 @@ namespace TimeSink.Entities.Enemies
         const string ENEMY_TEXTURE = "Textures/Enemies/Flower_Neutral";
         const string EDITOR_NAME = "Flower Enemy";
 
+        private static int textureHeight;
+        private static int textureWidth;
+
         const float DEPTH = -50f;
 
         private static readonly Guid GUID = new Guid("c37c1bc9-b0c5-401d-a1e0-5d427628ff12");
@@ -37,9 +41,24 @@ namespace TimeSink.Entities.Enemies
         }
 
         public FlowerEnemy(Vector2 position)
-            : base(position)
+            : this (128, 128, position)
         {
         }
+
+        public FlowerEnemy(int width, int height, Vector2 position)
+        {
+            Width = width;
+            Height = height;
+            Position = position;
+        }
+
+        [SerializableField]
+        [EditableField("Width")]
+        public override int Width { get; set; }
+
+        [SerializableField]
+        [EditableField("Height")]
+        public override int Height { get; set; }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -49,41 +68,12 @@ namespace TimeSink.Entities.Enemies
             get { return EDITOR_NAME; }
         }
 
-        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+        public override void Load(IComponentContext engineRegistrations)
         {
-            if (force || !initialized)
-            {
-                // Get variables
-                var world = engineRegistrations.Resolve<PhysicsManager>().World;
-                var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
-                var texture = GetTexture(textureCache);
-                Width = texture.Width;
-                Height = texture.Height;
-
-                var width = PhysicsConstants.PixelsToMeters(Width);
-                var height = PhysicsConstants.PixelsToMeters(Height);
-
-                // Create a rectangular body for hit detection.
-                Physics = BodyFactory.CreateRectangle(
-                    world,
-                    width,
-                    height,
-                    1,
-                    Position);
-                Physics.FixedRotation = true;
-                Physics.BodyType = BodyType.Dynamic;
-                Physics.UserData = this;
-                Physics.Mass = 0f;
-                Physics.CollidesWith = Category.Cat1;
-                Physics.CollisionCategories = Category.Cat3;
-                
-                // Register hit detection callbacks.
-                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
-
-                initialized = true;
-            }
-
-            base.InitializePhysics(false, engineRegistrations);
+            var cache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+            var texture = cache.LoadResource(ENEMY_TEXTURE);
+            textureWidth = texture.Width;
+            textureHeight = texture.Height;
         }
 
         public override IRendering Rendering
@@ -95,7 +85,8 @@ namespace TimeSink.Entities.Enemies
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     TintColor = new Color(255f, tint, tint, 255f),
-                    DepthWithinLayer = DEPTH
+                    DepthWithinLayer = DEPTH,
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, ENEMY_TEXTURE, TextureCache)
                 };
             }
         }
@@ -106,6 +97,60 @@ namespace TimeSink.Entities.Enemies
             {
                 return Rendering;
             }
+        }
+
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+         {
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
+                var texture = GetTexture(textureCache);
+                Width = texture.Width;
+                Height = texture.Height;
+                Physics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(Width),
+                    PhysicsConstants.PixelsToMeters(Height),
+                    1,
+                    Position);
+                Physics.FixedRotation = true;
+                Physics.BodyType = BodyType.Dynamic;
+                Physics.UserData = this;
+
+                Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+
+                var fix = Physics.FixtureList[0];
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollidesWith = Category.Cat1;
+
+                var hitsensor = fix.Clone(Physics);
+                hitsensor.IsSensor = true;
+                hitsensor.CollisionCategories = Category.Cat2;
+                hitsensor.CollidesWith = Category.Cat2;
+
+                initialized = true;
+            }
+
+            base.InitializePhysics(false, engineRegistrations);
+        }
+
+        public override List<Fixture> CollisionGeometry
+        {
+            get
+            {
+                return Physics.FixtureList;
+            }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }
