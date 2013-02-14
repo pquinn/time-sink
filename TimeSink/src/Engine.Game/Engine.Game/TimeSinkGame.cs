@@ -64,7 +64,7 @@ namespace TimeSink.Engine.Game
             levelTime = 0f;
             levelStarted = false;
 
-            RenderDebugGeometry = true;
+            RenderDebugGeometry = false;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace TimeSink.Engine.Game
             
             AddInitialScreens();
             
-            defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 30, 100, new List<IInventoryItem>());
+            defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 100, 100, new List<IInventoryItem>());
             LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
         }
