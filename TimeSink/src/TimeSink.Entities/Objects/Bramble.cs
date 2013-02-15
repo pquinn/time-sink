@@ -120,17 +120,20 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get 
             {
-                return new BasicRendering(TEXTURE)
+                return new List<IRendering>()
                 {
-                    Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                    new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                    }
                 };
             }
         }

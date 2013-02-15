@@ -7,7 +7,7 @@ namespace TimeSink.Engine.Core.Rendering
 {
     public interface IRenderable
     {
-        IRendering Rendering { get; }
+        List<IRendering> Renderings { get; }
 
         string EditorName { get; }
 

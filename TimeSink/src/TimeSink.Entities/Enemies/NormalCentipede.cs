@@ -84,13 +84,13 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
                     anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                     anim.Rotation = angle;
-                    return anim;
+                    return new List<IRendering>() { anim };
             }
         }
 

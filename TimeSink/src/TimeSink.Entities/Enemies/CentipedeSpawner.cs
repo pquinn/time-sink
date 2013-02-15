@@ -34,23 +34,23 @@ namespace TimeSink.Entities.Enemies
             return new NormalCentipede(Position, Vector2.UnitX * (SpawnDirection > 0 ? 1 : -1));
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(TEXTURE)
+                return new List<IRendering>(){ new BasicRendering(TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
                     DepthWithinLayer = DEPTH
-                };
+                }};
             }
         }
         public override IRendering Preview
         {
             get
             {
-                return Rendering;
+                return Renderings[0];
             }
         }
         public override string EditorName

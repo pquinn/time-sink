@@ -53,12 +53,12 @@ namespace Engine.Defaults
         
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
-            get { return new NullRendering(); }
+            get { return new List<IRendering>()  { new NullRendering() }; }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)

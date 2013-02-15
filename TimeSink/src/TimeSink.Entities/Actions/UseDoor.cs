@@ -235,22 +235,25 @@ namespace TimeSink.Entities.Actons
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get 
             {
                 if (DoorType == DoorType.Down)
                 {
-                    return new BasicRendering(IN_OVERLAY)
+                    return new List<IRendering>()
                     {
-                        Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
-                        DepthWithinLayer = -200,
-                        TintColor = Color.White
+                        new BasicRendering(IN_OVERLAY)
+                        {
+                            Position = PhysicsConstants.MetersToPixels(Position),
+                            Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
+                            DepthWithinLayer = -200,
+                            TintColor = Color.White
+                        }
                     };
                 }
                 else
-                    return new NullRendering();
+                    return new List<IRendering>() { new NullRendering() };
             }
         }
     }

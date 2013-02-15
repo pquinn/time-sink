@@ -80,7 +80,7 @@ namespace TimeSink.Entities
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -91,15 +91,18 @@ namespace TimeSink.Entities
             }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(TEXTURE)
+                return new List<IRendering>()
+                {
+                    new BasicRendering(TEXTURE)
                     { 
                         Position = PhysicsConstants.MetersToPixels(Position),
                         Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
-                    };
+                    }
+                };
             }
         }
 
@@ -127,12 +130,13 @@ namespace TimeSink.Entities
             if (force || !initialized)
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                var halfHeight =  PhysicsConstants.PixelsToMeters(Height / 2);
                 Physics = BodyFactory.CreateRectangle(
                     world,
-                    PhysicsConstants.PixelsToMeters(Width),
-                    PhysicsConstants.PixelsToMeters(Height),
+                    PhysicsConstants.PixelsToMeters(Width * .75f),
+                    halfHeight,
                     1,
-                    Position);
+                    Position + new Vector2(0, halfHeight));
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Kinematic;
                 Physics.Friction = 5f;

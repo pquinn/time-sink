@@ -24,14 +24,14 @@ namespace Engine.Defaults
        {
        }
 
-        public IRendering Rendering
+       public List<IRendering> Renderings
         {
             get 
             {
-                return new TextRendering(text, new Vector2(100, 100), 0, Vector2.One, Color.DarkGoldenrod)
+                return new List<IRendering>(){ new TextRendering(text, new Vector2(100, 100), 0, Vector2.One, Color.DarkGoldenrod)
                     {
                         DepthWithinLayer = DEPTH
-                    };
+                    }};
             }
         }
 

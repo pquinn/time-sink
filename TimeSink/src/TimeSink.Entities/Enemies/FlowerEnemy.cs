@@ -76,18 +76,18 @@ namespace TimeSink.Entities.Enemies
             textureHeight = texture.Height;
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
                 var tint = Math.Min(100, 2.55f * health);
-                return new BasicRendering(ENEMY_TEXTURE)
+                return new List<IRendering>(){ new BasicRendering(ENEMY_TEXTURE)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     TintColor = new Color(255f, tint, tint, 255f),
                     DepthWithinLayer = DEPTH,
                     Scale = BasicRendering.CreateScaleFromSize(Width, Height, ENEMY_TEXTURE, TextureCache)
-                };
+                }};
             }
         }
 
@@ -95,7 +95,7 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return Rendering;
+                return Renderings[0];
             }
         }
 

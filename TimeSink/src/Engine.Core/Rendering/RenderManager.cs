@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Input;
 
 namespace TimeSink.Engine.Core.Rendering
 {
@@ -49,8 +50,17 @@ namespace TimeSink.Engine.Core.Rendering
 
             foreach (var renderable in renderables)
             {
-                var rendering = forPreviews ? renderable.Preview : renderable.Rendering;
-                sets[rendering.RenderLayer].Add(rendering);
+                if (forPreviews)
+                    sets[renderable.Preview.RenderLayer].Add(renderable.Preview);
+                else
+                {
+                    renderable.Renderings.ForEach( 
+                        x => sets[x.RenderLayer].Add(x));
+                }
+            }
+
+            if (InputManager.Instance.Pressed(Microsoft.Xna.Framework.Input.Keys.B))
+            {
             }
 
             foreach (var set in sets.Values)
