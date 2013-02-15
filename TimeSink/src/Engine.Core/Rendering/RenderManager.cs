@@ -38,6 +38,17 @@ namespace TimeSink.Engine.Core.Rendering
             return renderables.Remove(renderable);
         }
 
+        private float getDepthScale(RenderLayer l)
+        {
+            switch (l)
+            {
+                case RenderLayer.Background:
+                    return .8f;
+                default:
+                    return 1;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch, Camera camera, bool forPreviews)
         {
             var comparer = new RenderComparer();
@@ -63,12 +74,15 @@ namespace TimeSink.Engine.Core.Rendering
             {
             }
 
-            foreach (var set in sets.Values)
+            foreach (var layerSetPair in sets)
             {
+                var set = layerSetPair.Value;
                 set.Sort(comparer);
                 foreach (var rendering in set)
                 {
-                    rendering.Draw(spriteBatch, TextureCache, camera.Transform);
+                    var t = camera.Transform;
+                    t.Translation *= getDepthScale(layerSetPair.Key);
+                    rendering.Draw(spriteBatch, TextureCache, t);
                 }
             }
         }
