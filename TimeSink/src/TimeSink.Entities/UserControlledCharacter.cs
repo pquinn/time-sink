@@ -513,6 +513,7 @@ namespace TimeSink.Entities
 
             if (health <= 0)
             {
+                Logger.Info(String.Format("DEATH: {0}", FormatPosition(Position)));
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
                 Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
             }
