@@ -1822,6 +1822,175 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4000.PNG">
+      <Name>Centipede_Hill%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4001.PNG">
+      <Name>Centipede_Hill%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4002.PNG">
+      <Name>Centipede_Hill%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4010.PNG">
+      <Name>Centipede_Hill%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4011.PNG">
+      <Name>Centipede_Hill%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4012.PNG">
+      <Name>Centipede_Hill%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4020.PNG">
+      <Name>Centipede_Hill%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4021.PNG">
+      <Name>Centipede_Hill%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Hill\Centipede_Hill%4022.PNG">
+      <Name>Centipede_Hill%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4000.PNG">
+      <Name>Hub_East%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4001.PNG">
+      <Name>Hub_East%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4002.PNG">
+      <Name>Hub_East%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4003.PNG">
+      <Name>Hub_East%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4010.PNG">
+      <Name>Hub_East%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4011.PNG">
+      <Name>Hub_East%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4012.PNG">
+      <Name>Hub_East%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4013.PNG">
+      <Name>Hub_East%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4020.PNG">
+      <Name>Hub_East%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4021.PNG">
+      <Name>Hub_East%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4022.PNG">
+      <Name>Hub_East%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4023.PNG">
+      <Name>Hub_East%4023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4030.PNG">
+      <Name>Hub_East%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4031.PNG">
+      <Name>Hub_East%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4032.PNG">
+      <Name>Hub_East%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4033.PNG">
+      <Name>Hub_East%4033</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4040.PNG">
+      <Name>Hub_East%4040</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4041.PNG">
+      <Name>Hub_East%4041</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4042.PNG">
+      <Name>Hub_East%4042</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4043.PNG">
+      <Name>Hub_East%4043</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4050.PNG">
+      <Name>Hub_East%4050</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4051.PNG">
+      <Name>Hub_East%4051</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4052.PNG">
+      <Name>Hub_East%4052</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Hub_East\Hub_East%4053.PNG">
+      <Name>Hub_East%4053</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
