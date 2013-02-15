@@ -65,7 +65,7 @@ namespace TimeSink.Entities.Inventory
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -73,15 +73,18 @@ namespace TimeSink.Entities.Inventory
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(!OnFire ? ARROW_TEXTURE_NAME : FLAME_TEXTURE)
+                return new List<IRendering>()
                 {
-                    Position = PhysicsConstants.MetersToPixels(Physics.Position),
-                    Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                    DepthWithinLayer = .1f
+                    new BasicRendering(!OnFire ? ARROW_TEXTURE_NAME : FLAME_TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                        Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                        DepthWithinLayer = .1f
+                    }
                 };
             }
         }

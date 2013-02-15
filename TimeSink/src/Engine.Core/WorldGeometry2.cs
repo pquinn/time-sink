@@ -57,14 +57,14 @@ namespace TimeSink.Engine.Core
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new NullRendering();
+                return new List<IRendering>() { new NullRendering() };
             }
         }
 

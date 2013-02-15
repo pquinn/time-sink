@@ -146,11 +146,11 @@ namespace TimeSink.Entities.Inventory
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return rendering;
+                return new List<IRendering>(){ rendering };
             }
         }
 

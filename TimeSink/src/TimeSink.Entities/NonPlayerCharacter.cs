@@ -91,7 +91,7 @@ namespace TimeSink.Entities
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -100,6 +100,7 @@ namespace TimeSink.Entities
             {
                 if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
                 {
+                    //game.
                     game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRootsList[DialogueState])), null);
                 }
             }
@@ -176,15 +177,17 @@ namespace TimeSink.Entities
         }
 
         // fix NPC in editor
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(TextureName)
-                {
-                    Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TextureName, TextureCache),
-                    DepthWithinLayer = DEPTH
+                return new List<IRendering>(){
+                    new BasicRendering(TextureName)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TextureName, TextureCache),
+                        DepthWithinLayer = DEPTH
+                    }
                 };
             }
         }

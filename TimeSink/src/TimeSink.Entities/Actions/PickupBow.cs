@@ -41,7 +41,7 @@ namespace TimeSink.Entities.Actons
             set { }
         }
 
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get
             {
@@ -53,11 +53,11 @@ namespace TimeSink.Entities.Actons
                 };
             }
         }
-        public override Engine.Core.Rendering.IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return Preview;
+                return new List<IRendering>() { Preview };
             }
         }
 

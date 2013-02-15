@@ -145,9 +145,9 @@ namespace TimeSink.Entities.Objects
             get { return Physics.FixtureList; }
         }
 
-        public override Engine.Core.Rendering.IRendering Rendering
+        public override List<IRendering> Renderings
         {
-            get { return Preview; }
+            get { return new List<IRendering>(){ Preview }; }
         }
     }
 }

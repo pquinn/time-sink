@@ -73,17 +73,20 @@ namespace TimeSink.Engine.Core
         }
 
         [XmlIgnore]
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(Texture)
-                { 
-                    Position = PhysicsConstants.MetersToPixels(Position), 
-                    Rotation = Rotation, 
-                    Scale = Scale,
-                    RenderLayer = RenderLayer,
-                    DepthWithinLayer = Depth
+                return new List<IRendering>()
+                {
+                    new BasicRendering(Texture)
+                    { 
+                        Position = PhysicsConstants.MetersToPixels(Position), 
+                        Rotation = Rotation, 
+                        Scale = Scale,
+                        RenderLayer = RenderLayer,
+                        DepthWithinLayer = Depth
+                    }
                 };
             }
         }
@@ -91,7 +94,7 @@ namespace TimeSink.Engine.Core
         [XmlIgnore]
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override void Load(IComponentContext engineRegistrations)

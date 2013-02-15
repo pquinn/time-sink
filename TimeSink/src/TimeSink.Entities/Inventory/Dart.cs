@@ -65,18 +65,22 @@ namespace TimeSink.Entities.Inventory
         
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return Dead ? null : new BasicRendering(DART_TEXTURE_NAME)
-                    {
-                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
-                        Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
-                        DepthWithinLayer = DEPTH
+                return Dead ? 
+                    new List<IRendering>() { new NullRendering() } :
+                    new List<IRendering>() {
+                        new BasicRendering(DART_TEXTURE_NAME)
+                        {
+                            Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                            Rotation = (float)Math.Atan2(Physics.LinearVelocity.Y, Physics.LinearVelocity.X),
+                            DepthWithinLayer = DEPTH
+                        }
                     };
             }
         }

@@ -236,11 +236,11 @@ namespace TimeSink.Entities.Objects
             }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new NullRendering();
+                return new List<IRendering>() { new NullRendering() };
             }
         }
 
