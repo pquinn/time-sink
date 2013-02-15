@@ -117,6 +117,7 @@ namespace TimeSink.Entities.Enemies
         private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             wall.BulletHit();
+            this.DestroyPhysics();
             Dead = true;
 
             return true;
