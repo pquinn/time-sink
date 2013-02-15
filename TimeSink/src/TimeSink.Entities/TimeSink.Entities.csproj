@@ -68,6 +68,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />

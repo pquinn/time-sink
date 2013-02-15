@@ -21,7 +21,7 @@ namespace TimeSink.Entities.Triggers
 {
     [EditorEnabled]
     [SerializableEntity("729f6f88-9ce0-4c66-ab70-b8643f982ae2")]
-    class DialogueTrigger : Trigger
+    public class DialogueTrigger : Trigger
     {
         const string EDITOR_NAME = "Dialogue Trigger";
         private static readonly Guid GUID = new Guid("729f6f88-9ce0-4c66-ab70-b8643f982ae2");
@@ -56,6 +56,7 @@ namespace TimeSink.Entities.Triggers
                 if (!engineGame.ScreenManager.IsInDialogueState() && DialogueId != null)
                 {
                     engineGame.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueId)), null);
+                    //this functionality needs to be abstracted out somehow
                     var tutorialTrigger = engineGame.LevelManager.Level.Entities.First(x => x.InstanceId.Equals("movement info")) as TutorialTrigger;
                     tutorialTrigger.Active = true;
                     tutorialTrigger.RecheckCollision();
