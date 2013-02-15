@@ -41,7 +41,7 @@ namespace TimeSink.Entities.Inventory
         private NewAnimationRendering rendering;
 
         public Torch()
-            : this(Vector2.Zero, 10, 75)
+            : this(Vector2.Zero, 20, 100)
         {
         }
 
@@ -94,7 +94,7 @@ namespace TimeSink.Entities.Inventory
 
                 var rect = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
-                    spriteHeightMeters,
+                    spriteHeightMeters + PhysicsConstants.PixelsToMeters(40),
                     1.4f,
                     Vector2.Zero,
                     Physics);

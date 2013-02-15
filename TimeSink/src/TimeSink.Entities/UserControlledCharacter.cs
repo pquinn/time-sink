@@ -295,7 +295,7 @@ namespace TimeSink.Entities
         float idleInterval = 2000f;
         float interval = 200f;
         float bowInterval = 150f;
-        float shotInterval = 1000f;
+        float shotInterval = 750f;
         int currentFrame = 0;
         int spriteWidth = 35;
         int spriteHeight = 130;
@@ -1193,7 +1193,7 @@ namespace TimeSink.Entities
                             ((Torch)onPickup).WeldToPlayer(this);
                             HoldingTorch = (Torch)onPickup;
                             onPickup = null;
-                            EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
+                           // EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
                             currentState = BodyStates.NeutralRightTorch;
 
                         }
@@ -1204,7 +1204,10 @@ namespace TimeSink.Entities
                         onPickup = HoldingTorch;
                         Inventory.Remove(HoldingTorch);
                         activeItem = 0;
-                        EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+                        if (Inventory != null)
+                        {
+                            EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+                        }
                         HoldingTorch = null;
                         if (InventoryItem is Arrow)
                         {
