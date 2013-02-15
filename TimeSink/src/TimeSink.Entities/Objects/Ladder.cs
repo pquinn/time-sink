@@ -208,11 +208,8 @@ namespace TimeSink.Entities.Objects
                     c.CanClimb = null;
                     if (c.Climbing)
                     {
-                        c.DismountLadder();
+                        c.DismountLadder(linearDamping);
                     }
-                    c.Physics.IgnoreGravity = false;
-                    c.Physics.LinearDamping = linearDamping;
-                    c.Climbing = false;
                 }
             }
                 /*

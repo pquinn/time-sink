@@ -34,6 +34,8 @@ namespace TimeSink.Entities
         private double nextLogTime = 0;
         private readonly double LOG_INTERVAL = 1000; //1 second = 1000 milliseconds
 
+        const float MOTOR_TORQUE = 90;
+
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
         const float DEPTH = -100f;
@@ -53,7 +55,7 @@ namespace TimeSink.Entities
             WalkingStartRight, WalkingRight, WalkingEndRight, WalkingStartLeft, WalkingLeft, WalkingEndLeft,
             WalkingShootRight, WalkingShoot2Right, WalkingShoot3Right, WalkingDrawnRight,
             WalkingShootLeft, WalkingShoot2Left, WalkingShoot3Left, WalkingDrawnLeft,
-            WalkingTorchRight, WalkingTorchLeft, WalkingTorchStartLeft, WalkingTorchStartRight, 
+            WalkingTorchRight, WalkingTorchLeft, WalkingTorchStartLeft, WalkingTorchStartRight,
             WalkingTorchEndLeft, WalkingTorchEndRight,
             #endregion
             #region running
@@ -519,6 +521,8 @@ namespace TimeSink.Entities
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
                 Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
             }
+
+            MotorJoint.MaxMotorTorque = TouchingGround ? MOTOR_TORQUE : 0;
         }
 
         private void RemoveInactiveDots()
@@ -808,6 +812,7 @@ namespace TimeSink.Entities
                         canClimb.Physics.IsSensor = true;
                         Climbing = true;
                         Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
+                        WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
 
                         if (!canClimb.Sideways)
                             currentState = BodyStates.ClimbingBack;
@@ -1870,7 +1875,7 @@ namespace TimeSink.Entities
             OnPickup = torch;
 
             currentItemPrompt = new ItemPopup(
-                "Textures/Keys/e-Key", 
+                "Textures/Keys/e-Key",
                 torch.Physics.Position - new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2),
                 TextureCache);
 
@@ -1984,7 +1989,7 @@ namespace TimeSink.Entities
                 if (Popups.Count != 0)
                 {
                     var stack = new Stack<IRendering>();
-                    foreach(ItemPopup i in Popups)
+                    foreach (ItemPopup i in Popups)
                     {
                         i.Renderings.ForEach(
                             x => stack.Push(x));
@@ -1994,7 +1999,7 @@ namespace TimeSink.Entities
                     return new List<IRendering>() { ret };
                 }
 
-                return new List<IRendering>(){ anim };
+                return new List<IRendering>() { anim };
             }
         }
 
@@ -2749,20 +2754,27 @@ namespace TimeSink.Entities
                     currentState == BodyStates.IdleRightOpen);
         }
 
-        public void DismountLadder()
+        public void DismountLadder(float oldDamping)
         {
-            if (RightFacingBodyState())
+            if (Climbing)
             {
-                currentState = BodyStates.JumpingRight;
-                Physics.ApplyLinearImpulse(new Vector2(3, -2));
+                if (RightFacingBodyState())
+                {
+                    currentState = BodyStates.JumpingRight;
+                    Physics.ApplyLinearImpulse(new Vector2(3, -2));
+                }
+                else if (LeftFacingBodyState())
+                {
+                    currentState = BodyStates.JumpingLeft;
+                    Physics.ApplyLinearImpulse(new Vector2(-3, -2));
+                }
+                else
+                    currentState = BodyStates.JumpingRight;
             }
-            else if (LeftFacingBodyState())
-            {
-                currentState = BodyStates.JumpingLeft;
-                Physics.ApplyLinearImpulse(new Vector2(-3, -2));
-            }
-            else
-                currentState = BodyStates.JumpingRight;
+            Physics.IgnoreGravity = false;
+            Physics.LinearDamping = oldDamping;
+            Climbing = false;
+            WheelBody.CollidesWith = Category.Cat1 | Category.Cat31;
         }
 
 
@@ -2790,8 +2802,8 @@ namespace TimeSink.Entities
                 Physics = BodyFactory.CreateBody(world, Position, this);
                 DoorType = DoorType.None;
 
-                var wPos = Position + 
-                           new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2 + 
+                var wPos = Position +
+                           new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2 +
                            PhysicsConstants.PixelsToMeters(SPRITE_OFFSET));
                 WheelBody = BodyFactory.CreateBody(world, wPos, this);
 
@@ -2830,7 +2842,7 @@ namespace TimeSink.Entities
 
                 MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, WheelBody, Vector2.Zero);
                 MotorJoint.MotorEnabled = true;
-                MotorJoint.MaxMotorTorque = 90;
+                MotorJoint.MaxMotorTorque = MOTOR_TORQUE;
 
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;

@@ -28,6 +28,7 @@ namespace TimeSink.Engine.Core
         public GraphicsDeviceManager graphics { get; set; }
 
         public Camera Camera { get; set; }
+        public bool CameraLock { get; set; }
 
         public LevelManager LevelManager { get; set; }
         public IComponentContext Container { get; set; }
