@@ -34,6 +34,8 @@ namespace TimeSink.Entities
         private double nextLogTime = 0;
         private readonly double LOG_INTERVAL = 1000; //1 second = 1000 milliseconds
 
+        const float MOTOR_TORQUE = 90;
+
         const float PLAYER_MASS = 130f;
         const string EDITOR_NAME = "User Controlled Character";
         const float DEPTH = -100f;
@@ -517,6 +519,8 @@ namespace TimeSink.Entities
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
                 Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
             }
+
+            MotorJoint.MaxMotorTorque = TouchingGround ? MOTOR_TORQUE : 0;
         }
 
         private void RemoveInactiveDots()
@@ -2831,7 +2835,7 @@ namespace TimeSink.Entities
 
                 MotorJoint = JointFactory.CreateRevoluteJoint(world, Physics, WheelBody, Vector2.Zero);
                 MotorJoint.MotorEnabled = true;
-                MotorJoint.MaxMotorTorque = 90;
+                MotorJoint.MaxMotorTorque = MOTOR_TORQUE;
 
                 rSens.IsSensor = true;
                 rSens.Shape.Density = 0;
