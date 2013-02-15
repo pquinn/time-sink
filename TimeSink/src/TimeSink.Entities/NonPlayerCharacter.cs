@@ -37,8 +37,8 @@ namespace TimeSink.Entities
         protected int textureHeight;
         protected int textureWidth;
 
-        private bool collided;
-        private EngineGame game;
+        protected bool collided;
+        protected EngineGame game;
 
         private ItemPopup popup;
 
@@ -83,6 +83,8 @@ namespace TimeSink.Entities
                 return DialogueRoots.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
         }
+
+        protected Body HitSensor { get; set; }
 
         public override string EditorName
         {
@@ -150,13 +152,18 @@ namespace TimeSink.Entities
                 fix.CollisionCategories = Category.Cat3;
                 fix.CollidesWith = Category.Cat1;
 
-                var hitsensor = fix.Clone(Physics);
-                hitsensor.IsSensor = true;
-                hitsensor.CollisionCategories = Category.Cat2;
-                hitsensor.CollidesWith = Category.Cat2;
+                HitSensor = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(Width) * 2,
+                    PhysicsConstants.PixelsToMeters(Height),
+                    1,
+                    Position);
+                HitSensor.IsSensor = true;
+                HitSensor.CollisionCategories = Category.Cat2;
+                HitSensor.CollidesWith = Category.Cat2;
 
-                Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
-                Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+                HitSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                HitSensor.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
                 popup = new ItemPopup(ACTION_POPUP, 
                     Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)),

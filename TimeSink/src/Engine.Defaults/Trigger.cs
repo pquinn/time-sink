@@ -14,6 +14,7 @@ using Autofac;
 using System.Xml.Serialization;
 using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.StateManagement;
 
 namespace Engine.Defaults
 {
@@ -22,6 +23,10 @@ namespace Engine.Defaults
     public abstract class Trigger : Entity
     {
         protected LevelManager levelManager;
+        protected EngineGame engineGame;
+
+        protected const float DEPTH = 0;
+        const string TEXTURE = "Textures/trigger";
 
         protected List<Fixture> _geom;
         public override List<Fixture> CollisionGeometry
@@ -51,14 +56,22 @@ namespace Engine.Defaults
 
         public Action<Body> Registrations { get; set; }
         
-        public override IRendering Preview
-        {
-            get { return Renderings[0]; }
-        }
-
         public override List<IRendering> Renderings
         {
-            get { return new List<IRendering>()  { new NullRendering() }; }
+            get { return new List<IRendering>() { new NullRendering()}; }
+        }
+
+        public override IRendering Preview
+        {
+            get
+            {
+                return new BasicRendering(TEXTURE)
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
+                    DepthWithinLayer = DEPTH
+                };
+            }
         }
 
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
@@ -76,6 +89,7 @@ namespace Engine.Defaults
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 levelManager = engineRegistrations.Resolve<LevelManager>();
+                engineGame = engineRegistrations.ResolveOptional<EngineGame>();
 
                 Physics = BodyFactory.CreateRectangle(
                     world, 

@@ -68,6 +68,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Inventory\Torch.cs" />
     <Compile Include="Save.cs" />
+    <Compile Include="Triggers\DialogueTrigger.cs" />
     <Compile Include="Triggers\CameraUnlockTrigger.cs" />
     <Compile Include="Triggers\PlaceTorchTrigger.cs" />
     <Compile Include="Triggers\SlideTrigger.cs" />
