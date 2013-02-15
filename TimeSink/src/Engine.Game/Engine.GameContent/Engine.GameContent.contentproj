@@ -923,11 +923,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Objects\Bramble_Tileable.png">
-      <Name>Bramble_Tileable</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\Tiles\MovingPlatform.png">
       <Name>MovingPlatform</Name>
       <Importer>TextureImporter</Importer>
@@ -1743,7 +1738,7 @@
       <Name>trigger</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-	</Compile>
+    </Compile>
     <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4000.PNG">
       <Name>Centipede_Nests%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -1806,6 +1801,13 @@
     </Compile>
     <Compile Include="Textures\Enemies\IceElemental.PNG">
       <Name>IceElemental</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\Bramble_Tileable.png">
+      <Name>Bramble_Tileable</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
