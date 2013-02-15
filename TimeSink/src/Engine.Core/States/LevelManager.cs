@@ -60,6 +60,17 @@ namespace TimeSink.Engine.Core.States
             tiles.ForEach(RegisterMidground);
         }
 
+        public void RegisterBackground(Tile tile)
+        {
+            Level.Background.Add(tile);
+            RenderManager.RegisterRenderable(tile);
+        }
+
+        public void RegisterBackground(IEnumerable<Tile> tiles)
+        {
+            tiles.ForEach(RegisterBackground);
+        }
+
         public void RegisterTile(Tile tile)
         {
             Level.Tiles.Add(tile);

@@ -55,6 +55,7 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Level_Loaded()
         {
+            background_txt.Text = Game.LevelManager.Level.BackgroundPath;
             midground_txt.Text = Game.LevelManager.Level.MidgroundPath;
             spawn_txt.Text = Game.LevelManager.Level.DefaultStart.ToDisplayString();
             spawns_txt.Text = string.Join(";", Game.LevelManager.Level.SpawnPoints.Select(x => x.ToDisplayString()));
@@ -62,7 +63,16 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Background_Click(object sender, RoutedEventArgs e)
         {
+            var dlg = new WPFFolderBrowserDialog();
 
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                var relativePath = dlg.FileName.Substring(dlg.FileName.LastIndexOf("Content\\") + 8);
+                background_txt.Text = relativePath;
+                LoadBackground(relativePath);
+            }
         }
 
         private void Midground_Click(object sender, RoutedEventArgs e)
@@ -116,6 +126,32 @@ namespace TimeSink.Editor.GUI.Views
 
                     Game.LevelManager.Level.MidgroundPath = path;
                     Game.LevelManager.RegisterMidground(
+                        new Tile(
+                            texture.Key,
+                            PhysicsConstants.PixelsToMeters(new Vector2((x * width) + (width / 2), (y * height) + (height / 2))),
+                            0, Vector2.One, RenderLayer.Midground, 1));
+                }
+            }
+        }
+
+        private void LoadBackground(string path)
+        {
+            var textures = Game.Content.LoadFolder<Texture2D>(path);
+
+            if (textures.Any())
+            {
+                var first = textures.First();
+                var height = first.Value.Height;
+                var width = first.Value.Width;
+
+                foreach (var texture in textures)
+                {
+                    var location = texture.Key.Split('@')[1];
+                    var x = Int32.Parse(location[1].ToString());
+                    var y = Int32.Parse(location[0].ToString());
+
+                    Game.LevelManager.Level.BackgroundPath = path;
+                    Game.LevelManager.RegisterBackground(
                         new Tile(
                             texture.Key,
                             PhysicsConstants.PixelsToMeters(new Vector2((x * width) + (width / 2), (y * height) + (height / 2))),

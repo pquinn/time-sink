@@ -1,1 +1,382 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><MidgroundPath>Textures\Levels\Apoc_Present\Hub</MidgroundPath><DefaultStart><X>8.90625</X><Y>7.8125</Y></DefaultStart><SpawnPoints><Vector2><X>8.90625</X><Y>7.8125</Y></Vector2><Vector2><X>18.21875</X><Y>8.203125</Y></Vector2></SpawnPoints><Midground><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>10</X><Y>5.625</Y></Position><Texture>Textures\Levels\Apoc_Present\Hub/Hub@00</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Background</RenderLayer><Depth>0</Depth></Tile></Midground><Tiles><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>0.921875</X><Y>9.15625</Y></Position><Texture>Textures/Tiles/Female01</Texture><Rotation>0</Rotation><Scale><X>0.7336245</X><Y>0.521069467</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>5.484375</X><Y>9.1875</Y></Position><Texture>Textures/Tiles/Female02</Texture><Rotation>0</Rotation><Scale><X>0.7870383</X><Y>0.5061902</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>4.21875</X><Y>9.3125</Y></Position><Texture>Textures/Tiles/Female03</Texture><Rotation>0</Rotation><Scale><X>0.680701554</X><Y>0.470414162</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>4.96875</X><Y>8.875</Y></Position><Texture>Textures/Tiles/Male03</Texture><Rotation>0</Rotation><Scale><X>-0.7134411</X><Y>0.663226366</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>7.84375</X><Y>8.953125</Y></Position><Texture>Textures/Tiles/Male04</Texture><Rotation>0</Rotation><Scale><X>-0.7095459</X><Y>0.583714</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>8.359375</X><Y>9.03125</Y></Position><Texture>Textures/Tiles/Female04</Texture><Rotation>0</Rotation><Scale><X>0.726494431</X><Y>0.5706151</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>3.734375</X><Y>9.140625</Y></Position><Texture>Textures/Tiles/Male01</Texture><Rotation>0</Rotation><Scale><X>-0.6788324</X><Y>0.551084161</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>1.890625</X><Y>8.9375</Y></Position><Texture>Textures/Tiles/Male02</Texture><Rotation>0</Rotation><Scale><X>-0.644027</X><Y>0.604827464</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>2.796875</X><Y>9.21875</Y></Position><Texture>Textures/Tiles/Female04</Texture><Rotation>0</Rotation><Scale><X>0.7364471</X><Y>0.5356591</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>6.3125</X><Y>8.984375</Y></Position><Texture>Textures/Tiles/Male02</Texture><Rotation>0</Rotation><Scale><X>-0.866455257</X><Y>0.6248573</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>6.859375</X><Y>9.0625</Y></Position><Texture>Textures/Tiles/Male01</Texture><Rotation>0</Rotation><Scale><X>-0.7203782</X><Y>0.5796245</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>7.234375</X><Y>8.96875</Y></Position><Texture>Textures/Tiles/Female03</Texture><Rotation>0</Rotation><Scale><X>0.7721817</X><Y>0.6592318</Y></Scale><RenderLayer>Gameground</RenderLayer><Depth>0.5</Depth></Tile></Tiles><GeoSegments><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>-0.03358052</X><Y>10.0239573</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>19.9553585</X><Y>10.0471735</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.673601</X><Y>6.636539</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.736038</X><Y>9.992558</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.673601</X><Y>6.636539</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.673601</X><Y>6.636539</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment></GeoSegments><EntitySerializations><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">25</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">190</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">2</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Apoc_Present\Hub_East</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">Hub Exit Gate</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>19.78125</X><Y>8.203125</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>75522a0f-66c2-444e-90bb-88df79c36c29</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">800</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">150</Value></PairOfStringObject><PairOfStringObject><Key>Key1</Key><Value xsi:type="xsd:string">Textures/Keys/a-Key</Value></PairOfStringObject><PairOfStringObject><Key>Key2</Key><Value xsi:type="xsd:string">Textures/Keys/d-Key</Value></PairOfStringObject><PairOfStringObject><Key>Active</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">movement info</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>6.25</X><Y>9.375</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>57eb5766-5ce2-4694-ad4b-e019d4817985</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">57eb5766-5ce2-4694-ad4b-e019d4817985</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">64</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">128</Value></PairOfStringObject><PairOfStringObject><Key>TextureName</Key><Value xsi:type="xsd:string">Textures/Enemies/Dummy</Value></PairOfStringObject><PairOfStringObject><Key>DialogueState</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>DialogueRoots</Key><Value xsi:type="xsd:string"></Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">NPC Restrictor</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>18.734375</X><Y>9.046875</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization></EntitySerializations></Level>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<MidgroundPath>Textures\Levels\Apoc_Present\Hub</MidgroundPath>
+	<DefaultStart>
+		<X>8.90625</X><Y>7.8125</Y>
+	</DefaultStart>
+	<SpawnPoints>
+		<Vector2>
+			<X>8.90625</X><Y>7.8125</Y>
+		</Vector2>
+		<Vector2>
+			<X>18.21875</X><Y>8.203125</Y>
+		</Vector2>
+	</SpawnPoints>
+	<Midground>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>10</X><Y>5.625</Y>
+			</Position>
+			<Texture>Textures\Levels\Apoc_Present\Hub/Hub@00</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>0</Depth>
+		</Tile>
+	</Midground>
+	<Tiles>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>0.921875</X><Y>9.15625</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female01</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.7336245</X><Y>0.521069467</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>5.484375</X><Y>9.1875</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female02</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.7870383</X><Y>0.5061902</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>4.21875</X><Y>9.3125</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female03</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.680701554</X><Y>0.470414162</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>4.96875</X><Y>8.875</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male03</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.7134411</X><Y>0.663226366</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>7.84375</X><Y>8.953125</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male04</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.7095459</X><Y>0.583714</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>8.359375</X><Y>9.03125</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female04</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.726494431</X><Y>0.5706151</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>3.734375</X><Y>9.140625</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male01</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.6788324</X><Y>0.551084161</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>1.890625</X><Y>8.9375</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male02</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.644027</X><Y>0.604827464</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>2.796875</X><Y>9.21875</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female04</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.7364471</X><Y>0.5356591</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>6.3125</X><Y>8.984375</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male02</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.866455257</X><Y>0.6248573</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>6.859375</X><Y>9.0625</Y>
+			</Position>
+			<Texture>Textures/Tiles/Male01</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>-0.7203782</X><Y>0.5796245</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>7.234375</X><Y>8.96875</Y>
+			</Position>
+			<Texture>Textures/Tiles/Female03</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>0.7721817</X><Y>0.6592318</Y>
+			</Scale>
+			<RenderLayer>Gameground</RenderLayer>
+			<Depth>0.5</Depth>
+		</Tile>
+	</Tiles>
+	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>-0.03358052</X><Y>10.0239573</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>19.9553585</X><Y>10.0471735</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.673601</X><Y>6.636539</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.736038</X><Y>9.992558</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.673601</X><Y>6.636539</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.673601</X><Y>6.636539</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+	</GeoSegments>
+	<EntitySerializations>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">25</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">190</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">2</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Apoc_Present\Hub_East</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">Hub Exit Gate</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>19.78125</X><Y>8.203125</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>75522a0f-66c2-444e-90bb-88df79c36c29</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">800</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Key1</Key>
+					<Value xsi:type="xsd:string">Textures/Keys/a-Key</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Key2</Key>
+					<Value xsi:type="xsd:string">Textures/Keys/d-Key</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Active</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">movement info</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>6.25</X><Y>9.375</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>57eb5766-5ce2-4694-ad4b-e019d4817985</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">57eb5766-5ce2-4694-ad4b-e019d4817985</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">64</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">128</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>TextureName</Key>
+					<Value xsi:type="xsd:string">Textures/Enemies/Dummy</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DialogueState</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DialogueRoots</Key>
+					<Value xsi:type="xsd:string"/>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">NPC Restrictor</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>18.734375</X><Y>9.046875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+	</EntitySerializations>
+</Level>

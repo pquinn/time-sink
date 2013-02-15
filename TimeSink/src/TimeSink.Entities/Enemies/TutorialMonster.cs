@@ -130,7 +130,7 @@ namespace TimeSink.Entities.Enemies
         {
             var largeBullet = new LargeBullet(
                 Position + PhysicsConstants.PixelsToMeters(new Vector2(Width / 2, -Height / 4)), 
-                200, 30, new Vector2(30, 0));
+                100, 30, new Vector2(30, 0));
             world.LevelManager.RegisterEntity(largeBullet);
             numShotsFired++;
         }
@@ -139,7 +139,6 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
                 return new List<IRendering>() { anim };
             }
