@@ -68,11 +68,25 @@ namespace TimeSink.Entities.Triggers
                 };
             }
         }
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return rendering;
+                if (activating)
+                {
+                    return new List<IRendering>() 
+                    { 
+                        rendering,
+                        new TextRendering("Checkpoint activated...", new Vector2(50, 100), 0, Vector2.One, Color.Black) 
+                            { 
+                                RenderLayer = RenderLayer.UI 
+                            }
+                    };
+                }
+                else
+                {
+                    return new List<IRendering>(){ rendering };
+                }
             }
         }
 

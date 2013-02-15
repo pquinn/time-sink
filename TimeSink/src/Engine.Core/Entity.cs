@@ -22,7 +22,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace TimeSink.Engine.Core
 {
     public abstract class Entity
-        : IPhysicsEnabledBody, IRenderable, IEditorPreviewable, IKeyboardControllable
+        : IPhysicsEnabledBody, IRenderable, IKeyboardControllable
     {
         internal void Update(GameTime time, EngineGame world)
         {
@@ -120,7 +120,7 @@ namespace TimeSink.Engine.Core
         }
 
         [XmlIgnore]
-        public abstract IRendering Rendering
+        public abstract List<IRendering> Renderings
         {
             get;
         }

@@ -94,7 +94,7 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get
             {
@@ -121,14 +121,14 @@ namespace TimeSink.Entities.Objects
             }
         }
 
-        public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
         }
 
-        public override Engine.Core.Rendering.IRendering Rendering
+        public override List<IRendering> Renderings
         {
-            get { return Preview; }
+            get { return new List<IRendering>() { Preview }; }
         }
         public override void DestroyPhysics()
         {

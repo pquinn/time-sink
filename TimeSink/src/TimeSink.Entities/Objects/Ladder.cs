@@ -105,6 +105,17 @@ namespace TimeSink.Entities.Objects
                     Vector2.Zero,
                     Physics);
 
+                var sensorHeight = Math.Min(spriteHeightMeters / 8, PhysicsConstants.PixelsToMeters(10));
+
+                var detachSensor = FixtureFactory.AttachRectangle(
+                    spriteWidthMeters,
+                    sensorHeight,
+                    1,
+                    Vector2.UnitY * (Position.Y + spriteHeightMeters / 2 - sensorHeight / 2),
+                    Physics);
+
+                detachSensor.IsSensor = true;
+
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
@@ -117,6 +128,8 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
+
+                detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
 
                 initialized = true;
             }
@@ -138,6 +151,12 @@ namespace TimeSink.Entities.Objects
                 return true;
             else
                 return false;
+        }
+
+        bool OnCollidedWithDetachSensor(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        {
+            c.DismountLadder(linearDamping);
+            return info.Enabled;
         }
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
@@ -208,11 +227,8 @@ namespace TimeSink.Entities.Objects
                     c.CanClimb = null;
                     if (c.Climbing)
                     {
-                        c.DismountLadder();
+                        c.DismountLadder(linearDamping);
                     }
-                    c.Physics.IgnoreGravity = false;
-                    c.Physics.LinearDamping = linearDamping;
-                    c.Climbing = false;
                 }
             }
                 /*
@@ -239,11 +255,11 @@ namespace TimeSink.Entities.Objects
             }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new NullRendering();
+                return new List<IRendering>() { new NullRendering() };
             }
         }
 

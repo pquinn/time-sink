@@ -48,6 +48,7 @@ namespace TimeSink.Engine.Game
         float levelTime;
         bool levelStarted;
 
+
         private Save defaultSave;
 
         public UserControlledCharacter Character
@@ -151,77 +152,81 @@ namespace TimeSink.Engine.Game
 
             view = ProcessControllerInput(gameTime);
 
-            int topClamp, leftClamp;
-            int bottomClamp, rightClamp;
-
-            topClamp = leftClamp = int.MaxValue;
-            bottomClamp = rightClamp = int.MinValue;
-
-            var h2 = GraphicsDevice.Viewport.Height / 2;
-            var w2 = GraphicsDevice.Viewport.Width / 2;
-
-            bool hasBackground = false;
-
-            foreach (var tile in LevelManager.Level.Midground)
+            if (!CameraLock)
             {
-                hasBackground = true;
 
-                var position = tile.Position;
+                int topClamp, leftClamp;
+                int bottomClamp, rightClamp;
 
-                var top = (int)(position.Y) - h2;
-                var bottom = (int)(position.Y) + h2;
-                var left = (int)(position.X) - w2;
-                var right = (int)(position.X) + w2;
+                topClamp = leftClamp = int.MaxValue;
+                bottomClamp = rightClamp = int.MinValue;
 
-                if (top < topClamp)
-                    topClamp = top;
-                if (bottom > bottomClamp)
-                    bottomClamp = bottom;
-                if (left < leftClamp)
-                    leftClamp = left;
-                if (right > rightClamp)
-                    rightClamp = right;
+                var h2 = GraphicsDevice.Viewport.Height / 2;
+                var w2 = GraphicsDevice.Viewport.Width / 2;
+
+                bool hasBackground = false;
+
+                foreach (var tile in LevelManager.Level.Midground)
+                {
+                    hasBackground = true;
+
+                    var position = tile.Position;
+
+                    var top = (int)(position.Y) - h2;
+                    var bottom = (int)(position.Y) + h2;
+                    var left = (int)(position.X) - w2;
+                    var right = (int)(position.X) + w2;
+
+                    if (top < topClamp)
+                        topClamp = top;
+                    if (bottom > bottomClamp)
+                        bottomClamp = bottom;
+                    if (left < leftClamp)
+                        leftClamp = left;
+                    if (right > rightClamp)
+                        rightClamp = right;
+                }
+
+                if (InputManager.Instance.Pressed(Keys.D9))
+                {
+                }
+
+                var velMaxX = GraphicsDevice.Viewport.Width * .1f;
+                var velMaxY = GraphicsDevice.Viewport.Height * .1f;
+                var pos = Character != null ? Character.Position : Vector2.Zero;
+                var vel = new Vector2(
+                    (Character.Physics.LinearVelocity.X <= 1 && Character.Physics.LinearVelocity.X >= -1) ?
+                        0 : Character.Physics.LinearVelocity.X,
+                    (Character.Physics.LinearVelocity.Y <= 1 && Character.Physics.LinearVelocity.Y >= -1) ?
+                        0 : Character.Physics.LinearVelocity.Y);
+                if (vel != Vector2.Zero) vel.Normalize();
+
+                cameraVel = Vector2.Clamp(
+                    cameraVel + gameTime.ElapsedGameTime.Milliseconds * new Vector2(.35f, .125f) * vel,
+                    new Vector2(-velMaxX, -velMaxY),
+                    new Vector2(velMaxX, velMaxY));
+
+                var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
+                    new Vector3(PhysicsConstants.MetersToPixels(pos) + cameraVel, 0);
+
+
+                #region clamping
+                //if (hasBackground)
+                //{
+                //    if (camPos.X < leftClamp)
+                //        camPos.X = leftClamp;
+                //    else if (camPos.X + GraphicsDevice.Viewport.Width > rightClamp)
+                //        camPos.X = rightClamp - GraphicsDevice.Viewport.Width;
+
+                //    if (camPos.Y < topClamp)
+                //        camPos.Y = topClamp;
+                //    else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
+                //        camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
+                //}
+                #endregion
+
+                Camera.MoveCameraTo(camPos);
             }
-
-            if (InputManager.Instance.Pressed(Keys.D9))
-            {
-            }
-
-            var velMaxX = GraphicsDevice.Viewport.Width * .1f;
-            var velMaxY = GraphicsDevice.Viewport.Height * .1f;
-            var pos = Character != null ? Character.Position : Vector2.Zero;
-            var vel = new Vector2(
-                (Character.Physics.LinearVelocity.X <= 1 && Character.Physics.LinearVelocity.X >= -1) ?
-                    0 : Character.Physics.LinearVelocity.X,
-                (Character.Physics.LinearVelocity.Y <= 1 && Character.Physics.LinearVelocity.Y >= -1) ?
-                    0 : Character.Physics.LinearVelocity.Y);
-            if (vel != Vector2.Zero) vel.Normalize();
-
-            cameraVel = Vector2.Clamp(
-                cameraVel + gameTime.ElapsedGameTime.Milliseconds * new Vector2(.35f, .125f) * vel,
-                new Vector2(-velMaxX, -velMaxY),
-                new Vector2(velMaxX, velMaxY));
-
-            var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
-                new Vector3(PhysicsConstants.MetersToPixels(pos) + cameraVel, 0);
-
-            #region clamping
-            //if (hasBackground)
-            //{
-            //    if (camPos.X < leftClamp)
-            //        camPos.X = leftClamp;
-            //    else if (camPos.X + GraphicsDevice.Viewport.Width > rightClamp)
-            //        camPos.X = rightClamp - GraphicsDevice.Viewport.Width;
-
-            //    if (camPos.Y < topClamp)
-            //        camPos.Y = topClamp;
-            //    else if (camPos.Y + GraphicsDevice.Viewport.Height > bottomClamp)
-            //        camPos.Y = bottomClamp - GraphicsDevice.Viewport.Height;
-            //}
-            #endregion
-
-            Camera.MoveCameraTo(camPos);
-
             ScreenManager.Update(gameTime, this);
 
             HandleInput(gameTime);

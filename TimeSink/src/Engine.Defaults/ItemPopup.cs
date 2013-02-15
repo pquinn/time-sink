@@ -35,15 +35,18 @@ namespace Engine.Defaults
             OffSet = offSet;
         }
 
-        public IRendering Rendering
+        public List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(texture)
+                return new List<IRendering>() 
                 {
-                    Position = PhysicsConstants.MetersToPixels(position) + OffSet,
-                    Scale = BasicRendering.CreateScaleFromSize(ITEM_SIZE, ITEM_SIZE, texture, textureCache),
-                    DepthWithinLayer = DEPTH
+                    new BasicRendering(texture)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(position) + OffSet,
+                        Scale = BasicRendering.CreateScaleFromSize(ITEM_SIZE, ITEM_SIZE, texture, textureCache),
+                        DepthWithinLayer = DEPTH
+                    }
                 };
             }
         }

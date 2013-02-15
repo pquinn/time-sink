@@ -38,6 +38,8 @@ namespace TimeSink.Engine.Core
 
         public List<Tile> Midground { get; set; }
 
+        public List<Tile> Background { get; set; }
+
         public List<Tile> Tiles { get; set; }
 
         public List<List<WorldCollisionGeometrySegment>> GeoSegments { get; set; }

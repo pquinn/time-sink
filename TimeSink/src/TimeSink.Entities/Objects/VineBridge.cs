@@ -148,7 +148,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -156,14 +156,17 @@ namespace TimeSink.Entities.Objects
             get { return Physics.FixtureList; }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(EDITOR_PREVIEW)
+                return new List<IRendering>()
                 {
-                    Position = PhysicsConstants.MetersToPixels(Position),
-                    Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache)
+                    new BasicRendering(EDITOR_PREVIEW)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache)
+                    }
                 };
             }
         }

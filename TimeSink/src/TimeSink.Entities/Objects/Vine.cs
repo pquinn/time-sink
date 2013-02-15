@@ -58,7 +58,7 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override void Load(IComponentContext container)
@@ -121,16 +121,18 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get 
             {
-                return new PivotedRendering(
+                return new List<IRendering>() {
+                    new PivotedRendering(
                     VINE_TEXTURE,
                     PhysicsConstants.MetersToPixels(Position),
                     //Need to translate rotation
                     VineAnchor == null ? 0 : VineAnchor.Rotation,
-                    new Vector2(Scale, Scale));
+                    new Vector2(Scale, Scale))
+                };
             }
         }
 

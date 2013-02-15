@@ -48,9 +48,13 @@ namespace TimeSink.Entities.Triggers
         {
             if (!used)
             {
-                var monster = new TutorialMonster(Position - PhysicsConstants.PixelsToMeters(new Vector2(400, 800)), Vector2.UnitX);
+                var monster = new TutorialMonster(Position - PhysicsConstants.PixelsToMeters(new Vector2(300, 800)), Vector2.UnitX);
                 levelManager.RegisterEntity(monster);
                 monster.StartChase();
+                Engine.CameraLock = true;
+                Engine.Camera.MoveCameraTo(new Vector3(-PhysicsConstants.MetersToPixels(obj.Position.X) + 400,
+                                          -PhysicsConstants.MetersToPixels(obj.Position.Y) + 400,
+                                           0));
                 used = true;
             }
 

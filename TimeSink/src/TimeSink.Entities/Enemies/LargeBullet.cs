@@ -48,26 +48,26 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override Engine.Core.Rendering.IRendering Preview
+        public override IRendering Preview
         {
             get { throw new NotImplementedException(); }
         }
 
-        public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
+        public override List<Fixture> CollisionGeometry
         {
             get { return Physics.FixtureList; }
         }
 
-        public override Engine.Core.Rendering.IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
-                return new BasicRendering(TEXTURE)
+                return new List<IRendering>() { new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
                         Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
                         DepthWithinLayer = DEPTH
-                    };
+                    }};
             }
         }
 
@@ -117,6 +117,8 @@ namespace TimeSink.Entities.Enemies
         private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             wall.BulletHit();
+            this.DestroyPhysics();
+            Engine.LevelManager.RenderManager.UnregisterRenderable(this);
             Dead = true;
 
             return true;

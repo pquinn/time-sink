@@ -72,7 +72,7 @@ namespace TimeSink.Entities.Enemies
         
         public override IRendering Preview
         {
-            get { return Rendering; }
+            get { return Renderings[0]; }
         }
 
         public override List<Fixture> CollisionGeometry
@@ -83,15 +83,18 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
                 var tint = Math.Min(100, 2.55f * health);
-                return new BasicRendering(DUMMY_TEXTURE)
+                return new List<IRendering>()
                 {
-                    Position = PhysicsConstants.MetersToPixels(Position),
-                    TintColor = new Color(255f, tint, tint, 255f)
+                    new BasicRendering(DUMMY_TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        TintColor = new Color(255f, tint, tint, 255f)
+                    }
                 };
             }
         }

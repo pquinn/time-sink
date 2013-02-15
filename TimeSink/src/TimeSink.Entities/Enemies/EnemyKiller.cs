@@ -101,9 +101,9 @@ namespace TimeSink.Entities.Enemies
             get { return new NullRendering(); }
         }
 
-        public override IRendering Rendering
+        public override List<IRendering> Renderings
         {
-            get { return new NullRendering(); }
+            get { return new List<IRendering>(){ new NullRendering() }; }
         }
     }
 }

@@ -185,6 +185,8 @@
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
@@ -549,7 +551,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>35.9375</X><Y>9.875</Y>
+						<X>37.5</X><Y>9.875</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -586,7 +588,7 @@
 			<PropertiesMap>
 				<PairOfStringObject>
 					<Key>Width</Key>
-					<Value xsi:type="xsd:int">400</Value>
+					<Value xsi:type="xsd:int">600</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Height</Key>
@@ -615,7 +617,38 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>42.3125</X><Y>8.75</Y>
+						<X>42.703125</X><Y>8.765625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>ce305111-8ab2-4e54-b737-b932a1d5d127</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q3="http://microsoft.com/wsdl/types/" xsi:type="q3:guid">ce305111-8ab2-4e54-b737-b932a1d5d127</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">Camera break post boss</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>50</X><Y>8.796875</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

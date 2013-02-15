@@ -14,6 +14,7 @@ using TimeSink.Engine.Core.Collisions;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics.Joints;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -23,11 +24,22 @@ namespace TimeSink.Entities.Enemies
     {
         const float MASS = 100f;
         const string EDITOR_NAME = "Tutorial Monster";
+        const string TEXTURE = "Textures/Enemies/IceElemental";
+        private bool animateP = false;
 
         const float DEPTH = -50f;
 
         private float lastShotTime;
+        private int numShotsFired = 0;
 
+        private float animTimer = 0f;
+        private float animInterval = 500f;
+
+        NewAnimationRendering anim =
+             new NewAnimationRendering(TEXTURE, new Vector2(500f, 417f), 8, Vector2.Zero, 0, new Vector2(.75f, .75f), Color.White)
+                {
+                    DepthWithinLayer = DEPTH
+                };
         private static readonly Guid GUID = new Guid("fc8cddb4-e1ef-4b83-bc22-5b6460103524");
 
         public TutorialMonster()
@@ -63,13 +75,40 @@ namespace TimeSink.Entities.Enemies
 
             if (IsShooting)
             {
-                lastShotTime += time.ElapsedGameTime.Milliseconds;
+                var lastTime = time.ElapsedGameTime.Milliseconds;
+                lastShotTime += lastTime;
+                animTimer += lastTime;
+
                 if (lastShotTime > 5000)
                 {
-                    Shoot(world);
-                    lastShotTime = 0;
+                    if (numShotsFired < 3)
+                    {
+                        anim.CurrentFrame = 7;
+                        animTimer = 0f;
+                        Shoot(world);
+                        lastShotTime = 0;
+                    }
+                    else
+                    {
+                        IsShooting = false;
+                    }
+                }
+                if (animTimer >= animInterval)
+                {
+                    if (anim.CurrentFrame < (anim.NumFrames - 2) && anim.CurrentFrame != 0)
+                    {
+                        anim.CurrentFrame = (anim.CurrentFrame + 1) % (anim.NumFrames - 1);
+                    }
+                    else if (anim.CurrentFrame == 0 || anim.CurrentFrame == 7)
+                    {
+                        anim.CurrentFrame = 1;
+                    }
+
+                    animTimer = 0;
                 }
             }
+            else
+                anim.CurrentFrame = 0;
         }
             
         public void StartChase()
@@ -92,7 +131,17 @@ namespace TimeSink.Entities.Enemies
             var largeBullet = new LargeBullet(
                 Position + PhysicsConstants.PixelsToMeters(new Vector2(Width / 2, -Height / 4)), 
                 200, 30, new Vector2(30, 0));
-            world.LevelManager.RegisterEntity(largeBullet);            
+            world.LevelManager.RegisterEntity(largeBullet);
+            numShotsFired++;
+        }
+
+        public override List<IRendering> Renderings
+        {
+            get
+            {
+                anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
+                return new List<IRendering>(){ anim };
+            }
         }
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)

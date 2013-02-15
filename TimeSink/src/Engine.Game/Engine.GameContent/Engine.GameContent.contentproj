@@ -1743,6 +1743,71 @@
       <Name>trigger</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+	</Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4000.PNG">
+      <Name>Centipede_Nests%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4001.PNG">
+      <Name>Centipede_Nests%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4002.PNG">
+      <Name>Centipede_Nests%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4003.PNG">
+      <Name>Centipede_Nests%4003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4004.PNG">
+      <Name>Centipede_Nests%4004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4005.PNG">
+      <Name>Centipede_Nests%4005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4010.PNG">
+      <Name>Centipede_Nests%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4011.PNG">
+      <Name>Centipede_Nests%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4012.PNG">
+      <Name>Centipede_Nests%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4013.PNG">
+      <Name>Centipede_Nests%4013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4014.PNG">
+      <Name>Centipede_Nests%4014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4015.PNG">
+      <Name>Centipede_Nests%4015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Enemies\IceElemental.PNG">
+      <Name>IceElemental</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
