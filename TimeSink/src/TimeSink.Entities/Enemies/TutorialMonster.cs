@@ -144,6 +144,14 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
+        public override IRendering Preview
+        {
+            get
+            {
+                return  anim;
+            }
+        }
+
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
