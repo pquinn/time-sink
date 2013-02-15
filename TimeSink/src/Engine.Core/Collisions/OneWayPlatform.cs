@@ -39,7 +39,7 @@ namespace TimeSink.Entities
                 collided.Remove(entityFixture);
         }
 
-        private bool OnCollision(Fixture platformFixture, Entity entity, Fixture entityFixture, Contact contact)
+        bool OnCollision(Fixture platformFixture, Entity entity, Fixture entityFixture, Contact contact)
         {
             if (entityFixture.IsSensor)
                 return false;

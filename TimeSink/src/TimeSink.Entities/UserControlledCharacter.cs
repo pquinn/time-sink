@@ -804,6 +804,7 @@ namespace TimeSink.Entities
                     canClimb.Physics.IsSensor = true;
                     Climbing = true;
                     Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
+                    WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
 
                     if (!canClimb.Sideways)
                         currentState = BodyStates.ClimbingBack;
@@ -2742,20 +2743,27 @@ namespace TimeSink.Entities
                     currentState == BodyStates.IdleRightOpen);
         }
 
-        public void DismountLadder()
+        public void DismountLadder(float oldDamping)
         {
-            if (RightFacingBodyState())
+            if (Climbing)
             {
-                currentState = BodyStates.JumpingRight;
-                Physics.ApplyLinearImpulse(new Vector2(3, -2));
+                if (RightFacingBodyState())
+                {
+                    currentState = BodyStates.JumpingRight;
+                    Physics.ApplyLinearImpulse(new Vector2(3, -2));
+                }
+                else if (LeftFacingBodyState())
+                {
+                    currentState = BodyStates.JumpingLeft;
+                    Physics.ApplyLinearImpulse(new Vector2(-3, -2));
+                }
+                else
+                    currentState = BodyStates.JumpingRight;
             }
-            else if (LeftFacingBodyState())
-            {
-                currentState = BodyStates.JumpingLeft;
-                Physics.ApplyLinearImpulse(new Vector2(-3, -2));
-            }
-            else
-                currentState = BodyStates.JumpingRight;
+            Physics.IgnoreGravity = false;
+            Physics.LinearDamping = oldDamping;
+            Climbing = false;
+            WheelBody.CollidesWith = Category.Cat1 | Category.Cat31;
         }
 
 
