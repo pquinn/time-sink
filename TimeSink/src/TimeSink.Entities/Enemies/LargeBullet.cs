@@ -118,6 +118,7 @@ namespace TimeSink.Entities.Enemies
         {
             wall.BulletHit();
             this.DestroyPhysics();
+            Engine.LevelManager.RenderManager.UnregisterRenderable(this);
             Dead = true;
 
             return true;
