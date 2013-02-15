@@ -111,10 +111,12 @@ namespace TimeSink.Entities.Objects
                     spriteWidthMeters,
                     sensorHeight,
                     1,
-                    Vector2.UnitY * (Position.Y + spriteHeightMeters / 2 - sensorHeight / 2),
+                    Vector2.UnitY * (Position.Y - spriteHeightMeters / 2 - sensorHeight / 2),
                     Physics);
 
                 detachSensor.IsSensor = true;
+
+                detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
 
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
@@ -129,7 +131,6 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
 
-                detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
 
                 initialized = true;
             }
