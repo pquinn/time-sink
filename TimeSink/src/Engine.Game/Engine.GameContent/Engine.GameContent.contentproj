@@ -1739,9 +1739,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Textures\Levels\Background\Apoc_Present\New folder\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4000.PNG">
       <Name>Centipede_Nests%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -1799,6 +1796,11 @@
     </Compile>
     <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4015.PNG">
       <Name>Centipede_Nests%4015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Enemies\IceElemental.PNG">
+      <Name>IceElemental</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
