@@ -1129,7 +1129,7 @@ namespace TimeSink.Entities
 
                 if (InputManager.Instance.IsNewKey(Keys.F))
                 {
-                    if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                    if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow && !climbing)
                     {
                         currentState = facing == -1
                             ? isDucking

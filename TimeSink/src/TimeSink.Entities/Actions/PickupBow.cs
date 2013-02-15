@@ -22,6 +22,7 @@ namespace TimeSink.Entities.Actons
         const string EDITOR_NAME = "Pickup Bow";
         const  string TEXTURE = "Textures/Weapons/Bow_Neutral";
         const float DEPTH = 0;
+        bool initialized = true;
 
         private static readonly Guid guid = new Guid("eaa35946-ea93-4e3b-968c-7e6d0c6dbb34");
 
@@ -65,8 +66,12 @@ namespace TimeSink.Entities.Actons
         {
             base.ExecuteAction();
 
-            DestroyPhysics();
-
+            if (initialized)
+            {
+                Engine.LevelManager.RenderManager.UnregisterRenderable(this);
+                Engine.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
+                initialized = false;
+            }
             Character.AddInventoryItem(new Arrow());
 
             if (!engine.ScreenManager.IsInDialogueState())
@@ -78,6 +83,9 @@ namespace TimeSink.Entities.Actons
             {
                return EDITOR_NAME;
             }
+        }
+        public override void DestroyPhysics()
+        {
         }
     }
 }
