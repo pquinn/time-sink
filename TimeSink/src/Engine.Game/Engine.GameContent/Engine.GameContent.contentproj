@@ -1739,6 +1739,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Enemies\IceElemental.PNG">
+      <Name>IceElemental</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4000.PNG">
       <Name>Centipede_Nests%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -1766,6 +1773,11 @@
     </Compile>
     <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4005.PNG">
       <Name>Centipede_Nests%4005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4006.PNG">
+      <Name>Centipede_Nests%4006</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -1799,8 +1811,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\Enemies\IceElemental.PNG">
-      <Name>IceElemental</Name>
+    <Compile Include="Textures\Levels\Background\Jungle_Tribal\Centipede_Nests\Centipede_Nests%4016.PNG">
+      <Name>Centipede_Nests%4016</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

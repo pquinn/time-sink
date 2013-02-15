@@ -43,7 +43,7 @@ namespace TimeSink.Engine.Core.Rendering
             switch (l)
             {
                 case RenderLayer.Background:
-                    return .8f;
+                    return .6f;
                 default:
                     return 1;
             }

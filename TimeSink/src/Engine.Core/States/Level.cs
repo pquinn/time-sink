@@ -23,6 +23,7 @@ namespace TimeSink.Engine.Core
             Tiles = new List<Tile>();
             Entities = new List<Entity>();
             Midground = new List<Tile>();
+            Background = new List<Tile>();
             GeoSegments = new List<List<WorldCollisionGeometrySegment>>() { new List<WorldCollisionGeometrySegment>() };
         }
 

@@ -155,7 +155,7 @@ namespace TimeSink.Editor.GUI.Views
                         new Tile(
                             texture.Key,
                             PhysicsConstants.PixelsToMeters(new Vector2((x * width) + (width / 2), (y * height) + (height / 2))),
-                            0, Vector2.One, RenderLayer.Midground, 1));
+                            0, Vector2.One, RenderLayer.Background, 1));
                 }
             }
         }

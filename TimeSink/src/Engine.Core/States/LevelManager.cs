@@ -175,6 +175,12 @@ namespace TimeSink.Engine.Core.States
                     RenderManager.RegisterRenderable(x);
                 });
 
+            Level.Background.ForEach(
+                x =>
+                {
+                    RenderManager.RegisterRenderable(x);
+                });
+
             Level.Tiles.ForEach(
                 x =>
                 {
