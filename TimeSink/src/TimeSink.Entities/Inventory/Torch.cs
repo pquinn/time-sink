@@ -41,7 +41,7 @@ namespace TimeSink.Entities.Inventory
         private NewAnimationRendering rendering;
 
         public Torch()
-            : this(Vector2.Zero, 10, 75)
+            : this(Vector2.Zero, 20, 100)
         {
         }
 
@@ -94,7 +94,7 @@ namespace TimeSink.Entities.Inventory
 
                 var rect = FixtureFactory.AttachRectangle(
                     spriteWidthMeters,
-                    spriteHeightMeters,
+                    spriteHeightMeters + PhysicsConstants.PixelsToMeters(40),
                     1.4f,
                     Vector2.Zero,
                     Physics);
@@ -166,6 +166,7 @@ namespace TimeSink.Entities.Inventory
         {
             this.Physics.Position = c.Physics.Position;
             this.held = c;
+            Engine.LevelManager.RenderManager.UnregisterRenderable(this);
            // j = JointFactory.CreateWeldJoint(Physics, c.Physics, Vector2.Zero);
             //w.AddJoint(j);
         }
@@ -175,6 +176,7 @@ namespace TimeSink.Entities.Inventory
             Physics.Position = new Vector2(c.Physics.Position.X, ground.Physics.Position.Y - 
                                            (PhysicsConstants.PixelsToMeters(Height) / 2));
             held = null;
+            Engine.LevelManager.RenderManager.RegisterRenderable(this);
         }
         public override void OnUpdate(GameTime time, EngineGame world)
         {
