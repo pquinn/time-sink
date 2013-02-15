@@ -657,7 +657,7 @@ namespace TimeSink.Entities
                     }
                     else
                     {
-                        if (!swinging || Physics.LinearVelocity.X <= 0)
+                        if ((!swinging || Physics.LinearVelocity.X <= 0) && !isDucking)
                             moveDirection.X -= 1.0f;
 
                         if (TouchingGround)
@@ -669,6 +669,9 @@ namespace TimeSink.Entities
                                     animations[BodyStates.RunningLeft].CurrentFrame = 0;
                                     currentState = BodyStates.RunningStartLeft;
                                 }
+                            }
+                            else if (isDucking)
+                            {
                             }
                             else if (InventoryItem is Arrow && HoldingTorch == null)
                             {
@@ -742,7 +745,7 @@ namespace TimeSink.Entities
                     }
                     else
                     {
-                        if (!swinging || Physics.LinearVelocity.X >= 0)
+                        if ((!swinging || Physics.LinearVelocity.X >= 0) && !isDucking)
                             moveDirection.X += 1.0f;
 
                         if (TouchingGround)
@@ -756,6 +759,9 @@ namespace TimeSink.Entities
                                 }
                             }
 
+                            else if (isDucking)
+                            {
+                            }
                             else if (InventoryItem is Arrow && HoldingTorch == null)
                             {
                                 if (currentState != BodyStates.WalkingShootRight &&

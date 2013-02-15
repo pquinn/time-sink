@@ -79,6 +79,8 @@ namespace TimeSink.Entities.Enemies
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var level = engineRegistrations.Resolve<LevelManager>().Level;
 
+                Physics = BodyFactory.CreateBody(world, Position, this);
+
                 foreach (Entity e in level.Entities)
                 {
                     if (e is TutorialTrigger)
@@ -89,15 +91,16 @@ namespace TimeSink.Entities.Enemies
                     }
                 }
 
-                Physics = BodyFactory.CreateRectangle(
-                    world, 
+                var body = FixtureFactory.AttachRectangle(
                     PhysicsConstants.PixelsToMeters(Width), 
                     PhysicsConstants.PixelsToMeters(Height),
                     1,
-                    Position);
+                    Vector2.Zero,
+                    Physics);
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.FixedRotation = true;
                 Physics.IsSensor = true;
+                Physics.IsBullet = true;
                 Physics.IgnoreGravity = true;
                 Physics.Mass = 5;
 
@@ -117,7 +120,6 @@ namespace TimeSink.Entities.Enemies
         private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             wall.BulletHit();
-            this.DestroyPhysics();
             Engine.LevelManager.RenderManager.UnregisterRenderable(this);
             Dead = true;
 
@@ -129,7 +131,25 @@ namespace TimeSink.Entities.Enemies
             if (!character.Invulnerable)
                 character.TakeDamage(30);
 
-            return true;
+            return false;
+        }
+
+        public override void OnUpdate(GameTime time, EngineGame world)
+        {
+            base.OnUpdate(time,world);
+            if (Dead)
+            {
+                world.LevelManager.RenderManager.UnregisterRenderable(this);
+                world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
+            }
+        }
+
+        public override void DestroyPhysics()
+        {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }

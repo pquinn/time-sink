@@ -135,13 +135,13 @@ namespace TimeSink.Entities.Enemies
             numShotsFired++;
         }
 
-        public override Engine.Core.Rendering.IRendering Rendering
+        public override List<IRendering> Renderings
         {
             get
             {
 
                 anim.Position = PhysicsConstants.MetersToPixels(Physics.Position);
-                return anim;
+                return new List<IRendering>() { anim };
             }
         }
 
