@@ -174,7 +174,7 @@ namespace TimeSink.Entities.Triggers
                     }
                 }
             }
-                character = c;
+            character = c;
 
             return true;
         }

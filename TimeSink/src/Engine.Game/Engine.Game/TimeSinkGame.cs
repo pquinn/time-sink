@@ -78,10 +78,10 @@ namespace TimeSink.Engine.Game
             base.Initialize();
             
             AddInitialScreens();
-            
             defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 100, 100, new List<IInventoryItem>());
             LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
+            Database.SetDBConnectionPath(PathToProject + "//DialoguePrototypeTestDB.s3db");
         }
 
         private void AddInitialScreens()
@@ -302,9 +302,9 @@ namespace TimeSink.Engine.Game
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
             levelTime = 0f;
             levelStarted = true;
-            Logger.Info("Level loaded.");
             
             var save = ((Save)LevelManager.LevelCache["Save"]);
+            Logger.Info(String.Format("LEVEL: {0}", save.LevelPath));
             Character = new UserControlledCharacter(
                 spawnPoint >= 0 ?
                     LevelManager.Level.SpawnPoints[spawnPoint] :

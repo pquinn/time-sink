@@ -124,6 +124,7 @@ namespace TimeSink.Engine.Core
             builder.RegisterType<PhysicsManager>().AsSelf().SingleInstance();
             builder.RegisterType<RenderManager>().AsSelf().SingleInstance();
             builder.RegisterType<LevelManager>().AsSelf().SingleInstance();
+            builder.RegisterType<ScreenManager>().AsSelf().SingleInstance();
 
             builder.RegisterType<SQLiteDatabase>().AsSelf().SingleInstance();
 
