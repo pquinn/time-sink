@@ -9,12 +9,17 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Collisions;
+using Engine.Defaults;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 
-namespace TimeSink.Entities.Actions
+namespace TimeSink.Entities.Triggers
+
 {
     [EditorEnabled]
     [SerializableEntity("5487de5f-acba-42c9-9404-b05ddea64b02")]
-    public class InvokeCheckpoint : InteractableItem
+    public class InvokeCheckpoint : Trigger
     {
         const string EDITOR_NAME = "Checkpoint";
         private static readonly Guid guid = new Guid("5487de5f-acba-42c9-9404-b05ddea64b02");
@@ -23,6 +28,7 @@ namespace TimeSink.Entities.Actions
         private static readonly Vector2 SrcRectSize = new Vector2(200f, 304f);
         private float timer;
         private float interval = 150f;
+        private bool activating = false;
         private bool activated = false;
 
         public InvokeCheckpoint()
@@ -79,25 +85,46 @@ namespace TimeSink.Entities.Actions
         [EditableField("Spawn Point")]
         public int SpawnPoint { get; set; }
 
-        protected override void ExecuteAction()
+        protected override void RegisterCollisions()
         {
-            engine.LevelManager.LevelCache.ReplaceOrAdd(
-                "Save",
-                new Save(Engine.LevelManager.LevelPath, SpawnPoint, Character.Health, Character.Mana, Character.Inventory));
-            activated = true;
+            object save;
+            if (levelManager.LevelCache.TryGetValue("Save", out save))
+            {
+                activated = ((Save)save).LevelPath == levelManager.LevelPath;
+                if (activated)
+                    rendering.CurrentFrame = rendering.NumFrames - 1;
+            }
+            Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+        }
+
+        public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        {
+            if (!activating && !activated)
+            {
+                Engine.LevelManager.LevelCache.ReplaceOrAdd(
+                    "Save",
+                    new Save(Engine.LevelManager.LevelPath, SpawnPoint, c.Health, c.Mana, c.Inventory));
+                activating = true;
+            }
+
+            return true;
         }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             timer += (float)time.ElapsedGameTime.TotalMilliseconds;
 
-            if (timer >= interval && activated && rendering.CurrentFrame != rendering.NumFrames - 1)
+            if (rendering.CurrentFrame == rendering.NumFrames - 1)
+            {
+                activated = true;
+                activating = false;
+            }
+            else if (timer >= interval && activating)
             {
                 rendering.CurrentFrame = (rendering.CurrentFrame + 1) % rendering.NumFrames;
                 timer = 0f;
             }
             rendering.Position = PhysicsConstants.MetersToPixels(position);
-
         }
     }
 }

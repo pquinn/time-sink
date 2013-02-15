@@ -24,7 +24,7 @@ namespace TimeSink.Engine.Core
 {
     public class EngineGame : Game
     {
-        // Components
+        #region fields
         public GraphicsDeviceManager graphics { get; set; }
 
         public Camera Camera { get; set; }
@@ -54,6 +54,7 @@ namespace TimeSink.Engine.Core
         public static EngineGame Instance;
 
         private DebugViewXNA debugView;
+        #endregion
 
         // todo: used for hacking door in the editor
         public EngineGame()
@@ -137,12 +138,6 @@ namespace TimeSink.Engine.Core
             base.Update(gameTime);
 
             InputManager.Instance.Update();
-
-         /* Gameplayscreen handles updating the Level 
-          * 
-          * LevelManager.PhysicsManager.Update(gameTime);
-
-            LevelManager.Level.Entities.ForEach(x => x.Update(gameTime, this));*/
         }
 
         protected override void Draw(GameTime gameTime)
@@ -182,7 +177,6 @@ namespace TimeSink.Engine.Core
             debugView = new DebugViewXNA(LevelManager.PhysicsManager.World);
             debugView.LoadContent(GraphicsDevice, Content);
         }
-
 
         public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
     }
