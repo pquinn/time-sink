@@ -56,10 +56,10 @@ namespace TimeSink.Entities.NPCs
                                                     false,
                                                     true,
                                                     false);
-                        var vineTile = new Tile("Textures/Tiles/Vine2",
+                        var vineTile = new Tile("Textures/Tiles/Climbing vine",
                                                 new Vector2(x, y),
                                                 0f,
-                                                new Vector2(1.0f, 1.777f),
+                                                new Vector2(1.0f, .8f),
                                                 RenderLayer.Gameground,
                                                 -50);
 
