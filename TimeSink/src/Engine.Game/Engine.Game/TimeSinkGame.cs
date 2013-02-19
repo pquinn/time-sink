@@ -154,42 +154,13 @@ namespace TimeSink.Engine.Game
 
             if (!CameraLock)
             {
+                var h = GraphicsDevice.Viewport.Height;
+                var w = GraphicsDevice.Viewport.Width;
 
-                int topClamp, leftClamp;
-                int bottomClamp, rightClamp;
-
-                topClamp = leftClamp = int.MaxValue;
-                bottomClamp = rightClamp = int.MinValue;
-
-                var h2 = GraphicsDevice.Viewport.Height / 2;
-                var w2 = GraphicsDevice.Viewport.Width / 2;
-
-                bool hasBackground = false;
-
-                foreach (var tile in LevelManager.Level.Midground)
-                {
-                    hasBackground = true;
-
-                    var position = tile.Position;
-
-                    var top = (int)(position.Y) - h2;
-                    var bottom = (int)(position.Y) + h2;
-                    var left = (int)(position.X) - w2;
-                    var right = (int)(position.X) + w2;
-
-                    if (top < topClamp)
-                        topClamp = top;
-                    if (bottom > bottomClamp)
-                        bottomClamp = bottom;
-                    if (left < leftClamp)
-                        leftClamp = left;
-                    if (right > rightClamp)
-                        rightClamp = right;
-                }
-
-                if (InputManager.Instance.Pressed(Keys.D9))
-                {
-                }
+                var topClamp = 0;
+                var leftClamp = 0;
+                var rightClamp = (int)PhysicsConstants.MetersToPixels(LevelManager.Level.CameraMax.X) - w;
+                var bottomClamp = (int)PhysicsConstants.MetersToPixels(LevelManager.Level.CameraMax.Y) - h;
 
                 var velMaxX = GraphicsDevice.Viewport.Width * .1f;
                 var velMaxY = GraphicsDevice.Viewport.Height * .1f;
@@ -209,6 +180,10 @@ namespace TimeSink.Engine.Game
                 var camPos = new Vector3(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, 0) -
                     new Vector3(PhysicsConstants.MetersToPixels(pos) + cameraVel, 0);
 
+                camPos = Vector3.Clamp(
+                    camPos,
+                    new Vector3(-rightClamp, -bottomClamp, 0),
+                    new Vector3(-leftClamp, -topClamp, 0));
 
                 #region clamping
                 //if (hasBackground)

@@ -37,6 +37,8 @@ namespace TimeSink.Engine.Core
 
         public List<Vector2> SpawnPoints { get; set; }
 
+        public Vector2 CameraMax { get; set; }
+
         public List<Tile> Midground { get; set; }
 
         public List<Tile> Background { get; set; }

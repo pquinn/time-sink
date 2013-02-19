@@ -57,6 +57,7 @@ namespace TimeSink.Editor.GUI.Views
         {
             background_txt.Text = Game.LevelManager.Level.BackgroundPath;
             midground_txt.Text = Game.LevelManager.Level.MidgroundPath;
+            camera_txt.Text = Game.LevelManager.Level.CameraMax.ToDisplayString();
             spawn_txt.Text = Game.LevelManager.Level.DefaultStart.ToDisplayString();
             spawns_txt.Text = string.Join(";", Game.LevelManager.Level.SpawnPoints.Select(x => x.ToDisplayString()));
         }
@@ -96,6 +97,7 @@ namespace TimeSink.Editor.GUI.Views
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
+            Game.LevelManager.Level.CameraMax = camera_txt.Text.ParseVector();
             Game.LevelManager.Level.DefaultStart = spawn_txt.Text.ParseVector();
             Game.LevelManager.Level.SpawnPoints = ExtractSpawnPoints();
         }
