@@ -104,7 +104,9 @@ namespace TimeSink.Entities.Triggers
             object save;
             if (levelManager.LevelCache.TryGetValue("Save", out save))
             {
-                activated = ((Save)save).LevelPath == levelManager.LevelPath;
+                var saveCast = ((Save)save);
+                activated = saveCast.LevelPath == levelManager.LevelPath && 
+                            saveCast.SpawnPoint == SpawnPoint;
                 if (activated)
                     rendering.CurrentFrame = rendering.NumFrames - 1;
             }
