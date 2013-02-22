@@ -37,6 +37,10 @@ namespace TimeSink.Entities.NPCs
         [EditableField("Passable?")]
         public bool Passable { get; set; }
 
+        [SerializableField]
+        [EditableField("Passable Texture Name")]
+        public string PassableTextureName { get; set; }
+
         private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
@@ -71,6 +75,9 @@ namespace TimeSink.Entities.NPCs
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat3;
                 fix.CollidesWith = Category.Cat1;
+
+                if (PassableTextureName != String.Empty)
+                    TextureName = PassableTextureName;
             }
             base.OnUpdate(time, world);
         }
