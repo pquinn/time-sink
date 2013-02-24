@@ -393,7 +393,7 @@ namespace TimeSink.Entities
                     damageTaken += val;
                     Logger.Info(String.Format("DAMAGED: {0}", val));
 
-                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+                    Engine.UpdateHealth();
                     PlaySound(takeDamageSound);
                 }
                 if (RightFacingBodyState())
