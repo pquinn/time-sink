@@ -80,9 +80,16 @@ namespace TimeSink.Engine.Core.Rendering
                 set.Sort(comparer);
                 foreach (var rendering in set)
                 {
-                    var t = camera.Transform;
-                    t.Translation *= getDepthScale(layerSetPair.Key);
-                    rendering.Draw(spriteBatch, TextureCache, t);
+                    if (layerSetPair.Key == RenderLayer.UI)
+                    {
+                        rendering.Draw(spriteBatch, TextureCache, Matrix.Identity);
+                    }
+                    else
+                    {
+                        var t = camera.Transform;
+                        t.Translation *= getDepthScale(layerSetPair.Key);
+                        rendering.Draw(spriteBatch, TextureCache, t);
+                    }
                 }
             }
         }

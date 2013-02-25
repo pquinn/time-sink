@@ -27,6 +27,7 @@ using TimeSink.Entities.Objects;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Entities.Objects;
 using Autofac;
+using TimeSink.Entities.Hud;
 #endregion
 
 namespace TimeSink.Engine.Game
@@ -48,6 +49,7 @@ namespace TimeSink.Engine.Game
         float levelTime;
         bool levelStarted;
 
+        HealthBar healthBar = new HealthBar();
 
         private Save defaultSave;
 
@@ -282,6 +284,8 @@ namespace TimeSink.Engine.Game
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
             levelTime = 0f;
             levelStarted = true;
+
+            
             
             var save = ((Save)LevelManager.LevelCache["Save"]);
             Logger.Info(String.Format("LEVEL: {0}", save.LevelPath));
@@ -297,6 +301,18 @@ namespace TimeSink.Engine.Game
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
             spawnPoint = -1;
+
+            LevelManager.RenderManager.RegisterRenderable(healthBar);
+            if (Character != null)
+            {
+                healthBar.UpdateHealth(Character);
+            }
+        }
+
+        public override void UpdateHealth()
+        {
+            base.UpdateHealth();
+            healthBar.UpdateHealth(Character);
         }
 
         #region Controller code

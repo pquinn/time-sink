@@ -44,6 +44,7 @@ namespace TimeSink.Engine.Core
         public ScreenManager ScreenManager { get; private set; }
         public ScreenFactory ScreenFactory { get; private set; }
 
+
         private bool musicEnabled = true;
 
         public bool MusicEnabled { get { return musicEnabled; } set { musicEnabled = value; } }
@@ -180,5 +181,7 @@ namespace TimeSink.Engine.Core
         }
 
         public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
+
+        public virtual void UpdateHealth() { }
     }
 }

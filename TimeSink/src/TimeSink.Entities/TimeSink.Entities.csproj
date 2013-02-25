@@ -68,6 +68,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hud\HealthBar.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
@@ -129,9 +130,7 @@
       <Name>Engine.Defaults</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hud\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

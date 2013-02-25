@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
 using Microsoft.Xna.Framework.Audio;
 using Engine.Defaults;
+using TimeSink.Entities.Triggers;
 
 namespace TimeSink.Entities.Inventory
 {
@@ -95,10 +96,18 @@ namespace TimeSink.Entities.Inventory
 
         public bool OnCollidedWith(Fixture f, Entity entity, Fixture eFix, Contact info)
         {
-            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder || entity is Torch))
+            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder || entity is Torch || entity is TutorialTrigger))
             {
                 Dead = true;
-                arrowImpact.Play();
+
+                if (EngineGame.Instance.SoundsEnabled)
+                {
+                    arrowImpact.Play();
+                }
+            }
+            else
+            {
+                return false;
             }
             return info.Enabled;
         }

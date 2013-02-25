@@ -393,7 +393,7 @@ namespace TimeSink.Entities
                     damageTaken += val;
                     Logger.Info(String.Format("DAMAGED: {0}", val));
 
-                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdateHealth(Health);
+                    Engine.UpdateHealth();
                     PlaySound(takeDamageSound);
                 }
                 if (RightFacingBodyState())
@@ -581,6 +581,7 @@ namespace TimeSink.Entities
 
                 #region Movement
                 #region gamepad
+                /*
                 if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
                 {
                     moveDirection.X -= 1.0f;
@@ -605,6 +606,7 @@ namespace TimeSink.Entities
                         currentState = BodyStates.WalkingRight;
                     }
                 }
+                 * */
                 #endregion
 
                 if (invulnTimer >= invulnInterval)
@@ -617,14 +619,14 @@ namespace TimeSink.Entities
                     damageTimer = 0f;
                     damageFlash = false;
                 }
-                if (InputManager.Instance.Pressed(Keys.LeftShift))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Sprint))
                 {
                     isRunning = true;
                 }
                 else
                     isRunning = false;
 
-                if (keyboard.IsKeyDown(Keys.A))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveLeft))
                 {
                     float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
                     facing = -1;
@@ -712,7 +714,7 @@ namespace TimeSink.Entities
                     }
                     //TODO -- add logic for climbing state / animation
                 }
-                if (keyboard.IsKeyDown(Keys.D))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveRight))
                 {
                     float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
                     facing = 1;
@@ -804,7 +806,7 @@ namespace TimeSink.Entities
                     }
                     //TODO -- add logic for climbing state / animation
                 }
-                if (keyboard.IsKeyDown(Keys.S))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
                 {
                     #region Climbing
 
@@ -984,8 +986,7 @@ namespace TimeSink.Entities
                 #endregion
 
                 #region Jumping
-                if (InputManager.Instance.IsNewKey(Keys.Space)
-                    || gamepad.Buttons.A.Equals(ButtonState.Pressed))
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
                 {
                     if (BridgeHanging())
                     {
@@ -1016,7 +1017,8 @@ namespace TimeSink.Entities
 
                     numberOfJumps++;
                 }
-                if (keyboard.IsKeyDown(Keys.S) && InputManager.Instance.IsNewKey(Keys.Space))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) && 
+                    InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
                 {
                     if (TouchingGround)
                     {
@@ -1026,7 +1028,7 @@ namespace TimeSink.Entities
                 #endregion
 
                 #region climbing
-                if (keyboard.IsKeyDown(Keys.W))
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.UpAction))
                 {
                     if ((canClimb != null))
                     {
@@ -1127,7 +1129,7 @@ namespace TimeSink.Entities
 
                 #region Shooting
 
-                if (InputManager.Instance.IsNewKey(Keys.F))
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Shoot))
                 {
                     if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow && !climbing)
                     {
@@ -1144,7 +1146,7 @@ namespace TimeSink.Entities
                         inHold = true;
                     }
                 }
-                else if (!InputManager.Instance.Pressed(Keys.F) && inHold)
+                else if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot) && inHold)
                 {
                     if (!ClimbingState() && !swinging && !VineBridgeState() &&
                         shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
@@ -1183,7 +1185,7 @@ namespace TimeSink.Entities
 
                 #endregion
 
-                if (InputManager.Instance.IsNewKey(Keys.E))
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Interact))
                 {
                     if (onPickup != null)
                     {
@@ -1226,7 +1228,7 @@ namespace TimeSink.Entities
                     }
                 }
                 //No keys are pressed and we're on the ground, we're neutral
-                if (keyboard.GetPressedKeys().GetLength(0) == 0)
+                if (keyboard.GetPressedKeys().GetLength(0) == 0 && InputManager.Instance.NoButtonsPressed(gamepad))
                 {
                     if (TouchingGround && timer >= interval)
                     {
