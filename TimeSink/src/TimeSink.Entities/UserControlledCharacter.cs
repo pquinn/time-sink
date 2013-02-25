@@ -21,7 +21,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Inventory;
 using Engine.Defaults;
-using TimeSink.Entities.Actons;
+using TimeSink.Entities.Actions;
 using TimeSink.Entities.Triggers;
 using TimeSink.Entities.Utils;
 

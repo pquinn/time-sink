@@ -68,6 +68,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Hud\HealthBar.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Inventory\Torch.cs" />
     <Compile Include="Save.cs" />
+    <Compile Include="Triggers\QuestCompletionTrigger.cs" />
     <Compile Include="Triggers\DialogueTrigger.cs" />
     <Compile Include="Triggers\CameraUnlockTrigger.cs" />
     <Compile Include="Triggers\PlaceTorchTrigger.cs" />
