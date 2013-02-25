@@ -1420,7 +1420,7 @@ namespace TimeSink.Entities
 
             jumpToggleGuard = false;
             PlaySound(jumpSound);
-            Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
+            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
 
             if (facing > 0)
             {
