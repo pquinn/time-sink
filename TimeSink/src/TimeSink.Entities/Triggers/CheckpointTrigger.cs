@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TimeSink.Entities.Actons;
+using TimeSink.Entities.Actions;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
 using Microsoft.Xna.Framework;

@@ -71,5 +71,16 @@ namespace TimeSink.Entities.NPCs
                 }
             }
         }
+
+        public override void OnUpdate(GameTime time, EngineGame world)
+        {
+            object questResult;
+            var questComplete = (bool)game.LevelManager.LevelCache.TryGetValue("centipede_quest_complete", out questResult);
+            if (DialogueState == 1 && (questComplete != null && questComplete))
+            {
+                DialogueState++;
+            }
+            base.OnUpdate(time, world);
+        }
     }
 }

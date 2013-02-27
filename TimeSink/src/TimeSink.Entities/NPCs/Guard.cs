@@ -51,6 +51,7 @@ namespace TimeSink.Entities.NPCs
                 {
                     var fix = Physics.FixtureList[0];
                     fix.CollidesWith = Category.All;
+                    fix.IsSensor = false;
                 }
                 initialized = true;
             }
@@ -76,7 +77,7 @@ namespace TimeSink.Entities.NPCs
                 fix.CollisionCategories = Category.Cat3;
                 fix.CollidesWith = Category.Cat1;
 
-                if (PassableTextureName != String.Empty)
+                if (PassableTextureName != String.Empty && PassableTextureName != null)
                     TextureName = PassableTextureName;
             }
             base.OnUpdate(time, world);

@@ -20,7 +20,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using Engine.Defaults;
 
-namespace TimeSink.Entities.Actons
+namespace TimeSink.Entities.Actions
 {
     public enum DoorType { Up, Down, Side, None }
 
@@ -38,6 +38,8 @@ namespace TimeSink.Entities.Actons
 
         const string UP_POPUP = "Textures/Keys/w-key";
         const string DOWN_POPUP = "Textures/Keys/s-key";
+
+        protected bool enabled;
 
         private static readonly Guid guid = new Guid("66c116cc-60bf-4808-a4c0-f5bb8cad053b");
 
@@ -58,6 +60,7 @@ namespace TimeSink.Entities.Actons
             DoorType = doorType;
             LevelPath = levelPath;
             SpawnPoint = spawnPoint;
+            enabled = true;
         }
 
         public override string EditorName
@@ -93,24 +96,27 @@ namespace TimeSink.Entities.Actons
 
         private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
-        {            
-            if (DoorType == DoorType.Side)
-                ChangeLevel();
-            if (DoorType == DoorType.Up)
+        {
+            if (enabled)
             {
-                c.DoorType = DoorType.Up;
-            }
-            if (DoorType == DoorType.Down)
-            {
-                c.DoorType = DoorType.Down;
-            }
+                if (DoorType == DoorType.Side)
+                    ChangeLevel();
+                if (DoorType == DoorType.Up)
+                {
+                    c.DoorType = DoorType.Up;
+                }
+                if (DoorType == DoorType.Down)
+                {
+                    c.DoorType = DoorType.Down;
+                }
 
-            collided = true;
+                collided = true;
 
-            if (popup != null && !registered)
-            {
-                engine.LevelManager.RenderManager.RegisterRenderable(popup);
-                registered = true;
+                if (popup != null && !registered)
+                {
+                    engine.LevelManager.RenderManager.RegisterRenderable(popup);
+                    registered = true;
+                }
             }
 
             return true;

@@ -359,7 +359,7 @@ namespace TimeSink.Engine.Core.StateManagement
             spriteBatch.Begin();
 
             // Draw each weaponSlot in turn.
-            for (int i = 0; i < hudElements.Count; i++)
+        /*    for (int i = 0; i < hudElements.Count; i++)
             {
                 IHudElement hudElement = hudElements[i];
                  
@@ -368,7 +368,7 @@ namespace TimeSink.Engine.Core.StateManagement
                 {
                     hudElement.Draw(this, false, gameTime);
                 }
-            }
+            }*/
 
             spriteBatch.End();
 

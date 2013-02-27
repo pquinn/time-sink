@@ -107,16 +107,16 @@ namespace TimeSink.Entities.Objects
 
                 var sensorHeight = Math.Min(spriteHeightMeters / 8, PhysicsConstants.PixelsToMeters(10));
 
-                var detachSensor = FixtureFactory.AttachRectangle(
-                    spriteWidthMeters,
-                    sensorHeight,
-                    1,
-                    Vector2.UnitY * (Position.Y - spriteHeightMeters / 2 - sensorHeight / 2),
-                    Physics);
+                //var detachSensor = FixtureFactory.AttachRectangle(
+                //    spriteWidthMeters,
+                //    sensorHeight,
+                //    1,
+                //    Vector2.UnitY * (Position.Y - spriteHeightMeters / 2 - sensorHeight / 2),
+                //    Physics);
 
-                detachSensor.IsSensor = true;
+                //detachSensor.IsSensor = true;
 
-                detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
+                //detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
 
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;

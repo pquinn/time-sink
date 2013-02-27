@@ -7,7 +7,7 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Enemies;
 
-namespace TimeSink.Entities.Actons
+namespace TimeSink.Entities.Actions
 {
 
     [EditorEnabled]
