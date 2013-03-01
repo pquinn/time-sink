@@ -12,7 +12,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Inventory;
 using Microsoft.Xna.Framework;
 
-namespace TimeSink.Entities.Actons
+namespace TimeSink.Entities.Actions
 {
 
     [EditorEnabled]

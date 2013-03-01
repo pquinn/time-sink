@@ -9,7 +9,7 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.StateManagement;
 using TimeSink.Engine.Core.States;
 
-namespace TimeSink.Entities.Actons
+namespace TimeSink.Entities.Actions
 {
     [EditorEnabled]
     [SerializableEntity("e498c785-4483-43ae-95b5-d839c6d2089f")]

@@ -23,6 +23,7 @@ namespace TimeSink.Engine.Core.StateManagement
         #region Fields
 
         MenuEntry soundsEntry;
+        MenuEntry controllerEntry;
 
         enum Ungulate
         {
@@ -53,6 +54,7 @@ namespace TimeSink.Engine.Core.StateManagement
         {
             // Create our menu entries.
             soundsEntry = new MenuEntry(string.Empty);
+            controllerEntry = new MenuEntry(string.Empty);
 
             SetMenuEntryText();
 
@@ -60,10 +62,12 @@ namespace TimeSink.Engine.Core.StateManagement
 
             // Hook up menu event handlers.
             soundsEntry.Selected += SoundsEntrySelected;
+            controllerEntry.Selected += ControllerEntrySelected;
             back.Selected += OnCancel;
             
             // Add entries to the menu.
             MenuEntries.Add(soundsEntry);
+            MenuEntries.Add(controllerEntry);
             MenuEntries.Add(back);
         }
 
@@ -74,6 +78,7 @@ namespace TimeSink.Engine.Core.StateManagement
         void SetMenuEntryText()
         {
             soundsEntry.Text = "Sounds";
+            controllerEntry.Text = "Controller Settings";
         }
 
 
@@ -131,6 +136,11 @@ namespace TimeSink.Engine.Core.StateManagement
         void SoundsEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             ScreenManager.AddScreen(new SoundOptionsScreen(), e.PlayerIndex);
+        }
+
+        void ControllerEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new ControllerOptionsScreen(), e.PlayerIndex);
         }
 
 

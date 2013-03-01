@@ -43,7 +43,7 @@ namespace TimeSink.Entities.NPCs
         {
             if (collided && DialogueRootsList.Count > 0)
             {
-                if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Pickup) && !game.ScreenManager.IsInDialogueState())
                 {
                     game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRootsList[DialogueState])), null);
                     if (DialogueState == 1 && !vineDropped)
@@ -70,6 +70,17 @@ namespace TimeSink.Entities.NPCs
                     }
                 }
             }
+        }
+
+        public override void OnUpdate(GameTime time, EngineGame world)
+        {
+            object questResult;
+            var questComplete = (bool)game.LevelManager.LevelCache.TryGetValue("centipede_quest_complete", out questResult);
+            if (DialogueState == 1 && (questComplete != null && questComplete))
+            {
+                DialogueState++;
+            }
+            base.OnUpdate(time, world);
         }
     }
 }

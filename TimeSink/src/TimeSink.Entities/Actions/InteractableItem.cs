@@ -19,7 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Rendering;
 using Engine.Defaults;
 
-namespace TimeSink.Entities.Actons
+namespace TimeSink.Entities.Actions
 {
     [EditorEnabled]
     [SerializableEntity("edc87822-ee90-4826-84af-d0eeba3c13fe")]

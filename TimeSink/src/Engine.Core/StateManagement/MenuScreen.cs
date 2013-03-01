@@ -229,7 +229,7 @@ namespace TimeSink.Engine.Core.StateManagement
                 position.Y += menuEntry.GetHeight(this) + 10;
             }
 
-            UpdateHudElements();
+           // UpdateHudElements();
         }
 
         public void UpdateHudElements()
@@ -281,10 +281,10 @@ namespace TimeSink.Engine.Core.StateManagement
 
                 menuEntries[i].Update(this, isSelected, gameTime);
             }
-            for (int i = 0; i < hudElements.Count; i++)
+         /*   for (int i = 0; i < hudElements.Count; i++)
             {
                 hudElements[i].Update(this, gameTime);
-            }
+            }*/
         }
 
 
@@ -313,7 +313,7 @@ namespace TimeSink.Engine.Core.StateManagement
                 menuEntry.Draw(this, isSelected, gameTime);
             }
 
-            // Draw each weaponSlot in turn.
+       /*     // Draw each weaponSlot in turn.
             for (int i = 0; i < hudElements.Count; i++)
             {
                 IHudElement weaponSlot = hudElements[i];
@@ -321,7 +321,7 @@ namespace TimeSink.Engine.Core.StateManagement
                 bool isSelected = IsActive && (i == selectedEntry);
 
                 weaponSlot.Draw(this, isSelected, gameTime);
-            }
+            }*/
 
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes

@@ -21,7 +21,7 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Inventory;
 using Engine.Defaults;
-using TimeSink.Entities.Actons;
+using TimeSink.Entities.Actions;
 using TimeSink.Entities.Triggers;
 using TimeSink.Entities.Utils;
 
@@ -63,6 +63,7 @@ namespace TimeSink.Entities
             #endregion
             #region jumping
             JumpingRight, JumpingLeft,
+            JumpingRightTorch, JumpingLeftTorch,
             #endregion
             #region shooting
             ShootingArrowRight, ShootingArrowLeft,
@@ -121,6 +122,8 @@ namespace TimeSink.Entities
         #region jumping
         const string JUMPING_LEFT = "Textures/Sprites/SpriteSheets/JumpingLeft";
         const string JUMPING_RIGHT = "Textures/Sprites/SpriteSheets/Jumping_Right";
+        const string JUMPING_RIGHT_TORCH = "Textures/Sprites/SpriteSheets/Jump_Torch_Right";
+        const string JUMPING_LEFT_TORCH = "Textures/Sprites/SpriteSheets/Jump_Torch_Left";
         #endregion
         const string FACING_BACK = "Textures/Sprites/SpriteSheets/Backward";
         const string FACING_FORWARD = "Textures/Sprites/SpriteSheets/Facing_Forward";
@@ -996,7 +999,7 @@ namespace TimeSink.Entities
                             isDucking = false;
                         }
                         vineBridge.ForceSeperation(this);
-                        if (!InputManager.Instance.Pressed(Keys.S))
+                        if (!InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction))
                             PerformJump();
                     }
                     else if (swinging)
@@ -1422,17 +1425,33 @@ namespace TimeSink.Entities
 
             jumpToggleGuard = false;
             PlaySound(jumpSound);
-            Physics.ApplyLinearImpulse(new Vector2(0, -20f * percentOfMax));
+            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
 
             if (facing > 0)
             {
-                currentState = BodyStates.JumpingRight;
-                animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                if (HoldingTorch != null)
+                {
+                    currentState = BodyStates.JumpingRightTorch;
+                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 0;
+                }
+                else
+                {
+                    currentState = BodyStates.JumpingRight;
+                    animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                }
             }
             else
             {
-                currentState = BodyStates.JumpingLeft;
-                animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                if (HoldingTorch != null)
+                {
+                    currentState = BodyStates.JumpingLeftTorch;
+                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 0;
+                }
+                else
+                {
+                    currentState = BodyStates.JumpingLeft;
+                    animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                }
             }
         }
 
@@ -1731,6 +1750,27 @@ namespace TimeSink.Entities
 
                 timer = 0f;
             }
+            if (currentState == BodyStates.JumpingRightTorch && timer >= interval)
+            {
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
+                {
+                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 1;
+                }
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
+                {
+                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 2;
+                }
+                else if (animations[BodyStates.JumpingRightTorch].CurrentFrame == 3)
+                {
+                    currentState = BodyStates.NeutralRightTorch;
+                }
+                else if (TouchingGround)
+                {
+                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 3;
+                }
+
+                timer = 0f;
+            }
 
             if (currentState == BodyStates.JumpingLeft && timer >= interval)
             {
@@ -1749,6 +1789,27 @@ namespace TimeSink.Entities
                 else if (TouchingGround)
                 {
                     animations[BodyStates.JumpingLeft].CurrentFrame = 3;
+                }
+
+                timer = 0f;
+            } 
+            if (currentState == BodyStates.JumpingLeftTorch && timer >= interval)
+            {
+                if (!TouchingGround && Physics.LinearVelocity.Y < 0)
+                {
+                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 1;
+                }
+                else if (!TouchingGround && Physics.LinearVelocity.Y > 0)
+                {
+                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 2;
+                }
+                else if (animations[BodyStates.JumpingLeftTorch].CurrentFrame == 3)
+                {
+                    currentState = BodyStates.NeutralLeftTorch;
+                }
+                else if (TouchingGround)
+                {
+                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 3;
                 }
 
                 timer = 0f;
@@ -2294,7 +2355,7 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingRight,
                 new NewAnimationRendering(
                     JUMPING_RIGHT,
-                    new Vector2(77f, 154f),
+                    new Vector2(76.75f, 154f),
                     4,
                     Vector2.Zero,
                     0,
@@ -2304,7 +2365,27 @@ namespace TimeSink.Entities
             dictionary.Add(BodyStates.JumpingLeft,
                 new NewAnimationRendering(
                     JUMPING_LEFT,
-                    new Vector2(77f, 154f),
+                    new Vector2(76.75f, 154f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(BodyStates.JumpingRightTorch,
+                new NewAnimationRendering(
+                    JUMPING_RIGHT_TORCH,
+                    new Vector2(92f, 170f),
+                    4,
+                    Vector2.Zero,
+                    0,
+                    Vector2.One,
+                    invulnTint) { DepthWithinLayer = -100 });
+
+            dictionary.Add(BodyStates.JumpingLeftTorch,
+                new NewAnimationRendering(
+                    JUMPING_LEFT_TORCH,
+                    new Vector2(92f, 170f),
                     4,
                     Vector2.Zero,
                     0,
