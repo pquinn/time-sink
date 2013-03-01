@@ -14,7 +14,7 @@ namespace TimeSink.Engine.Core.Input
 
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact
+            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact, Pickup
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
@@ -59,6 +59,7 @@ namespace TimeSink.Engine.Core.Input
             keyDictionary.Add(ButtonActions.AimLeft,Keys.Left );
             keyDictionary.Add( ButtonActions.AimRight, Keys.Right);
             keyDictionary.Add(ButtonActions.Jump, Keys.Space);
+            keyDictionary.Add(ButtonActions.Pickup, Keys.X);
 
             gamepadDictionary.Add(ButtonActions.MoveLeft, Buttons.DPadLeft);
             gamepadDictionary.Add(ButtonActions.MoveRight, Buttons.DPadRight);
@@ -70,6 +71,7 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightShoulder);
             gamepadDictionary.Add(ButtonActions.AimDown, Buttons.LeftShoulder);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
+            gamepadDictionary.Add(ButtonActions.Pickup, Buttons.B);
            // gamepadDictionary.Add(ButtonActions.AimLeft, Keys.Left);
            // gamepadDictionary.Add(ButtonActions.AimRight, Keys.Right); sticks
 
