@@ -999,7 +999,7 @@ namespace TimeSink.Entities
                             isDucking = false;
                         }
                         vineBridge.ForceSeperation(this);
-                        if (!InputManager.Instance.Pressed(Keys.S))
+                        if (!InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction))
                             PerformJump();
                     }
                     else if (swinging)

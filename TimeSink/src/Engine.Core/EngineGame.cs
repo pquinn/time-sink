@@ -49,6 +49,7 @@ namespace TimeSink.Engine.Core
 
         public bool MusicEnabled { get { return musicEnabled; } set { musicEnabled = value; } }
         public bool SoundsEnabled { get; set; }
+        public bool GamepadEnabled { get; set; }
 
         public bool RenderDebugGeometry { get; set; }
 

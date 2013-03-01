@@ -199,8 +199,8 @@ namespace TimeSink.Entities.Actions
             Physics.Friction = 0;
             if (collided)
             {
-                if ((InputManager.Instance.IsNewKey(Keys.W) && DoorType == DoorType.Up) ||
-                    (InputManager.Instance.IsNewKey(Keys.S) && DoorType != DoorType.Up))
+                if ((InputManager.Instance.ActionPressed(InputManager.ButtonActions.UpAction) && DoorType == DoorType.Up) ||
+                    (InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction) && DoorType != DoorType.Up))
                 {
                     ChangeLevel();
                 }

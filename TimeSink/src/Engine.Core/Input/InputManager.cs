@@ -14,7 +14,7 @@ namespace TimeSink.Engine.Core.Input
 
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact
+            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact, Pickup
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
@@ -53,6 +53,7 @@ namespace TimeSink.Engine.Core.Input
             keyDictionary.Add(ButtonActions.UpAction,Keys.W );
             keyDictionary.Add(ButtonActions.Shoot, Keys.F );
             keyDictionary.Add( ButtonActions.Interact,Keys.E);
+            keyDictionary.Add(ButtonActions.Pickup, Keys.X);
             keyDictionary.Add( ButtonActions.Sprint,Keys.LeftShift);
             keyDictionary.Add( ButtonActions.AimUp,Keys.Up);
             keyDictionary.Add( ButtonActions.AimDown,Keys.Down);
@@ -70,6 +71,7 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightShoulder);
             gamepadDictionary.Add(ButtonActions.AimDown, Buttons.LeftShoulder);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
+            gamepadDictionary.Add(ButtonActions.Pickup, Buttons.B);
            // gamepadDictionary.Add(ButtonActions.AimLeft, Keys.Left);
            // gamepadDictionary.Add(ButtonActions.AimRight, Keys.Right); sticks
 
@@ -89,7 +91,9 @@ namespace TimeSink.Engine.Core.Input
         public bool Pressed(Keys key)
         {
             if (LastKeyState.IsKeyDown(key))
+            {
                 return true;
+            }
             else
                 return false;
         }
