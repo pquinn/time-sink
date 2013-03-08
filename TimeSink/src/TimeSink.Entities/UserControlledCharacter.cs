@@ -557,8 +557,8 @@ namespace TimeSink.Entities
                 // Grab the keyboard state.
                 var keyboard = Keyboard.GetState();
                 var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
-                var d = InputManager.Instance.Pressed(Keys.D);
-                var a = InputManager.Instance.Pressed(Keys.A);
+              //  var d = InputManager.Instance.Pressed(Keys.D);
+              //  var a = InputManager.Instance.Pressed(Keys.A);
 
                 //Update the animation timer by the timeframe in milliseconds
                 timer += timeFrame_ms;
@@ -930,23 +930,39 @@ namespace TimeSink.Entities
 
                 #region Direction
 
-                var up = InputManager.Instance.Pressed(Keys.Up);
-                var down = InputManager.Instance.Pressed(Keys.Down);
-                var right = InputManager.Instance.Pressed(Keys.Right);
-                var left = InputManager.Instance.Pressed(Keys.Left);
+                var up = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimUp);
+                var down = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimDown);
+                var right = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimRight);
+                var left = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimLeft);
                 if (!ClimbingState() && !swinging && !VineBridgeState())
                 {
                     if (up && right)
                     {
-                        direction = new Vector2(0.707106769f, -0.707106769f);
-                        currentState = BodyStates.NeutralRight;
                         facing = 1;
+                        direction = new Vector2(0.707106769f, -0.707106769f);
+                        if (InHold)
+                        {
+                            currentState = BodyStates.ShootingArrowRight;
+                            animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
+                        }
+                        else
+                        {
+                            currentState = NeutralState();
+                        }
                     }
                     else if (up && left)
                     {
                         direction = new Vector2(-0.707106769f, -0.707106769f);
-                        currentState = BodyStates.NeutralLeft;
                         facing = -1;
+                        if (InHold)
+                        {
+                            currentState = BodyStates.ShootingArrowLeft;
+                            animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
+                        }
+                        else
+                        {
+                            currentState = NeutralState();
+                        }
                     }
                     else if (down && right)
                     {
@@ -971,14 +987,14 @@ namespace TimeSink.Entities
                     else if (right)
                     {
                         direction = new Vector2(1, 0);
-                        currentState = BodyStates.NeutralRight;
                         facing = 1;
+                        currentState = NeutralState();
                     }
                     else if (left)
                     {
                         direction = new Vector2(-1, 0);
-                        currentState = BodyStates.NeutralLeft;
                         facing = -1;
+                        currentState = NeutralState();
                     }
                     else
                     {
@@ -1593,7 +1609,7 @@ namespace TimeSink.Entities
                 var shooting = animations[BodyStates.ShootingArrowLeft];
                 if (inHold)
                 {
-                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1 && shooting.CurrentFrame != shooting.NumFrames - 2)
                         shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
                 }
                 timer = 0f;
@@ -1603,7 +1619,7 @@ namespace TimeSink.Entities
                 var shooting = animations[BodyStates.ShootingArrowRight];
                 if (inHold)
                 {
-                    if (shooting.CurrentFrame != shooting.NumFrames - 1)
+                    if (shooting.CurrentFrame != shooting.NumFrames - 1 && shooting.CurrentFrame != shooting.NumFrames - 2)
                         shooting.CurrentFrame = (shooting.CurrentFrame + 1) % shooting.NumFrames;
                 }
                 timer = 0f;
@@ -2513,7 +2529,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     SHOOT_ARROW_LEFT,
                     new Vector2(154f, 185f),
-                    4,
+                    5,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -2524,7 +2540,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     SHOOT_ARROW_RIGHT,
                     new Vector2(154f, 185f),
-                    4,
+                    5,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -3159,6 +3175,44 @@ namespace TimeSink.Entities
             MotorJoint.MotorSpeed = 0;
             WheelBody.Friction = 5f;
             isSliding = false;
+        }
+
+        BodyStates NeutralState()
+        {
+            if (facing == 1)
+            {
+                if (InventoryItem is Arrow)
+                {
+                    if (InHold)
+                    {
+                        return BodyStates.ShootingArrowRight;
+                    }
+                    else
+                    {
+                        animations[BodyStates.ShootingArrowRight].CurrentFrame = 0;
+                        return BodyStates.ShootingArrowRight;
+                    }
+                }
+                else
+                    return BodyStates.NeutralRight;
+            }
+            else
+            {
+                if (InventoryItem is Arrow)
+                {
+                    if (InHold)
+                    {
+                        return BodyStates.ShootingArrowLeft;
+                    }
+                    else
+                    {
+                        animations[BodyStates.ShootingArrowLeft].CurrentFrame = 0;
+                        return BodyStates.ShootingArrowLeft;
+                    }
+                }
+                else
+                    return BodyStates.NeutralLeft;
+            }
         }
     }
 }

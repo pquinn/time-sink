@@ -87,6 +87,8 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.Sprint, Buttons.X);
             gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightShoulder);
             gamepadDictionary.Add(ButtonActions.AimDown, Buttons.LeftShoulder);
+            gamepadDictionary.Add(ButtonActions.AimRight, Buttons.RightThumbstickRight);
+            gamepadDictionary.Add(ButtonActions.AimLeft, Buttons.RightThumbstickLeft);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
             gamepadDictionary.Add(ButtonActions.Pickup, Buttons.B);
 
