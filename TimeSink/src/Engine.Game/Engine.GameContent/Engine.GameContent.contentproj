@@ -171,6 +171,96 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4000.PNG">
+      <Name>Lab2-01%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4001.PNG">
+      <Name>Lab2-01%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4010.PNG">
+      <Name>Lab2-01%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4011.PNG">
+      <Name>Lab2-01%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4020.PNG">
+      <Name>Lab2-01%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-01\Lab2-01%4021.PNG">
+      <Name>Lab2-01%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4000.PNG">
+      <Name>Lab2-02%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4001.PNG">
+      <Name>Lab2-02%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4002.PNG">
+      <Name>Lab2-02%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4010.PNG">
+      <Name>Lab2-02%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4011.PNG">
+      <Name>Lab2-02%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4012.PNG">
+      <Name>Lab2-02%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4020.PNG">
+      <Name>Lab2-02%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4021.PNG">
+      <Name>Lab2-02%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4022.PNG">
+      <Name>Lab2-02%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4030.PNG">
+      <Name>Lab2-02%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4031.PNG">
+      <Name>Lab2-02%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-02\Lab2-02%4032.PNG">
+      <Name>Lab2-02%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Levels\Hub_East\Hub_East%4000.PNG">
       <Name>Hub_East%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -1992,6 +2082,97 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Keys\upArrow.png">
+      <Name>upArrow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\HUD\HealthBarTemp.png">
+      <Name>HealthBarTemp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4000.PNG">
+      <Name>Lab2-03%4000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4001.PNG">
+      <Name>Lab2-03%4001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4002.PNG">
+      <Name>Lab2-03%4002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4010.PNG">
+      <Name>Lab2-03%4010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4011.PNG">
+      <Name>Lab2-03%4011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4012.PNG">
+      <Name>Lab2-03%4012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4020.PNG">
+      <Name>Lab2-03%4020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4021.PNG">
+      <Name>Lab2-03%4021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4022.PNG">
+      <Name>Lab2-03%4022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4030.PNG">
+      <Name>Lab2-03%4030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4031.PNG">
+      <Name>Lab2-03%4031</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4032.PNG">
+      <Name>Lab2-03%4032</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4040.PNG">
+      <Name>Lab2-03%4040</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4041.PNG">
+      <Name>Lab2-03%4041</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4042.PNG">
+      <Name>Lab2-03%4042</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Textures\Levels\Future\Lab1\Lab1%4000.PNG">
       <Name>Lab1%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -2109,18 +2290,6 @@
     </Compile>
     <Compile Include="Textures\Levels\Future\Lab1\Lab1%4035.PNG">
       <Name>Lab1%4035</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Keys\upArrow.png">
-      <Name>upArrow</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\HUD\HealthBarTemp.png">
-      <Name>HealthBarTemp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
