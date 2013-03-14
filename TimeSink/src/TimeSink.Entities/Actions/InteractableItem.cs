@@ -152,7 +152,7 @@ namespace TimeSink.Entities.Actions
         {
             if (collided && !used)
             {
-                if (InputManager.Instance.IsNewKey(Keys.X))
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Pickup))
                 {
                     ExecuteAction();
                 }

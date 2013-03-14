@@ -76,8 +76,33 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\Keys\F.png">
-      <Name>F</Name>
+    <Compile Include="Textures\Keys\f-Key.png">
+      <Name>f-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\plusCombine.png">
+      <Name>plusCombine</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-O.png">
+      <Name>PS-O</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-SQ.png">
+      <Name>PS-SQ</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-TRI.png">
+      <Name>PS-TRI</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-X.png">
+      <Name>PS-X</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -88,6 +113,21 @@
     </Compile>
     <Compile Include="Textures\Keys\s-Key.png">
       <Name>s-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\shift-Key.png">
+      <Name>shift-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\space-Key.png">
+      <Name>space-Key</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\upArrow.png">
+      <Name>upArrow</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -1516,18 +1556,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Keys\shift-Key.png">
-      <Name>shift-Key</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Keys\space-Key.png">
-      <Name>space-Key</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Levels\Apoc_Present\Hub_East\Hub_East%4000.PNG">
       <Name>Hub_East%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -2290,6 +2318,27 @@
     </Compile>
     <Compile Include="Textures\Levels\Future\Lab1\Lab1%4035.PNG">
       <Name>Lab1%4035</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\Jump_Torch_Right.PNG">
+      <Name>Jump_Torch_Right</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\Jump_Torch_Left.PNG">
+      <Name>Jump_Torch_Left</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\HUD\HealthBarTemp.png">
+      <Name>HealthBarTemp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

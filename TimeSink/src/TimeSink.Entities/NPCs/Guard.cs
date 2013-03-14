@@ -61,7 +61,7 @@ namespace TimeSink.Entities.NPCs
         {
             if (collided && DialogueRootsList.Count > 0)
             {
-                if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Pickup) && !game.ScreenManager.IsInDialogueState())
                 {
                     game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRootsList[DialogueState])), null);
                     Passable = true;

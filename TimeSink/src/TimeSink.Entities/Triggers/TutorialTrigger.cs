@@ -38,17 +38,19 @@ namespace TimeSink.Entities.Triggers
         private EngineGame engine;
         private ItemPopup display1;
         private ItemPopup display2;
+        private ItemPopup plusCombine;
         private UserControlledCharacter character;
 
         public TutorialTrigger()
-            : this(Vector2.Zero, 200, 150, "Textures/Objects/tutorial", "blank", true)
+            : this(Vector2.Zero, 200, 150, 0, 0, true)
         {
         }
-        public TutorialTrigger(Vector2 position, int width, int height, String key1, String key2, bool initiallyActive)
+        public TutorialTrigger(Vector2 position, int width, int height, int key1, int key2, bool initiallyActive)
         {
             Position = position;
             Width = width;
             Height = height;
+            //Ints representing the enum value from InputActions
             Key1 = key1;
             Key2 = key2;
             Active = initiallyActive;
@@ -94,11 +96,11 @@ namespace TimeSink.Entities.Triggers
 
         [SerializableField]
         [EditableField("Key1")]
-        public String Key1 { get; set; }
+        public int Key1 { get; set; }
 
         [SerializableField]
         [EditableField("Key2")]
-        public String Key2 { get; set; }
+        public int Key2 { get; set; }
 
         [SerializableField]
         [EditableField("Active")]
@@ -124,17 +126,23 @@ namespace TimeSink.Entities.Triggers
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
-                if (!Key2.Equals("blank"))
-                {
-                    display2 = new ItemPopup(Key2, Vector2.Zero, cache, new Vector2(40, -90));
-                }
-                //else
-                //{
-                //    display2 = null;
+                string texture1 = InputTextureLookup(Key1);
 
-                //    display1 = new ItemPopup(Key1, Vector2.Zero, new Vector2(0, -90));
-                //}
-                display1 = new ItemPopup(Key1, Vector2.Zero, cache, new Vector2(-40, -90));
+                if (Key2 != 999)
+                {
+                    string texture2 = InputTextureLookup(Key2);
+                    display2 = new ItemPopup(texture2, Vector2.Zero, cache, new Vector2(40, -90));
+
+                    plusCombine = new ItemPopup("Textures/Keys/plusCombine", Vector2.Zero, cache, new Vector2(0, -90));
+                    
+                    display1 = new ItemPopup(texture1, Vector2.Zero, cache, new Vector2(-40, -90));
+                }
+                else
+                {
+                    display2 = null;
+
+                    display1 = new ItemPopup(texture1, Vector2.Zero, cache, new Vector2(0, -90));
+                }
 
 
                 var rect = FixtureFactory.AttachRectangle(
@@ -171,6 +179,7 @@ namespace TimeSink.Entities.Triggers
                     if (!c.Popups.Contains(display2))
                     {
                         c.Popups.Add(display2);
+                        c.Popups.Add(plusCombine);
                     }
                 }
             }
@@ -187,6 +196,7 @@ namespace TimeSink.Entities.Triggers
                 if (display2 != null)
                 {
                     c.Popups.Remove(display2);
+                    c.Popups.Remove(plusCombine);
                 }
             }
             character = null;
@@ -208,9 +218,20 @@ namespace TimeSink.Entities.Triggers
                     if (!character.Popups.Contains(display2))
                     {
                         character.Popups.Add(display2);
+                        character.Popups.Add(plusCombine);
                     }
                 }
             }
+        }
+
+        public string InputTextureLookup(int action)
+        {
+            if (Engine != null && Engine.GamepadEnabled)
+            {
+                return InputManager.Instance.GamepadTextures[(InputManager.ButtonActions)action];
+            }
+            else
+                return InputManager.Instance.KeyboardTextures[(InputManager.ButtonActions)action];
         }
     }
 }

@@ -11,10 +11,13 @@ namespace TimeSink.Engine.Core.Input
     {
         private static object lockObject = new object();
 
+        private Dictionary<ButtonActions, string> keyboardTextures;
+        private Dictionary<ButtonActions, string> gamepadTextures;
+
 
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact
+            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact, Pickup
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
@@ -42,10 +45,24 @@ namespace TimeSink.Engine.Core.Input
         GamePadState CurrentPadState;
         MouseState lastMouseState, currentMouseState;
 
+        public Dictionary<ButtonActions, string> GamepadTextures
+        {
+            get { return gamepadTextures; }
+            set { }
+        }
+        
+        public Dictionary<ButtonActions, string> KeyboardTextures
+        {
+            get { return keyboardTextures; }
+            set { }
+        }
+
         public void InitializeDict()
         {
             keyDictionary = new Dictionary<ButtonActions, Keys>();
             gamepadDictionary = new Dictionary<ButtonActions, Buttons>();
+            keyboardTextures = new Dictionary<ButtonActions, string>();
+            gamepadTextures = new Dictionary<ButtonActions, string>();
 
             keyDictionary.Add(ButtonActions.MoveLeft, Keys.A);
             keyDictionary.Add( ButtonActions.MoveRight, Keys.D);
@@ -53,6 +70,7 @@ namespace TimeSink.Engine.Core.Input
             keyDictionary.Add(ButtonActions.UpAction,Keys.W );
             keyDictionary.Add(ButtonActions.Shoot, Keys.F );
             keyDictionary.Add( ButtonActions.Interact,Keys.E);
+            keyDictionary.Add(ButtonActions.Pickup, Keys.X);
             keyDictionary.Add( ButtonActions.Sprint,Keys.LeftShift);
             keyDictionary.Add( ButtonActions.AimUp,Keys.Up);
             keyDictionary.Add( ButtonActions.AimDown,Keys.Down);
@@ -69,7 +87,34 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.Sprint, Buttons.X);
             gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightShoulder);
             gamepadDictionary.Add(ButtonActions.AimDown, Buttons.LeftShoulder);
+            gamepadDictionary.Add(ButtonActions.AimRight, Buttons.RightThumbstickRight);
+            gamepadDictionary.Add(ButtonActions.AimLeft, Buttons.RightThumbstickLeft);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
+            gamepadDictionary.Add(ButtonActions.Pickup, Buttons.B);
+
+            keyboardTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/a-Key");
+            keyboardTextures.Add(ButtonActions.MoveRight, "Textures/Keys/d-Key");
+            keyboardTextures.Add(ButtonActions.DownAction, "Textures/Keys/s-Key");
+            keyboardTextures.Add(ButtonActions.UpAction, "Textures/Keys/w-Key");
+            keyboardTextures.Add(ButtonActions.Shoot, "Textures/Keys/f-Key");
+            keyboardTextures.Add(ButtonActions.Interact, "Textures/Keys/e-Key");
+            keyboardTextures.Add(ButtonActions.Sprint, "Textures/Keys/shift-Key");
+            keyboardTextures.Add(ButtonActions.AimUp, "Textures/Keys/upArrow");
+            keyboardTextures.Add(ButtonActions.AimDown, "Textures/Keys/downArrow");
+            keyboardTextures.Add(ButtonActions.Jump, "Textures/Keys/space-Key");
+            keyboardTextures.Add(ButtonActions.Pickup, "Textures/Keys/x-Key");
+
+            gamepadTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.MoveRight, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.DownAction, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.UpAction, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.Shoot, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.Interact, "Textures/Keys/PS/PS-TRI");
+            gamepadTextures.Add(ButtonActions.Sprint, "Textures/Keys/PS/PS-SQ");
+            gamepadTextures.Add(ButtonActions.AimUp, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.AimDown, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.Jump, "Textures/Keys/PS/PS-X");
+            gamepadTextures.Add(ButtonActions.Pickup, "Textures/Keys/PS/PS-O");
            // gamepadDictionary.Add(ButtonActions.AimLeft, Keys.Left);
            // gamepadDictionary.Add(ButtonActions.AimRight, Keys.Right); sticks
 
@@ -89,7 +134,9 @@ namespace TimeSink.Engine.Core.Input
         public bool Pressed(Keys key)
         {
             if (LastKeyState.IsKeyDown(key))
+            {
                 return true;
+            }
             else
                 return false;
         }
