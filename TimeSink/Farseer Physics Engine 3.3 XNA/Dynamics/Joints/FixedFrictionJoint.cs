@@ -169,6 +169,8 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body bA = BodyA;
 
+            var scaled_dt = step.dt;
+
             Vector2 vA = bA.LinearVelocityInternal;
             float wA = bA.AngularVelocityInternal;
 
@@ -186,7 +188,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt * MaxTorque;
+                float maxImpulse = scaled_dt * MaxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
@@ -201,7 +203,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.dt * MaxForce;
+                float maxImpulse = scaled_dt * MaxForce;
 
                 if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
                 {

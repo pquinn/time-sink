@@ -246,7 +246,17 @@ namespace TimeSink.Engine.Core.StateManagement
             {
                 UpdateHudElements();
                 currentLevel.PhysicsManager.Update(gameTime);
-                currentLevel.Level.Entities.ForEach(x => x.Update(gameTime, EngineGame.Instance));
+                currentLevel.Level.Entities.ForEach(
+                    x => 
+                    {
+                        var scale = currentLevel.PhysicsManager.TimeScaleLookup(x.PreviousPosition ?? x.Position);
+                        x.Update(
+                            new GameTime(
+                                new TimeSpan((long)(gameTime.TotalGameTime.Ticks * scale)), 
+                                new TimeSpan((long)(gameTime.ElapsedGameTime.Ticks * scale)), 
+                                gameTime.IsRunningSlowly),
+                            EngineGame.Instance);
+                    });
             }
         }
 

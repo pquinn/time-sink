@@ -69,7 +69,6 @@ namespace TimeSink.Entities.Actions
 
         protected override void ExecuteAction()
         {
-           // Target.OnSwitch();
 
             Enabled = !Enabled;
 

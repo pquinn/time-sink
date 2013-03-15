@@ -656,12 +656,17 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public void Step(float dt)
+        {
+            Step(dt, _ => 1);
+        }
+
         /// <summary>
         /// Take a time step. This performs collision detection, integration,
         /// and consraint solution.
         /// </summary>
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
-        public void Step(float dt)
+        public void Step(float dt, Converter<Vector2, float> scaleLookup)
         {
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
@@ -702,6 +707,7 @@ namespace FarseerPhysics.Dynamics
             //Update controllers
             for (int i = 0; i < ControllerList.Count; i++)
             {
+                throw new Exception("Controllers are not currently supported by the Time Sink engine.");
                 ControllerList[i].Update(dt);
             }
 
@@ -718,7 +724,7 @@ namespace FarseerPhysics.Dynamics
                 ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime);
 #endif
             // Integrate velocities, solve velocity raints, and integrate positions.
-            Solve(ref step);
+            Solve(ref step, scaleLookup);
 
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
@@ -728,7 +734,7 @@ namespace FarseerPhysics.Dynamics
             // Handle TOI events.
             if (Settings.ContinuousPhysics)
             {
-                SolveTOI(ref step);
+                SolveTOI(ref step, scaleLookup);
             }
 
 #if (!SILVERLIGHT)
@@ -835,7 +841,7 @@ namespace FarseerPhysics.Dynamics
                                                   }, ref input);
         }
 
-        private void Solve(ref TimeStep step)
+        private void Solve(ref TimeStep step, Converter<Vector2, float> scaleLookup)
         {
             // Size the island for the worst case.
             Island.Reset(BodyList.Count,
@@ -988,7 +994,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-                Island.Solve(ref step, ref Gravity);
+                Island.Solve(ref step, ref Gravity, scaleLookup);
 
                 // Post solve cleanup.
                 for (int i = 0; i < Island.BodyCount; ++i)
@@ -1028,7 +1034,7 @@ namespace FarseerPhysics.Dynamics
         /// Find TOI contacts and solve them.
         /// </summary>
         /// <param name="step">The step.</param>
-        private void SolveTOI(ref TimeStep step)
+        private void SolveTOI(ref TimeStep step, Converter<Vector2, float> scaleLookup)
         {
             Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
@@ -1303,7 +1309,7 @@ namespace FarseerPhysics.Dynamics
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
                 //subStep.warmStarting = false;
-                Island.SolveTOI(ref subStep);
+                Island.SolveTOI(ref subStep, scaleLookup);
 
                 // Reset island flags and synchronize broad-phase proxies.
                 for (int i = 0; i < Island.BodyCount; ++i)
