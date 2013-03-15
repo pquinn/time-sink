@@ -18,18 +18,14 @@ using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities.Objects
 {
-    [SerializableEntity("a849cb69-ed2c-48ad-bdee-35015063d331")]
+    [SerializableEntity("ec4e9acd-6deb-46f4-bfc7-4793b6c39ed9")]
     [EditorEnabled]
-    public class BreakableWall : Entity, ISwitchable
+    public class SwitchableWall : Entity, ISwitchable
     {
-        const string EDITOR_NAME = "Breakable Wall";
-        const string TEXTURE1 = "Textures/Objects/Ice Wall";
-        const string TEXTURE2 = "Textures/Objects/Ice Wall2";
-        const string TEXTURE3 = "Textures/Objects/Ice Wall3";
-        const string TEXTURE4 = "Textures/Objects/Ice Wall4";
-        private int remainingHits = 3;
+        const string EDITOR_NAME = "Switchable Wall";
+        const string TEXTURE = "Textures/Objects/Ice Wall";
 
-        private static readonly Guid guid = new Guid("a849cb69-ed2c-48ad-bdee-35015063d331");
+        private static readonly Guid guid = new Guid("ec4e9acd-6deb-46f4-bfc7-4793b6c39ed9");
         public override string EditorName
         {
             get { return EDITOR_NAME; }
@@ -41,14 +37,15 @@ namespace TimeSink.Entities.Objects
             set { }
         }
 
-        public BreakableWall()
+        public SwitchableWall()
             : this(75, 300)
         {
         }
-        public BreakableWall(int width, int height)
+        public SwitchableWall(int width, int height)
         {
             Width = width;
             Height = height;
+            Enabled = true;
         }
 
         [SerializableField]
@@ -58,6 +55,10 @@ namespace TimeSink.Entities.Objects
         [SerializableField]
         [EditableField("Height")]
         public override int Height { get; set; }
+
+        [SerializableField]
+        [EditableField("Enabled")]
+        public bool Enabled { get; set; }
 
         private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
@@ -85,44 +86,15 @@ namespace TimeSink.Entities.Objects
             base.InitializePhysics(false, engineRegistrations);
         }
 
-        public bool BulletHit()
-        {
-            remainingHits--;
-            if (remainingHits <= 0)
-            {
-                this.DestroyPhysics();
-            }
-            return true;
-        }
-
-        public bool DestroyWall()
-        {
-            this.remainingHits = 0;
-            this.DestroyPhysics();
-            return true;
-        }
-
         public override IRendering Preview
         {
             get
             {
-                if (remainingHits == 3)
-                    return new BasicRendering(TEXTURE1)
+                if (Enabled)
+                    return new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE1, TextureCache)
-                    };
-                else if (remainingHits == 2)
-                    return new BasicRendering(TEXTURE2)
-                    {
-                        Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE2, TextureCache)
-                    };
-                else if (remainingHits == 1)
-                    return new BasicRendering(TEXTURE3)
-                    {
-                        Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE3, TextureCache)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
                     };
                 else
                     return new NullRendering();
@@ -148,7 +120,9 @@ namespace TimeSink.Entities.Objects
 
         public void OnSwitch()
         {
-            DestroyPhysics();
+            Enabled = !Enabled;
+            Physics.Enabled = Enabled;
+
         }
     }
 }
