@@ -17,8 +17,8 @@ namespace TimeSink.Entities.Actions
     class BinarySwitch : InteractableItem
     {
         const string EDITOR_NAME = "Binary Switch";
-        const string ENABLED_TEXTURE = "Textures/HUD/HealthBarTemp";
-        const string DISABLED_TEXTURE = "Textures/giroux";
+        const string ENABLED_TEXTURE = "Textures/Objects/switchOn";
+        const string DISABLED_TEXTURE = "Textures/Objects/switchOff";
         private static readonly Guid guid = new Guid("fe4f39bb-fb1e-4ce0-be2e-92ca70975f4e");
 
 
