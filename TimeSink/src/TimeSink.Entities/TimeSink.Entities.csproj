@@ -71,6 +71,7 @@
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Hud\HealthBar.cs" />
+    <Compile Include="Inventory\TimeGrenade.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Objects\SwitchableWall.cs" />

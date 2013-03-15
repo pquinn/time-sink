@@ -95,7 +95,6 @@ namespace TimeSink.Entities.Actions
             SwitchEnabledState();
         }
 
-        //For switching current animation/display of switch.
         private void SwitchEnabledState()
         {
             Enabled = !Enabled;

@@ -205,10 +205,8 @@ namespace TimeSink.Entities.Enemies
             if (!c.Invulnerable)
             {
                 c.TakeDamage(10);
-                return true;
             }
-            else
-                return false;
+            return true;
         }
 
         RevoluteJoint wheelMotor;

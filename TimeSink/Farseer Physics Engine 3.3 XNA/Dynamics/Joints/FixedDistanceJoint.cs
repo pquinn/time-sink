@@ -167,10 +167,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 // Spring stiffness
                 float k = _mass * omega * omega;
 
+                var scaled_dt = step.dt;
+
                 // magic formulas
-                _gamma = step.dt * (d + step.dt * k);
+                _gamma = scaled_dt * (d + scaled_dt * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
-                _bias = C * step.dt * k * _gamma;
+                _bias = C * scaled_dt * k * _gamma;
 
                 _mass = invMass + _gamma;
                 _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;

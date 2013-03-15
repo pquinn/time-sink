@@ -31,6 +31,15 @@ namespace TimeSink.Engine.Core.States
             LevelCache = new Dictionary<string, object>();
 
             Physics = BodyFactory.CreateBody(PhysicsManager.World, Vector2.Zero);
+
+            PhysicsManager.TimeScaleLookup = PhysicsManager.TimeScaleLookup =
+                position =>
+                    Level.TimeScaleCircles.Aggregate(
+                        1f,
+                        (accumulator, circle) =>
+                            accumulator * Math.Max(
+                                1f, 
+                                Vector2.DistanceSquared(circle.Center, position) / (circle.Radius * circle.Radius)));
         }
 
         public PhysicsManager PhysicsManager { get; private set; }

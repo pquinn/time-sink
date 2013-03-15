@@ -399,14 +399,20 @@ namespace TimeSink.Entities
                     Engine.UpdateHealth();
                     PlaySound(takeDamageSound);
                 }
+                if (CanClimb != null && Climbing)
+                {
+                    CanClimb.DismountCharacter(this);
+                }
                 if (RightFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackRight;
+                    Physics.LinearVelocity = Vector2.Zero;
                     Physics.ApplyLinearImpulse(new Vector2(-20, 0));
                 }
                 else if (LeftFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackLeft;
+                    Physics.LinearVelocity = Vector2.Zero;
                     Physics.ApplyLinearImpulse(new Vector2(20, 0));
                 }
             }
@@ -2689,7 +2695,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     DUCK_LEFT,
                     new Vector2(154f, 154f),
-                    5,
+                    3,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -2700,7 +2706,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     DUCK_RIGHT,
                     new Vector2(154f, 154f),
-                    5,
+                    3,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -2711,7 +2717,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     DUCK_LEFT_BOW,
                     new Vector2(154f, 154f),
-                    4,
+                    2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
@@ -2733,7 +2739,7 @@ namespace TimeSink.Entities
                  new NewAnimationRendering(
                     DUCK_RIGHT_BOW,
                     new Vector2(154f, 154f),
-                    4,
+                    2,
                     Vector2.Zero,
                     0,
                     Vector2.One,
