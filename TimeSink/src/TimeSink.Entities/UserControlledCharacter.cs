@@ -3214,5 +3214,9 @@ namespace TimeSink.Entities
                     return BodyStates.NeutralLeft;
             }
         }
+        public void Electrocute()
+        {
+
+        }
     }
 }
