@@ -1,4 +1,3 @@
-
 #region Using Statements
 using System;
 using System.Collections.Generic;
@@ -25,9 +24,9 @@ using TimeSink.Entities;
 using TimeSink.Entities.Enemies;
 using TimeSink.Entities.Objects;
 using TimeSink.Engine.Core.StateManagement;
-using TimeSink.Entities.Objects;
 using Autofac;
 using TimeSink.Entities.Hud;
+using System.Linq;
 #endregion
 
 namespace TimeSink.Engine.Game
@@ -85,6 +84,9 @@ namespace TimeSink.Engine.Game
             LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
             Database.SetDBConnectionPath(PathToProject + "//DialoguePrototypeTestDB.s3db");
+
+            LevelManager.PhysicsManager.TimeScaleLookup =
+                v => LevelManager.Level.TimeScaleCircles.Aggregate(1f, (scale, circ) => scale * circ.CalcScale(v));
         }
 
         private void AddInitialScreens()

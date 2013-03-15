@@ -198,6 +198,14 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <value>The data.</value>
         public object UserData { get; set; }
 
+        protected internal Vector2 Center
+        {
+            get
+            {
+                return (WorldAnchorA + WorldAnchorB) / 2;
+            }
+        }
+
         /// <summary>
         /// Short-cut function to determine if either body is inactive.
         /// </summary>

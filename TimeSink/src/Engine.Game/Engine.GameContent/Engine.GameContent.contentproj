@@ -1284,13 +1284,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Sprites\SpriteSheets\DuckingLeft.PNG">
-      <Name>DuckingLeft</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\DuckingRight.PNG">
       <Name>DuckingRight</Name>
       <Importer>TextureImporter</Importer>
@@ -2339,6 +2332,59 @@
   <ItemGroup>
     <Compile Include="Textures\HUD\HealthBarTemp.png">
       <Name>HealthBarTemp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Keys\PS\PS-Down.png">
+      <Name>PS-Down</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-Left.png">
+      <Name>PS-Left</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-Right.png">
+      <Name>PS-Right</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Keys\PS\PS-Up.png">
+      <Name>PS-Up</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Keys\key-UpRight.png">
+      <Name>key-UpRight</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Sprites\SpriteSheets\DuckingLeft.PNG">
+      <Name>DuckingLeft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Grenade Radius.png">
+      <Name>Grenade Radius</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\switchOff.png">
+      <Name>switchOff</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\switchOn.png">
+      <Name>switchOn</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

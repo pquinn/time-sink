@@ -49,6 +49,8 @@ namespace TimeSink.Engine.Core
 
         public List<EntitySerialization> EntitySerializations { get; set; }
 
+        public HashSet<TimeScaleCircle> TimeScaleCircles = new HashSet<TimeScaleCircle>();
+
         [XmlIgnore]
         public List<Entity> Entities { get; set; }
 

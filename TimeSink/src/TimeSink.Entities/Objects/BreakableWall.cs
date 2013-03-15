@@ -14,12 +14,13 @@ using TimeSink.Engine.Core.States;
 using TimeSink.Engine.Core.Collisions;
 using TimeSink.Entities.Enemies;
 using Microsoft.Xna.Framework;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities.Objects
 {
     [SerializableEntity("a849cb69-ed2c-48ad-bdee-35015063d331")]
     [EditorEnabled]
-    public class BreakableWall : Entity
+    public class BreakableWall : Entity, ISwitchable
     {
         const string EDITOR_NAME = "Breakable Wall";
         const string TEXTURE1 = "Textures/Objects/Ice Wall";
@@ -94,6 +95,13 @@ namespace TimeSink.Entities.Objects
             return true;
         }
 
+        public bool DestroyWall()
+        {
+            this.remainingHits = 0;
+            this.DestroyPhysics();
+            return true;
+        }
+
         public override IRendering Preview
         {
             get
@@ -136,6 +144,11 @@ namespace TimeSink.Entities.Objects
             initialized = false;
 
             Physics.Dispose();
+        }
+
+        public void OnSwitch()
+        {
+            DestroyPhysics();
         }
     }
 }

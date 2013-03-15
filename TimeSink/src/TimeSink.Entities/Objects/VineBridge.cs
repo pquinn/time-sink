@@ -66,10 +66,10 @@ namespace TimeSink.Entities.Objects
         [EditableField("NumLinks")]
         public int NumLinks { get; set; }
 
-        public bool Hanging { get; private set; }
-        private PrismaticJoint joint;
-        private float origLinearDamping;
-        private World world;
+        public bool Hanging { get; protected set; }
+        protected PrismaticJoint joint;
+        protected float origLinearDamping;
+        protected World world;
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
         {

@@ -68,10 +68,14 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Hud\HealthBar.cs" />
+    <Compile Include="Inventory\TimeGrenade.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
+    <Compile Include="Objects\SwitchableWall.cs" />
+    <Compile Include="Objects\WireBridge.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />
     <Compile Include="Enemies\CentipedeSpawner.cs" />
@@ -116,6 +120,7 @@
     <Compile Include="Inventory\Arrow.cs" />
     <Compile Include="Inventory\Dart.cs" />
     <Compile Include="Inventory\IWeapon.cs" />
+    <Compile Include="Utils\ISwitchable.cs" />
     <Compile Include="Utils\ShieldDamageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
