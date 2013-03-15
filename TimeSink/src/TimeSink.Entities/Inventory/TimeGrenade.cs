@@ -28,6 +28,8 @@ namespace TimeSink.Entities.Inventory
         private static readonly Guid GUID = new Guid("16b7d25a-15f1-4b0b-acaf-c70124acda0e");
         public override Guid Id { get { return GUID; } set { } }
 
+        private double fuseTime;
+
         public override IRendering Preview
         {
             get { return new NullRendering(); }
@@ -43,10 +45,12 @@ namespace TimeSink.Entities.Inventory
             get { return new List<IRendering>(); }
         }
 
-        public TimeGrenade(Vector2 pos, Vector2 vel)
+        public TimeGrenade(Vector2 pos, Vector2 vel, double fuseTime_ms, double lingerTime_ms)
         {
             Position = pos;
             initialVelocity = vel;
+            fuseTime = fuseTime_ms;
+            lingerTime = lingerTime_ms;
         }
 
         private bool initialized;
@@ -68,9 +72,41 @@ namespace TimeSink.Entities.Inventory
             }
         }
 
+        private bool exploded;
+        private double lingerTime;
+
+        private TimeScaleCircle blast;
+
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.OnUpdate(time, world);
+            if (!exploded)
+            {
+                fuseTime -= time.ElapsedGameTime.TotalMilliseconds;
+                if (fuseTime <= 0)
+                {
+                    exploded = true;
+                    blast = new TimeScaleCircle()
+                    {
+                        Center = Position,
+                        Radius = PhysicsConstants.PixelsToMeters(100),
+                        TimeScale = .3f
+                    };
+                    world.LevelManager.Level.TimeScaleCircles.Add(blast);
+
+                    //TODO: Stop drawing sprite
+                }
+            }
+            else
+            {
+                lingerTime -= time.ElapsedGameTime.TotalMilliseconds;
+                if (lingerTime <= 0)
+                {
+                    world.LevelManager.RenderManager.UnregisterRenderable(this);
+                    world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
+                    world.LevelManager.Level.TimeScaleCircles.Remove(blast);
+                    Dead = true;
+                }
+            }
         }
     }
 }
