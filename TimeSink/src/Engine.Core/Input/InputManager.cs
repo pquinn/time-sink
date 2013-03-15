@@ -17,7 +17,10 @@ namespace TimeSink.Engine.Core.Input
 
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, UpAction, DownAction, AimUp, AimLeft, AimRight, AimDown, Interact, Pickup
+            MoveLeft, MoveRight, Jump, Sprint, Shoot, 
+            UpAction, DownAction, 
+            AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
+            AimUpRight, AimUpLeft, AimDownLeft, AimDownRight
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
@@ -103,6 +106,7 @@ namespace TimeSink.Engine.Core.Input
             keyboardTextures.Add(ButtonActions.AimDown, "Textures/Keys/downArrow");
             keyboardTextures.Add(ButtonActions.Jump, "Textures/Keys/space-Key");
             keyboardTextures.Add(ButtonActions.Pickup, "Textures/Keys/x-Key");
+            keyboardTextures.Add(ButtonActions.AimUpRight, "Textures/Keys/key-UpRight");
 
             gamepadTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/PS/");
             gamepadTextures.Add(ButtonActions.MoveRight, "Textures/Keys/PS/");

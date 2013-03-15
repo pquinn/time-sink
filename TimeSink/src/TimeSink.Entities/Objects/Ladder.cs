@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Input;
 
 namespace TimeSink.Entities.Objects
 {
@@ -36,6 +37,7 @@ namespace TimeSink.Entities.Objects
         private bool wheelExit1 = false;
         private bool wheelExit = false;
         public float LinearDamping { get { return linearDamping; } set { linearDamping = value; } }
+
 
         private static readonly Guid GUID = new Guid("657b0660-5620-46da-bea4-499f95c658e8");
 
@@ -107,16 +109,21 @@ namespace TimeSink.Entities.Objects
 
                 var sensorHeight = Math.Min(spriteHeightMeters / 8, PhysicsConstants.PixelsToMeters(10));
 
-                //var detachSensor = FixtureFactory.AttachRectangle(
-                //    spriteWidthMeters,
-                //    sensorHeight,
-                //    1,
-                //    Vector2.UnitY * (Position.Y - spriteHeightMeters / 2 - sensorHeight / 2),
-                //    Physics);
 
-                //detachSensor.IsSensor = true;
+                var detachSensor = FixtureFactory.AttachRectangle(
+                    spriteWidthMeters,
+                    sensorHeight,
+                    1,
+                    new Vector2(0, spriteHeightMeters / 2),
+                    Physics);
 
-                //detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
+               
+                
+                detachSensor.UserData = "detach";
+
+                detachSensor.IsSensor = true;
+
+                detachSensor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWithDetachSensor);
 
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
@@ -156,8 +163,17 @@ namespace TimeSink.Entities.Objects
 
         bool OnCollidedWithDetachSensor(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            c.DismountLadder(linearDamping);
+            if(InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
+            {
+                c.CanClimb = null;
+                c.DismountLadder(linearDamping);
+            }
             return info.Enabled;
+        }
+
+        public void DismountCharacter(UserControlledCharacter c)
+        {
+            c.DismountLadder(linearDamping);
         }
 
         bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
@@ -225,10 +241,16 @@ namespace TimeSink.Entities.Objects
              */
                 if(f2.UserData.Equals("Ladder"))
                 {
-                    c.CanClimb = null;
-                    if (c.Climbing)
+                    if (f1.UserData != null && f1.UserData.Equals("detach"))
                     {
-                        c.DismountLadder(linearDamping);
+                    }
+                    else
+                    {
+                        c.CanClimb = null;
+                        if (c.Climbing)
+                        {
+                            c.DismountLadder(linearDamping);
+                        }
                     }
                 }
             }
