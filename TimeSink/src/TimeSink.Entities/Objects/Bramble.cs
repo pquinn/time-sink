@@ -31,7 +31,7 @@ namespace TimeSink.Entities.Objects
         private static int textureWidth;
 
         // lasts 1000 seconds, should probably use positive infinity
-        public DamageOverTimeEffect dot = new DamageOverTimeEffect(10f);
+        public DamageOverTimeEffect dot = new DamageOverTimeEffect(10f, false);
 
         private static readonly Guid guid = new Guid("9bad74e2-3c00-443b-a461-26f625d32124");
 

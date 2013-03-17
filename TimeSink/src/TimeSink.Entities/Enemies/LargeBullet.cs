@@ -129,7 +129,7 @@ namespace TimeSink.Entities.Enemies
         private bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             if (!character.Invulnerable)
-                character.TakeDamage(30);
+                character.TakeDamage(30, true);
 
             return false;
         }

@@ -110,6 +110,7 @@
     <Compile Include="Triggers\CameraUnlockTrigger.cs" />
     <Compile Include="Triggers\PlaceTorchTrigger.cs" />
     <Compile Include="Triggers\SlideTrigger.cs" />
+    <Compile Include="Triggers\TurretTrigger.cs" />
     <Compile Include="Triggers\TutorialTrigger.cs" />
     <Compile Include="Objects\Vine.cs" />
     <Compile Include="Objects\VineBridge.cs" />

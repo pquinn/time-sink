@@ -351,6 +351,7 @@ namespace TimeSink.Entities
             //};
             Position = position;
             health = 30;  //@update
+            shield = 50;
             direction = new Vector2(1, 0);
 
             // this seems stupid
@@ -376,14 +377,17 @@ namespace TimeSink.Entities
             jumpImpactSound = soundCache.LoadResource(JUMP_IMPACT_SOUND);
         }
 
-        public void TakeDamage(float val)
+        public void TakeDamage(float val, bool doesKnockBack)
         {
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
                 if (!Invulnerable)
                 {
-                    Invulnerable = true;
-                    damageFlash = true;
+                    if (doesKnockBack)
+                    {
+                        Invulnerable = true;
+                        damageFlash = true;
+                    }
 
                     if (Shield > 0)
                     {
@@ -403,17 +407,20 @@ namespace TimeSink.Entities
                 {
                     CanClimb.DismountCharacter(this);
                 }
-                if (RightFacingBodyState())
+                if (doesKnockBack)
                 {
-                    currentState = BodyStates.KnockbackRight;
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(-20, 0));
-                }
-                else if (LeftFacingBodyState())
-                {
-                    currentState = BodyStates.KnockbackLeft;
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(20, 0));
+                    if (RightFacingBodyState())
+                    {
+                        currentState = BodyStates.KnockbackRight;
+                        Physics.LinearVelocity = Vector2.Zero;
+                        Physics.ApplyLinearImpulse(new Vector2(-20, 0));
+                    }
+                    else if (LeftFacingBodyState())
+                    {
+                        currentState = BodyStates.KnockbackLeft;
+                        Physics.LinearVelocity = Vector2.Zero;
+                        Physics.ApplyLinearImpulse(new Vector2(20, 0));
+                    }
                 }
             }
         }
@@ -457,7 +464,7 @@ namespace TimeSink.Entities
             foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active && !Invulnerable)
-                    TakeDamage(dot.Tick(gameTime));
+                    TakeDamage(dot.Tick(gameTime), dot.DoesKnockBack);
             }
 
             if (!chargingWeapon)
@@ -2006,13 +2013,12 @@ namespace TimeSink.Entities
 
         public bool OnCollidedWith(Fixture f1, Bramble bramble, Fixture f2, Contact info)
         {
-
             if (!Invulnerable)
             {
                 /*  this.RegisterDot(bramble.dot);
                   bramble.dot.Active = true;
                   return true;*/
-                TakeDamage(10);
+                TakeDamage(10, true);
                 return true;
             }
             else

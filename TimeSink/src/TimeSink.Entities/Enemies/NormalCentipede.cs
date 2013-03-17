@@ -204,7 +204,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (!c.Invulnerable)
             {
-                c.TakeDamage(10);
+                c.TakeDamage(10, true);
             }
             return true;
         }
