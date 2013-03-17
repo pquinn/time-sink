@@ -650,7 +650,7 @@ namespace TimeSink.Entities
                         if (Physics.Position.X >= (canClimb.Position.X - (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) + THRESHHOLD)
                         {
                             moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
-                            Physics.LinearDamping = 10f;
+                            Physics.LinearDamping = 15f;
                         }
                     }
 
@@ -739,7 +739,7 @@ namespace TimeSink.Entities
                         if (Physics.Position.X <= (canClimb.Position.X + (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) - THRESHHOLD)
                         {
                             moveDirection.X += 1.0f;
-                            Physics.LinearDamping = 10f;
+                            Physics.LinearDamping = 15f;
                         }
                     }
                     else if (currentState == BodyStates.ClimbingBack)
@@ -843,7 +843,7 @@ namespace TimeSink.Entities
                          WheelBody.Position += v;
                          */
                         moveDirection.Y += 1.0f;
-                        Physics.LinearDamping = 5f;
+                        Physics.LinearDamping = 15f;
                     }
                     #endregion
                     //Sliding
@@ -1089,7 +1089,7 @@ namespace TimeSink.Entities
                                                                                              (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                        WheelBody.Position.Y);
                                         moveDirection.Y -= 1.0f;
-                                        Physics.LinearDamping = 10f;
+                                        Physics.LinearDamping = 15f;
                                     }
                                     //We are to the left of the ladder
                                     else if (Physics.Position.X < canClimb.Position.X)
@@ -1102,7 +1102,7 @@ namespace TimeSink.Entities
                                                                                              (PhysicsConstants.PixelsToMeters(this.Width) / 2),
                                                                        WheelBody.Position.Y);
                                         moveDirection.Y -= 1.0f;
-                                        Physics.LinearDamping = 10f;
+                                        Physics.LinearDamping = 15f;
                                     }
                                 }
 
@@ -1117,7 +1117,7 @@ namespace TimeSink.Entities
                                         currentState = BodyStates.ClimbingLeft;
                                     }
                                     moveDirection.Y += 1.0f;
-                                    Physics.LinearDamping = 5f;
+                                    Physics.LinearDamping = 15f;
                                 }
                             }
 
@@ -1130,7 +1130,7 @@ namespace TimeSink.Entities
                                 WheelBody.Position = new Vector2(canClimb.Position.X,
                                                                WheelBody.Position.Y);
                                 moveDirection.Y -= 1.0f;
-                                Physics.LinearDamping = 5f;
+                                Physics.LinearDamping = 15f;
                             }
                         }
                         else
@@ -1142,7 +1142,7 @@ namespace TimeSink.Entities
                             WheelBody.Position = new Vector2(WheelBody.Position.X,
                                                            WheelBody.Position.Y);
                             moveDirection.Y -= 1.0f;
-                            Physics.LinearDamping = 5f;
+                            Physics.LinearDamping = 15f;
                         }
                     }
                     else if (DoorType == DoorType.Up)
