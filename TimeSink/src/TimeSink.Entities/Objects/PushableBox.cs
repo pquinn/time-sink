@@ -53,11 +53,11 @@ namespace TimeSink.Entities.Objects
         {
             get
             {
-                return new BasicRendering("Textures/giroux")
+                return new BasicRendering("Textures/Objects/Crate")
                     {
 
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, "Textures/giroux", TextureCache)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, "Textures/Objects/Crate", TextureCache)
                     };
             }
         }
