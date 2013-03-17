@@ -20,7 +20,7 @@ namespace TimeSink.Entities.Objects
 {
     [SerializableEntity("ec4e9acd-6deb-46f4-bfc7-4793b6c39ed9")]
     [EditorEnabled]
-    public class SwitchableWall : Entity, ISwitchable
+    public class SwitchableWall : Wall, ISwitchable
     {
         const string EDITOR_NAME = "Switchable Wall";
         const string TEXTURE = "Textures/Objects/Ice Wall";

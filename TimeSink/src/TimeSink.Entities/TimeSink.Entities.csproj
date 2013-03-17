@@ -75,6 +75,7 @@
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Objects\SwitchableWall.cs" />
+    <Compile Include="Objects\Wall.cs" />
     <Compile Include="Objects\WireBridge.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />

@@ -15,7 +15,7 @@ namespace TimeSink.Entities.Inventory
 {
     public class TimeGrenade : Entity
     {
-        const string EDITOR_NAME = "Arrow";
+        const string EDITOR_NAME = "Time Grenade";
 
         private Vector2 initialVelocity;
 
