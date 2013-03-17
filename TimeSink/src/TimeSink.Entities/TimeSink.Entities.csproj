@@ -70,7 +70,9 @@
   <ItemGroup>
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
+    <Compile Include="Enemies\VerticalTracker.cs" />
     <Compile Include="Hud\HealthBar.cs" />
+    <Compile Include="Hud\ShieldBar.cs" />
     <Compile Include="Inventory\TimeGrenade.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Triggers\CreateTutorialMonsterTrigger.cs" />
     <Compile Include="Triggers\TutorialMonsterAttackTrigger.cs" />
+    <Compile Include="Triggers\VerticalTrackTrigger.cs" />
     <Compile Include="UserControlledCharacter.cs" />
     <Compile Include="Inventory\Arrow.cs" />
     <Compile Include="Inventory\Dart.cs" />
