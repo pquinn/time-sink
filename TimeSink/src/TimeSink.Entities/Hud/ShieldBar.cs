@@ -9,8 +9,10 @@ namespace TimeSink.Entities.Hud
 {
     public class ShieldBar : IRenderable
     {
-        const string TEXTURE = "Textures/giroux";
+        const string TEXTURE = "Textures/HUD/ShieldBar";
         const string EDITOR_NAME = "Shield Bar";
+        const int WIDTH = 300;
+        const int HEIGHT = 100;
         private float scale = 1.0f;
 
         public ShieldBar()
@@ -21,15 +23,16 @@ namespace TimeSink.Entities.Hud
         {
             get
             {
+                var width = scale * .65f;
                 return new List<IRendering>()
-            {
-                new BasicRendering(TEXTURE)
                 {
-                    Position = new Vector2(0, -10),
-                    Scale = new Vector2(scale, 1),
-                    RenderLayer = RenderLayer.UI
-                }
-            };
+                    new BasicRendering(TEXTURE)
+                    {
+                        Position = new Vector2(WIDTH * width *.5f, HEIGHT * .6f),
+                        Scale = new Vector2(width, .4f),
+                        RenderLayer = RenderLayer.UI
+                    }
+                };
             }
         }
 
@@ -45,7 +48,7 @@ namespace TimeSink.Entities.Hud
 
         public void UpdateHealth(UserControlledCharacter c)
         {
-            scale = c.Shield / 100;
+            scale = c.Shield / 50;
         }
     }
 }

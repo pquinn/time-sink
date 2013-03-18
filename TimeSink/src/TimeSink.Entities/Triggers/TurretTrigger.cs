@@ -23,7 +23,7 @@ namespace TimeSink.Entities.Triggers
         const string EDITOR_NAME = "Turret Trigger";
         private static readonly Guid GUID = new Guid("77913887-7ca6-4c45-a0c1-4f4c2d68f01b");
         private static readonly int TURRET_SIZE = 50;
-        private static readonly int DAMAGE = 1;
+        private static readonly float DAMAGE = 1.5f;
         private static readonly int TIME_BETWEEN_SHOTS = 100;
 
         private UserControlledCharacter character;
