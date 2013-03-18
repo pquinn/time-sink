@@ -36,19 +36,21 @@ namespace TimeSink.Entities.Triggers
             : base()
         {
             EnemyString = enemy;
-            InitializeEnemy();
+            //InitializeEnemy();
 
         }
 
-        private void InitializeEnemy()
+        public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
+ 	        base.InitializePhysics(force, engineRegistrations);
 
-            //var target = Engine.LevelManager.Level.Entities.First(x => x.InstanceId.Equals(EnemyString)) as VerticalTracker;
+            var target = 
+                Engine == null ? null : Engine.LevelManager.Level.Entities.First(x => x.InstanceId.Equals(EnemyString)) as VerticalTracker;
 
-            //if (target != null)
-            //{
-            //    Enemy = target;
-            //}
+            if (target != null)
+            {
+                Enemy = target;
+            }
         }
 
         protected override void RegisterCollisions()
@@ -64,13 +66,16 @@ namespace TimeSink.Entities.Triggers
 
         public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter monster, Fixture f2, Contact info)
         {
-
+            Enemy.Descend();
             return true;
         }
 
         public virtual void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-           
+            if (c.Position.Y < Position.Y)
+            {
+                Enemy.Jump();
+            }
         }
 
         public override Guid Id

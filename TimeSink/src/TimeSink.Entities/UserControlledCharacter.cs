@@ -296,7 +296,7 @@ namespace TimeSink.Entities
         float damageTimer = 0f;
         float knockbackTimer = 0f;
         const float knockbackDur = 500f;
-        const float invulnInterval = 2000f;
+        const float invulnInterval = 1500f;
         const float damageFlashInterval = 300f;
         float idleInterval = 2000f;
         float interval = 200f;
