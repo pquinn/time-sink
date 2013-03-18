@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Inventory
 {
-    public class TimeGrenade : Entity
+    public class TimeGrenade : Projectile
     {
         const string EDITOR_NAME = "Time Grenade";
 

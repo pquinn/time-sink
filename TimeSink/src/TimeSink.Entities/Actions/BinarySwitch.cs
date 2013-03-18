@@ -104,9 +104,12 @@ namespace TimeSink.Entities.Actions
         {
             base.InitializePhysics(force, engineRegistrations);
 
+            Physics.IsSensor = true;
+
             foreach (string key in TargetsList)
             {
-                var target = engine.LevelManager.Level.Entities.First(x => x.InstanceId.Equals(key)) as ISwitchable;
+                var target = 
+                    engine == null ? null : engine.LevelManager.Level.Entities.First(x => x.InstanceId.Equals(key)) as ISwitchable;
                 if (target != null) targetObjects.Add(target);
             }
         }
