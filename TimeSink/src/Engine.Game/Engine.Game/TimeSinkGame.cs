@@ -49,6 +49,7 @@ namespace TimeSink.Engine.Game
         bool levelStarted;
 
         HealthBar healthBar = new HealthBar();
+        ShieldBar shieldBar = new ShieldBar();
 
         private Save defaultSave;
 
@@ -305,9 +306,11 @@ namespace TimeSink.Engine.Game
             spawnPoint = -1;
 
             LevelManager.RenderManager.RegisterRenderable(healthBar);
+            LevelManager.RenderManager.RegisterRenderable(shieldBar);
             if (Character != null)
             {
                 healthBar.UpdateHealth(Character);
+                shieldBar.UpdateHealth(Character);
             }
         }
 
@@ -315,6 +318,7 @@ namespace TimeSink.Engine.Game
         {
             base.UpdateHealth();
             healthBar.UpdateHealth(Character);
+            shieldBar.UpdateHealth(Character);
         }
 
         #region Controller code
