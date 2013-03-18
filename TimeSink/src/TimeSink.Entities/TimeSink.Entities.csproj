@@ -72,12 +72,14 @@
     <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Enemies\VerticalTracker.cs" />
     <Compile Include="Hud\HealthBar.cs" />
+    <Compile Include="Inventory\Projectile.cs" />
     <Compile Include="Hud\ShieldBar.cs" />
     <Compile Include="Inventory\TimeGrenade.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Objects\PushableBox.cs" />
     <Compile Include="Objects\SwitchableWall.cs" />
+    <Compile Include="Objects\Wall.cs" />
     <Compile Include="Objects\WireBridge.cs" />
     <Compile Include="Triggers\CheckpointTrigger.cs" />
     <Compile Include="Enemies\CentipedeKiller.cs" />

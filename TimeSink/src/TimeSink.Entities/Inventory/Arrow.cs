@@ -23,7 +23,7 @@ using TimeSink.Entities.Triggers;
 namespace TimeSink.Entities.Inventory
 {
     [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
-    public class Arrow : Entity, IWeapon
+    public class Arrow : Projectile, IWeapon
     {
         const float ARROW_MASS = .02f;
         const string ARROW_TEXTURE_NAME = "Textures/Weapons/Arrow";
