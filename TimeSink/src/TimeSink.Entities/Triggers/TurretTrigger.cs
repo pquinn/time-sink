@@ -13,6 +13,8 @@ using FarseerPhysics.Factories;
 using TimeSink.Engine.Core.Physics;
 using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Entities.Enemies;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -43,7 +45,10 @@ namespace TimeSink.Entities.Triggers
             set { }
         }
 
+        public string TurretId { get; set; }
+        public Turret Turret { get; set; }
         public Body TurretPhysics { get; set; }
+        public bool Enabled { get; set; }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
@@ -88,6 +93,9 @@ namespace TimeSink.Entities.Triggers
                 PhysicsConstants.PixelsToMeters(TURRET_SIZE),
                 PhysicsConstants.PixelsToMeters(TURRET_SIZE),
                 1);
+
+            Turret = (Turret)engineRegistrations.Resolve<LevelManager>()
+                .Level.Entities.First(x => x.InstanceId == TurretId);
         }
 
         public override void DestroyPhysics()

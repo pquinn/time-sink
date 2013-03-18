@@ -1,1 +1,964 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TimeScaleCircles /><MidgroundPath>Textures\Levels\Future\Lab2-02</MidgroundPath><DefaultStart><X>1.71875</X><Y>36.40625</Y></DefaultStart><SpawnPoints><Vector2><X>1.71875</X><Y>36.40625</Y></Vector2><Vector2><X>8.75</X><Y>36.71875</Y></Vector2><Vector2><X>17.34375</X><Y>24.53125</Y></Vector2><Vector2><X>22.34375</X><Y>6.40625</Y></Vector2><Vector2><X>32.8125</X><Y>6.40625</Y></Vector2></SpawnPoints><CameraMax><X>52.5</X><Y>38.4375</Y></CameraMax><Midground><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>10</X><Y>5.625</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@00</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>30</X><Y>5.625</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@01</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>50</X><Y>5.625</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@02</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>10</X><Y>16.875</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@10</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>30</X><Y>16.875</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@11</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>50</X><Y>16.875</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@12</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>10</X><Y>28.125</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@20</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>30</X><Y>28.125</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@21</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>50</X><Y>28.125</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@22</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>10</X><Y>39.375</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@30</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>30</X><Y>39.375</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@31</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile><Tile><Dead>false</Dead><Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id><Position><X>50</X><Y>39.375</Y></Position><Texture>Textures\Levels\Future\Lab2-02/Lab2-02@32</Texture><Rotation>0</Rotation><Scale><X>1</X><Y>1</Y></Scale><RenderLayer>Midground</RenderLayer><Depth>1</Depth></Tile></Midground><Background /><Tiles /><GeoSegments><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment /><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>0</X><Y>38.234375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>52.234375</X><Y>38.234375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>52.25</X><Y>17.09375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>35.875</X><Y>17.09375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>35.859375</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>40.609375</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>40.59375</X><Y>28.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>29.15625</X><Y>28.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>29.15625</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>33.46875</X><Y>25.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>33.46875</X><Y>17.09375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>25.625</X><Y>17.09375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>25.609375</X><Y>14.765625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>49.375</X><Y>14.765625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment><ArrayOfWorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>49.375</X><Y>14.765625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>49.375</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>52.234375</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>52.234375</X><Y>0.9375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>28.96875</X><Y>0.953125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>28.953125</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>46.453125</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>46.4375</X><Y>12.171875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>20.578125</X><Y>12.1875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>20.578125</X><Y>14.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>23.5625</X><Y>14.765625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>23.546875</X><Y>17.078125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>21.5625</X><Y>17.09375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>21.5625</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>26.53125</X><Y>25.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>26.53125</X><Y>28.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>15.171875</X><Y>28.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>15.1875</X><Y>25.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>19.453125</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>19.453125</X><Y>17.015625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>4.640625</X><Y>17.015625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>4.640625</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>26.8125</X><Y>7.78125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>26.796875</X><Y>0.921875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>1.390625</X><Y>0.953125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>1.375</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>12.3125</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>12.328125</X><Y>28.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.65625</X><Y>28.90625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>8.65625</X><Y>31.90625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>43.609375</X><Y>31.90625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>43.59375</X><Y>25.875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>46.921875</X><Y>25.890625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>46.90625</X><Y>32.546875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>7.734375</X><Y>32.5625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>7.75</X><Y>27.953125</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>1.359375</X><Y>27.96875</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>1.359375</X><Y>34.265625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>0.03125</X><Y>34.265625</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment><WorldCollisionGeometrySegment><EndPoint><X>0</X><Y>38.234375</Y></EndPoint><IsOneWay>false</IsOneWay></WorldCollisionGeometrySegment></ArrayOfWorldCollisionGeometrySegment></GeoSegments><EntitySerializations><EntitySerialization><EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">657b0660-5620-46da-bea4-499f95c658e8</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">100</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">800</Value></PairOfStringObject><PairOfStringObject><Key>Sideways</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>VineWall</Key><Value xsi:type="xsd:boolean">true</Value></PairOfStringObject><PairOfStringObject><Key>LimitedHeight</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">ladder_bot</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>51.203125</X><Y>32.03125</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q2="http://microsoft.com/wsdl/types/" xsi:type="q2:guid">657b0660-5620-46da-bea4-499f95c658e8</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">100</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">200</Value></PairOfStringObject><PairOfStringObject><Key>Sideways</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>VineWall</Key><Value xsi:type="xsd:boolean">true</Value></PairOfStringObject><PairOfStringObject><Key>LimitedHeight</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">ladder_vent_right</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>42.046875</X><Y>27.34375</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q3="http://microsoft.com/wsdl/types/" xsi:type="q3:guid">657b0660-5620-46da-bea4-499f95c658e8</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">100</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">200</Value></PairOfStringObject><PairOfStringObject><Key>Sideways</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>VineWall</Key><Value xsi:type="xsd:boolean">true</Value></PairOfStringObject><PairOfStringObject><Key>LimitedHeight</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">ladder_vent_mid</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>27.890625</X><Y>27.328125</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q4="http://microsoft.com/wsdl/types/" xsi:type="q4:guid">657b0660-5620-46da-bea4-499f95c658e8</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">100</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">200</Value></PairOfStringObject><PairOfStringObject><Key>Sideways</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>VineWall</Key><Value xsi:type="xsd:boolean">true</Value></PairOfStringObject><PairOfStringObject><Key>LimitedHeight</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">ladder_vent_left</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>13.734375</X><Y>27.34375</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q5="http://microsoft.com/wsdl/types/" xsi:type="q5:guid">657b0660-5620-46da-bea4-499f95c658e8</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">100</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">1150</Value></PairOfStringObject><PairOfStringObject><Key>Sideways</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>VineWall</Key><Value xsi:type="xsd:boolean">true</Value></PairOfStringObject><PairOfStringObject><Key>LimitedHeight</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">ladder_top</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>3.046875</X><Y>16.65625</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">25</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">200</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">2</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Future/Lab1</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">1</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">door_lab1</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>0.25</X><Y>36.46875</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">75</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">150</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Future/Lab2-01</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">door_lab2_01_bot</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>8.921875</X><Y>37.0625</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">75</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">150</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Future/Lab2-01</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">1</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">door_lab2_01_mid</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>17.390625</X><Y>24.671875</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">75</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">150</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Future/Lab2-03</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">door_lab2_03_left</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>22.390625</X><Y>6.65625</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId><PropertiesMap><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">75</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">150</Value></PairOfStringObject><PairOfStringObject><Key>DoorType</Key><Value xsi:type="xsd:int">0</Value></PairOfStringObject><PairOfStringObject><Key>LevelPath</Key><Value xsi:type="xsd:string">Future/Lab2-03</Value></PairOfStringObject><PairOfStringObject><Key>SpawnPoint</Key><Value xsi:type="xsd:int">1</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">door_lab2_03_right</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>32.875</X><Y>6.6875</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>77913887-7ca6-4c45-a0c1-4f4c2d68f01b</EntityId><PropertiesMap><PairOfStringObject><Key>Id</Key><Value xmlns:q6="http://microsoft.com/wsdl/types/" xsi:type="q6:guid">77913887-7ca6-4c45-a0c1-4f4c2d68f01b</Value></PairOfStringObject><PairOfStringObject><Key>Width</Key><Value xsi:type="xsd:int">2050</Value></PairOfStringObject><PairOfStringObject><Key>Height</Key><Value xsi:type="xsd:int">200</Value></PairOfStringObject><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">turret_lower_vent</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>24.59375</X><Y>30.484375</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization><EntitySerialization><EntityId>7c66912c-6c14-4714-ab5d-27778ee8c063</EntityId><PropertiesMap><PairOfStringObject><Key>Dead</Key><Value xsi:type="xsd:boolean">false</Value></PairOfStringObject><PairOfStringObject><Key>InstanceId</Key><Value xsi:type="xsd:string">box</Value></PairOfStringObject><PairOfStringObject><Key>Position</Key><Value xsi:type="Vector2"><X>27.84375</X><Y>24.265625</Y></Value></PairOfStringObject></PropertiesMap></EntitySerialization></EntitySerializations></Level>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<TimeScaleCircles />
+	<MidgroundPath>Textures\Levels\Future\Lab2-02</MidgroundPath>
+	<DefaultStart>
+		<X>1.71875</X><Y>36.40625</Y>
+	</DefaultStart>
+	<SpawnPoints>
+		<Vector2>
+			<X>1.71875</X><Y>36.40625</Y>
+		</Vector2>
+		<Vector2>
+			<X>8.75</X><Y>36.71875</Y>
+		</Vector2>
+		<Vector2>
+			<X>17.34375</X><Y>24.53125</Y>
+		</Vector2>
+		<Vector2>
+			<X>22.34375</X><Y>6.40625</Y>
+		</Vector2>
+		<Vector2>
+			<X>32.8125</X><Y>6.40625</Y>
+		</Vector2>
+	</SpawnPoints>
+	<CameraMax>
+		<X>52.5</X><Y>38.4375</Y>
+	</CameraMax>
+	<Midground>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>10</X><Y>5.625</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@00</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>30</X><Y>5.625</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@01</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>50</X><Y>5.625</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@02</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>10</X><Y>16.875</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@10</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>30</X><Y>16.875</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@11</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>50</X><Y>16.875</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@12</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>10</X><Y>28.125</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@20</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>30</X><Y>28.125</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@21</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>50</X><Y>28.125</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@22</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>10</X><Y>39.375</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@30</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>30</X><Y>39.375</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@31</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+		<Tile>
+			<Dead>false</Dead>
+			<Id>50be45d6-51a2-462e-a8e5-0779832ffee3</Id>
+			<Position>
+				<X>50</X><Y>39.375</Y>
+			</Position>
+			<Texture>Textures\Levels\Future\Lab2-02/Lab2-02@32</Texture>
+			<Rotation>0</Rotation>
+			<Scale>
+				<X>1</X><Y>1</Y>
+			</Scale>
+			<RenderLayer>Midground</RenderLayer>
+			<Depth>1</Depth>
+		</Tile>
+	</Midground>
+	<Background />
+	<Tiles />
+	<GeoSegments>
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>0</X><Y>38.234375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>52.234375</X><Y>38.234375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>52.25</X><Y>17.09375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>35.875</X><Y>17.09375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>35.859375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>40.609375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>40.59375</X><Y>28.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>29.15625</X><Y>28.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>29.15625</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>33.46875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>33.46875</X><Y>17.09375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>25.625</X><Y>17.09375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>25.609375</X><Y>14.765625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>49.375</X><Y>14.765625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>49.375</X><Y>14.765625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>49.375</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>52.234375</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>52.234375</X><Y>0.9375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>28.96875</X><Y>0.953125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>28.953125</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.453125</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.4375</X><Y>12.171875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>20.578125</X><Y>12.1875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>20.578125</X><Y>14.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>23.5625</X><Y>14.765625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>23.546875</X><Y>17.078125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>21.5625</X><Y>17.09375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>21.5625</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>26.53125</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>26.53125</X><Y>28.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>15.171875</X><Y>28.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>15.1875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>19.453125</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>19.453125</X><Y>17.015625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>4.640625</X><Y>17.015625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>4.640625</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>26.8125</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>26.796875</X><Y>0.921875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.390625</X><Y>0.953125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>12.3125</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>12.328125</X><Y>28.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.65625</X><Y>28.90625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>8.65625</X><Y>31.90625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>43.609375</X><Y>31.90625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>43.59375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.921875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.90625</X><Y>32.546875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>7.734375</X><Y>32.5625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>7.75</X><Y>27.953125</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.359375</X><Y>27.96875</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.359375</X><Y>34.265625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>0.03125</X><Y>34.265625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>0</X><Y>38.234375</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+	</GeoSegments>
+	<EntitySerializations>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q1="http://microsoft.com/wsdl/types/" xsi:type="q1:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">100</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">800</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LimitedHeight</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">ladder_bot</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>51.203125</X><Y>32.03125</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q2="http://microsoft.com/wsdl/types/" xsi:type="q2:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">100</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LimitedHeight</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">ladder_vent_right</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>42.046875</X><Y>27.34375</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q3="http://microsoft.com/wsdl/types/" xsi:type="q3:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">100</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LimitedHeight</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">ladder_vent_mid</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>27.890625</X><Y>27.328125</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q4="http://microsoft.com/wsdl/types/" xsi:type="q4:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">100</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LimitedHeight</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">ladder_vent_left</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>13.734375</X><Y>27.34375</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>657b0660-5620-46da-bea4-499f95c658e8</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q5="http://microsoft.com/wsdl/types/" xsi:type="q5:guid">657b0660-5620-46da-bea4-499f95c658e8</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">100</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">1150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Sideways</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>VineWall</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LimitedHeight</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">ladder_top</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>3.046875</X><Y>16.65625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">25</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">2</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Future/Lab1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_lab1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>0.25</X><Y>36.46875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">75</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Future/Lab2-01</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_lab2_01_bot</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>8.921875</X><Y>37.0625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">75</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Future/Lab2-01</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_lab2_01_mid</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>17.390625</X><Y>24.671875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">75</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Future/Lab2-03</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_lab2_03_left</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>22.390625</X><Y>6.65625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>66c116cc-60bf-4808-a4c0-f5bb8cad053b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">75</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">150</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>DoorType</Key>
+					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>LevelPath</Key>
+					<Value xsi:type="xsd:string">Future/Lab2-03</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>SpawnPoint</Key>
+					<Value xsi:type="xsd:int">1</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_lab2_03_right</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>32.875</X><Y>6.6875</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>7c66912c-6c14-4714-ab5d-27778ee8c063</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">box</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>27.84375</X><Y>24.265625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+	</EntitySerializations>
+</Level>
