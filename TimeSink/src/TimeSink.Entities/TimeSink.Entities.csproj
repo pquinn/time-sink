@@ -110,6 +110,7 @@
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Inventory\Torch.cs" />
     <Compile Include="Save.cs" />
+    <Compile Include="Triggers\FanTrigger.cs" />
     <Compile Include="Triggers\QuestCompletionTrigger.cs" />
     <Compile Include="Triggers\DialogueTrigger.cs" />
     <Compile Include="Triggers\CameraUnlockTrigger.cs" />

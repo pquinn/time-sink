@@ -54,7 +54,6 @@ namespace TimeSink.Entities.Actions
             Position = position;
             Width = width;
             Height = height;
-
             used = false;
         }
 

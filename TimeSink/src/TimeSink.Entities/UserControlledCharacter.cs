@@ -327,6 +327,8 @@ namespace TimeSink.Entities
         /// </summary>
         public bool CanSlide { get { return slideTriggers.Any(); } }
 
+        public bool CanJump { get; set; }
+
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -365,6 +367,8 @@ namespace TimeSink.Entities
             shieldDamager = new ShieldDamageQueue(this);
 
             slideTriggers = new HashSet<SlideTrigger>();
+
+            CanJump = true;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -1444,35 +1448,37 @@ namespace TimeSink.Entities
 
         private void PerformJump(float percentOfMax = 1)
         {
-
-            jumpToggleGuard = false;
-            PlaySound(jumpSound);
-            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
-
-            if (facing > 0)
+            if (CanJump)
             {
-                if (HoldingTorch != null)
+                jumpToggleGuard = false;
+                PlaySound(jumpSound);
+                Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
+
+                if (facing > 0)
                 {
-                    currentState = BodyStates.JumpingRightTorch;
-                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 0;
+                    if (HoldingTorch != null)
+                    {
+                        currentState = BodyStates.JumpingRightTorch;
+                        animations[BodyStates.JumpingRightTorch].CurrentFrame = 0;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.JumpingRight;
+                        animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                    }
                 }
                 else
                 {
-                    currentState = BodyStates.JumpingRight;
-                    animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                }
-            }
-            else
-            {
-                if (HoldingTorch != null)
-                {
-                    currentState = BodyStates.JumpingLeftTorch;
-                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 0;
-                }
-                else
-                {
-                    currentState = BodyStates.JumpingLeft;
-                    animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                    if (HoldingTorch != null)
+                    {
+                        currentState = BodyStates.JumpingLeftTorch;
+                        animations[BodyStates.JumpingLeftTorch].CurrentFrame = 0;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.JumpingLeft;
+                        animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                    }
                 }
             }
         }
