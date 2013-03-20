@@ -199,6 +199,7 @@ namespace TimeSink.Entities
 
         public Ladder CanClimb { get { return canClimb; } set { canClimb = value; } }
         public bool Climbing { get { return climbing; } set { climbing = value; } }
+        private bool InKnockback { get; set; }
 
         private bool manaRegenEnabled = true;
         private const float MANA_REGEN_RATE = .2f; //percent/sec
@@ -293,7 +294,9 @@ namespace TimeSink.Entities
         float shotTimer = 0f;
         float invulnTimer = 0f;
         float damageTimer = 0f;
-        const float invulnInterval = 2000f;
+        float knockbackTimer = 0f;
+        const float knockbackDur = 500f;
+        const float invulnInterval = 1500f;
         const float damageFlashInterval = 300f;
         float idleInterval = 2000f;
         float interval = 200f;
@@ -407,17 +410,18 @@ namespace TimeSink.Entities
                 {
                     CanClimb.DismountCharacter(this);
                 }
+                InKnockback = true;
                 if (RightFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackRight;
                     Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(-20, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(-15, 0));
                 }
                 else if (LeftFacingBodyState())
                 {
                     currentState = BodyStates.KnockbackLeft;
                     Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(20, 0));
+                    Physics.ApplyLinearImpulse(new Vector2(15, 0));
                 }
             }
         }
@@ -567,12 +571,23 @@ namespace TimeSink.Entities
                 // Grab the keyboard state.
                 var keyboard = Keyboard.GetState();
                 var gamepad = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
-              //  var d = InputManager.Instance.Pressed(Keys.D);
-              //  var a = InputManager.Instance.Pressed(Keys.A);
+                //  var d = InputManager.Instance.Pressed(Keys.D);
+                //  var a = InputManager.Instance.Pressed(Keys.A);
 
                 //Update the animation timer by the timeframe in milliseconds
                 timer += timeFrame_ms;
                 shotTimer += timeFrame_ms;
+                if (InKnockback)
+                {
+                    MotorJoint.MotorSpeed = 0;
+                    knockbackTimer += timeFrame_ms;
+
+                    if (knockbackTimer >= knockbackDur)
+                    {
+                        InKnockback = false;
+                        knockbackTimer = 0f;
+                    }
+                }
                 if (Invulnerable)
                 {
                     invulnTimer += timeFrame_ms;
@@ -593,34 +608,6 @@ namespace TimeSink.Entities
                     Physics.Friction = WheelBody.Friction = .01f;
 
                 #region Movement
-                #region gamepad
-                /*
-                if (gamepad.DPad.Left.Equals(ButtonState.Pressed))
-                {
-                    moveDirection.X -= 1.0f;
-                    if (TouchingGround)
-                    {
-                        currentState = BodyStates.WalkingRight;
-                    }
-                }
-                if (gamepad.DPad.Right.Equals(ButtonState.Pressed))
-                {
-                    moveDirection.X += 1.0f;
-                    if (TouchingGround)
-                    {
-                        currentState = BodyStates.WalkingRight;
-                    }
-                }
-                if (gamepad.ThumbSticks.Left.X != 0)
-                {
-                    moveDirection.X += gamepad.ThumbSticks.Left.X;
-                    if (TouchingGround)
-                    {
-                        currentState = BodyStates.WalkingRight;
-                    }
-                }
-                 * */
-                #endregion
 
                 if (invulnTimer >= invulnInterval)
                 {
@@ -632,758 +619,762 @@ namespace TimeSink.Entities
                     damageTimer = 0f;
                     damageFlash = false;
                 }
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Sprint))
+
+                if (!InKnockback)
                 {
-                    isRunning = true;
-                }
-                else
-                    isRunning = false;
-
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveLeft))
-                {
-                    float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
-                    facing = -1;
-                    if (ClimbingState())
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Sprint))
                     {
-                        Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
-                    }
-
-                    if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) &&
-                         canClimb != null && canClimb.VineWall)
-                    {
-                        if (Physics.Position.X >= (canClimb.Position.X - (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) + THRESHHOLD)
-                        {
-                            moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
-                            Physics.LinearDamping = 15f;
-                        }
-                    }
-
-                    else if (currentState == BodyStates.ClimbingBack)
-                    {
-                        // Do Nothing -- Normal Ladder
-                    }
-                    else if (RightFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingLookLeft;
-                    }
-                    else if (LeftFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingLeftNeutral;
+                        isRunning = true;
                     }
                     else
+                        isRunning = false;
+
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveLeft))
                     {
-                        if ((!swinging || Physics.LinearVelocity.X <= 0) && !isDucking)
-                            moveDirection.X -= 1.0f;
-
-                        if (TouchingGround)
+                        float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
+                        facing = -1;
+                        if (ClimbingState())
                         {
-                            if (isRunning)
-                            {
-                                if (currentState != BodyStates.RunningLeft)
-                                {
-                                    animations[BodyStates.RunningLeft].CurrentFrame = 0;
-                                    currentState = BodyStates.RunningStartLeft;
-                                }
-                            }
-                            else if (isDucking)
-                            {
-                            }
-                            else if (InventoryItem is Arrow && HoldingTorch == null)
-                            {
-                                if (currentState != BodyStates.WalkingShootLeft &&
-                                    currentState != BodyStates.WalkingShoot2Left &&
-                                    currentState != BodyStates.WalkingShoot3Left &&
-                                    currentState != BodyStates.WalkingDrawnLeft)
-                                {
-                                    animations[BodyStates.WalkingShootLeft].CurrentFrame = 0;
-                                    currentState = BodyStates.WalkingShootLeft;
-                                }
-                            }
+                            Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                        }
 
-                            else if (currentState != BodyStates.WalkingTorchLeft && HoldingTorch != null)
+                        if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) &&
+                             canClimb != null && canClimb.VineWall)
+                        {
+                            if (Physics.Position.X >= (canClimb.Position.X - (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) + THRESHHOLD)
                             {
-                                animations[BodyStates.WalkingTorchLeft].CurrentFrame = 0;
-                                currentState = BodyStates.WalkingTorchStartLeft;
-                            }
-                            else if (currentState != BodyStates.WalkingLeft && HoldingTorch == null)
-                            {
-                                animations[BodyStates.WalkingLeft].CurrentFrame = 0;
-                                currentState = BodyStates.WalkingStartLeft;
+                                moveDirection.X -= 1.0f;// Physics.Position = new Vector2(Physics.Position.X - PhysicsConstants.PixelsToMeters(5), Physics.Position.Y);
+                                Physics.LinearDamping = 15f;
                             }
                         }
-                        else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
-                                currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
+
+                        else if (currentState == BodyStates.ClimbingBack)
                         {
-                            currentState = BodyStates.HorizontalClimbLeft;
+                            // Do Nothing -- Normal Ladder
                         }
-                        else if (HoldingTorch == null)
+                        else if (RightFacingBodyState() && ClimbingState())
                         {
-                            currentState = BodyStates.JumpingLeft;
+                            currentState = BodyStates.ClimbingLookLeft;
+                        }
+                        else if (LeftFacingBodyState() && ClimbingState())
+                        {
+                            currentState = BodyStates.ClimbingLeftNeutral;
                         }
                         else
                         {
-                            currentState = BodyStates.WalkingTorchLeft;
-                        }
-                    }
-                    //TODO -- add logic for climbing state / animation
-                }
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveRight))
-                {
-                    float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
-                    facing = 1;
+                            if ((!swinging || Physics.LinearVelocity.X <= 0) && !isDucking)
+                                moveDirection.X -= 1.0f;
 
-                    if (ClimbingState())
-                    {
-                        Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
-                    }
-
-                    if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) &&
-                         canClimb != null && canClimb.VineWall)
-                    {
-                        if (Physics.Position.X <= (canClimb.Position.X + (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) - THRESHHOLD)
-                        {
-                            moveDirection.X += 1.0f;
-                            Physics.LinearDamping = 15f;
-                        }
-                    }
-                    else if (currentState == BodyStates.ClimbingBack)
-                    {
-                        // Do Nothing
-                    }
-                    else if (LeftFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingLookRight;
-                    }
-                    else if (RightFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingRightNeutral;
-                    }
-                    else
-                    {
-                        if ((!swinging || Physics.LinearVelocity.X >= 0) && !isDucking)
-                            moveDirection.X += 1.0f;
-
-                        if (TouchingGround)
-                        {
-                            if (isRunning)
+                            if (TouchingGround)
                             {
-                                if (currentState != BodyStates.RunningRight)
+                                if (isRunning)
                                 {
-                                    animations[BodyStates.RunningRight].CurrentFrame = 0;
-                                    currentState = BodyStates.RunningStartRight;
+                                    if (currentState != BodyStates.RunningLeft)
+                                    {
+                                        animations[BodyStates.RunningLeft].CurrentFrame = 0;
+                                        currentState = BodyStates.RunningStartLeft;
+                                    }
+                                }
+                                else if (isDucking)
+                                {
+                                }
+                                else if (InventoryItem is Arrow && HoldingTorch == null)
+                                {
+                                    if (currentState != BodyStates.WalkingShootLeft &&
+                                        currentState != BodyStates.WalkingShoot2Left &&
+                                        currentState != BodyStates.WalkingShoot3Left &&
+                                        currentState != BodyStates.WalkingDrawnLeft)
+                                    {
+                                        animations[BodyStates.WalkingShootLeft].CurrentFrame = 0;
+                                        currentState = BodyStates.WalkingShootLeft;
+                                    }
+                                }
+
+                                else if (currentState != BodyStates.WalkingTorchLeft && HoldingTorch != null)
+                                {
+                                    animations[BodyStates.WalkingTorchLeft].CurrentFrame = 0;
+                                    currentState = BodyStates.WalkingTorchStartLeft;
+                                }
+                                else if (currentState != BodyStates.WalkingLeft && HoldingTorch == null)
+                                {
+                                    animations[BodyStates.WalkingLeft].CurrentFrame = 0;
+                                    currentState = BodyStates.WalkingStartLeft;
                                 }
                             }
-
-                            else if (isDucking)
+                            else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
+                                    currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
                             {
-                            }
-                            else if (InventoryItem is Arrow && HoldingTorch == null)
-                            {
-                                if (currentState != BodyStates.WalkingShootRight &&
-                                    currentState != BodyStates.WalkingShoot2Right &&
-                                    currentState != BodyStates.WalkingShoot3Right &&
-                                    currentState != BodyStates.WalkingDrawnRight)
-                                {
-                                    animations[BodyStates.WalkingShootRight].CurrentFrame = 0;
-                                    currentState = BodyStates.WalkingShootRight;
-                                }
-                            }
-                            else if (currentState != BodyStates.WalkingTorchRight && HoldingTorch != null)
-                            {
-                                animations[BodyStates.WalkingTorchRight].CurrentFrame = 0;
-                                currentState = BodyStates.WalkingTorchStartRight;
-                            }
-                            else if (currentState != BodyStates.WalkingRight && HoldingTorch == null)
-                            {
-                                animations[BodyStates.WalkingRight].CurrentFrame = 0;
-                                currentState = BodyStates.WalkingStartRight;
+                                currentState = BodyStates.HorizontalClimbLeft;
                             }
                             else if (HoldingTorch == null)
                             {
-                                currentState = BodyStates.WalkingRight;
+                                currentState = BodyStates.JumpingLeft;
                             }
                             else
                             {
-                                currentState = BodyStates.WalkingTorchRight;
+                                currentState = BodyStates.WalkingTorchLeft;
                             }
                         }
-                        else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
-                                currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
+                        //TODO -- add logic for climbing state / animation
+                    }
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.MoveRight))
+                    {
+                        float THRESHHOLD = PhysicsConstants.PixelsToMeters(5);
+                        facing = 1;
+
+                        if (ClimbingState())
                         {
-                            currentState = BodyStates.HorizontalClimbRight;
+                            Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                        }
+
+                        if ((currentState == BodyStates.ClimbingBack || currentState == BodyStates.ClimbingBackNeut) &&
+                             canClimb != null && canClimb.VineWall)
+                        {
+                            if (Physics.Position.X <= (canClimb.Position.X + (PhysicsConstants.PixelsToMeters(canClimb.Width) / 2)) - THRESHHOLD)
+                            {
+                                moveDirection.X += 1.0f;
+                                Physics.LinearDamping = 15f;
+                            }
+                        }
+                        else if (currentState == BodyStates.ClimbingBack)
+                        {
+                            // Do Nothing
+                        }
+                        else if (LeftFacingBodyState() && ClimbingState())
+                        {
+                            currentState = BodyStates.ClimbingLookRight;
+                        }
+                        else if (RightFacingBodyState() && ClimbingState())
+                        {
+                            currentState = BodyStates.ClimbingRightNeutral;
                         }
                         else
                         {
-                            currentState = BodyStates.JumpingRight;
-                        }
-                    }
-                    //TODO -- add logic for climbing state / animation
-                }
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
-                {
-                    #region Climbing
+                            if ((!swinging || Physics.LinearVelocity.X >= 0) && !isDucking)
+                                moveDirection.X += 1.0f;
 
-                    if (ClimbingState())
-                    {
-                        Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
-                    }
-                    if (canClimb != null)
-                    {
-                        TouchingGround = false;
-                        canClimb.Physics.IsSensor = true;
-                        Climbing = true;
-                        Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
-                        WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
-
-                        if (!canClimb.Sideways)
-                            currentState = BodyStates.ClimbingBack;
-                        else if (RightFacingBodyState())
-                            currentState = BodyStates.ClimbingRight;
-                        else
-                            currentState = BodyStates.ClimbingLeft;
-                        /*
-                         var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
-                         Physics.Position += v;
-                         WheelBody.Position += v;
-                         */
-                        moveDirection.Y += 1.0f;
-                        Physics.LinearDamping = 15f;
-                    }
-                    #endregion
-                    //Sliding
-                    else if (TouchingGround)
-                    {
-
-                        if (DoorType == DoorType.Down)
-                        {
-                            currentState = BodyStates.FacingForward;
-                        }
-                        else if (TouchingGround && !inHold && !isDucking)
-                        {
-                            if (CanSlide)
+                            if (TouchingGround)
                             {
-                                StartSliding(moveDirection.X >= 0
-                                    ? MoveDirection.Right
-                                    : MoveDirection.Left);
-                            }
-                            else
-                            {
-                                isDucking = true;
-
-                                var pos = Physics.Position;
-
-                                Physics.Dispose();
-                                _world.RemoveJoint(MotorJoint);
-
-                                float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
-
-                                Physics = BodyFactory.CreateBody(_world);
-                                var r = FixtureFactory.AttachRectangle(
-                                    PhysicsConstants.PixelsToMeters(Width),
-                                    PhysicsConstants.PixelsToMeters(Height / 2),
-                                    1.4f,
-                                    new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
-                                    Physics);
-
-                                r.CollidesWith = Category.Cat1 | ~Category.Cat31;
-                                r.CollisionCategories = Category.Cat3;
-                                r.UserData = "Rectangle";
-                                r.Shape.Density = 7;
-
-                                Physics.FixedRotation = true;
-                                Physics.Position = pos;
-                                Physics.BodyType = BodyType.Dynamic;
-                                Physics.Friction = 10.0f;
-                                Physics.IsBullet = true;
-
-                                MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
-                                MotorJoint.MotorEnabled = true;
-                                MotorJoint.MaxMotorTorque = 10;
-
-                                if (LeftFacingBodyState())
+                                if (isRunning)
                                 {
-                                    if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                                    if (currentState != BodyStates.RunningRight)
                                     {
-                                        currentState = BodyStates.DuckingLeftBow;
+                                        animations[BodyStates.RunningRight].CurrentFrame = 0;
+                                        currentState = BodyStates.RunningStartRight;
                                     }
-                                    else
-                                        currentState = BodyStates.DuckingLeft;
+                                }
+
+                                else if (isDucking)
+                                {
+                                }
+                                else if (InventoryItem is Arrow && HoldingTorch == null)
+                                {
+                                    if (currentState != BodyStates.WalkingShootRight &&
+                                        currentState != BodyStates.WalkingShoot2Right &&
+                                        currentState != BodyStates.WalkingShoot3Right &&
+                                        currentState != BodyStates.WalkingDrawnRight)
+                                    {
+                                        animations[BodyStates.WalkingShootRight].CurrentFrame = 0;
+                                        currentState = BodyStates.WalkingShootRight;
+                                    }
+                                }
+                                else if (currentState != BodyStates.WalkingTorchRight && HoldingTorch != null)
+                                {
+                                    animations[BodyStates.WalkingTorchRight].CurrentFrame = 0;
+                                    currentState = BodyStates.WalkingTorchStartRight;
+                                }
+                                else if (currentState != BodyStates.WalkingRight && HoldingTorch == null)
+                                {
+                                    animations[BodyStates.WalkingRight].CurrentFrame = 0;
+                                    currentState = BodyStates.WalkingStartRight;
+                                }
+                                else if (HoldingTorch == null)
+                                {
+                                    currentState = BodyStates.WalkingRight;
                                 }
                                 else
                                 {
-                                    if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                                    currentState = BodyStates.WalkingTorchRight;
+                                }
+                            }
+                            else if (currentState == BodyStates.HorizontalClimbLeft || currentState == BodyStates.HorizontalClimbRight ||
+                                    currentState == BodyStates.HorizontalClimbLeftNeut || currentState == BodyStates.HorizontalClimbRightNeut)
+                            {
+                                currentState = BodyStates.HorizontalClimbRight;
+                            }
+                            else
+                            {
+                                currentState = BodyStates.JumpingRight;
+                            }
+                        }
+                        //TODO -- add logic for climbing state / animation
+                    }
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
+                    {
+                        #region Climbing
+
+                        if (ClimbingState())
+                        {
+                            Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                        }
+                        if (canClimb != null)
+                        {
+                            TouchingGround = false;
+                            canClimb.Physics.IsSensor = true;
+                            Climbing = true;
+                            Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
+                            WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
+
+                            if (!canClimb.Sideways)
+                                currentState = BodyStates.ClimbingBack;
+                            else if (RightFacingBodyState())
+                                currentState = BodyStates.ClimbingRight;
+                            else
+                                currentState = BodyStates.ClimbingLeft;
+                            /*
+                             var v = new Vector2(0, PhysicsConstants.PixelsToMeters(5));
+                             Physics.Position += v;
+                             WheelBody.Position += v;
+                             */
+                            moveDirection.Y += 1.0f;
+                            Physics.LinearDamping = 15f;
+                        }
+                        #endregion
+                        //Sliding
+                        else if (TouchingGround)
+                        {
+
+                            if (DoorType == DoorType.Down)
+                            {
+                                currentState = BodyStates.FacingForward;
+                            }
+                            else if (TouchingGround && !inHold && !isDucking)
+                            {
+                                if (CanSlide)
+                                {
+                                    StartSliding(moveDirection.X >= 0
+                                        ? MoveDirection.Right
+                                        : MoveDirection.Left);
+                                }
+                                else
+                                {
+                                    isDucking = true;
+
+                                    var pos = Physics.Position;
+
+                                    Physics.Dispose();
+                                    _world.RemoveJoint(MotorJoint);
+
+                                    float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
+                                    float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
+
+                                    Physics = BodyFactory.CreateBody(_world);
+                                    var r = FixtureFactory.AttachRectangle(
+                                        PhysicsConstants.PixelsToMeters(Width),
+                                        PhysicsConstants.PixelsToMeters(Height / 2),
+                                        1.4f,
+                                        new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
+                                        Physics);
+
+                                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                                    r.CollisionCategories = Category.Cat3;
+                                    r.UserData = "Rectangle";
+                                    r.Shape.Density = 7;
+
+                                    Physics.FixedRotation = true;
+                                    Physics.Position = pos;
+                                    Physics.BodyType = BodyType.Dynamic;
+                                    Physics.Friction = 10.0f;
+                                    Physics.IsBullet = true;
+
+                                    MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
+                                    MotorJoint.MotorEnabled = true;
+                                    MotorJoint.MaxMotorTorque = 10;
+
+                                    if (LeftFacingBodyState())
                                     {
-                                        currentState = BodyStates.DuckingRightBow;
+                                        if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                                        {
+                                            currentState = BodyStates.DuckingLeftBow;
+                                        }
+                                        else
+                                            currentState = BodyStates.DuckingLeft;
                                     }
                                     else
-                                        currentState = BodyStates.DuckingRight;
+                                    {
+                                        if (HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                                        {
+                                            currentState = BodyStates.DuckingRightBow;
+                                        }
+                                        else
+                                            currentState = BodyStates.DuckingRight;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                else
-                {
-                    if (isDucking)
-                    {
-                        ReRegisterPhysics();
-                        isDucking = false;
-                    }
-                    if (isSliding)
-                    {
-                        StopSliding();
-                    }
-                }
-
-                #endregion
-
-                #region Direction
-
-                var up = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimUp);
-                var down = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimDown);
-                var right = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimRight);
-                var left = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimLeft);
-                if (!ClimbingState() && !swinging && !VineBridgeState())
-                {
-                    if (up && right)
-                    {
-                        facing = 1;
-                        direction = new Vector2(0.707106769f, -0.707106769f);
-                        if (InHold)
-                        {
-                            currentState = BodyStates.ShootingArrowRight;
-                            animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
-                        }
-                        else
-                        {
-                            currentState = NeutralState();
-                        }
-                    }
-                    else if (up && left)
-                    {
-                        direction = new Vector2(-0.707106769f, -0.707106769f);
-                        facing = -1;
-                        if (InHold)
-                        {
-                            currentState = BodyStates.ShootingArrowLeft;
-                            animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
-                        }
-                        else
-                        {
-                            currentState = NeutralState();
-                        }
-                    }
-                    else if (down && right)
-                    {
-                        direction = new Vector2(0.707106769f, 0.707106769f);
-                        currentState = BodyStates.NeutralRight;
-                        facing = 1;
-                    }
-                    else if (down && left)
-                    {
-                        direction = new Vector2(-0.707106769f, 0.707106769f);
-                        currentState = BodyStates.NeutralLeft;
-                        facing = -1;
-                    }
-                    else if (up)
-                    {
-                        direction = new Vector2(0, -1);
-                    }
-                    else if (down)
-                    {
-                        direction = new Vector2(0, 1);
-                    }
-                    else if (right)
-                    {
-                        direction = new Vector2(1, 0);
-                        facing = 1;
-                        currentState = NeutralState();
-                    }
-                    else if (left)
-                    {
-                        direction = new Vector2(-1, 0);
-                        facing = -1;
-                        currentState = NeutralState();
-                    }
                     else
-                    {
-                        direction = new Vector2(1, 0) * facing;
-                    }
-                }
-
-                #endregion
-
-                #region Jumping
-                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
-                {
-                    if (BridgeHanging())
                     {
                         if (isDucking)
                         {
                             ReRegisterPhysics();
                             isDucking = false;
                         }
-                        vineBridge.ForceSeperation(this);
-                        if (!InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction))
-                            PerformJump();
-                    }
-                    else if (swinging)
-                    {
-                        ForceVineSeperate();
-                        PerformJump(.2f);
-                    }
-                    else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
-                    {
-                        Physics.LinearDamping = canClimb.LinearDamping;
-                        Physics.IgnoreGravity = WheelBody.IgnoreGravity = false;
-                        PerformJump();
-                    }
-                    else if (jumpToggleGuard && TouchingGround)
-                    {
-                        PerformJump();
+                        if (isSliding)
+                        {
+                            StopSliding();
+                        }
                     }
 
-                    numberOfJumps++;
-                }
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) && 
-                    InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
-                {
-                    if (TouchingGround)
-                    {
-                        PerformJump();
-                    }
-                }
                 #endregion
 
-                #region climbing
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.UpAction))
-                {
-                    if ((canClimb != null))
+                    #region Direction
+
+                    var up = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimUp);
+                    var down = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimDown);
+                    var right = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimRight);
+                    var left = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimLeft);
+                    if (!ClimbingState() && !swinging && !VineBridgeState())
                     {
-                        Climbing = true;
-                        //Insert anim state change here for climbing anim
-                        Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
-                        Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
-                        TouchingGround = false;
-                        jumpToggleGuard = true;
-                        const float THRESHHOLD = 3;
-                        float playerTopLeft = Physics.Position.Y - PhysicsConstants.PixelsToMeters(Height / 2);
-                        float ladderTopLeft = canClimb.Position.Y - PhysicsConstants.PixelsToMeters(canClimb.Height / 2);
-                        if (!canClimb.VineWall)
+                        if (up && right)
                         {
-                            if (canClimb.Sideways)
+                            facing = 1;
+                            direction = new Vector2(0.707106769f, -0.707106769f);
+                       //     if (InHold)
+                            if(InventoryItem is Arrow)
                             {
-                                //We are to the right of the ladder
+                                currentState = BodyStates.ShootingArrowRight;
+                                animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
+                            }
+                            else
+                            {
+                                currentState = NeutralState();
+                            }
+                        }
+                        else if (up && left)
+                        {
+                            direction = new Vector2(-0.707106769f, -0.707106769f);
+                            facing = -1;
+                            if (InventoryItem is Arrow)
+                            {
+                                currentState = BodyStates.ShootingArrowLeft;
+                                animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
+                            }
+                            else
+                            {
+                                currentState = NeutralState();
+                            }
+                        }
+                        else if (down && right)
+                        {
+                            direction = new Vector2(0.707106769f, 0.707106769f);
+                            currentState = BodyStates.NeutralRight;
+                            facing = 1;
+                        }
+                        else if (down && left)
+                        {
+                            direction = new Vector2(-0.707106769f, 0.707106769f);
+                            currentState = BodyStates.NeutralLeft;
+                            facing = -1;
+                        }
+                        else if (up)
+                        {
+                            direction = new Vector2(0, -1);
+                        }
+                        else if (down)
+                        {
+                            direction = new Vector2(0, 1);
+                        }
+                        else if (right)
+                        {
+                            direction = new Vector2(1, 0);
+                            facing = 1;
+                            currentState = NeutralState();
+                        }
+                        else if (left)
+                        {
+                            direction = new Vector2(-1, 0);
+                            facing = -1;
+                            currentState = NeutralState();
+                        }
+                        else
+                        {
+                            direction = new Vector2(1, 0) * facing;
+                        }
+                    }
 
-                                if (playerTopLeft >= ladderTopLeft || !canClimb.LimitedHeight)
+                    #endregion
+
+                    #region Jumping
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
+                    {
+                        if (BridgeHanging())
+                        {
+                            if (isDucking)
+                            {
+                                ReRegisterPhysics();
+                                isDucking = false;
+                            }
+                            vineBridge.ForceSeperation(this);
+                            if (!InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction))
+                                PerformJump();
+                        }
+                        else if (swinging)
+                        {
+                            ForceVineSeperate();
+                            PerformJump(.2f);
+                        }
+                        else if ((canClimb != null) && !TouchingGround && jumpToggleGuard)
+                        {
+                            Physics.LinearDamping = canClimb.LinearDamping;
+                            Physics.IgnoreGravity = WheelBody.IgnoreGravity = false;
+                            PerformJump();
+                        }
+                        else if (jumpToggleGuard && TouchingGround)
+                        {
+                            PerformJump();
+                        }
+
+                        numberOfJumps++;
+                    }
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
+                        InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
+                    {
+                        if (TouchingGround)
+                        {
+                            PerformJump();
+                        }
+                    }
+                    #endregion
+
+                    #region climbing
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.UpAction))
+                    {
+                        if ((canClimb != null))
+                        {
+                            Climbing = true;
+                            //Insert anim state change here for climbing anim
+                            Physics.LinearVelocity = WheelBody.LinearVelocity = Vector2.Zero;
+                            Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
+                            TouchingGround = false;
+                            jumpToggleGuard = true;
+                            const float THRESHHOLD = 3;
+                            float playerTopLeft = Physics.Position.Y - PhysicsConstants.PixelsToMeters(Height / 2);
+                            float ladderTopLeft = canClimb.Position.Y - PhysicsConstants.PixelsToMeters(canClimb.Height / 2);
+                            if (!canClimb.VineWall)
+                            {
+                                if (canClimb.Sideways)
                                 {
-                                    if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD) && canClimb.LimitedHeight)
-                                    {
-                                        //do nothing;
-                                    }
-                                    else if (Physics.Position.X >= canClimb.Position.X)
-                                    {
-                                        currentState = BodyStates.ClimbingLeft;
-                                        Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
-                                                                                             (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                                       Physics.Position.Y);
+                                    //We are to the right of the ladder
 
-                                        WheelBody.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
-                                                                                             (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                                       WheelBody.Position.Y);
-                                        moveDirection.Y -= 1.0f;
-                                        Physics.LinearDamping = 15f;
-                                    }
-                                    //We are to the left of the ladder
-                                    else if (Physics.Position.X < canClimb.Position.X)
+                                    if (playerTopLeft >= ladderTopLeft || !canClimb.LimitedHeight)
                                     {
-                                        currentState = BodyStates.ClimbingRight;
-                                        Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
-                                                                                             (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                                       Physics.Position.Y);
-                                        WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
-                                                                                             (PhysicsConstants.PixelsToMeters(this.Width) / 2),
-                                                                       WheelBody.Position.Y);
-                                        moveDirection.Y -= 1.0f;
+                                        if (playerTopLeft <= ladderTopLeft + PhysicsConstants.PixelsToMeters(THRESHHOLD) && canClimb.LimitedHeight)
+                                        {
+                                            //do nothing;
+                                        }
+                                        else if (Physics.Position.X >= canClimb.Position.X)
+                                        {
+                                            currentState = BodyStates.ClimbingLeft;
+                                            Physics.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
+                                                                                                 (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                           Physics.Position.Y);
+
+                                            WheelBody.Position = new Vector2(CanClimb.Position.X + (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) +
+                                                                                                 (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                           WheelBody.Position.Y);
+                                            moveDirection.Y -= 1.0f;
+                                            Physics.LinearDamping = 15f;
+                                        }
+                                        //We are to the left of the ladder
+                                        else if (Physics.Position.X < canClimb.Position.X)
+                                        {
+                                            currentState = BodyStates.ClimbingRight;
+                                            Physics.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
+                                                                                                 (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                           Physics.Position.Y);
+                                            WheelBody.Position = new Vector2(CanClimb.Position.X - (PhysicsConstants.PixelsToMeters(CanClimb.Width) / 2) -
+                                                                                                 (PhysicsConstants.PixelsToMeters(this.Width) / 2),
+                                                                           WheelBody.Position.Y);
+                                            moveDirection.Y -= 1.0f;
+                                            Physics.LinearDamping = 15f;
+                                        }
+                                    }
+
+                                    else if (canClimb.LimitedHeight)
+                                    {
+                                        if (RightFacingBodyState())
+                                        {
+                                            currentState = BodyStates.ClimbingRight;
+                                        }
+                                        else if (LeftFacingBodyState())
+                                        {
+                                            currentState = BodyStates.ClimbingLeft;
+                                        }
+                                        moveDirection.Y += 1.0f;
                                         Physics.LinearDamping = 15f;
                                     }
                                 }
 
-                                else if (canClimb.LimitedHeight)
+                                else
                                 {
-                                    if (RightFacingBodyState())
-                                    {
-                                        currentState = BodyStates.ClimbingRight;
-                                    }
-                                    else if (LeftFacingBodyState())
-                                    {
-                                        currentState = BodyStates.ClimbingLeft;
-                                    }
-                                    moveDirection.Y += 1.0f;
+                                    currentState = BodyStates.ClimbingBack;
+                                    Physics.Position = new Vector2(canClimb.Position.X,
+                                                                   Physics.Position.Y);
+
+                                    WheelBody.Position = new Vector2(canClimb.Position.X,
+                                                                   WheelBody.Position.Y);
+                                    moveDirection.Y -= 1.0f;
                                     Physics.LinearDamping = 15f;
                                 }
                             }
-
                             else
                             {
                                 currentState = BodyStates.ClimbingBack;
-                                Physics.Position = new Vector2(canClimb.Position.X,
+                                Physics.Position = new Vector2(Physics.Position.X,
                                                                Physics.Position.Y);
 
-                                WheelBody.Position = new Vector2(canClimb.Position.X,
+                                WheelBody.Position = new Vector2(WheelBody.Position.X,
                                                                WheelBody.Position.Y);
                                 moveDirection.Y -= 1.0f;
                                 Physics.LinearDamping = 15f;
                             }
                         }
+                        else if (DoorType == DoorType.Up)
+                        {
+                            currentState = BodyStates.FacingBack;
+                        }
+                    }
+                    #endregion
+
+                    #region Shooting
+
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Shoot))
+                    {
+                        if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow && !climbing)
+                        {
+                            currentState = facing == -1
+                                ? isDucking
+                                    ? BodyStates.DuckShootLeftBow
+                                    : BodyStates.ShootingArrowLeft
+                                : isDucking
+                                    ? BodyStates.DuckShootRightBow
+                                    : BodyStates.ShootingArrowRight;
+
+                            //currentState = BodyStates.ShootingRight;
+                            holdTime = gameTime.TotalGameTime.TotalSeconds;
+                            inHold = true;
+                        }
+                    }
+                    else if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot) && inHold)
+                    {
+                        if (!ClimbingState() && !swinging && !VineBridgeState() &&
+                            shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                        {
+                            PlaySound(arrowSound);
+                            Inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
+                            if (chargingWeapon)
+                                Mana -= 50; //TODO: constant? per-weapon? calc?
+                            var shooting = animations[currentState].CurrentFrame = 0;
+
+                            currentState = facing == -1
+                                ? isDucking
+                                    ? BodyStates.DuckingLeftBow
+                                    : BodyStates.ShootingArrowNeutLeft
+                                : isDucking
+                                    ? BodyStates.DuckingRightBow
+                                    : BodyStates.ShootingArrowNeutRight;
+                        }
+
+                        inHold = false;
+                        shotTimer = 0f;
+                    }
+
+                    if (InputManager.Instance.IsNewKey(Keys.G))
+                    {
+                        if (activeItem == Inventory.Count - 1)
+                        {
+                            activeItem = 0;
+                        }
                         else
                         {
-                            currentState = BodyStates.ClimbingBack;
-                            Physics.Position = new Vector2(Physics.Position.X,
-                                                           Physics.Position.Y);
-
-                            WheelBody.Position = new Vector2(WheelBody.Position.X,
-                                                           WheelBody.Position.Y);
-                            moveDirection.Y -= 1.0f;
-                            Physics.LinearDamping = 15f;
+                            activeItem++;
                         }
-                    }
-                    else if (DoorType == DoorType.Up)
-                    {
-                        currentState = BodyStates.FacingBack;
-                    }
-                }
-                #endregion
-
-                #region Shooting
-
-                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Shoot))
-                {
-                    if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow && !climbing)
-                    {
-                        currentState = facing == -1
-                            ? isDucking
-                                ? BodyStates.DuckShootLeftBow
-                                : BodyStates.ShootingArrowLeft
-                            : isDucking
-                                ? BodyStates.DuckShootRightBow
-                                : BodyStates.ShootingArrowRight;
-
-                        //currentState = BodyStates.ShootingRight;
-                        holdTime = gameTime.TotalGameTime.TotalSeconds;
-                        inHold = true;
-                    }
-                }
-                else if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot) && inHold)
-                {
-                    if (!ClimbingState() && !swinging && !VineBridgeState() &&
-                        shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
-                    {
-                        PlaySound(arrowSound);
-                        Inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
-                        if (chargingWeapon)
-                            Mana -= 50; //TODO: constant? per-weapon? calc?
-                        var shooting = animations[currentState].CurrentFrame = 0;
-
-                        currentState = facing == -1
-                            ? isDucking
-                                ? BodyStates.DuckingLeftBow
-                                : BodyStates.ShootingArrowNeutLeft
-                            : isDucking
-                                ? BodyStates.DuckingRightBow
-                                : BodyStates.ShootingArrowNeutRight;
+                        EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
                     }
 
-                    inHold = false;
-                    shotTimer = 0f;
-                }
+                    #endregion
 
-                if (InputManager.Instance.IsNewKey(Keys.G))
-                {
-                    if (activeItem == Inventory.Count - 1)
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Interact))
                     {
-                        activeItem = 0;
-                    }
-                    else
-                    {
-                        activeItem++;
-                    }
-                    EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
-                }
-
-                #endregion
-
-                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Interact))
-                {
-                    if (onPickup != null)
-                    {
-                        if (onPickup is Torch)
+                        if (onPickup != null)
                         {
-                            Inventory.Add(onPickup);
-                            ((Torch)onPickup).WeldToPlayer(this);
-                            HoldingTorch = (Torch)onPickup;
-                            onPickup = null;
-                           // EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
-                            currentState = BodyStates.NeutralRightTorch;
-
-                        }
-                    }
-                    else if (onTorchGround != null && HoldingTorch != null)
-                    {
-                        ((Torch)HoldingTorch).PlaceTorch(this, onTorchGround);
-                        onPickup = HoldingTorch;
-                        Inventory.Remove(HoldingTorch);
-                        activeItem = 0;
-                        if (Inventory != null)
-                        {
-                            EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
-                        }
-                        HoldingTorch = null;
-                        if (InventoryItem is Arrow)
-                        {
-                            if (RightFacingBodyState())
+                            if (onPickup is Torch)
                             {
-                                currentState = BodyStates.WalkingShootRight;
+                                Inventory.Add(onPickup);
+                                ((Torch)onPickup).WeldToPlayer(this);
+                                HoldingTorch = (Torch)onPickup;
+                                onPickup = null;
+                                // EngineGame.Instance.LevelManager.RenderManager.UnregisterRenderable(currentItemPrompt);
+                                currentState = BodyStates.NeutralRightTorch;
+
+                            }
+                        }
+                        else if (onTorchGround != null && HoldingTorch != null)
+                        {
+                            ((Torch)HoldingTorch).PlaceTorch(this, onTorchGround);
+                            onPickup = HoldingTorch;
+                            Inventory.Remove(HoldingTorch);
+                            activeItem = 0;
+                            if (Inventory != null)
+                            {
+                                EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+                            }
+                            HoldingTorch = null;
+                            if (InventoryItem is Arrow)
+                            {
+                                if (RightFacingBodyState())
+                                {
+                                    currentState = BodyStates.WalkingShootRight;
+                                }
+                                else
+                                    currentState = BodyStates.WalkingShootRight;
+                            }
+                            else if (RightFacingBodyState())
+                                currentState = BodyStates.NeutralRight;
+                            else
+                                currentState = BodyStates.NeutralLeft;
+
+                        }
+                    }
+                    //No keys are pressed and we're on the ground, we're neutral
+                    if (keyboard.GetPressedKeys().GetLength(0) == 0 && InputManager.Instance.NoButtonsPressed(gamepad))
+                    {
+                        if (TouchingGround && timer >= interval)
+                        {
+                            if (currentState == BodyStates.WalkingRight)
+                            {
+                                currentState = BodyStates.WalkingEndRight;
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.WalkingLeft)
+                            {
+                                currentState = BodyStates.WalkingEndLeft;
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.WalkingTorchRight)
+                            {
+                                currentState = BodyStates.WalkingTorchEndRight;
+                                timer = 0f;
+                            }
+
+                            else if (currentState == BodyStates.WalkingTorchLeft)
+                            {
+                                currentState = BodyStates.WalkingTorchEndLeft;
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.NeutralLeft)
+                            {
+                                animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                            }
+                            else if (currentState == BodyStates.NeutralRight)
+                            {
+                                animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
+                            }
+                            else if (currentState == BodyStates.RunningLeft)
+                            {
+                                currentState = BodyStates.RunningStopLeft;
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.RunningRight)
+                            {
+                                currentState = BodyStates.RunningStopRight;
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.WalkingShootLeft)
+                            {
+                                currentState = BodyStates.ShootingArrowNeutLeft; //Add in Stopping Animation
+                                timer = 0f;
+                            }
+                            else if (currentState == BodyStates.WalkingShootRight)
+                            {
+                                currentState = BodyStates.ShootingArrowNeutRight; //Add in Stopping Animation
+                                timer = 0f;
+                            }
+                        }
+                        //Set to climbing neutral states
+                        if (LeftFacingBodyState() && ClimbingState())
+                        {
+                            currentState = BodyStates.ClimbingLeftNeutral;
+                        }
+                        else if (RightFacingBodyState() && ClimbingState())
+                        {
+                            currentState = BodyStates.ClimbingRightNeutral;
+                        }
+                        else if (currentState == BodyStates.HorizontalClimbRight)
+                        {
+                            currentState = BodyStates.HorizontalClimbRightNeut;
+                        }
+                        else if (currentState == BodyStates.HorizontalClimbLeft)
+                        {
+                            currentState = BodyStates.HorizontalClimbLeftNeut;
+                        }
+                        if (currentState == BodyStates.ClimbingBack)
+                        {
+                            animations[BodyStates.ClimbingBack].CurrentFrame = 0;
+                            currentState = BodyStates.ClimbingBackNeut;
+                        }
+                        if (currentState == BodyStates.DuckingLeft)
+                        {
+                            animations[BodyStates.DuckingLeft].CurrentFrame = 0;
+                            currentState = BodyStates.NeutralLeft;
+                        }
+                        if (currentState == BodyStates.DuckingRight)
+                        {
+                            currentState = BodyStates.NeutralRight;
+                            animations[BodyStates.DuckingRight].CurrentFrame = 0;
+                        }
+                        if (currentState == BodyStates.DuckingLeftBow)
+                        {
+                            animations[BodyStates.DuckingLeftBow].CurrentFrame = 0;
+                            currentState = BodyStates.NeutralLeft;
+                        }
+                        if (currentState == BodyStates.DuckingRightBow)
+                        {
+                            currentState = BodyStates.NeutralRight;
+                            animations[BodyStates.DuckingRightBow].CurrentFrame = 0;
+                        }
+                    }
+
+                    if (moveDirection != Vector2.Zero)
+                    {
+                        // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
+                        moveDirection.Normalize();
+                    }
+
+                    if (!isSliding)
+                    {
+                        // Increment animation unless idle.
+                        if (amount != 0.0f)
+                        {
+                            // Rotate the player towards the controller direction.
+                            playerRotation = (float)(Math.Atan2(moveDirection.Y, moveDirection.X) + Math.PI / 2.0);
+
+                            if (!ClimbingState())
+                            {
+                                // Move player based on the controller direction and time scale.
+                                //Physics.ApplyLinearImpulse(movedirection * amount);
+                                MovePlayer(moveDirection.X);
                             }
                             else
-                                currentState = BodyStates.WalkingShootRight;
-                        }
-                        else if (RightFacingBodyState())
-                            currentState = BodyStates.NeutralRight;
-                        else
-                            currentState = BodyStates.NeutralLeft;
+                                Physics.ApplyLinearImpulse(moveDirection * climbAmount);
 
+                            MotorJoint.MotorSpeed = moveDirection.X * 10;
+                        }
                     }
+
                 }
-                //No keys are pressed and we're on the ground, we're neutral
-                if (keyboard.GetPressedKeys().GetLength(0) == 0 && InputManager.Instance.NoButtonsPressed(gamepad))
-                {
-                    if (TouchingGround && timer >= interval)
-                    {
-                        if (currentState == BodyStates.WalkingRight)
-                        {
-                            currentState = BodyStates.WalkingEndRight;
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.WalkingLeft)
-                        {
-                            currentState = BodyStates.WalkingEndLeft;
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.WalkingTorchRight)
-                        {
-                            currentState = BodyStates.WalkingTorchEndRight;
-                            timer = 0f;
-                        }
-
-                        else if (currentState == BodyStates.WalkingTorchLeft)
-                        {
-                            currentState = BodyStates.WalkingTorchEndLeft;
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.NeutralLeft)
-                        {
-                            animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                        }
-                        else if (currentState == BodyStates.NeutralRight)
-                        {
-                            animations[BodyStates.IdleRightOpen].CurrentFrame = 0;
-                        }
-                        else if (currentState == BodyStates.RunningLeft)
-                        {
-                            currentState = BodyStates.RunningStopLeft;
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.RunningRight)
-                        {
-                            currentState = BodyStates.RunningStopRight;
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.WalkingShootLeft)
-                        {
-                            currentState = BodyStates.ShootingArrowNeutLeft; //Add in Stopping Animation
-                            timer = 0f;
-                        }
-                        else if (currentState == BodyStates.WalkingShootRight)
-                        {
-                            currentState = BodyStates.ShootingArrowNeutRight; //Add in Stopping Animation
-                            timer = 0f;
-                        }
-                    }
-                    //Set to climbing neutral states
-                    if (LeftFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingLeftNeutral;
-                    }
-                    else if (RightFacingBodyState() && ClimbingState())
-                    {
-                        currentState = BodyStates.ClimbingRightNeutral;
-                    }
-                    else if (currentState == BodyStates.HorizontalClimbRight)
-                    {
-                        currentState = BodyStates.HorizontalClimbRightNeut;
-                    }
-                    else if (currentState == BodyStates.HorizontalClimbLeft)
-                    {
-                        currentState = BodyStates.HorizontalClimbLeftNeut;
-                    }
-                    if (currentState == BodyStates.ClimbingBack)
-                    {
-                        animations[BodyStates.ClimbingBack].CurrentFrame = 0;
-                        currentState = BodyStates.ClimbingBackNeut;
-                    }
-                    if (currentState == BodyStates.DuckingLeft)
-                    {
-                        animations[BodyStates.DuckingLeft].CurrentFrame = 0;
-                        currentState = BodyStates.NeutralLeft;
-                    }
-                    if (currentState == BodyStates.DuckingRight)
-                    {
-                        currentState = BodyStates.NeutralRight;
-                        animations[BodyStates.DuckingRight].CurrentFrame = 0;
-                    }
-                    if (currentState == BodyStates.DuckingLeftBow)
-                    {
-                        animations[BodyStates.DuckingLeftBow].CurrentFrame = 0;
-                        currentState = BodyStates.NeutralLeft;
-                    }
-                    if (currentState == BodyStates.DuckingRightBow)
-                    {
-                        currentState = BodyStates.NeutralRight;
-                        animations[BodyStates.DuckingRightBow].CurrentFrame = 0;
-                    }
-                }
-
-                if (moveDirection != Vector2.Zero)
-                {
-                    // Normalize direction to 1.0 magnitude to avoid walking faster at angles.
-                    moveDirection.Normalize();
-                }
-
-                if (!isSliding)
-                {
-                    // Increment animation unless idle.
-                    if (amount != 0.0f)
-                    {
-                        // Rotate the player towards the controller direction.
-                        playerRotation = (float)(Math.Atan2(moveDirection.Y, moveDirection.X) + Math.PI / 2.0);
-
-                        if (!ClimbingState())
-                        {
-                            // Move player based on the controller direction and time scale.
-                            //Physics.ApplyLinearImpulse(movedirection * amount);
-                            MovePlayer(moveDirection.X);
-                        }
-                        else
-                            Physics.ApplyLinearImpulse(moveDirection * climbAmount);
-
-                        MotorJoint.MotorSpeed = moveDirection.X * 10;
-                    }
-                }
-
             }
-
             //ClampVelocity();
 
             UpdateAnimationStates();
