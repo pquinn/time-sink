@@ -18,6 +18,7 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Engine.Core.Rendering;
 using Engine.Defaults;
+using TimeSink.Entities.Inventory;
 
 namespace TimeSink.Entities.Actions
 {
@@ -91,6 +92,11 @@ namespace TimeSink.Entities.Actions
             return true;
         }
 
+        public virtual bool OnCollidedWith(Fixture f, Projectile p, Fixture cf, Contact info)
+        {
+            return false;
+        }
+
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             character = null;
@@ -128,6 +134,7 @@ namespace TimeSink.Entities.Actions
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
+                Physics.RegisterOnCollidedListener<Projectile>(OnCollidedWith);
 
                 popup = new ItemPopup(ACTION_POPUP, 
                     Physics.Position + new Vector2(0, -PhysicsConstants.PixelsToMeters(Height / 2 + POPUP_OFFSET)),

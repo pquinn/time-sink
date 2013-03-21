@@ -201,6 +201,10 @@
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
@@ -956,6 +960,68 @@
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
 						<X>27.84375</X><Y>24.265625</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>5774325e-ce5e-4db6-a036-4ed8e85a36d4</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q6="http://microsoft.com/wsdl/types/" xsi:type="q6:guid">5774325e-ce5e-4db6-a036-4ed8e85a36d4</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">turret_gun_lower_vent</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>9.828125</X><Y>30.625</Y>
+					</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>77913887-7ca6-4c45-a0c1-4f4c2d68f01b</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Id</Key>
+					<Value xmlns:q7="http://microsoft.com/wsdl/types/" xsi:type="q7:guid">77913887-7ca6-4c45-a0c1-4f4c2d68f01b</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>TurretId</Key>
+					<Value xsi:type="xsd:string">turret_gun_lower_vent</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">2050</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">turret_lower_vent</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>24.53125</X><Y>30.8125</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

@@ -20,7 +20,7 @@ namespace TimeSink.Entities.Objects
 {
     [SerializableEntity("a849cb69-ed2c-48ad-bdee-35015063d331")]
     [EditorEnabled]
-    public class BreakableWall : Entity, ISwitchable
+    public class BreakableWall : Wall, ISwitchable
     {
         const string EDITOR_NAME = "Breakable Wall";
         const string TEXTURE1 = "Textures/Objects/Ice Wall";
@@ -45,6 +45,7 @@ namespace TimeSink.Entities.Objects
             : this(75, 300)
         {
         }
+
         public BreakableWall(int width, int height)
         {
             Width = width;

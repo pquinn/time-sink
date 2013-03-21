@@ -20,7 +20,7 @@ using Engine.Defaults;
 namespace TimeSink.Entities.Inventory
 {
     [SerializableEntity("158e2984-34ce-4c1f-93ef-fbf81c5fed1f")]
-    public class Dart : Entity, IWeapon
+    public class Dart : Projectile, IWeapon
     {
         const string DART_TEXTURE_NAME = "Textures/Weapons/Dart";
         const string EDITOR_NAME = "Dart";

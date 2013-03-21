@@ -73,10 +73,12 @@ namespace TimeSink.Entities.Actions
                 initialized = false;
             }
             Character.AddInventoryItem(new Arrow());
+            DestroyPhysics();
 
-            if (!engine.ScreenManager.IsInDialogueState())
+            if (!engine.ScreenManager.IsInDialogueState() && !String.IsNullOrEmpty(Prompt))
                 engine.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(Prompt)), null);
         }
+
         public override string EditorName
         {
             get
@@ -84,8 +86,13 @@ namespace TimeSink.Entities.Actions
                return EDITOR_NAME;
             }
         }
+
         public override void DestroyPhysics()
         {
+            if (!initialized) return;
+            initialized = false;
+
+            Physics.Dispose();
         }
     }
 }

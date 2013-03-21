@@ -26,7 +26,7 @@ namespace TimeSink.Entities.Triggers
         private static readonly Guid GUID = new Guid("77913887-7ca6-4c45-a0c1-4f4c2d68f01b");
         private static readonly int TURRET_SIZE = 50;
         private static readonly float DAMAGE = 1.5f;
-        private static readonly int TIME_BETWEEN_SHOTS = 100;
+        public static readonly int TIME_BETWEEN_SHOTS = 100;
 
         private UserControlledCharacter character;
         private float timeSinceLastShot;
@@ -45,10 +45,12 @@ namespace TimeSink.Entities.Triggers
             set { }
         }
 
+        [SerializableField]
+        [EditableField("Turret Id")]
         public string TurretId { get; set; }
+
         public Turret Turret { get; set; }
         public Body TurretPhysics { get; set; }
-        public bool Enabled { get; set; }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
@@ -58,16 +60,24 @@ namespace TimeSink.Entities.Triggers
 
                 if (timeSinceLastShot >= TIME_BETWEEN_SHOTS)
                 {
-                    character.TakeDamage(DAMAGE, false);
-                    timeSinceLastShot = 0;
+                    if (Turret.HittingPlayer)
+                    {
+                        character.TakeDamage(DAMAGE, false);
+                        timeSinceLastShot = 0;
+                    }
                 }
             }
         }
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            if (character == null) 
-                character = c;
+            if (Turret.Enabled)
+            {
+                if (character == null)
+                    character = c;
+
+                Turret.IsTargeting = true;
+            }
             
             return true;
         }
@@ -75,6 +85,7 @@ namespace TimeSink.Entities.Triggers
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             character = null;
+            Turret.IsTargeting = false;
         }
 
         protected override void RegisterCollisions()

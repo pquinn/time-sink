@@ -76,7 +76,7 @@ namespace TimeSink.Entities.NPCs
         {
             object questResult;
             var questComplete = (bool)game.LevelManager.LevelCache.TryGetValue("centipede_quest_complete", out questResult);
-            if (DialogueState == 1 && (questComplete != null && questComplete))
+            if (DialogueState == 1 && questComplete)
             {
                 DialogueState++;
             }
