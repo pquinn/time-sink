@@ -28,6 +28,7 @@ namespace TimeSink.Entities.Objects
     {
         const string TEXTURE = "Textures/Objects/ice bridge";
         const string EDITOR_NAME = "Break Bridge Item";
+        string ACTION_POPUP = "Textures/Keys/e-Key";
         private ItemPopup popupTrigger;
         private EngineGame engine;
         private bool registered;
@@ -71,6 +72,11 @@ namespace TimeSink.Entities.Objects
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
+                if (engine != null && engine.GamepadEnabled)
+                {
+                    ACTION_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
+                }
+
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
@@ -89,7 +95,7 @@ namespace TimeSink.Entities.Objects
                 Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
 
                 popupTrigger = new ItemPopup(
-                    "Textures/Keys/e-Key", 
+                    ACTION_POPUP, 
                     new Vector2(Physics.Position.X, Physics.Position.Y - PhysicsConstants.PixelsToMeters(100)),
                     cache);
 
@@ -121,7 +127,7 @@ namespace TimeSink.Entities.Objects
         }
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
-            if (InputManager.Instance.IsNewKey(Keys.E) && registered)
+            if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Interact) && registered)
             {
                 Physics.IgnoreGravity = false;
                 Physics.BodyType = BodyType.Dynamic;

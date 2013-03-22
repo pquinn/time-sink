@@ -332,6 +332,8 @@ namespace TimeSink.Entities
         /// </summary>
         public bool CanSlide { get { return slideTriggers.Any(); } }
 
+        public bool CanJump { get; set; }
+
         public override List<Fixture> CollisionGeometry
         {
             get
@@ -369,6 +371,8 @@ namespace TimeSink.Entities
             Dots = new HashSet<DamageOverTimeEffect>();
 
             slideTriggers = new HashSet<SlideTrigger>();
+
+            CanJump = true;
         }
 
         public override void Load(IComponentContext engineRegistrations)
@@ -1466,35 +1470,37 @@ namespace TimeSink.Entities
 
         private void PerformJump(float percentOfMax = 1)
         {
-
-            jumpToggleGuard = false;
-            PlaySound(jumpSound);
-            Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
-
-            if (facing > 0)
+            if (CanJump)
             {
-                if (HoldingTorch != null)
+                jumpToggleGuard = false;
+                PlaySound(jumpSound);
+                Physics.ApplyLinearImpulse(new Vector2(0, -22f * percentOfMax));
+
+                if (facing > 0)
                 {
-                    currentState = BodyStates.JumpingRightTorch;
-                    animations[BodyStates.JumpingRightTorch].CurrentFrame = 0;
+                    if (HoldingTorch != null)
+                    {
+                        currentState = BodyStates.JumpingRightTorch;
+                        animations[BodyStates.JumpingRightTorch].CurrentFrame = 0;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.JumpingRight;
+                        animations[BodyStates.JumpingRight].CurrentFrame = 0;
+                    }
                 }
                 else
                 {
-                    currentState = BodyStates.JumpingRight;
-                    animations[BodyStates.JumpingRight].CurrentFrame = 0;
-                }
-            }
-            else
-            {
-                if (HoldingTorch != null)
-                {
-                    currentState = BodyStates.JumpingLeftTorch;
-                    animations[BodyStates.JumpingLeftTorch].CurrentFrame = 0;
-                }
-                else
-                {
-                    currentState = BodyStates.JumpingLeft;
-                    animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                    if (HoldingTorch != null)
+                    {
+                        currentState = BodyStates.JumpingLeftTorch;
+                        animations[BodyStates.JumpingLeftTorch].CurrentFrame = 0;
+                    }
+                    else
+                    {
+                        currentState = BodyStates.JumpingLeft;
+                        animations[BodyStates.JumpingLeft].CurrentFrame = 0;
+                    }
                 }
             }
         }
@@ -1961,7 +1967,13 @@ namespace TimeSink.Entities
         {
             if (HoldingTorch != null)
             {
-                currentItemPrompt = new ItemPopup("Textures/Keys/e-Key",
+                var TEXTURE = "Textures/Keys/e-Key";
+
+                if (Engine != null && Engine.GamepadEnabled)
+                {
+                    TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
+                }
+                currentItemPrompt = new ItemPopup(TEXTURE,
                                                     torchGround.Physics.Position, TextureCache);
 
                 EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
@@ -1989,9 +2001,15 @@ namespace TimeSink.Entities
         bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
         {
             OnPickup = torch;
+            var TEXTURE = "Textures/Keys/e-Key";
+
+            if (Engine != null && Engine.GamepadEnabled)
+            {
+                TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
+            }
 
             currentItemPrompt = new ItemPopup(
-                "Textures/Keys/e-Key",
+                TEXTURE,
                 torch.Physics.Position - new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2),
                 TextureCache);
 

@@ -60,6 +60,8 @@ namespace TimeSink.Entities.Objects
         [EditableField("Height")]
         public override int Height { get; set; }
 
+        public bool Enabled { get; set; }
+
         private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {

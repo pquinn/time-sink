@@ -30,7 +30,7 @@ namespace TimeSink.Entities.Actions
         const string TEXTURE = "Materials/blank";
         const string EDITOR_PREVIEW = "Textures/Objects/ladder";
 
-        const string ACTION_POPUP = "Textures/Keys/x-Key";
+        string ACTION_POPUP = "Textures/Keys/x-Key";
         const float DEPTH = 0;
         const int POPUP_OFFSET = 20;
 
@@ -54,7 +54,6 @@ namespace TimeSink.Entities.Actions
             Position = position;
             Width = width;
             Height = height;
-
             used = false;
         }
 
@@ -118,6 +117,11 @@ namespace TimeSink.Entities.Actions
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
+
+                if (engine != null && engine.GamepadEnabled)
+                {
+                    ACTION_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Pickup];
+                }
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);

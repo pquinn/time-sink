@@ -7,7 +7,7 @@ namespace TimeSink.Entities.Utils
 {
     interface ISwitchable
     {
-
+        bool Enabled { get; set; }
         void OnSwitch();
     }
 }

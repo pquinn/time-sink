@@ -88,8 +88,8 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.Shoot, Buttons.RightTrigger);
             gamepadDictionary.Add(ButtonActions.Interact, Buttons.Y);
             gamepadDictionary.Add(ButtonActions.Sprint, Buttons.X);
-            gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightShoulder);
-            gamepadDictionary.Add(ButtonActions.AimDown, Buttons.LeftShoulder);
+            gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightThumbstickUp);
+            gamepadDictionary.Add(ButtonActions.AimDown, Buttons.RightThumbstickDown);
             gamepadDictionary.Add(ButtonActions.AimRight, Buttons.RightThumbstickRight);
             gamepadDictionary.Add(ButtonActions.AimLeft, Buttons.RightThumbstickLeft);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
@@ -108,18 +108,22 @@ namespace TimeSink.Engine.Core.Input
             keyboardTextures.Add(ButtonActions.Pickup, "Textures/Keys/x-Key");
             keyboardTextures.Add(ButtonActions.AimUpRight, "Textures/Keys/key-UpRight");
 
-            gamepadTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/PS/");
-            gamepadTextures.Add(ButtonActions.MoveRight, "Textures/Keys/PS/");
-            gamepadTextures.Add(ButtonActions.DownAction, "Textures/Keys/PS/");
-            gamepadTextures.Add(ButtonActions.UpAction, "Textures/Keys/PS/");
-            gamepadTextures.Add(ButtonActions.Shoot, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/PS/PS-Left");
+            gamepadTextures.Add(ButtonActions.MoveRight, "Textures/Keys/PS/PS-Right");
+            gamepadTextures.Add(ButtonActions.DownAction, "Textures/Keys/PS/PS-Down");
+            gamepadTextures.Add(ButtonActions.UpAction, "Textures/Keys/PS/PS-Up");
+            gamepadTextures.Add(ButtonActions.Shoot, "Textures/Keys/PS/PS-R2");
             gamepadTextures.Add(ButtonActions.Interact, "Textures/Keys/PS/PS-TRI");
             gamepadTextures.Add(ButtonActions.Sprint, "Textures/Keys/PS/PS-SQ");
-            gamepadTextures.Add(ButtonActions.AimUp, "Textures/Keys/PS/");
-            gamepadTextures.Add(ButtonActions.AimDown, "Textures/Keys/PS/");
+            gamepadTextures.Add(ButtonActions.AimUp, "Textures/Keys/PS/PS-RStickUp");
+            gamepadTextures.Add(ButtonActions.AimDown, "Textures/Keys/PS/PS-RStickDown");
             gamepadTextures.Add(ButtonActions.Jump, "Textures/Keys/PS/PS-X");
             gamepadTextures.Add(ButtonActions.Pickup, "Textures/Keys/PS/PS-O");
-           // gamepadDictionary.Add(ButtonActions.AimLeft, Keys.Left);
+            gamepadTextures.Add(ButtonActions.AimUpRight, "Textures/Keys/PS/PS-RStickUpRight");
+            gamepadTextures.Add(ButtonActions.AimLeft, "Textures/Keys/PS/PS-RStickLeft");
+            gamepadTextures.Add(ButtonActions.AimRight, "Textures/Keys/PS/PS-RStickRight");
+
+            //gamepadDictionary.Add(ButtonActions.AimLeft, Keys.Left);
            // gamepadDictionary.Add(ButtonActions.AimRight, Keys.Right); sticks
 
         }
