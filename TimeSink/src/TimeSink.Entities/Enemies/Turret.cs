@@ -59,6 +59,10 @@ namespace TimeSink.Entities.Enemies
         [EditableField("Enabled")]
         public bool Enabled { get; set; }
 
+        [SerializableField]
+        [EditableField("Rotation")]
+        public float Rotation { get; set; }
+
         public bool IsTargeting { get; set; }
 
         public override void OnUpdate(GameTime time, EngineGame game)
@@ -122,7 +126,8 @@ namespace TimeSink.Entities.Enemies
                 renderList.Add(
                     new BasicRendering(Enabled ? BASE_ON : BASE_OFF)
                     {
-                        Position = PhysicsConstants.MetersToPixels(Position)
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Rotation = Rotation
                     });
                 renderList.Add(
                     new BasicRendering(firing ? GUN_FIRING : GUN)
@@ -145,7 +150,8 @@ namespace TimeSink.Entities.Enemies
             {
                 return new BasicRendering(Enabled ? BASE_ON : BASE_OFF)
                 {
-                    Position = PhysicsConstants.MetersToPixels(Position)
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    Rotation = Rotation
                 };
             }
         }
@@ -168,19 +174,16 @@ namespace TimeSink.Entities.Enemies
                     PhysicsConstants.PixelsToMeters(texture.Width / 2),
                     PhysicsConstants.PixelsToMeters(texture.Height), 
                     0,
-                    Position - new Vector2(PhysicsConstants.PixelsToMeters(texture.Width / 4), 0),
+                    Position,
                     this);
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
+
+                gunRotation = Rotation;
             }
 
             base.InitializePhysics(force, engineRegistrations);
-        }
-
-        internal static void Reset()
-        {
-            throw new NotImplementedException();
         }
     }
 }

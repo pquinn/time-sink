@@ -420,13 +420,13 @@ namespace TimeSink.Entities
                     {
                         currentState = BodyStates.KnockbackRight;
                         Physics.LinearVelocity = Vector2.Zero;
-                        Physics.ApplyLinearImpulse(new Vector2(-20, 0));
+                        Physics.ApplyLinearImpulse(new Vector2(-10, 0));
                     }
                     else if (LeftFacingBodyState())
                     {
                         currentState = BodyStates.KnockbackLeft;
                         Physics.LinearVelocity = Vector2.Zero;
-                        Physics.ApplyLinearImpulse(new Vector2(20, 0));
+                        Physics.ApplyLinearImpulse(new Vector2(10, 0));
                     }
                 }
             }
@@ -453,6 +453,7 @@ namespace TimeSink.Entities
                     }
                     jumpToggleGuard = true;
                     TouchingGround = true;
+                    WheelBody.CollidesWith = Category.All;
                     return 0;
                 }
                 else
@@ -1034,7 +1035,7 @@ namespace TimeSink.Entities
                                 isDucking = false;
                             }
                             vineBridge.ForceSeperation(this);
-                            if (!InputManager.Instance.ActionPressed(InputManager.ButtonActions.DownAction))
+                            if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
                                 PerformJump();
                         }
                         else if (swinging)
@@ -1050,7 +1051,15 @@ namespace TimeSink.Entities
                         }
                         else if (jumpToggleGuard && TouchingGround)
                         {
-                            PerformJump();
+                            if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
+                            {
+                                PerformJump();
+                            }
+                            else
+                            {
+                                WheelBody.CollidesWith = Category.All & ~Category.Cat31;
+                                Physics.ApplyForce(new Vector2(0, 200f));
+                            }
                         }
 
                         numberOfJumps++;
@@ -3090,6 +3099,11 @@ namespace TimeSink.Entities
             Physics = BodyFactory.CreateBody(_world, Position, this);
             DoorType = DoorType.None;
 
+            var wPos = Position +
+           new Vector2(0, (spriteHeightMeters - spriteWidthMeters) / 2 +
+           PhysicsConstants.PixelsToMeters(5));
+
+            WheelBody.Position = wPos;
             // Physics.Position = new Vector2(Physics.Position.X, Physics.Position.Y - (spriteHeightMeters / 2));
 
             var r = FixtureFactory.AttachRectangle(

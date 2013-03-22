@@ -49,7 +49,23 @@ namespace TimeSink.Entities.Triggers
         [EditableField("Turret Id")]
         public string TurretId { get; set; }
 
-        public Turret Turret { get; set; }
+        private LevelManager levelManager;
+        private Turret turret;
+        public Turret Turret
+        {
+            get
+            {
+                if (turret == null)
+                {
+                    turret = (Turret)levelManager.Level.Entities.First(x => x.InstanceId == TurretId);
+                }
+                return turret;
+            }
+            set
+            {
+                turret = value;
+            }
+        }
         public Body TurretPhysics { get; set; }
 
         public override void OnUpdate(GameTime time, EngineGame world)
@@ -94,19 +110,24 @@ namespace TimeSink.Entities.Triggers
             Physics.RegisterOnSeparatedListener<UserControlledCharacter>(OnSeparation);
         }
 
+        private bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
+            if (force || !initialized)
+            {
+                var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                TurretPhysics = BodyFactory.CreateRectangle(
+                    world,
+                    PhysicsConstants.PixelsToMeters(TURRET_SIZE),
+                    PhysicsConstants.PixelsToMeters(TURRET_SIZE),
+                    1);
+
+                levelManager = engineRegistrations.Resolve<LevelManager>();
+                    
+            }
+
+
             base.InitializePhysics(force, engineRegistrations);
-
-            var world = engineRegistrations.Resolve<PhysicsManager>().World;
-            TurretPhysics = BodyFactory.CreateRectangle(
-                world,
-                PhysicsConstants.PixelsToMeters(TURRET_SIZE),
-                PhysicsConstants.PixelsToMeters(TURRET_SIZE),
-                1);
-
-            Turret = (Turret)engineRegistrations.Resolve<LevelManager>()
-                .Level.Entities.First(x => x.InstanceId == TurretId);
         }
 
         public override void DestroyPhysics()
@@ -114,7 +135,7 @@ namespace TimeSink.Entities.Triggers
             base.DestroyPhysics();
 
             if (!initialized) return;
-            TurretPhysics.Dispose();
+                TurretPhysics.Dispose();
         }
     }
 }

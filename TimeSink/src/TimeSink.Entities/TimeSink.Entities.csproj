@@ -71,6 +71,7 @@
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Enemies\Turret.cs" />
+    <Compile Include="Enemies\SmallBullet.cs" />
     <Compile Include="Enemies\VerticalTracker.cs" />
     <Compile Include="Hud\HealthBar.cs" />
     <Compile Include="Inventory\Projectile.cs" />

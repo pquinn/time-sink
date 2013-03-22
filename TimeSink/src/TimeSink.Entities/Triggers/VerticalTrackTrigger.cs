@@ -66,15 +66,33 @@ namespace TimeSink.Entities.Triggers
 
         public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter monster, Fixture f2, Contact info)
         {
-            Enemy.Descend();
-            return true;
+            if (f2.UserData.ToString().Equals("Ladder"))
+            {
+                if (Enemy.WaitingToShoot)
+                {
+                    Enemy.Descend();
+                }
+                else
+                    Enemy.NeedToDescend = true;
+
+                return true;
+            }
+            else return false;
         }
 
         public virtual void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
-            if (c.Position.Y < Position.Y)
+            if (f1.UserData.ToString().Equals("Ladder") || f2.UserData.ToString().Equals("Ladder"))
             {
-                Enemy.Jump();
+                if (c.Position.Y < Position.Y)
+                {
+                    if (Enemy.WaitingToShoot)
+                    {
+                        Enemy.Jump();
+                    }
+                    else
+                        Enemy.NeedToJump = true;
+                }
             }
         }
 
