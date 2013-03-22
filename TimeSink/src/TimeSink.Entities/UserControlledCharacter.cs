@@ -1939,7 +1939,13 @@ namespace TimeSink.Entities
         {
             if (HoldingTorch != null)
             {
-                currentItemPrompt = new ItemPopup("Textures/Keys/e-Key",
+                var TEXTURE = "Textures/Keys/e-Key";
+
+                if(Engine.GamepadEnabled)
+                {
+                    TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
+                }
+                currentItemPrompt = new ItemPopup(TEXTURE,
                                                     torchGround.Physics.Position, TextureCache);
 
                 EngineGame.Instance.LevelManager.RenderManager.RegisterRenderable(currentItemPrompt);
@@ -1967,9 +1973,15 @@ namespace TimeSink.Entities
         bool OnCollidedWith(Fixture f, Torch torch, Fixture c, Contact info)
         {
             OnPickup = torch;
+            var TEXTURE = "Textures/Keys/e-Key";
+
+            if (Engine.GamepadEnabled)
+            {
+                TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
+            }
 
             currentItemPrompt = new ItemPopup(
-                "Textures/Keys/e-Key",
+                TEXTURE,
                 torch.Physics.Position - new Vector2(0, PhysicsConstants.PixelsToMeters(torch.Height) / 2),
                 TextureCache);
 

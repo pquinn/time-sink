@@ -126,11 +126,11 @@ namespace TimeSink.Entities.Triggers
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
-                string texture1 = InputTextureLookup(Key1);
+                string texture1 = InputTextureLookup(Key1, engine);
 
                 if (Key2 != 999)
                 {
-                    string texture2 = InputTextureLookup(Key2);
+                    string texture2 = InputTextureLookup(Key2, engine);
                     display2 = new ItemPopup(texture2, Vector2.Zero, cache, new Vector2(40, -90));
 
                     plusCombine = new ItemPopup("Textures/Keys/plusCombine", Vector2.Zero, cache, new Vector2(0, -90));
@@ -224,9 +224,9 @@ namespace TimeSink.Entities.Triggers
             }
         }
 
-        public string InputTextureLookup(int action)
+        public string InputTextureLookup(int action, EngineGame engine)
         {
-            if (Engine != null && Engine.GamepadEnabled)
+            if (engine != null && engine.GamepadEnabled)
             {
                 return InputManager.Instance.GamepadTextures[(InputManager.ButtonActions)action];
             }
