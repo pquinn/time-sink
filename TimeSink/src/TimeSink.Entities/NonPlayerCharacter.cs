@@ -28,7 +28,7 @@ namespace TimeSink.Entities
     {
         const string EDITOR_NAME = "NPC";
         const string DEFAULT_TEXTURE = "Textures/Enemies/Dummy";
-        const string ACTION_POPUP = "Textures/Keys/x-Key";
+        string ACTION_POPUP = "Textures/Keys/x-Key";
         const int POPUP_OFFSET = 20;
         const float DEPTH = .25f;
 
@@ -100,7 +100,7 @@ namespace TimeSink.Entities
         {
             if (collided && DialogueRootsList.Count > 0)
             {
-                if (InputManager.Instance.IsNewKey(Keys.X) && !game.ScreenManager.IsInDialogueState())
+                if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Pickup) && !game.ScreenManager.IsInDialogueState())
                 {
                     //game.
                     game.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(DialogueRootsList[DialogueState])), null);
@@ -135,6 +135,11 @@ namespace TimeSink.Entities
                 var texture = cache.GetResource(TextureName);
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
+
+                if (game.GamepadEnabled)
+                {
+                    ACTION_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Pickup];
+                }
 
                 //Width = texture.Width;
                 //Height = texture.Height;

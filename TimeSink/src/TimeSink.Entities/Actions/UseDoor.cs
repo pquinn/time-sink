@@ -36,8 +36,9 @@ namespace TimeSink.Entities.Actions
         const string IN_OVERLAY = "Textures/Objects/Inner_Door_Overlay";
         const float DEPTH = 0;
 
-        const string UP_POPUP = "Textures/Keys/w-key";
-        const string DOWN_POPUP = "Textures/Keys/s-key";
+        string UP_POPUP = "Textures/Keys/w-key";
+        string DOWN_POPUP = "Textures/Keys/s-key";
+
 
         protected bool enabled;
 
@@ -143,6 +144,12 @@ namespace TimeSink.Entities.Actions
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
+
+                if (engine.GamepadEnabled)
+                {
+                    UP_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.UpAction];
+                    DOWN_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.DownAction];
+                }
 
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
