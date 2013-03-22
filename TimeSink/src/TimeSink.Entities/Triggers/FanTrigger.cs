@@ -29,6 +29,9 @@ namespace TimeSink.Entities.Triggers
     {
         const string EDITOR_NAME = "Fan Trigger";
         private static readonly Guid GUID = new Guid("89bb3358-5b34-43ca-8bd3-fa21322159ba");
+
+        private Vector2 originPoint;
+        private int forceFactor = 220;
         
         public FanTrigger() : base() { }
 
@@ -48,7 +51,11 @@ namespace TimeSink.Entities.Triggers
         {
             c.Physics.IgnoreGravity = true;
             c.CanJump = false;
-            c.Physics.ApplyForce(new Vector2(0, -220));
+            c.Physics.LinearVelocity = Vector2.Zero;
+            var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
+            var originPointInWorld = Position + originPointInMeters;
+            var magnitude = (100 - (originPointInWorld.Y - c.Position.Y)) / 100;
+            c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
             return true;
         }
 
@@ -69,6 +76,12 @@ namespace TimeSink.Entities.Triggers
         public void OnSwitch()
         {
             Enabled = !Enabled;
+        }
+
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+        {
+            base.InitializePhysics(force, engineRegistrations);
+            originPoint = new Vector2(0, Height / 2);
         }
     }
 }

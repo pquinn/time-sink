@@ -17,9 +17,6 @@ namespace TimeSink.Entities.Triggers
     [EditorEnabled]
     public class VerticalTrackTrigger : Trigger
     {
-
-        const string EDITOR_NAME = "Vertical Track Trigger";
-
         private static readonly Guid guid = new Guid("c4c2f0bb-91ed-41ac-a905-b126068b9c31");
         private const string EDITOR_NAME = "Vertical Track Trigger";
 
