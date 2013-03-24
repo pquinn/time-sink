@@ -106,7 +106,7 @@ namespace TimeSink.Entities.Objects
             get { return Physics.FixtureList; }
         }
 
-        public override bool OnCollidedWith(Fixture f1, Inventory.Arrow proj, Fixture f2, Contact contact)
+        public override bool OnCollidedWith(Fixture f1, Inventory.Projectile proj, Fixture f2, Contact contact)
         {
             return base.OnCollidedWith(f1, proj, f2, contact);
         }
@@ -115,6 +115,7 @@ namespace TimeSink.Entities.Objects
         {
             get { return new List<IRendering>() { Preview }; }
         }
+
         public override void DestroyPhysics()
         {
             if (!initialized) return;

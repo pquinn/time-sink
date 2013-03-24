@@ -31,7 +31,9 @@ namespace TimeSink.Entities.Triggers
         private static readonly Guid GUID = new Guid("89bb3358-5b34-43ca-8bd3-fa21322159ba");
 
         private Vector2 originPoint;
-        private int forceFactor = 220;
+        private int forceFactor = 1100;
+
+        private double nextLogTime = 0;
         
         public FanTrigger() : base() { }
 
@@ -39,6 +41,10 @@ namespace TimeSink.Entities.Triggers
         {
             get { return EDITOR_NAME; }
         }
+
+        [SerializableField]
+        [EditableField("Interval (ms)")]
+        public int IntervalDuration { get; set; }
 
         [SerializableField]
         public override Guid Id
@@ -49,14 +55,21 @@ namespace TimeSink.Entities.Triggers
 
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            c.Physics.IgnoreGravity = true;
-            c.CanJump = false;
-            c.Physics.LinearVelocity = Vector2.Zero;
-            var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
-            var originPointInWorld = Position + originPointInMeters;
-            var magnitude = (100 - ((originPointInWorld.Y - c.Position.Y) / PhysicsConstants.PixelsToMeters(Height))) / 100;
-            c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
-            return true;
+            if (cf.UserData.Equals("Ladder") && Active)
+            {
+                c.Physics.IgnoreGravity = true;
+                c.CanJump = false;
+                c.Physics.LinearVelocity = Vector2.Zero;
+                var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
+                var originPointInWorld = Position + originPointInMeters;
+                var magnitude = (100 - ((originPointInWorld.Y - c.Position.Y) / PhysicsConstants.PixelsToMeters(Height))) / 100;
+                c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
@@ -73,6 +86,8 @@ namespace TimeSink.Entities.Triggers
 
         public bool Enabled { get; set; }
 
+        public bool Active { get; set; }
+
         public void OnSwitch()
         {
             Enabled = !Enabled;
@@ -82,6 +97,16 @@ namespace TimeSink.Entities.Triggers
         {
             base.InitializePhysics(force, engineRegistrations);
             originPoint = new Vector2(0, Height / 2);
+        }
+
+        public override void OnUpdate(GameTime time, EngineGame world)
+        {
+            if (time.TotalGameTime.TotalMilliseconds >= nextLogTime)
+            {
+                Active = !Active;   
+                nextLogTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
+            }
+            base.OnUpdate(time, world);
         }
     }
 }
