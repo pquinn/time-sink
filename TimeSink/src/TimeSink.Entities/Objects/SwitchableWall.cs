@@ -106,6 +106,11 @@ namespace TimeSink.Entities.Objects
             get { return Physics.FixtureList; }
         }
 
+        public override bool OnCollidedWith(Fixture f1, Inventory.Arrow proj, Fixture f2, Contact contact)
+        {
+            return base.OnCollidedWith(f1, proj, f2, contact);
+        }
+
         public override List<IRendering> Renderings
         {
             get { return new List<IRendering>() { Preview }; }

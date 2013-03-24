@@ -19,7 +19,7 @@ namespace TimeSink.Entities.Objects
         [EditableField("Bullet Passable?")]
         public bool BulletPassable { get; set; }
 
-        public virtual bool OnCollidedWith(Fixture f1, Arrow proj, Fixture f2, Contact contact)
+        public virtual bool OnCollidedWith(Fixture f1, Projectile proj, Fixture f2, Contact contact)
         {
             if (BulletPassable)
             {

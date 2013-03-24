@@ -54,7 +54,7 @@ namespace TimeSink.Entities.Triggers
             c.Physics.LinearVelocity = Vector2.Zero;
             var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
             var originPointInWorld = Position + originPointInMeters;
-            var magnitude = (100 - (originPointInWorld.Y - c.Position.Y)) / 100;
+            var magnitude = (100 - ((originPointInWorld.Y - c.Position.Y) / PhysicsConstants.PixelsToMeters(Height))) / 100;
             c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
             return true;
         }
