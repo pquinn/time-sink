@@ -40,7 +40,7 @@ namespace TimeSink.Entities.Inventory
         public Dart(Vector2 position)
         {
             Position = position;
-            dot = new DamageOverTimeEffect(4, 100);
+            dot = new DamageOverTimeEffect(4, 100, false);
         }
 
         [SerializableField]

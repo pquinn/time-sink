@@ -76,6 +76,8 @@ namespace TimeSink.Engine.Core
             ScreenManager = new ScreenManager(this);
 
             Instance = this;
+
+            GamepadEnabled = true;
         }
 
         protected override void Initialize()

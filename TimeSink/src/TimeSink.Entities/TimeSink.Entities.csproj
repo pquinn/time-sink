@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
+    <Compile Include="Enemies\Turret.cs" />
     <Compile Include="Enemies\SmallBullet.cs" />
     <Compile Include="Enemies\VerticalTracker.cs" />
     <Compile Include="Hud\HealthBar.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Triggers\CameraUnlockTrigger.cs" />
     <Compile Include="Triggers\PlaceTorchTrigger.cs" />
     <Compile Include="Triggers\SlideTrigger.cs" />
+    <Compile Include="Triggers\TurretTrigger.cs" />
     <Compile Include="Triggers\TutorialTrigger.cs" />
     <Compile Include="Objects\Vine.cs" />
     <Compile Include="Objects\VineBridge.cs" />

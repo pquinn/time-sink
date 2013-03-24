@@ -11,6 +11,8 @@ namespace TimeSink.Entities.Hud
     {
         const string TEXTURE = "Textures/HUD/HealthBarTemp";
         const string EDITOR_NAME = "Health Bar";
+        const int WIDTH = 300;
+        const int HEIGHT = 100;
         private float scale = 1.0f;
 
         public HealthBar()
@@ -23,15 +25,16 @@ namespace TimeSink.Entities.Hud
         {
             get
             {
+                var width = scale * .65f;
                 return new List<IRendering>()
-            {
-                new BasicRendering(TEXTURE)
                 {
-                    Position = new Vector2(0, 0),
-                    Scale = new Vector2(scale, 1),
-                    RenderLayer = RenderLayer.UI
-                }
-            };
+                    new BasicRendering(TEXTURE)
+                    {
+                        Position = new Vector2(WIDTH * width *.5f, HEIGHT * .2f),
+                        Scale = new Vector2(width, .4f),
+                        RenderLayer = RenderLayer.UI
+                    }
+                };
             }
         }
 

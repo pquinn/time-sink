@@ -145,7 +145,7 @@ namespace TimeSink.Entities.Actions
                 engine = engineRegistrations.ResolveOptional<EngineGame>();
                 Physics = BodyFactory.CreateBody(world, Position, this);
 
-                if (engine.GamepadEnabled)
+                if (engine != null && engine.GamepadEnabled)
                 {
                     UP_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.UpAction];
                     DOWN_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.DownAction];

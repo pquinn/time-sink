@@ -117,7 +117,7 @@ namespace TimeSink.Entities.Enemies
 
         protected bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            c.TakeDamage(25);
+            c.TakeDamage(25, true);
             return true;
         }
 

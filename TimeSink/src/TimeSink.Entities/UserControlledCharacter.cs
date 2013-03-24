@@ -40,8 +40,6 @@ namespace TimeSink.Entities
         const string EDITOR_NAME = "User Controlled Character";
         const float DEPTH = -100f;
 
-        ShieldDamageQueue shieldDamager;
-
         private static readonly Guid GUID = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
         enum BodyStates
         {
@@ -175,6 +173,9 @@ namespace TimeSink.Entities
         const float MAX_ARROW_INIT_SPEED = 1500;
         public static float X_OFFSET = PhysicsConstants.PixelsToMeters(-5);
         public static float Y_OFFSET = PhysicsConstants.PixelsToMeters(-30);
+        const int RECHARGE_WAIT_TIME = 3000;
+        const int RECHARGE_AMOUNT = 20;
+        const int SHIELD_MAX = 50;
 
         private SoundEffect jumpSound;
         private SoundEffect jumpImpactSound;
@@ -207,6 +208,7 @@ namespace TimeSink.Entities
         private const float MAX_MANA = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
+        private int timeSinceLastHit = 0;
 
         private bool playerControlled = true;
 
@@ -355,7 +357,8 @@ namespace TimeSink.Entities
             //    GravityEnabled = true
             //};
             Position = position;
-            health = 30;  //@update
+            health = 100;  //@update
+            shield = SHIELD_MAX;
             direction = new Vector2(1, 0);
 
             // this seems stupid
@@ -366,8 +369,6 @@ namespace TimeSink.Entities
             animations = CreateAnimations();
 
             Dots = new HashSet<DamageOverTimeEffect>();
-
-            shieldDamager = new ShieldDamageQueue(this);
 
             slideTriggers = new HashSet<SlideTrigger>();
 
@@ -383,25 +384,31 @@ namespace TimeSink.Entities
             jumpImpactSound = soundCache.LoadResource(JUMP_IMPACT_SOUND);
         }
 
-        public void TakeDamage(float val)
+        public void TakeDamage(float val, bool doesKnockBack)
         {
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
                 if (!Invulnerable)
                 {
-                    Invulnerable = true;
-                    damageFlash = true;
+                    if (doesKnockBack)
+                    {
+                        Invulnerable = true;
+                        damageFlash = true;
+                    }
 
                     if (Shield > 0)
                     {
-                        var newAmt = Math.Min(Shield, val);
-                        val -= newAmt;
-                        shieldDamager.TakeDamage(newAmt);
+                        val = Math.Min(Shield, val);
+                        Shield -= val;
+                        timeSinceLastHit = 0;
+                    }
+                    else
+                    {
+                        Health -= val;
+                        damageTaken += val;
+                        Logger.Info(String.Format("DAMAGED: {0}", val));
                     }
 
-                    Health -= val;
-                    damageTaken += val;
-                    Logger.Info(String.Format("DAMAGED: {0}", val));
 
                     Engine.UpdateHealth();
                     PlaySound(takeDamageSound);
@@ -410,18 +417,21 @@ namespace TimeSink.Entities
                 {
                     CanClimb.DismountCharacter(this);
                 }
-                InKnockback = true;
-                if (RightFacingBodyState())
+                if (doesKnockBack)
                 {
-                    currentState = BodyStates.KnockbackRight;
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(-10, 0));
-                }
-                else if (LeftFacingBodyState())
-                {
-                    currentState = BodyStates.KnockbackLeft;
-                    Physics.LinearVelocity = Vector2.Zero;
-                    Physics.ApplyLinearImpulse(new Vector2(10, 0));
+                    InKnockback = true;
+                    if (RightFacingBodyState())
+                    {
+                        currentState = BodyStates.KnockbackRight;
+                        Physics.LinearVelocity = Vector2.Zero;
+                        Physics.ApplyLinearImpulse(new Vector2(-10, 0));
+                    }
+                    else if (LeftFacingBodyState())
+                    {
+                        currentState = BodyStates.KnockbackLeft;
+                        Physics.LinearVelocity = Vector2.Zero;
+                        Physics.ApplyLinearImpulse(new Vector2(10, 0));
+                    }
                 }
             }
         }
@@ -466,7 +476,13 @@ namespace TimeSink.Entities
             foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active && !Invulnerable)
-                    TakeDamage(dot.Tick(gameTime));
+                    TakeDamage(dot.Tick(gameTime), dot.DoesKnockBack);
+            }
+
+            timeSinceLastHit += gameTime.ElapsedGameTime.Milliseconds;
+            if (timeSinceLastHit >= RECHARGE_WAIT_TIME)
+            {
+                Recharge(gameTime.ElapsedGameTime.Milliseconds);
             }
 
             if (!chargingWeapon)
@@ -541,6 +557,12 @@ namespace TimeSink.Entities
             }
 
             MotorJoint.MaxMotorTorque = TouchingGround ? MOTOR_TORQUE : 0;
+        }
+
+        private void Recharge(int ellapsedTime)
+        {
+            Shield = Math.Min(SHIELD_MAX, Shield + ellapsedTime / 1000f * RECHARGE_AMOUNT);
+            Engine.UpdateHealth();
         }
 
         private void RemoveInactiveDots()
@@ -1947,7 +1969,7 @@ namespace TimeSink.Entities
             {
                 var TEXTURE = "Textures/Keys/e-Key";
 
-                if(Engine.GamepadEnabled)
+                if (Engine != null && Engine.GamepadEnabled)
                 {
                     TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
                 }
@@ -1981,7 +2003,7 @@ namespace TimeSink.Entities
             OnPickup = torch;
             var TEXTURE = "Textures/Keys/e-Key";
 
-            if (Engine.GamepadEnabled)
+            if (Engine != null && Engine.GamepadEnabled)
             {
                 TEXTURE = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Interact];
             }
@@ -2024,13 +2046,12 @@ namespace TimeSink.Entities
 
         public bool OnCollidedWith(Fixture f1, Bramble bramble, Fixture f2, Contact info)
         {
-
             if (!Invulnerable)
             {
                 /*  this.RegisterDot(bramble.dot);
                   bramble.dot.Active = true;
                   return true;*/
-                TakeDamage(10);
+                TakeDamage(10, true);
                 return true;
             }
             else

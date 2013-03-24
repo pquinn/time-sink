@@ -16,6 +16,7 @@ namespace Engine.Defaults
         private float damagePerTick { get; set; }
 
         public bool Active { get; set; }
+        public bool DoesKnockBack { get; set; }
 
         private bool finished;
         public bool Finished
@@ -30,22 +31,24 @@ namespace Engine.Defaults
             }
         }
 
-        public DamageOverTimeEffect(float timeSpan, float totalDamage)
+        public DamageOverTimeEffect(float timeSpan, float totalDamage, bool doesKnockBack)
         {
             this.timeSpan = timeSpan;
             this.totalDamage = totalDamage;
             this.damagePerTick = (int)(totalDamage / timeSpan);
             this.timeApplied = 0f;
             this.Active = false;
+            this.DoesKnockBack = doesKnockBack;
         }
 
-        public DamageOverTimeEffect(float damagePerTick)
+        public DamageOverTimeEffect(float damagePerTick, bool doesKnockBack)
         {
             this.timeSpan = Single.PositiveInfinity;
             this.totalDamage = timeSpan * damagePerTick;
             this.damagePerTick = damagePerTick;
             this.timeApplied = 0f;
             this.Active = false;
+            this.DoesKnockBack = doesKnockBack;
         }
 
         public float Tick(GameTime gameTime)
