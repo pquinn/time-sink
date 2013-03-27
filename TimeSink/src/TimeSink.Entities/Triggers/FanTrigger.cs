@@ -44,7 +44,7 @@ namespace TimeSink.Entities.Triggers
         private Vector2 originPoint;
         private int forceFactor = 1100;
 
-        private double nextLogTime = 0;
+        private double nextFlipTime = 0;
         
         public FanTrigger() : base() { }
 
@@ -98,18 +98,17 @@ namespace TimeSink.Entities.Triggers
             {
                 originDirection = originPointInWorld.Y;
                 characterDirection = characterPosition.Y;
-                dimensionDirection = Height;
+                dimensionDirection = PhysicsConstants.PixelsToMeters(Height);
             }
             else
             {
                 originDirection = originPointInWorld.X;
                 characterDirection = characterPosition.X;
-                dimensionDirection = Width;
+                dimensionDirection = PhysicsConstants.PixelsToMeters(Width);
             }
 
-            var magnitude = (100 - (Math.Abs((originDirection - characterDirection)) / 
-                PhysicsConstants.PixelsToMeters(dimensionDirection))) / 100;
-            return DetermineDirection(magnitude);
+            var magnitude = (dimensionDirection - (Math.Abs((originDirection - characterDirection))) / dimensionDirection) / 100;
+            return DetermineDirection(magnitude * forceFactor);
         }
 
         private Vector2 DetermineDirection(float magnitude)
@@ -156,15 +155,30 @@ namespace TimeSink.Entities.Triggers
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             base.InitializePhysics(force, engineRegistrations);
-            originPoint = new Vector2(0, Height / 2);
+            // divide measurement by 2 because origin is in center
+            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+            {
+                originPoint = new Vector2(0, Height / 2);
+            }
+            else
+            {
+                originPoint = new Vector2(-Width / 2, 0);                
+            }
         }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            if (time.TotalGameTime.TotalMilliseconds >= nextLogTime)
+            if (time.TotalGameTime.TotalMilliseconds >= nextFlipTime)
             {
+                if (Active)
+                {
+                    nextFlipTime = time.TotalGameTime.TotalMilliseconds + InactiveTime;
+                }
+                else
+                {
+                    nextFlipTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
+                }
                 Active = !Active;   
-                nextLogTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
             }
             base.OnUpdate(time, world);
         }
