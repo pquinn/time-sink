@@ -25,7 +25,7 @@ namespace TimeSink.Entities.Actions
         public ConditionalDoor(Vector2 position, int width, int height, DoorType doorType, string levelPath, int spawnPoint)
             : base(position, width, height, doorType, levelPath, spawnPoint)
         {
-            enabled = false;
+            Enabled = false;
         }
 
         public override string EditorName
@@ -45,11 +45,11 @@ namespace TimeSink.Entities.Actions
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            if (!enabled) 
+            if (!Enabled) 
             {
                 object result;
                 world.LevelManager.LevelCache.TryGetValue(ConditionKey, out result);
-                if (result != null) enabled = (bool)result;
+                if (result != null) Enabled = (bool)result;
             }
 
             base.OnUpdate(time, world);

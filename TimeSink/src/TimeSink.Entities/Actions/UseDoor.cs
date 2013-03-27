@@ -19,6 +19,7 @@ using System.IO;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using Engine.Defaults;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities.Actions
 {
@@ -26,7 +27,7 @@ namespace TimeSink.Entities.Actions
 
     [SerializableEntity("66c116cc-60bf-4808-a4c0-f5bb8cad053b")]
     [EditorEnabled]
-    public class UseDoor : Entity
+    public class UseDoor : Entity, ISwitchable
     {
         const string EDITOR_NAME = "Use Door";
         const string TEXTURE = "Materials/blank";
@@ -38,9 +39,6 @@ namespace TimeSink.Entities.Actions
 
         string UP_POPUP = "Textures/Keys/w-key";
         string DOWN_POPUP = "Textures/Keys/s-key";
-
-
-        protected bool enabled;
 
         private static readonly Guid guid = new Guid("66c116cc-60bf-4808-a4c0-f5bb8cad053b");
 
@@ -61,7 +59,7 @@ namespace TimeSink.Entities.Actions
             DoorType = doorType;
             LevelPath = levelPath;
             SpawnPoint = spawnPoint;
-            enabled = true;
+            Enabled = true;
         }
 
         public override string EditorName
@@ -95,10 +93,14 @@ namespace TimeSink.Entities.Actions
         [EditableField("SpawnPoint")]
         public int SpawnPoint { get; set; }
 
+        [SerializableField]
+        [EditableField("Enabled")]
+        public bool Enabled { get; set; }
+
         private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
-            if (enabled)
+            if (Enabled)
             {
                 if (DoorType == DoorType.Side)
                     ChangeLevel();
@@ -113,7 +115,7 @@ namespace TimeSink.Entities.Actions
 
                 collided = true;
 
-                if (popup != null && !registered)
+                if (popup != null && !registered && Enabled)
                 {
                     engine.LevelManager.RenderManager.RegisterRenderable(popup);
                     registered = true;
@@ -268,6 +270,11 @@ namespace TimeSink.Entities.Actions
                 else
                     return new List<IRendering>() { new NullRendering() };
             }
+        }
+
+        public void OnSwitch()
+        {
+            Enabled = !Enabled;
         }
     }
 }

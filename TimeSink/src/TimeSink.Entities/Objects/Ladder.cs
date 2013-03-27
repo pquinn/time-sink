@@ -128,6 +128,7 @@ namespace TimeSink.Entities.Objects
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
+                Physics.UserData = this;
 
                 //TODO -- Figure out Steve's collison logic for passable collision detection
 

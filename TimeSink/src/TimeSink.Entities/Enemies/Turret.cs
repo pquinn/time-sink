@@ -14,6 +14,7 @@ using TimeSink.Entities.Triggers;
 using FarseerPhysics.Factories;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -112,10 +113,17 @@ namespace TimeSink.Entities.Enemies
 
         private float RayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
-            HittingPlayer = fixture.Body.UserData is UserControlledCharacter;
-            hitPosition = point;
-            hitNormal = normal;
-            return 0;
+            if (fixture.IsSensor == true || fixture.Body.UserData is SwitchableWall)
+            {
+                return -1;
+            }
+            else
+            {
+                HittingPlayer = fixture.Body.UserData is UserControlledCharacter;
+                hitPosition = point;
+                hitNormal = normal;
+                return 0;
+            }
         }
 
         public override List<IRendering> Renderings
