@@ -2516,8 +2516,20 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\Levels\Background\Apoc_Present\Hub\Hub%4014.PNG">
-      <Name>Hub%4014</Name>
+  <Compile Include="Textures\Levels\Background\Apoc_Present\Hub\Hub%4014.PNG">
+    <Name>Hub%4014</Name>
+    <Importer>TextureImporter</Importer>
+    <Processor>TextureProcessor</Processor>
+  </Compile>
+    <Compile Include="Textures\Weapons\TimeGrenade.png">
+      <Name>TimeGrenade</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Weapons\TimeGrenade_Blast.png">
+      <Name>TimeGrenade_Blast</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

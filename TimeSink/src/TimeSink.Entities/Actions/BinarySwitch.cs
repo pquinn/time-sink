@@ -9,6 +9,7 @@ using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Utils;
+using TimeSink.Engine.Core;
 
 namespace TimeSink.Entities.Actions
 {
@@ -98,6 +99,7 @@ namespace TimeSink.Entities.Actions
         private void SwitchEnabledState()
         {
             Enabled = !Enabled;
+            engine.LevelManager.LevelCache.ReplaceOrAdd(InstanceId, Enabled);
         }
 
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
@@ -106,11 +108,21 @@ namespace TimeSink.Entities.Actions
 
             Physics.IsSensor = true;
 
+            object cachedState = null;
+            if (engine != null && engine.LevelManager.LevelCache.TryGetValue(InstanceId, out cachedState))
+            {
+                Enabled = (bool)cachedState;
+            }
+
             foreach (string key in TargetsList)
             {
                 var target = 
                     engine == null ? null : engine.LevelManager.Level.Entities.First(x => x.InstanceId.Equals(key)) as ISwitchable;
-                if (target != null) targetObjects.Add(target);
+                if (target != null)
+                {
+                    targetObjects.Add(target);
+                    target.Enabled = Enabled;
+                }
             }
         }
 

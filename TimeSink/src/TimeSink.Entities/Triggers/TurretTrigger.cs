@@ -57,7 +57,7 @@ namespace TimeSink.Entities.Triggers
             {
                 if (turret == null)
                 {
-                    turret = (Turret)levelManager.Level.Entities.First(x => x.InstanceId == TurretId);
+                     turret = (Turret)levelManager.Level.Entities.First(x => x.InstanceId == TurretId);
                 }
                 return turret;
             }

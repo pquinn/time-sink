@@ -3,7 +3,7 @@
 	<TimeScaleCircles />
 	<MidgroundPath>Textures\Levels\Future\Lab2-02</MidgroundPath>
 	<DefaultStart>
-		<X>1.71875</X><Y>36.40625</Y>
+		<X>23.4375</X><Y>23.4375</Y>
 	</DefaultStart>
 	<SpawnPoints>
 		<Vector2>
@@ -205,6 +205,15 @@
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
+		<ArrayOfWorldCollisionGeometrySegment />
 		<ArrayOfWorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
@@ -238,25 +247,25 @@
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>40.609375</X><Y>25.875</Y>
+					<X>41.65625</X><Y>25.875</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>40.59375</X><Y>28.875</Y>
+					<X>41.65625</X><Y>28.90625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>29.15625</X><Y>28.875</Y>
+					<X>28.8125</X><Y>28.890625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>29.15625</X><Y>25.875</Y>
+					<X>28.8125</X><Y>25.890625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
@@ -378,25 +387,25 @@
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>26.53125</X><Y>25.890625</Y>
+					<X>26.96875</X><Y>25.890625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>26.53125</X><Y>28.890625</Y>
+					<X>26.953125</X><Y>28.890625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>15.171875</X><Y>28.890625</Y>
+					<X>14.71875</X><Y>28.90625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>15.1875</X><Y>25.890625</Y>
+					<X>14.71875</X><Y>25.890625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
@@ -450,25 +459,25 @@
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>12.3125</X><Y>25.875</Y>
+					<X>12.828125</X><Y>25.90625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>12.328125</X><Y>28.875</Y>
+					<X>12.828125</X><Y>28.90625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>8.65625</X><Y>28.90625</Y>
+					<X>8.171875</X><Y>28.90625</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
 			<WorldCollisionGeometrySegment>
 				<EndPoint>
-					<X>8.65625</X><Y>31.90625</Y>
+					<X>8.140625</X><Y>31.921875</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
 			</WorldCollisionGeometrySegment>
@@ -531,6 +540,104 @@
 					<X>0</X><Y>38.234375</Y>
 				</EndPoint>
 				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>14.71875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>14.71875</X><Y>28.90625</Y>
+				</EndPoint>
+				<IsOneWay>false</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.453125</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>49.375</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>4.640625</X><Y>7.78125</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>1.375</X><Y>7.765625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>46.921875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>52.234375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>41.65625</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>43.59375</X><Y>25.875</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>26.96875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>28.8125</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+		</ArrayOfWorldCollisionGeometrySegment>
+		<ArrayOfWorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>12.828125</X><Y>25.90625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
+			</WorldCollisionGeometrySegment>
+			<WorldCollisionGeometrySegment>
+				<EndPoint>
+					<X>14.71875</X><Y>25.890625</Y>
+				</EndPoint>
+				<IsOneWay>true</IsOneWay>
 			</WorldCollisionGeometrySegment>
 		</ArrayOfWorldCollisionGeometrySegment>
 	</GeoSegments>
@@ -616,7 +723,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>42.046875</X><Y>27.34375</Y>
+						<X>42.640625</X><Y>27.34375</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -702,7 +809,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>13.734375</X><Y>27.34375</Y>
+						<X>13.78125</X><Y>27.34375</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -774,6 +881,10 @@
 					<Value xsi:type="xsd:int">1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -811,6 +922,10 @@
 				<PairOfStringObject>
 					<Key>SpawnPoint</Key>
 					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Dead</Key>
@@ -852,6 +967,10 @@
 					<Value xsi:type="xsd:int">1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -889,6 +1008,10 @@
 				<PairOfStringObject>
 					<Key>SpawnPoint</Key>
 					<Value xsi:type="xsd:int">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
 					<Key>Dead</Key>
@@ -930,6 +1053,10 @@
 					<Value xsi:type="xsd:int">1</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -949,6 +1076,14 @@
 			<EntityId>7c66912c-6c14-4714-ab5d-27778ee8c063</EntityId>
 			<PropertiesMap>
 				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">200</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -959,7 +1094,7 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>27.84375</X><Y>24.265625</Y>
+						<X>27.84375</X><Y>24.28125</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
@@ -972,6 +1107,14 @@
 					<Value xmlns:q6="http://microsoft.com/wsdl/types/" xsi:type="q6:guid">5774325e-ce5e-4db6-a036-4ed8e85a36d4</Value>
 				</PairOfStringObject>
 				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">true</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Rotation</Key>
+					<Value xsi:type="xsd:float">0</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
 					<Key>Dead</Key>
 					<Value xsi:type="xsd:boolean">false</Value>
 				</PairOfStringObject>
@@ -982,12 +1125,8 @@
 				<PairOfStringObject>
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
-						<X>9.828125</X><Y>30.625</Y>
+						<X>9.4375</X><Y>30.625</Y>
 					</Value>
-				</PairOfStringObject>
-				<PairOfStringObject>
-					<Key>Enabled</Key>
-					<Value xsi:type="xsd:boolean">true</Value>
 				</PairOfStringObject>
 			</PropertiesMap>
 		</EntitySerialization>
@@ -1022,6 +1161,41 @@
 					<Key>Position</Key>
 					<Value xsi:type="Vector2">
 						<X>24.53125</X><Y>30.8125</Y>
+					</Value>
+				</PairOfStringObject>
+			</PropertiesMap>
+		</EntitySerialization>
+		<EntitySerialization>
+			<EntityId>fe4f39bb-fb1e-4ce0-be2e-92ca70975f4e</EntityId>
+			<PropertiesMap>
+				<PairOfStringObject>
+					<Key>Targets</Key>
+					<Value xsi:type="xsd:string">door_lab2_01_mid</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Enabled</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Width</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Height</Key>
+					<Value xsi:type="xsd:int">50</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Dead</Key>
+					<Value xsi:type="xsd:boolean">false</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>InstanceId</Key>
+					<Value xsi:type="xsd:string">door_01_mid_switch</Value>
+				</PairOfStringObject>
+				<PairOfStringObject>
+					<Key>Position</Key>
+					<Value xsi:type="Vector2">
+						<X>23.515625</X><Y>24.015625</Y>
 					</Value>
 				</PairOfStringObject>
 			</PropertiesMap>

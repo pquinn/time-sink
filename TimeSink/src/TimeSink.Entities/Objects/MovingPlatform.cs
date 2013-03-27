@@ -141,12 +141,12 @@ namespace TimeSink.Entities
                 Physics.BodyType = BodyType.Kinematic;
                 Physics.Friction = 5f;
                 Physics.IgnoreGravity = true;
-                Physics.CollidesWith = Category.All | ~Category.Cat1;
+                Physics.CollidesWith = ~Category.Cat1;
                 Physics.CollisionCategories = Category.Cat1;
 
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat1;
-                fix.CollidesWith = Category.All | ~Category.Cat1;
+                fix.CollidesWith = ~Category.Cat1;
 
                 initialized = true;
             }

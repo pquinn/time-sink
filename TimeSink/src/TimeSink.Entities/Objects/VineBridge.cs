@@ -71,7 +71,7 @@ namespace TimeSink.Entities.Objects
         protected float origLinearDamping;
         protected World world;
 
-        public bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
+        public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
         {
             if (!Hanging && character.Physics.LinearVelocity.Y > 0)
             {

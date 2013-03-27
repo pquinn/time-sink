@@ -556,6 +556,10 @@ namespace TimeSink.Entities
                 Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
             }
 
+            if (ignoreOneWays)
+                WheelBody.CollidesWith = Category.Cat1 | Category.Cat31;
+            ignoreOneWays = false;
+
             MotorJoint.MaxMotorTorque = TouchingGround ? MOTOR_TORQUE : 0;
         }
 
@@ -846,7 +850,7 @@ namespace TimeSink.Entities
                             canClimb.Physics.IsSensor = true;
                             Climbing = true;
                             Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
-                            WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                            WheelBody.CollidesWith = Category.Cat1;
 
                             if (!canClimb.Sideways)
                                 currentState = BodyStates.ClimbingBack;
@@ -899,7 +903,7 @@ namespace TimeSink.Entities
                                         new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
                                         Physics);
 
-                                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                                    r.CollidesWith = Category.Cat1;
                                     r.CollisionCategories = Category.Cat3;
                                     r.UserData = "Rectangle";
                                     r.Shape.Density = 7;
@@ -1061,21 +1065,22 @@ namespace TimeSink.Entities
                             }
                             else
                             {
-                                WheelBody.CollidesWith = Category.All & ~Category.Cat31;
-                                Physics.ApplyForce(new Vector2(0, 200f));
+                                WheelBody.CollidesWith = Category.Cat1;
+                                PerformJump(-1);
+                                ignoreOneWays = true;
                             }
                         }
 
                         numberOfJumps++;
                     }
-                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
-                        InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
-                    {
-                        if (TouchingGround)
-                        {
-                            PerformJump();
-                        }
-                    }
+                    //if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
+                    //    InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
+                    //{
+                    //    if (TouchingGround)
+                    //    {
+                    //        PerformJump();
+                    //    }
+                    //}
                     #endregion
 
                     #region climbing
@@ -2983,7 +2988,7 @@ namespace TimeSink.Entities
                 l.UserData = "Ladder";
                 l.Shape.Density = 0;
 
-                r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
@@ -3142,7 +3147,7 @@ namespace TimeSink.Entities
             l.UserData = "Ladder";
             l.Shape.Density = 0;
 
-            r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+            r.CollidesWith = Category.Cat1;
             r.CollisionCategories = Category.Cat3;
             r.UserData = "Rectangle";
 
@@ -3199,6 +3204,7 @@ namespace TimeSink.Entities
         HashSet<SlideTrigger> slideTriggers;
 
         private bool isSliding;
+        private bool ignoreOneWays;
 
         public void AddSlideTrigger(SlideTrigger st)
         {

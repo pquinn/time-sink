@@ -103,7 +103,7 @@ namespace TimeSink.Entities.Enemies
 
         public void Descend()
         {
-            Physics.CollidesWith = Category.All & ~Category.Cat31;
+            Physics.CollidesWith = ~Category.Cat31;
             Physics.ApplyForce(new Vector2(0, 200f));
         }
 
