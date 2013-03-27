@@ -22,6 +22,15 @@ namespace TimeSink.Entities.Objects
         private static Guid guid = new Guid("7c66912c-6c14-4714-ab5d-27778ee8c063");
         private bool initialized = false;
 
+        public PushableBox()
+            : this(200, 200)
+        { }
+
+        public PushableBox(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
 
         public override string EditorName
         {
@@ -39,15 +48,13 @@ namespace TimeSink.Entities.Objects
             }
         }
 
-        public PushableBox()
-            : this(200, 200)
-        { }
+        [SerializableField]
+        [EditableField("Width")]
+        public override int Width { get; set; }
 
-        public PushableBox(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
+        [SerializableField]
+        [EditableField("Height")]
+        public override int Height { get; set; }
 
         public override Engine.Core.Rendering.IRendering Preview
         {
@@ -84,7 +91,6 @@ namespace TimeSink.Entities.Objects
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
 
-
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
                 float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
@@ -97,10 +103,7 @@ namespace TimeSink.Entities.Objects
                 Physics.UserData = this;
                 Physics.Mass = 75f;
                 Physics.Friction = 0.01f;
-                
-                
-
-
+                            
                 Physics.CollisionCategories = Category.All;
                 Physics.CollidesWith = Category.All;
 

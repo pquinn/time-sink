@@ -31,11 +31,32 @@ namespace TimeSink.Entities.Objects
             Height = height;
         }
 
-        public bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
+        public override string EditorName
         {
+            get
+            {
+                return editorName;
+            }
+        }
+
+        [SerializableField]
+        public override Guid Id
+        {
+            get
+            {
+                return guid;
+            }
+            set
+            {
+            }
+        }
+
+        public override bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)
+        {
+            attachedChar = character;
+
             if (!Hanging && character.Physics.LinearVelocity.Y > 0 && !Electrified)
             {
-                attachedChar = character;
                 character.Physics.ResetDynamics();
                 character.WheelBody.ResetDynamics();
 
@@ -62,6 +83,7 @@ namespace TimeSink.Entities.Objects
         public void ElectrifyWire()
         {
             AnimateElectricity();
+            Electrified = true;
 
             if (attachedChar != null)
             {
