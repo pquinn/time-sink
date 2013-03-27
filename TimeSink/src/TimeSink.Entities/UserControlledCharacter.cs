@@ -1066,7 +1066,7 @@ namespace TimeSink.Entities
                             else
                             {
                                 WheelBody.CollidesWith = Category.Cat1;
-                                Physics.ApplyForce(new Vector2(0, 200f));
+                                PerformJump(-1);
                                 ignoreOneWays = true;
                             }
                         }
