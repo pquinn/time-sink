@@ -850,7 +850,7 @@ namespace TimeSink.Entities
                             canClimb.Physics.IsSensor = true;
                             Climbing = true;
                             Physics.IgnoreGravity = WheelBody.IgnoreGravity = true;
-                            WheelBody.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                            WheelBody.CollidesWith = Category.Cat1;
 
                             if (!canClimb.Sideways)
                                 currentState = BodyStates.ClimbingBack;
@@ -903,7 +903,7 @@ namespace TimeSink.Entities
                                         new Vector2(0, PhysicsConstants.PixelsToMeters(15)),
                                         Physics);
 
-                                    r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                                    r.CollidesWith = Category.Cat1;
                                     r.CollisionCategories = Category.Cat3;
                                     r.UserData = "Rectangle";
                                     r.Shape.Density = 7;
@@ -3147,7 +3147,7 @@ namespace TimeSink.Entities
             l.UserData = "Ladder";
             l.Shape.Density = 0;
 
-            r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+            r.CollidesWith = Category.Cat1;
             r.CollisionCategories = Category.Cat3;
             r.UserData = "Rectangle";
 
