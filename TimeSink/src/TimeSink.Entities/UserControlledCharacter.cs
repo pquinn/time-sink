@@ -1073,14 +1073,14 @@ namespace TimeSink.Entities
 
                         numberOfJumps++;
                     }
-                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
-                        InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
-                    {
-                        if (TouchingGround)
-                        {
-                            PerformJump();
-                        }
-                    }
+                    //if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
+                    //    InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
+                    //{
+                    //    if (TouchingGround)
+                    //    {
+                    //        PerformJump();
+                    //    }
+                    //}
                     #endregion
 
                     #region climbing
