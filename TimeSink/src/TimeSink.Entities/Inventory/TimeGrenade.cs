@@ -13,19 +13,31 @@ using Microsoft.Xna.Framework;
 
 namespace TimeSink.Entities.Inventory
 {
-    public class TimeGrenade : Projectile
+    [SerializableEntity("16b7d25a-15f1-4b0b-acaf-c70124acda0e")]
+    public class TimeGrenade : Projectile, IWeapon
     {
-        const string EDITOR_NAME = "Time Grenade";
+        const string EDITOR_NAME = "TimeGrenade";
+
+        const string GRENADE_TEXTURE_NAME = "Textures/Weapons/TimeGrenade";
+        const string EXPLOSION_TEXTURE_NAME = "Textures/Weapons/TimeGrenade_Blast";
+
+        const float MAX_GRENADE_HOLD = 1;
+        const float MIN_GRENADE_INIT_SPEED = 1000;
+        const float MAX_GRENADE_INIT_SPEED = 2000;
+
+        const double DEFAULT_FUSE_TIME = 4000;
+        const double DEFAULT_LINGER_TIME = 10000;
 
         private Vector2 initialVelocity;
 
-        [SerializableEntity("16b7d25a-15f1-4b0b-acaf-c70124acda0e")]
         public override string EditorName
         {
             get { return EDITOR_NAME; }
         }
 
         private static readonly Guid GUID = new Guid("16b7d25a-15f1-4b0b-acaf-c70124acda0e");
+
+        [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
 
         private double fuseTime;
@@ -42,7 +54,18 @@ namespace TimeSink.Entities.Inventory
 
         public override List<IRendering> Renderings
         {
-            get { return new List<IRendering>(); }
+            get
+            {
+                return new List<IRendering>()
+                {
+                    new BasicRendering(!exploded ? GRENADE_TEXTURE_NAME : EXPLOSION_TEXTURE_NAME)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Physics.Position),
+                        Rotation = Physics.Rotation,
+                        DepthWithinLayer = .1f
+                    }
+                }; 
+            }
         }
 
         public TimeGrenade(Vector2 pos, Vector2 vel, double fuseTime_ms, double lingerTime_ms)
@@ -92,8 +115,6 @@ namespace TimeSink.Entities.Inventory
                         TimeScale = .3f
                     };
                     world.LevelManager.Level.TimeScaleCircles.Add(blast);
-
-                    //TODO: Stop drawing sprite
                 }
             }
             else
@@ -108,5 +129,58 @@ namespace TimeSink.Entities.Inventory
                 }
             }
         }
+
+        #region IWeapon Members
+
+        public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
+        {
+            character.InHold = false;
+
+            var elapsedTime = Math.Min(gameTime.TotalGameTime.TotalSeconds - holdTime, MAX_GRENADE_HOLD);
+            // linear interp: y = 500 + (x - 0)(1300 - 500)/(MAX_HOLD-0) x = elapsedTime
+            float speed =
+                MIN_GRENADE_INIT_SPEED + (MAX_GRENADE_INIT_SPEED - MIN_GRENADE_INIT_SPEED) /
+                                       MAX_GRENADE_HOLD *
+                                       (float)elapsedTime;
+
+            Vector2 initialVelocity = PhysicsConstants.PixelsToMeters(speed * character.Direction);
+            if (character.Direction.Y == 0)
+            {
+                var rotation = (float)Math.PI / 32;
+                rotation *= character.Direction.X > 0
+                    ? -1
+                    : 1;
+                initialVelocity = Vector2.Transform(initialVelocity, Matrix.CreateRotationZ(rotation));
+            }
+            
+            TimeGrenade grenade = new TimeGrenade(
+                new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
+                            character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET),
+                initialVelocity,
+                DEFAULT_FUSE_TIME,
+                DEFAULT_LINGER_TIME);
+
+            world.LevelManager.RegisterEntity(grenade);
+        }
+
+        #endregion
+
+        #region IInventoryItem Members
+
+        public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
+        {
+            Fire(character, world, gameTime, holdTime, charged);
+        }
+
+        #endregion
+
+        #region IMenuItem Members
+
+        public string Texture
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

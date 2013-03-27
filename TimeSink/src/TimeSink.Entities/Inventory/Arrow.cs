@@ -201,7 +201,7 @@ namespace TimeSink.Entities.Inventory
                 Physics.UserData = this;
                 Physics.IsSensor = true;
                 //Physics.Mass = ARROW_MASS;
-                Physics.CollidesWith = Category.All | ~Category.Cat31;
+                Physics.CollidesWith = ~Category.Cat31;
 
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<Torch>(OnCollidedWith);
