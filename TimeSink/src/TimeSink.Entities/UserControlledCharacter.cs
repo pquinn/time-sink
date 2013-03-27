@@ -556,6 +556,10 @@ namespace TimeSink.Entities
                 Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
             }
 
+            if (ignoreOneWays)
+                WheelBody.CollidesWith = Category.Cat1 | Category.Cat31;
+            ignoreOneWays = false;
+
             MotorJoint.MaxMotorTorque = TouchingGround ? MOTOR_TORQUE : 0;
         }
 
@@ -1061,8 +1065,9 @@ namespace TimeSink.Entities
                             }
                             else
                             {
-                                WheelBody.CollidesWith = Category.All & ~Category.Cat31;
+                                WheelBody.CollidesWith = Category.Cat1;
                                 Physics.ApplyForce(new Vector2(0, 200f));
+                                ignoreOneWays = true;
                             }
                         }
 
@@ -2983,7 +2988,7 @@ namespace TimeSink.Entities
                 l.UserData = "Ladder";
                 l.Shape.Density = 0;
 
-                r.CollidesWith = Category.Cat1 | ~Category.Cat31;
+                r.CollidesWith = Category.Cat1;
                 r.CollisionCategories = Category.Cat3;
                 c.CollidesWith = Category.Cat1 | Category.Cat31;
                 c.CollisionCategories = Category.Cat3;
@@ -3199,6 +3204,7 @@ namespace TimeSink.Entities
         HashSet<SlideTrigger> slideTriggers;
 
         private bool isSliding;
+        private bool ignoreOneWays;
 
         public void AddSlideTrigger(SlideTrigger st)
         {
