@@ -21,8 +21,19 @@ using Engine.Defaults;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Entities.Utils;
 
+
+// make fans horizontal too
+// separate interval from inactive time
 namespace TimeSink.Entities.Triggers
 {
+    public enum FanDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
     [SerializableEntity("89bb3358-5b34-43ca-8bd3-fa21322159ba")]
     [EditorEnabled]
     public class FanTrigger : Trigger, ISwitchable
@@ -43,8 +54,16 @@ namespace TimeSink.Entities.Triggers
         }
 
         [SerializableField]
-        [EditableField("Interval (ms)")]
+        [EditableField("Active Interval (ms)")]
         public int IntervalDuration { get; set; }
+
+        [SerializableField]
+        [EditableField("Inactive Time (ms)")]
+        public int InactiveTime { get; set; }
+
+        [SerializableField]
+        [EditableField("Fan Direction")]
+        public FanDirection FanDirection { get; set; }
 
         [SerializableField]
         public override Guid Id
@@ -60,16 +79,57 @@ namespace TimeSink.Entities.Triggers
                 c.Physics.IgnoreGravity = true;
                 c.CanJump = false;
                 c.Physics.LinearVelocity = Vector2.Zero;
-                var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
-                var originPointInWorld = Position + originPointInMeters;
-                var magnitude = (100 - ((originPointInWorld.Y - c.Position.Y) / PhysicsConstants.PixelsToMeters(Height))) / 100;
-                c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
+                c.Physics.ApplyForce(CalculateForce(c.Position));
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        private Vector2 CalculateForce(Vector2 characterPosition)
+        {
+            float originDirection, characterDirection, dimensionDirection;
+            var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
+            var originPointInWorld = Position + originPointInMeters;
+
+            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+            {
+                originDirection = originPointInWorld.Y;
+                characterDirection = characterPosition.Y;
+                dimensionDirection = Height;
+            }
+            else
+            {
+                originDirection = originPointInWorld.X;
+                characterDirection = characterPosition.X;
+                dimensionDirection = Width;
+            }
+
+            var magnitude = (100 - (Math.Abs((originDirection - characterDirection)) / 
+                PhysicsConstants.PixelsToMeters(dimensionDirection))) / 100;
+            return DetermineDirection(magnitude);
+        }
+
+        private Vector2 DetermineDirection(float magnitude)
+        {
+            switch (FanDirection)
+            {
+                case FanDirection.Up:
+                    return new Vector2(0, -1) * magnitude;
+                case FanDirection.Down:
+                    return new Vector2(0, 1) * magnitude;
+                case FanDirection.Left:
+                    return new Vector2(1, 0) * magnitude;
+                case FanDirection.Right:
+                    return new Vector2(-1, 0) * magnitude;
+                default:
+                    // this should never happen
+                    return Vector2.Zero;
+            }
+
+            
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
