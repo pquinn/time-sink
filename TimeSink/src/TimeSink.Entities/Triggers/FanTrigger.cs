@@ -41,10 +41,11 @@ namespace TimeSink.Entities.Triggers
         const string EDITOR_NAME = "Fan Trigger";
         private static readonly Guid GUID = new Guid("89bb3358-5b34-43ca-8bd3-fa21322159ba");
 
-        private Vector2 originPoint;
-        private int forceFactor = 1100;
-
+        private Vector2 localOriginPoint;
+        private int forceFactor = 50;
         private double nextFlipTime = 0;
+        private bool collided;
+        private UserControlledCharacter _character;
         
         public FanTrigger() : base() { }
 
@@ -79,7 +80,8 @@ namespace TimeSink.Entities.Triggers
                 c.Physics.IgnoreGravity = true;
                 c.CanJump = false;
                 c.Physics.LinearVelocity = Vector2.Zero;
-                c.Physics.ApplyForce(CalculateForce(c.Position));
+                _character = c;
+                collided = true;
                 return true;
             }
             else
@@ -91,7 +93,7 @@ namespace TimeSink.Entities.Triggers
         private Vector2 CalculateForce(Vector2 characterPosition)
         {
             float originDirection, characterDirection, dimensionDirection;
-            var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
+            var originPointInMeters = PhysicsConstants.PixelsToMeters(localOriginPoint);
             var originPointInWorld = Position + originPointInMeters;
 
             if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
@@ -107,7 +109,7 @@ namespace TimeSink.Entities.Triggers
                 dimensionDirection = PhysicsConstants.PixelsToMeters(Width);
             }
 
-            var magnitude = (dimensionDirection - (Math.Abs((originDirection - characterDirection))) / dimensionDirection) / 100;
+            var magnitude = (dimensionDirection - (Math.Abs((characterDirection - originDirection)))) / dimensionDirection;
             return DetermineDirection(magnitude * forceFactor);
         }
 
@@ -120,9 +122,9 @@ namespace TimeSink.Entities.Triggers
                 case FanDirection.Down:
                     return new Vector2(0, 1) * magnitude;
                 case FanDirection.Left:
-                    return new Vector2(1, 0) * magnitude;
-                case FanDirection.Right:
                     return new Vector2(-1, 0) * magnitude;
+                case FanDirection.Right:
+                    return new Vector2(1, 0) * magnitude;
                 default:
                     // this should never happen
                     return Vector2.Zero;
@@ -135,6 +137,7 @@ namespace TimeSink.Entities.Triggers
         {
             c.CanJump = true;
             c.Physics.IgnoreGravity = false;
+            collided = false;
         }
 
         protected override void RegisterCollisions()
@@ -156,14 +159,26 @@ namespace TimeSink.Entities.Triggers
         {
             base.InitializePhysics(force, engineRegistrations);
             // divide measurement by 2 because origin is in center
-            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+            switch (FanDirection)
             {
-                originPoint = new Vector2(0, Height / 2);
+                case FanDirection.Up:
+                    localOriginPoint = new Vector2(0, Height / 2);
+                    break;
+                case FanDirection.Down:
+                    localOriginPoint = new Vector2(0, -Height / 2);
+                    break;
+                case FanDirection.Left:
+                    localOriginPoint = new Vector2(Width / 2, 0);
+                    break;
+                case FanDirection.Right:
+                    localOriginPoint = new Vector2(-Width / 2, 0);
+                    break;
+                default:
+                    localOriginPoint = new Vector2(0, 0);
+                    break;
             }
-            else
-            {
-                originPoint = new Vector2(-Width / 2, 0);                
-            }
+
+            Enabled = true;
         }
 
         public override void OnUpdate(GameTime time, EngineGame world)
@@ -180,6 +195,12 @@ namespace TimeSink.Entities.Triggers
                 }
                 Active = !Active;   
             }
+
+            if (Enabled && collided && Active)
+            {
+                _character.Physics.ApplyForce(CalculateForce(_character.Position));
+            }
+
             base.OnUpdate(time, world);
         }
     }
