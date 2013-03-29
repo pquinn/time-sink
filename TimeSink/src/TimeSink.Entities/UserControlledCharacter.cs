@@ -1187,7 +1187,7 @@ namespace TimeSink.Entities
 
                     if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Shoot))
                     {
-                        if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow && !climbing)
+                        if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && (Inventory[activeItem] is Arrow || Inventory[activeItem] is EnergyGun) && !climbing)
                         {
                             currentState = facing == -1
                                 ? isDucking
@@ -1205,7 +1205,7 @@ namespace TimeSink.Entities
                     else if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot) && inHold)
                     {
                         if (!ClimbingState() && !swinging && !VineBridgeState() &&
-                            shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && Inventory[activeItem] is Arrow)
+                            shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && (Inventory[activeItem] is Arrow || Inventory[activeItem] is EnergyGun))
                         {
                             PlaySound(arrowSound);
                             Inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
