@@ -47,10 +47,10 @@ namespace SpriteSheetCreator
                 MAX_HEIGHT = 0;
                 MAX_WIDTH = 0;
 
-                foreach (PictureBox pic in previews)
+                /*foreach (PictureBox pic in previews)
                 {
                     pic.Image = null;
-                }
+                }*/
                 
                 AnalyzeFiles();
             }
@@ -72,17 +72,17 @@ namespace SpriteSheetCreator
                     if (img.Height > MAX_HEIGHT)
                         MAX_HEIGHT = img.Height;
 
-                    PictureBox pic = previews[i];
+                    //PictureBox pic = previews[i];
 
-                    pic.Image = null;
-                    pic.Invalidate();
-                    pic.Width = 50;
-                    pic.Height = 100;
-                    pic.SizeMode = PictureBoxSizeMode.Zoom;
-                    pic.Location = new Point(0 + (pic.Width * i), 50);
-                    pic.Visible = true;
+                    //pic.Image = null;
+                    //pic.Invalidate();
+                    //pic.Width = 50;
+                    //pic.Height = 100;
+                    //pic.SizeMode = PictureBoxSizeMode.Zoom;
+                    //pic.Location = new Point(0 + (pic.Width * i), 50);
+                    //pic.Visible = true;
 
-                    pic.Image = img;
+                    //pic.Image = img;
                     i++;
                 }
                 else

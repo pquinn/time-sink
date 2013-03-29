@@ -35,7 +35,7 @@ namespace SpriteSheetCreator
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.locBox = new System.Windows.Forms.TextBox();
             this.OK = new System.Windows.Forms.Button();
-            this.previews = new PictureBox[10];
+            this.previews = new PictureBox[25];
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.preview1 = new System.Windows.Forms.PictureBox();
             this.preview2 = new System.Windows.Forms.PictureBox();
@@ -47,6 +47,15 @@ namespace SpriteSheetCreator
             this.preview8 = new System.Windows.Forms.PictureBox();
             this.preview9 = new System.Windows.Forms.PictureBox();
             this.preview10 = new System.Windows.Forms.PictureBox();
+            this.preview11 = new System.Windows.Forms.PictureBox();
+            this.preview12 = new System.Windows.Forms.PictureBox();
+            this.preview13 = new System.Windows.Forms.PictureBox();
+            this.preview14 = new System.Windows.Forms.PictureBox();
+            this.preview15 = new System.Windows.Forms.PictureBox();
+            this.preview16 = new System.Windows.Forms.PictureBox();
+            this.preview17 = new System.Windows.Forms.PictureBox();
+            this.preview18 = new System.Windows.Forms.PictureBox();
+            this.preview19 = new System.Windows.Forms.PictureBox();
             this.GifBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.preview1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.preview2)).BeginInit();
@@ -254,6 +263,15 @@ namespace SpriteSheetCreator
         private Button OK;
         private TextBox textBox1;
         private PictureBox GifBox;
+        private PictureBox preview11;
+        private PictureBox preview12;
+        private PictureBox preview13;
+        private PictureBox preview14;
+        private PictureBox preview15;
+        private PictureBox preview16;
+        private PictureBox preview17;
+        private PictureBox preview18;
+        private PictureBox preview19;
     }
 }
 
