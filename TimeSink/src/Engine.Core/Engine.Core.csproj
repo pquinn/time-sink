@@ -137,6 +137,9 @@
     <Compile Include="IMenuItem.cs" />
     <Compile Include="Input\IKeyboardControllable.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Particles\Emitter.cs" />
+    <Compile Include="Particles\MathLib.cs" />
+    <Compile Include="Particles\Particle.cs" />
     <Compile Include="Physics\TimeScaleCircle.cs" />
     <Compile Include="Rendering\ParentedRendering.cs" />
     <Compile Include="Rendering\PivotedRendering.cs" />
