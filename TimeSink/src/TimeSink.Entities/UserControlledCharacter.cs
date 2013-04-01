@@ -485,6 +485,11 @@ namespace TimeSink.Entities
                 Recharge(gameTime.ElapsedGameTime.Milliseconds);
             }
 
+            if (Inventory.Count > 0 && Inventory[0] is EnergyGun)
+            {
+                ((EnergyGun)Inventory[0]).OnUpdate(gameTime, Engine);
+            }
+
             if (!chargingWeapon)
             {
                 //    if (Mana > 0)

@@ -15,16 +15,19 @@ using TimeSink.Engine.Core.Collisions;
 using Autofac;
 using FarseerPhysics.Factories;
 using TimeSink.Entities.Triggers;
+using TimeSink.Entities.Enemies;
 
 namespace TimeSink.Entities.Inventory
 {
     [SerializableEntity("16b8d25a-25f1-4b0b-acae-c60114aade0e")]
-    public class EnergyGun : Projectile, IWeapon
+    public class EnergyGun : Entity, IWeapon
     {
         private static readonly string BULLET_TEXTURE = "";
-        private static readonly int BULLET_SPEED = 3;
+        private static readonly int BULLET_SPEED = 3000;
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
         private const int RADIUS = 15;
+        private const int TIME_BETWEEN_SHOTS = 100;
+        private int timeSinceLastShot = 0;
 
         public EnergyGun()
             : this(Vector2.Zero)
@@ -41,21 +44,14 @@ namespace TimeSink.Entities.Inventory
 
         public override List<Fixture> CollisionGeometry
         {
-            get { return Physics.FixtureList; }
+            get { return new List<Fixture>(); }
         }
 
         public override List<IRendering> Renderings
         {
             get
             {
-                return new List<IRendering>()
-                {
-                    new BasicRendering(BULLET_TEXTURE)
-                    {
-                        Position = PhysicsConstants.MetersToPixels(Position),
-                        DepthWithinLayer = .1f
-                    }
-                };
+                return new List<IRendering>() { };
             }
         }
 
@@ -74,13 +70,8 @@ namespace TimeSink.Entities.Inventory
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+            timeSinceLastShot += time.ElapsedGameTime.Milliseconds;
             base.OnUpdate(time, world);
-
-            if (Dead)
-            {
-                world.LevelManager.RenderManager.UnregisterRenderable(this);
-                world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
-            }
         }
 
         public void Use(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
@@ -90,50 +81,17 @@ namespace TimeSink.Entities.Inventory
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            EnergyGun bullet = new EnergyGun(
-                new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
-                            character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET));
-
-            world.LevelManager.RegisterEntity(bullet);
-
-            bullet.Physics.LinearVelocity = PhysicsConstants.PixelsToMeters(BULLET_SPEED * character.Direction);
-        }
-
-        private bool initialized;
-        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
-        {
-            if (force || !initialized)
+            if (timeSinceLastShot >= TIME_BETWEEN_SHOTS)
             {
-                var world = engineRegistrations.Resolve<PhysicsManager>().World;
+                timeSinceLastShot = 0;
+                EnergyBullet bullet = new EnergyBullet(
+                    new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
+                                character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET),
+                                20, 20,
+                                PhysicsConstants.PixelsToMeters(BULLET_SPEED * character.Direction));
 
-                Width = 64;
-                Height = 32;
-                Physics = BodyFactory.CreateCircle(
-                    world,
-                    RADIUS,
-                    1,
-                    Position,
-                    this);
-
-                Physics.BodyType = BodyType.Dynamic;
-                Physics.IsBullet = true;
-                Physics.IsSensor = true;
-                Physics.CollidesWith = ~Category.Cat31;
-
-                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
-
-                initialized = true;
+                world.LevelManager.RegisterEntity(bullet);
             }
-
-            base.InitializePhysics(false, engineRegistrations);
-        }
-
-        public override void DestroyPhysics()
-        {
-            if (!initialized) return;
-            initialized = false;
-
-            Physics.Dispose();
         }
 
         public override string EditorName
@@ -148,7 +106,7 @@ namespace TimeSink.Entities.Inventory
 
         public string Texture
         {
-            get { throw new NotImplementedException(); }
+            get { return "Textures\\giroux"; }
         }
     }
 }

@@ -70,7 +70,9 @@
   <ItemGroup>
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
+    <Compile Include="Actions\PickupEnergyGun.cs" />
     <Compile Include="Enemies\Turret.cs" />
+    <Compile Include="Inventory\EnergyBullet.cs" />
     <Compile Include="Inventory\EnergyGun.cs" />
     <Compile Include="Inventory\SmallBullet.cs" />
     <Compile Include="Enemies\VerticalTracker.cs" />
@@ -80,7 +82,6 @@
     <Compile Include="Inventory\TimeGrenade.cs" />
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
-    <Compile Include="Objects\Emitter.cs" />
     <Compile Include="Objects\PushableBox.cs" />
     <Compile Include="Objects\SwitchableWall.cs" />
     <Compile Include="Objects\Wall.cs" />
