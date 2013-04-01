@@ -20,6 +20,7 @@ using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Entities.Utils;
+using TimeSink.Entities.Objects;
 
 
 // make fans horizontal too
@@ -46,6 +47,7 @@ namespace TimeSink.Entities.Triggers
         private double nextFlipTime = 0;
         private bool collided;
         private UserControlledCharacter _character;
+        private Emitter particles;
         
         public FanTrigger() : base() { }
 
@@ -188,12 +190,27 @@ namespace TimeSink.Entities.Triggers
                 if (Active)
                 {
                     nextFlipTime = time.TotalGameTime.TotalMilliseconds + InactiveTime;
+
+                    particles.Clear();
+                    Engine.LevelManager.UnregisterEntity(particles);
+                    particles = null;
                 }
                 else
                 {
                     nextFlipTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
                 }
-                Active = !Active;   
+                Active = !Active;
+
+            }
+
+            if (Active && particles == null)
+            {
+                particles = new Emitter(new Vector2(100f, 100f),
+                    new Vector2(0, -1), new Vector2(-.5f, .5f), new Vector2(2000f, 2000f),
+                    Vector2.One, Vector2.One, Color.White, Color.Red, Color.White, Color.Red,
+                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position);
+                Engine.LevelManager.RegisterEntity(particles);
+
             }
 
             if (Enabled && collided && Active)

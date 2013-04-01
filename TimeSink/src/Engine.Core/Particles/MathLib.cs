@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TimeSink.Engine.Core.Particles
 {
-    class MathLib
+   public class MathLib
     {
         /* Begin Linear Interpolation method overloads */
         public static byte LinearInterpolate(byte a, byte b, double t)
