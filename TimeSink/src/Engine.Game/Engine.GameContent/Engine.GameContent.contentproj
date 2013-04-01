@@ -2534,7 +2534,13 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Textures\NPCs\Male_Guard_Front.png">
+      <Name>Male_Guard_Front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Textures\Levels\Future\Lab3-01\Lab3-01%4000.PNG">
       <Name>Lab3-01%4000</Name>
