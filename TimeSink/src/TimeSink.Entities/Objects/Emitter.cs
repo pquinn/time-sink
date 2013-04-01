@@ -1,10 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TimeSink.Engine.Core;
+using TimeSink.Engine.Core.Particles;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 
-namespace TimeSink.Engine.Core.Particles
+namespace TimeSink.Entities.Objects
 {
 
     public class Emitter : Entity
@@ -12,9 +17,9 @@ namespace TimeSink.Engine.Core.Particles
         public Vector2 RelPosition;                    // Position relative to collection.
         public int Budget;                      // Max number of alive particles.
         float NextSpawnIn;                      // This is a random number generated using the SecPerSpawn.
-        float SecPassed;                        // Time pased since last spawn.
+        float MSecPassed;                        // Time pased since last spawn.
         LinkedList<Particle> ActiveParticles;   // A list of all the active particles.
-        public Texture2D ParticleSprite;        // This is what the particle looks like.
+        public string ParticleSprite;        // This is what the particle looks like.
         public Random random;                          // Pointer to a random object passed trough constructor.
 
         public Vector2 SecPerSpawn;
@@ -30,11 +35,9 @@ namespace TimeSink.Engine.Core.Particles
         public Vector2 StartSpeed;
         public Vector2 EndSpeed;
 
-        public ParticleSystem Parent;
-
         public Emitter(Vector2 SecPerSpawn, Vector2 SpawnDirection, Vector2 SpawnNoiseAngle, Vector2 StartLife, Vector2 StartScale,
                     Vector2 EndScale, Color StartColor1, Color StartColor2, Color EndColor1, Color EndColor2, Vector2 StartSpeed,
-                    Vector2 EndSpeed, int Budget, Vector2 RelPosition, Texture2D ParticleSprite, Random random, ParticleSystem parent)
+                    Vector2 EndSpeed, int Budget, Vector2 RelPosition, string ParticleSprite, Random random, Vector2 position)
         {
             this.SecPerSpawn = SecPerSpawn;
             this.SpawnDirection = SpawnDirection;
@@ -52,16 +55,16 @@ namespace TimeSink.Engine.Core.Particles
             this.RelPosition = RelPosition;
             this.ParticleSprite = ParticleSprite;
             this.random = random;
-            this.Parent = parent;
             ActiveParticles = new LinkedList<Particle>();
             this.NextSpawnIn = MathLib.LinearInterpolate(SecPerSpawn.X, SecPerSpawn.Y, random.NextDouble());
-            this.SecPassed = 0.0f;
+            this.MSecPassed = 0.0f;
+            Position = position;
         }
 
-        public void Update(float dt)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            SecPassed += dt;
-            while (SecPassed > NextSpawnIn)
+            MSecPassed += time.ElapsedGameTime.Milliseconds;
+            while (MSecPassed > NextSpawnIn)
             {
                 if (ActiveParticles.Count < Budget)
                 {
@@ -70,8 +73,8 @@ namespace TimeSink.Engine.Core.Particles
                     StartDirection.Normalize();
                     Vector2 EndDirection = StartDirection * MathLib.LinearInterpolate(EndSpeed.X, EndSpeed.Y, random.NextDouble());
                     StartDirection *= MathLib.LinearInterpolate(StartSpeed.X, StartSpeed.Y, random.NextDouble());
-                    ActiveParticles.AddLast(new Particle(
-                        RelPosition + Parent.Position,
+                    var particle = new Particle(
+                        RelPosition + new Vector2(PhysicsConstants.PixelsToMeters((float)new Random().Next(-20, 20)), 0) + Position,
                         StartDirection,
                         EndDirection,
                         MathLib.LinearInterpolate(StartLife.X, StartLife.Y, random.NextDouble()),
@@ -79,17 +82,19 @@ namespace TimeSink.Engine.Core.Particles
                         MathLib.LinearInterpolate(EndScale.X, EndScale.Y, random.NextDouble()),
                         MathLib.LinearInterpolate(StartColor1, StartColor2, random.NextDouble()),
                         MathLib.LinearInterpolate(EndColor1, EndColor2, random.NextDouble()),
-                        this)
-                    );
+                        ParticleSprite, Engine.TextureCache);
+                    ActiveParticles.AddLast(particle);
+                    Engine.LevelManager.RenderManager.RegisterRenderable(particle);
+                    
                 }
-                SecPassed -= NextSpawnIn;
+                MSecPassed -= NextSpawnIn;
                 NextSpawnIn = MathLib.LinearInterpolate(SecPerSpawn.X, SecPerSpawn.Y, random.NextDouble());
             }
 
             LinkedListNode<Particle> node = ActiveParticles.First;
             while (node != null)
             {
-                bool isAlive = node.Value.Update(dt);
+                bool isAlive = node.Value.Update(time);
                 node = node.Next;
                 if (!isAlive)
                 {
@@ -99,7 +104,9 @@ namespace TimeSink.Engine.Core.Particles
                     }
                     else
                     {
-                        ActiveParticles.Remove(node.Previous);
+                      ActiveParticles.Remove(node.Previous);
+                      Engine.LevelManager.RenderManager.UnregisterRenderable(node.Value);
+
                     }
                 }
             }
@@ -110,15 +117,52 @@ namespace TimeSink.Engine.Core.Particles
             LinkedListNode<Particle> node = ActiveParticles.First;
             while (node != null)
             {
-                node.Value.Draw(spriteBatch, Scale, Offset);
-                node = node.Next;
+         //       node.Value.Draw(spriteBatch, Scale, Offset);
+           //     node = node.Next;
             }
         }
 
         public void Clear()
         {
+
+            foreach (Particle p in ActiveParticles)
+            {
+                Engine.LevelManager.RenderManager.UnregisterRenderable(p);
+            }
             ActiveParticles.Clear();
         }
 
+
+        public override string EditorName
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override Guid Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override Engine.Core.Rendering.IRendering Preview
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override List<FarseerPhysics.Dynamics.Fixture> CollisionGeometry
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override List<Engine.Core.Rendering.IRendering> Renderings
+        {
+            get { return new List<IRendering> { new NullRendering()}; }
+        }
     }
 }
