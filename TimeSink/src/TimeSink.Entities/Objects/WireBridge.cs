@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeSink.Engine.Core.Editor;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
 
 namespace TimeSink.Entities.Objects
@@ -16,7 +18,7 @@ namespace TimeSink.Entities.Objects
     class WireBridge : VineBridge
     {
         private const string editorName = "Wire Bridge";
-        const string EDITOR_PREVIEW = "";
+        const string EDITOR_PREVIEW = "Textures/Objects/electric wireOn";
         private static readonly Guid guid = new Guid("51609f7d-8f65-46af-9eba-786f48352463");
         public bool Electrified { get; set; }
         private UserControlledCharacter attachedChar = null;
@@ -94,6 +96,21 @@ namespace TimeSink.Entities.Objects
 
         private void AnimateElectricity()
         {
+        }
+
+        public override List<IRendering> Renderings
+        {
+            get
+            {
+                return new List<IRendering>()
+                {
+                    new BasicRendering(EDITOR_PREVIEW)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache)
+                    }
+                };
+            }
         }
     }
 }

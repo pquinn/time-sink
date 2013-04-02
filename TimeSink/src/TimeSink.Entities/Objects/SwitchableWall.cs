@@ -23,7 +23,7 @@ namespace TimeSink.Entities.Objects
     public class SwitchableWall : Wall, ISwitchable
     {
         const string EDITOR_NAME = "Switchable Wall";
-        const string TEXTURE = "Textures/Objects/Ice Wall";
+        const string TEXTURE = "Textures/Objects/energy_wall";
 
         private static readonly Guid guid = new Guid("ec4e9acd-6deb-46f4-bfc7-4793b6c39ed9");
         public override string EditorName
