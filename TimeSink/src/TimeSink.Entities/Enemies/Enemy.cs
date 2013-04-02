@@ -103,19 +103,25 @@ namespace TimeSink.Entities.Enemies
         {
         }
 
-        protected bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
+        protected virtual bool OnCollidedWith(Fixture f, Arrow arrow, Fixture af, Contact info)
         {
             health -= 100;
             return true;
         }
 
-        protected bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
+        protected virtual bool OnCollidedWith(Fixture f, Dart dart, Fixture df, Contact info)
         {
             RegisterDot(dart.dot);
             return true;
         }
 
-        protected bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        protected virtual bool OnCollidedWith(Fixture f, EnergyBullet bullet, Fixture df, Contact info)
+        {
+            health -= 7;
+            return true;
+        }
+
+        protected virtual bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
         {
             c.TakeDamage(25, true);
             return true;
@@ -186,6 +192,7 @@ namespace TimeSink.Entities.Enemies
                 Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<EnergyBullet>(OnCollidedWith);
 
                 var fix = Physics.FixtureList[0];
                 fix.CollisionCategories = Category.Cat3;
