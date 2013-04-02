@@ -487,7 +487,12 @@ namespace TimeSink.Entities
 
             if (Inventory.Count > 0 && Inventory[0] is EnergyGun)
             {
-                ((EnergyGun)Inventory[0]).OnUpdate(gameTime, Engine);
+                var gun = ((EnergyGun)Inventory[0]);
+                gun.OnUpdate(gameTime, Engine);
+
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot)){
+                    gun.Fire(this, Engine, gameTime, 0, chargingWeapon);
+                }
             }
 
             if (!chargingWeapon)

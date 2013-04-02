@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Triggers;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -112,6 +113,7 @@ namespace TimeSink.Entities.Enemies
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<BreakableWall>(OnCollidedWith);
+                Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
             }
 
             base.InitializePhysics(false, engineRegistrations);
@@ -131,6 +133,11 @@ namespace TimeSink.Entities.Enemies
             if (!character.Invulnerable)
                 character.TakeDamage(30, true);
 
+            return false;
+        }
+
+        public virtual bool OnCollidedWith(Fixture f1, Entity entity, Fixture f2, Contact contact)
+        {
             return false;
         }
 
