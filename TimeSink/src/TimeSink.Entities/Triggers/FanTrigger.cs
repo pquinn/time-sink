@@ -20,9 +20,21 @@ using Microsoft.Xna.Framework.Content;
 using Engine.Defaults;
 using TimeSink.Engine.Core.Caching;
 using TimeSink.Entities.Utils;
+using TimeSink.Entities.Objects;
 
+
+// make fans horizontal too
+// separate interval from inactive time
 namespace TimeSink.Entities.Triggers
 {
+    public enum FanDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+
     [SerializableEntity("89bb3358-5b34-43ca-8bd3-fa21322159ba")]
     [EditorEnabled]
     public class FanTrigger : Trigger, ISwitchable
@@ -30,10 +42,12 @@ namespace TimeSink.Entities.Triggers
         const string EDITOR_NAME = "Fan Trigger";
         private static readonly Guid GUID = new Guid("89bb3358-5b34-43ca-8bd3-fa21322159ba");
 
-        private Vector2 originPoint;
-        private int forceFactor = 1100;
-
-        private double nextLogTime = 0;
+        private Vector2 localOriginPoint;
+        private int forceFactor = 50;
+        private double nextFlipTime = 0;
+        private bool collided;
+        private UserControlledCharacter _character;
+        private Emitter particles;
         
         public FanTrigger() : base() { }
 
@@ -43,8 +57,16 @@ namespace TimeSink.Entities.Triggers
         }
 
         [SerializableField]
-        [EditableField("Interval (ms)")]
+        [EditableField("Active Interval (ms)")]
         public int IntervalDuration { get; set; }
+
+        [SerializableField]
+        [EditableField("Inactive Time (ms)")]
+        public int InactiveTime { get; set; }
+
+        [SerializableField]
+        [EditableField("Fan Direction")]
+        public FanDirection FanDirection { get; set; }
 
         [SerializableField]
         public override Guid Id
@@ -60,10 +82,8 @@ namespace TimeSink.Entities.Triggers
                 c.Physics.IgnoreGravity = true;
                 c.CanJump = false;
                 c.Physics.LinearVelocity = Vector2.Zero;
-                var originPointInMeters = PhysicsConstants.PixelsToMeters(originPoint);
-                var originPointInWorld = Position + originPointInMeters;
-                var magnitude = (100 - ((originPointInWorld.Y - c.Position.Y) / PhysicsConstants.PixelsToMeters(Height))) / 100;
-                c.Physics.ApplyForce(new Vector2(0, -forceFactor * magnitude));
+                _character = c;
+                collided = true;
                 return true;
             }
             else
@@ -72,10 +92,54 @@ namespace TimeSink.Entities.Triggers
             }
         }
 
+        private Vector2 CalculateForce(Vector2 characterPosition)
+        {
+            float originDirection, characterDirection, dimensionDirection;
+            var originPointInMeters = PhysicsConstants.PixelsToMeters(localOriginPoint);
+            var originPointInWorld = Position + originPointInMeters;
+
+            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+            {
+                originDirection = originPointInWorld.Y;
+                characterDirection = characterPosition.Y;
+                dimensionDirection = PhysicsConstants.PixelsToMeters(Height);
+            }
+            else
+            {
+                originDirection = originPointInWorld.X;
+                characterDirection = characterPosition.X;
+                dimensionDirection = PhysicsConstants.PixelsToMeters(Width);
+            }
+
+            var magnitude = (dimensionDirection - (Math.Abs((characterDirection - originDirection)))) / dimensionDirection;
+            return DetermineDirection(magnitude * forceFactor);
+        }
+
+        private Vector2 DetermineDirection(float magnitude)
+        {
+            switch (FanDirection)
+            {
+                case FanDirection.Up:
+                    return new Vector2(0, -1) * magnitude;
+                case FanDirection.Down:
+                    return new Vector2(0, 1) * magnitude;
+                case FanDirection.Left:
+                    return new Vector2(-1, 0) * magnitude;
+                case FanDirection.Right:
+                    return new Vector2(1, 0) * magnitude;
+                default:
+                    // this should never happen
+                    return Vector2.Zero;
+            }
+
+            
+        }
+
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
             c.CanJump = true;
             c.Physics.IgnoreGravity = false;
+            collided = false;
         }
 
         protected override void RegisterCollisions()
@@ -96,16 +160,64 @@ namespace TimeSink.Entities.Triggers
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             base.InitializePhysics(force, engineRegistrations);
-            originPoint = new Vector2(0, Height / 2);
+            // divide measurement by 2 because origin is in center
+            switch (FanDirection)
+            {
+                case FanDirection.Up:
+                    localOriginPoint = new Vector2(0, Height / 2);
+                    break;
+                case FanDirection.Down:
+                    localOriginPoint = new Vector2(0, -Height / 2);
+                    break;
+                case FanDirection.Left:
+                    localOriginPoint = new Vector2(Width / 2, 0);
+                    break;
+                case FanDirection.Right:
+                    localOriginPoint = new Vector2(-Width / 2, 0);
+                    break;
+                default:
+                    localOriginPoint = new Vector2(0, 0);
+                    break;
+            }
+
+            Enabled = true;
         }
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            if (time.TotalGameTime.TotalMilliseconds >= nextLogTime)
+            if (time.TotalGameTime.TotalMilliseconds >= nextFlipTime)
             {
-                Active = !Active;   
-                nextLogTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
+                if (Active)
+                {
+                    nextFlipTime = time.TotalGameTime.TotalMilliseconds + InactiveTime;
+
+                    particles.Clear();
+                    Engine.LevelManager.UnregisterEntity(particles);
+                    particles = null;
+                }
+                else
+                {
+                    nextFlipTime = time.TotalGameTime.TotalMilliseconds + IntervalDuration;
+                }
+                Active = !Active;
+
             }
+
+            if (Active && particles == null)
+            {
+                particles = new Emitter(new Vector2(100f, 100f),
+                    new Vector2(0, -1), new Vector2(-.5f, .5f), new Vector2(2000f, 2000f),
+                    Vector2.One, Vector2.One, Color.White, Color.Red, Color.White, Color.Red,
+                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position);
+                Engine.LevelManager.RegisterEntity(particles);
+
+            }
+
+            if (Enabled && collided && Active)
+            {
+                _character.Physics.ApplyForce(CalculateForce(_character.Position));
+            }
+
             base.OnUpdate(time, world);
         }
     }
