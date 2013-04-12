@@ -208,7 +208,8 @@ namespace TimeSink.Entities.Triggers
                 particles = new Emitter(new Vector2(100f, 100f),
                     new Vector2(0, -1), new Vector2(-.5f, .5f), new Vector2(2000f, 2000f),
                     Vector2.One, Vector2.One, Color.White, Color.Red, Color.White, Color.Red,
-                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position);
+                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position,
+                    PhysicsConstants.PixelsToMeters(Width / 2), PhysicsConstants.PixelsToMeters(Height / 2));
                 Engine.LevelManager.RegisterEntity(particles);
 
             }

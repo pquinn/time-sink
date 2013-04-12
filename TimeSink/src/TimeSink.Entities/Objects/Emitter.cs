@@ -34,10 +34,12 @@ namespace TimeSink.Entities.Objects
         public Color EndColor2;
         public Vector2 StartSpeed;
         public Vector2 EndSpeed;
+        public float MaxWidth;
+        public float MaxHeight;
 
         public Emitter(Vector2 SecPerSpawn, Vector2 SpawnDirection, Vector2 SpawnNoiseAngle, Vector2 StartLife, Vector2 StartScale,
                     Vector2 EndScale, Color StartColor1, Color StartColor2, Color EndColor1, Color EndColor2, Vector2 StartSpeed,
-                    Vector2 EndSpeed, int Budget, Vector2 RelPosition, string ParticleSprite, Random random, Vector2 position)
+                    Vector2 EndSpeed, int Budget, Vector2 RelPosition, string ParticleSprite, Random random, Vector2 position, float maxWidth, float maxHeight)
         {
             this.SecPerSpawn = SecPerSpawn;
             this.SpawnDirection = SpawnDirection;
@@ -58,6 +60,8 @@ namespace TimeSink.Entities.Objects
             ActiveParticles = new LinkedList<Particle>();
             this.NextSpawnIn = MathLib.LinearInterpolate(SecPerSpawn.X, SecPerSpawn.Y, random.NextDouble());
             this.MSecPassed = 0.0f;
+            this.MaxWidth = maxWidth;
+            this.MaxHeight = maxHeight;
             Position = position;
         }
 
@@ -82,7 +86,7 @@ namespace TimeSink.Entities.Objects
                         MathLib.LinearInterpolate(EndScale.X, EndScale.Y, random.NextDouble()),
                         MathLib.LinearInterpolate(StartColor1, StartColor2, random.NextDouble()),
                         MathLib.LinearInterpolate(EndColor1, EndColor2, random.NextDouble()),
-                        ParticleSprite, Engine.TextureCache);
+                        ParticleSprite, Engine.TextureCache, MaxHeight, MaxWidth);
                     ActiveParticles.AddLast(particle);
                     Engine.LevelManager.RenderManager.RegisterRenderable(particle);
                     
@@ -94,18 +98,28 @@ namespace TimeSink.Entities.Objects
             LinkedListNode<Particle> node = ActiveParticles.First;
             while (node != null)
             {
-                bool isAlive = node.Value.Update(time);
+                bool isAlive = node.Value.Update(time, world);
                 node = node.Next;
                 if (!isAlive)
                 {
                     if (node == null)
                     {
                         ActiveParticles.RemoveLast();
+
+                        if (ActiveParticles.Count != 0)
+                        {
+                            Engine.LevelManager.RenderManager.UnregisterRenderable(ActiveParticles.Last.Value);
+                        }
                     }
                     else
                     {
                       ActiveParticles.Remove(node.Previous);
                       Engine.LevelManager.RenderManager.UnregisterRenderable(node.Value);
+                      if (node.Previous != null)
+                      {
+                          Engine.LevelManager.RenderManager.UnregisterRenderable(node.Previous.Value);
+                      }
+                      
 
                     }
                 }
