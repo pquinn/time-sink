@@ -67,7 +67,7 @@ namespace TimeSink.Entities.Objects
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height / 2);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 Physics = BodyFactory.CreateRectangle(
                     world,
@@ -113,7 +113,17 @@ namespace TimeSink.Entities.Objects
 
         public override List<IRendering> Renderings
         {
-            get { return new List<IRendering>() { Preview }; }
+            get
+            {
+                return new List<IRendering>() 
+                { 
+                    new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                    } 
+                };
+            }
         }
 
         public override void DestroyPhysics()

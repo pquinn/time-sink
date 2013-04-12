@@ -41,6 +41,7 @@ namespace TimeSink.Entities.Triggers
     {
         const string EDITOR_NAME = "Fan Trigger";
         private static readonly Guid GUID = new Guid("89bb3358-5b34-43ca-8bd3-fa21322159ba");
+        const string TEXTURE = "Textures/Objects/FanAnim";
 
         private Vector2 localOriginPoint;
         private int forceFactor = 50;
@@ -48,8 +49,23 @@ namespace TimeSink.Entities.Triggers
         private bool collided;
         private UserControlledCharacter _character;
         private Emitter particles;
-        
-        public FanTrigger() : base() { }
+        private float animInterval = 50f;
+        private float animTimer = 0f;
+        private NewAnimationRendering rendering;
+        private static readonly Vector2 SrcRectSize = new Vector2(158.9999f, 97);
+
+        public FanTrigger()
+            : base()
+        {
+            rendering = new NewAnimationRendering(
+                TEXTURE,
+                SrcRectSize,
+                24,
+                PhysicsConstants.MetersToPixels(position),
+                0,
+                new Vector2(.75f, .35f),
+                Color.White) { DepthWithinLayer = 100 };
+        }
 
         public override string EditorName
         {
@@ -157,6 +173,17 @@ namespace TimeSink.Entities.Triggers
             Enabled = !Enabled;
         }
 
+        public override List<IRendering> Renderings
+        {
+            get
+            {
+                return new List<IRendering>()
+                {  
+                    rendering
+                };
+            }
+        }
+
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             base.InitializePhysics(force, engineRegistrations);
@@ -185,6 +212,32 @@ namespace TimeSink.Entities.Triggers
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+
+            animTimer += (float)time.ElapsedGameTime.Milliseconds;
+
+            switch (FanDirection)
+            {
+                case FanDirection.Up:
+                    rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2(0,(Height / 2));
+                    break;
+                case FanDirection.Down:
+                    rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2(0,-(Height / 2));
+                    break;
+                case FanDirection.Left:
+                    rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2((Width / 2), 0);
+                    break;
+                case FanDirection.Right:
+                    rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2(-(Width / 2), 0);
+                    break;
+            }
+            if (Active)
+            {
+                if (animTimer >= animInterval)
+                {
+                    rendering.CurrentFrame = (rendering.CurrentFrame + 1) % rendering.NumFrames;
+                    animTimer = 0f;
+                }
+            }
             if (time.TotalGameTime.TotalMilliseconds >= nextFlipTime)
             {
                 if (Active)
@@ -205,11 +258,27 @@ namespace TimeSink.Entities.Triggers
 
             if (Active && particles == null)
             {
+                Vector2 offset = Vector2.Zero;
+                switch(FanDirection)
+                {
+                    case FanDirection.Up:
+                        offset = new Vector2(0,  PhysicsConstants.PixelsToMeters(Height) / 2);
+                        break;
+                    case FanDirection.Down:
+                        offset = new Vector2(0, -PhysicsConstants.PixelsToMeters(Height) / 2);
+                        break;
+                    case FanDirection.Left:
+                        offset = new Vector2(PhysicsConstants.PixelsToMeters(Width) / 2, 0);
+                        break;
+                    case FanDirection.Right:
+                        offset = new Vector2(-PhysicsConstants.PixelsToMeters(Width) / 2, 0);
+                        break;
+                }
                 particles = new Emitter(new Vector2(100f, 100f),
-                    new Vector2(0, -1), new Vector2(-.5f, .5f), new Vector2(2000f, 2000f),
+                    DetermineDirection(1.0f), new Vector2(-.1f, .1f), new Vector2(4000f, 4000f),
                     Vector2.One, Vector2.One, Color.White, Color.Red, Color.White, Color.Red,
-                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position,
-                    PhysicsConstants.PixelsToMeters(Width / 2), PhysicsConstants.PixelsToMeters(Height / 2));
+                    new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position + offset,
+                    PhysicsConstants.PixelsToMeters(Width * 2), PhysicsConstants.PixelsToMeters(Height * 2));
                 Engine.LevelManager.RegisterEntity(particles);
 
             }
