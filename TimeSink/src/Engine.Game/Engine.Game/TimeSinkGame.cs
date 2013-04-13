@@ -50,6 +50,7 @@ namespace TimeSink.Engine.Game
 
         HealthBar healthBar = new HealthBar();
         ShieldBar shieldBar = new ShieldBar();
+        ManaBar manaBar = new ManaBar();
 
         private Save defaultSave;
 
@@ -307,10 +308,12 @@ namespace TimeSink.Engine.Game
 
             LevelManager.RenderManager.RegisterRenderable(healthBar);
             LevelManager.RenderManager.RegisterRenderable(shieldBar);
+            LevelManager.RenderManager.RegisterRenderable(manaBar);
             if (Character != null)
             {
                 healthBar.UpdateHealth(Character);
-                shieldBar.UpdateHealth(Character);
+                shieldBar.UpdateShield(Character);
+                manaBar.UpdateMana(Character);
             }
         }
 
@@ -318,7 +321,8 @@ namespace TimeSink.Engine.Game
         {
             base.UpdateHealth();
             healthBar.UpdateHealth(Character);
-            shieldBar.UpdateHealth(Character);
+            shieldBar.UpdateShield(Character);
+            manaBar.UpdateMana(Character);
         }
 
         #region Controller code

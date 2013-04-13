@@ -51,6 +51,7 @@ namespace TimeSink.Entities.Actions
             if (Character.HoldingTorch != null)
             {
                 nest.Dead = true;
+                used = true;
             }
         }
     }

@@ -72,8 +72,11 @@ namespace TimeSink.Entities.Actions
                 Engine.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
                 initialized = false;
             }
-            Character.AddInventoryItem(new EnergyGun());
+            var gun = new EnergyGun();
+            Character.AddInventoryItem(gun);
+            Engine.LevelManager.RegisterEntity(gun);
             DestroyPhysics();
+            used = true;
 
             if (!engine.ScreenManager.IsInDialogueState() && !String.IsNullOrEmpty(Prompt))
                 engine.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(Prompt)), null);

@@ -56,6 +56,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\HUD\HealthBarTemp.png">
+      <Name>HealthBarTemp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Keys\a-Key.png">
       <Name>a-Key</Name>
       <Importer>TextureImporter</Importer>
@@ -2110,13 +2115,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\HUD\HealthBarTemp.png">
-      <Name>HealthBarTemp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\Levels\Future\Lab2-03\Lab2-03%4000.PNG">
       <Name>Lab2-03%4000</Name>
       <Importer>TextureImporter</Importer>
@@ -2325,13 +2323,6 @@
   <ItemGroup>
     <Compile Include="Textures\Sprites\SpriteSheets\Jump_Torch_Left.PNG">
       <Name>Jump_Torch_Left</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\HUD\HealthBarTemp.png">
-      <Name>HealthBarTemp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -2893,6 +2884,13 @@
   <ItemGroup>
     <Compile Include="Textures\Objects\ladda.png">
       <Name>ladda</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\HUD\ManaBarTemp.png">
+      <Name>ManaBarTemp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

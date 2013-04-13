@@ -53,7 +53,10 @@ namespace TimeSink.Entities.Actions
             guard.DialogueState++;
 
             if (!engine.ScreenManager.IsInDialogueState())
+            {
                 engine.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(Prompt)), null);
+                used = true;
+            }
         }
     }
 }

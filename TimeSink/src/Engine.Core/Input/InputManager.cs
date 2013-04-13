@@ -14,11 +14,10 @@ namespace TimeSink.Engine.Core.Input
         private Dictionary<ButtonActions, string> keyboardTextures;
         private Dictionary<ButtonActions, string> gamepadTextures;
 
-
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, 
-            UpAction, DownAction, 
+            MoveLeft, MoveRight, Jump, Sprint, Shoot, ChargeShot,
+            UpAction, DownAction, Heal,
             AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
             AimUpRight, AimUpLeft, AimDownLeft, AimDownRight
         }
@@ -72,8 +71,10 @@ namespace TimeSink.Engine.Core.Input
             keyDictionary.Add( ButtonActions.DownAction,Keys.S);
             keyDictionary.Add(ButtonActions.UpAction,Keys.W );
             keyDictionary.Add(ButtonActions.Shoot, Keys.F );
+            keyDictionary.Add(ButtonActions.ChargeShot, Keys.RightControl);
+            keyDictionary.Add(ButtonActions.Heal, Keys.H);
             keyDictionary.Add( ButtonActions.Interact,Keys.E);
-            keyDictionary.Add(ButtonActions.Pickup, Keys.X);
+            keyDictionary.Add(ButtonActions.Pickup, Keys.E);
             keyDictionary.Add( ButtonActions.Sprint,Keys.LeftShift);
             keyDictionary.Add( ButtonActions.AimUp,Keys.Up);
             keyDictionary.Add( ButtonActions.AimDown,Keys.Down);
@@ -86,6 +87,8 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.DownAction, Buttons.DPadDown);
             gamepadDictionary.Add(ButtonActions.UpAction, Buttons.DPadUp);
             gamepadDictionary.Add(ButtonActions.Shoot, Buttons.RightTrigger);
+            gamepadDictionary.Add(ButtonActions.ChargeShot, Buttons.LeftTrigger);
+            gamepadDictionary.Add(ButtonActions.Heal, Buttons.B);
             gamepadDictionary.Add(ButtonActions.Interact, Buttons.Y);
             gamepadDictionary.Add(ButtonActions.Sprint, Buttons.X);
             gamepadDictionary.Add(ButtonActions.AimUp, Buttons.RightThumbstickUp);
@@ -93,7 +96,7 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.AimRight, Buttons.RightThumbstickRight);
             gamepadDictionary.Add(ButtonActions.AimLeft, Buttons.RightThumbstickLeft);
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
-            gamepadDictionary.Add(ButtonActions.Pickup, Buttons.B);
+            gamepadDictionary.Add(ButtonActions.Pickup, Buttons.Y);
 
             keyboardTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/a-Key");
             keyboardTextures.Add(ButtonActions.MoveRight, "Textures/Keys/d-Key");
@@ -138,6 +141,15 @@ namespace TimeSink.Engine.Core.Input
             return result;
         }
 
+        public bool KeyReleased(Keys key)
+        {
+            CurrentKeyState = Keyboard.GetState();
+            bool result;
+            result = CurrentKeyState.IsKeyUp(key) &&
+                     LastKeyState.IsKeyDown(key);
+            return result;
+        }
+
         // Is a key pressed?
         public bool Pressed(Keys key)
         {
@@ -170,23 +182,32 @@ namespace TimeSink.Engine.Core.Input
             return result;
         }
 
+        public bool KeyReleased(Buttons button)
+        {
+            CurrentPadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
+            bool result;
+            result = CurrentPadState.IsButtonUp(button) &&
+                     LastPadState.IsButtonDown(button);
+            return result;
+        }
+
+        public bool IsNewAction(ButtonActions b)
+        {
+            return IsNewKey(keyDictionary[b]) || IsNewKey(gamepadDictionary[b]);
+        }
+
         public bool ActionHeld(ButtonActions b)
         {
-            if (Pressed(keyDictionary[b]) || Pressed(gamepadDictionary[b]))
-            {
-                return true;
-            }
-            else
-                return false;
+            return Pressed(keyDictionary[b]) || Pressed(gamepadDictionary[b]);
         }
         public bool ActionPressed(ButtonActions b)
         {
-            if (IsNewKey(keyDictionary[b]) || IsNewKey(gamepadDictionary[b]))
-            {
-                return true;
-            }
-            else
-                return false;
+            return IsNewKey(keyDictionary[b]) || IsNewKey(gamepadDictionary[b]);
+        }
+
+        public bool ActionReleased(ButtonActions b)
+        {
+            return KeyReleased(keyDictionary[b]) || KeyReleased(gamepadDictionary[b]);
         }
 
         public MouseState CurrentMouseState

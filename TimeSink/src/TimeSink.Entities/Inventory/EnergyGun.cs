@@ -28,6 +28,8 @@ namespace TimeSink.Entities.Inventory
         private const int RADIUS = 15;
         private const int TIME_BETWEEN_SHOTS = 100;
         private const int RELOAD_TIME = 3000;
+        private const float MANA_DRAIN_PER_MILLI = .005f;
+        private const float TIME_SCALE = 2.5f;
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -35,6 +37,8 @@ namespace TimeSink.Entities.Inventory
         private int ammo = MAX_AMMO;
         private  bool reloading;
         private int reload_count;
+        private bool charged;
+        private UserControlledCharacter character;
 
         public EnergyGun()
             : this(Vector2.Zero)
@@ -62,26 +66,24 @@ namespace TimeSink.Entities.Inventory
             }
         }
 
-        public bool OnCollidedWith(Fixture f, Entity entity, Fixture eFix, Contact info)
+        public override void OnUpdate(GameTime time, EngineGame world)
         {
-            if (info.Enabled && !(entity is UserControlledCharacter || entity is Trigger || entity is Ladder || entity is Torch || entity is TutorialTrigger || entity is NonPlayerCharacter))
+            if (charged && character.Mana > 0)
             {
-                Dead = true;
+                character.Mana = Math.Max(0, character.Mana - time.ElapsedGameTime.Milliseconds * MANA_DRAIN_PER_MILLI);
+                Engine.UpdateHealth();
             }
             else
             {
-                return false;
+                charged = false;
+                Engine.LevelManager.PhysicsManager.GlobalReferenceScale = 1;
             }
-            return info.Enabled;
-        }
 
-        public override void OnUpdate(GameTime time, EngineGame world)
-        {
             timeSinceLastShot += time.ElapsedGameTime.Milliseconds;
             if (reloading)
             {
                 reload_count += time.ElapsedGameTime.Milliseconds;
-                if (reload_count > RELOAD_TIME)
+                if (reload_count > RELOAD_TIME * Engine.LevelManager.PhysicsManager.GlobalReferenceScale)
                 {
                     reload_count = 0;
                     reloading = false;
@@ -99,7 +101,7 @@ namespace TimeSink.Entities.Inventory
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
-            if (timeSinceLastShot >= TIME_BETWEEN_SHOTS && !reloading && ammo > 0)
+            if (timeSinceLastShot >= TIME_BETWEEN_SHOTS * Engine.LevelManager.PhysicsManager.GlobalReferenceScale && !reloading && ammo > 0)
             {
                 timeSinceLastShot = 0;
                 EnergyBullet bullet = new EnergyBullet(
@@ -127,6 +129,21 @@ namespace TimeSink.Entities.Inventory
                 reload_count = 0;
                 //add reload animations
             }
+        }
+
+        public void ChargeInitiated(UserControlledCharacter character, GameTime gameTime)
+        {
+            charged = character.Mana > 0;
+            this.character = character;
+            
+            if (charged)
+                Engine.LevelManager.PhysicsManager.GlobalReferenceScale = TIME_SCALE;
+        }
+
+        public void ChargeReleased(UserControlledCharacter character, GameTime gameTime)
+        {
+            charged = false;
+            Engine.LevelManager.PhysicsManager.GlobalReferenceScale = 1;
         }
 
         public override string EditorName

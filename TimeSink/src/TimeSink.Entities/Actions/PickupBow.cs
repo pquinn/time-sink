@@ -74,6 +74,7 @@ namespace TimeSink.Entities.Actions
             }
             Character.AddInventoryItem(new Arrow());
             DestroyPhysics();
+            used = true;
 
             if (!engine.ScreenManager.IsInDialogueState() && !String.IsNullOrEmpty(Prompt))
                 engine.ScreenManager.AddScreen(DialogueScreen.InitializeDialogueBox(new Guid(Prompt)), null);

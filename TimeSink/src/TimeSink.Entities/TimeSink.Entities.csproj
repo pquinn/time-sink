@@ -70,11 +70,13 @@
   <ItemGroup>
     <Compile Include="Actions\BinarySwitch.cs" />
     <Compile Include="Actions\ConditionalDoor.cs" />
+    <Compile Include="Actions\ManaRegenerator.cs" />
     <Compile Include="Actions\PickupEnergyGun.cs" />
     <Compile Include="Enemies\Hopper.cs" />
     <Compile Include="Enemies\InterpolatedEnemy.cs" />
     <Compile Include="Enemies\Turret.cs" />
     <Compile Include="Enemies\Zoomer.cs" />
+    <Compile Include="Hud\ManaBar.cs" />
     <Compile Include="Inventory\SmallBullet.cs" />
     <Compile Include="Inventory\EnergyGun.cs" />
     <Compile Include="Inventory\EnergyBullet.cs" />

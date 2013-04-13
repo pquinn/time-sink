@@ -171,5 +171,14 @@ namespace TimeSink.Entities.Inventory
 
             Physics.Dispose();
         }
+
+
+        public void ChargeInitiated(UserControlledCharacter character, GameTime gameTime)
+        {
+        }
+
+        public void ChargeReleased(UserControlledCharacter character, GameTime gameTime)
+        {
+        }
     }
 }

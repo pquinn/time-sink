@@ -81,8 +81,7 @@ namespace TimeSink.Entities
             HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut
             #endregion
         };
-
-
+        
         BodyStates currentState;
 
         //Texture strings for content loading
@@ -176,6 +175,8 @@ namespace TimeSink.Entities
         const int RECHARGE_WAIT_TIME = 3000;
         const int RECHARGE_AMOUNT = 20;
         const int SHIELD_MAX = 50;
+        const float HEAL_MANA_BURN_PER_MILLI = .003f;
+        const float MANA_TO_HEALTH_SCALE = 2f;
 
         private SoundEffect jumpSound;
         private SoundEffect jumpImpactSound;
@@ -205,7 +206,7 @@ namespace TimeSink.Entities
         private bool manaRegenEnabled = true;
         private const float MANA_REGEN_RATE = .2f; //percent/sec
         private const float CHARGE_MANA_COST = 5f; //mana/percent
-        private const float MAX_MANA = 100;
+        public const float MAX_MANA = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
         private int timeSinceLastHit = 0;
@@ -479,11 +480,11 @@ namespace TimeSink.Entities
                     TakeDamage(dot.Tick(gameTime), dot.DoesKnockBack);
             }
 
-            timeSinceLastHit += gameTime.ElapsedGameTime.Milliseconds;
-            if (timeSinceLastHit >= RECHARGE_WAIT_TIME)
-            {
-                Recharge(gameTime.ElapsedGameTime.Milliseconds);
-            }
+            //timeSinceLastHit += gameTime.ElapsedGameTime.Milliseconds;
+            //if (timeSinceLastHit >= RECHARGE_WAIT_TIME)
+            //{
+            //    Recharge(gameTime.ElapsedGameTime.Milliseconds);
+            //}
 
             if (Inventory.Count > 0 && Inventory[0] is EnergyGun)
             {
@@ -493,35 +494,6 @@ namespace TimeSink.Entities
                 if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot)){
                     gun.Fire(this, Engine, gameTime, 0, chargingWeapon);
                 }
-            }
-
-            if (!chargingWeapon)
-            {
-                //    if (Mana > 0)
-                //    {
-                //        var chargeAmt = MANA_REGEN_RATE * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //        var manaCost = chargeAmt * CHARGE_MANA_COST;
-                //        //if (manaCost > Mana)
-                //        //{
-                //        //    chargeAmt *= Mana / manaCost;
-                //        //}
-                //        var newChargePercent = chargePercent + chargeAmt;
-                //        if (newChargePercent > 1)
-                //        {
-                //            chargePercent = 1;
-                //            //manaCost /= newChargePercent;
-                //        }
-                //        else
-                //        {
-                //            chargePercent += chargeAmt;
-                //        }
-                //        //Mana -= manaCost;
-                //    }
-                //}
-                //else
-                //{
-                if (mana < MAX_MANA)
-                    Mana += .5f * (float)gameTime.ElapsedGameTime.TotalMilliseconds; //Recharge
             }
 
             if (gameTime.TotalGameTime.TotalMilliseconds >= nextLogTime)
@@ -1195,6 +1167,21 @@ namespace TimeSink.Entities
 
                     #region Shooting
 
+                    if (InputManager.Instance.IsNewAction(InputManager.ButtonActions.ChargeShot))
+                    {
+                        if (Inventory.Count != 0)
+                        {
+                            Inventory[activeItem].ChargeInitiated(this, gameTime);
+                        }
+                    }
+                    else if (InputManager.Instance.ActionReleased(InputManager.ButtonActions.ChargeShot))
+                    {
+                        if (Inventory.Count != 0)
+                        {
+                            Inventory[activeItem].ChargeReleased(this, gameTime);
+                        }
+                    }
+
                     if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.Shoot))
                     {
                         if (shotTimer >= shotInterval && HoldingTorch == null && Inventory.Count != 0 && (Inventory[activeItem] is Arrow || Inventory[activeItem] is EnergyGun) && !climbing)
@@ -1219,8 +1206,6 @@ namespace TimeSink.Entities
                         {
                             PlaySound(arrowSound);
                             Inventory[activeItem].Use(this, world, gameTime, holdTime, chargingWeapon);
-                            if (chargingWeapon)
-                                Mana -= 50; //TODO: constant? per-weapon? calc?
                             var shooting = animations[currentState].CurrentFrame = 0;
 
                             currentState = facing == -1
@@ -1247,6 +1232,18 @@ namespace TimeSink.Entities
                             activeItem++;
                         }
                         EngineGame.Instance.ScreenManager.CurrentGameplay.UpdatePrimaryItems(this);
+                    }
+
+                    #endregion
+
+                    #region abilities
+
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Shield < SHIELD_MAX && Mana > 0)
+                    {
+                        var manaUsage = Math.Min(Mana, gameTime.ElapsedGameTime.Milliseconds * HEAL_MANA_BURN_PER_MILLI);
+                        mana -= manaUsage; 
+                        Shield = Math.Min(SHIELD_MAX, Shield + manaUsage * MANA_TO_HEALTH_SCALE);
+                        Engine.UpdateHealth();
                     }
 
                     #endregion

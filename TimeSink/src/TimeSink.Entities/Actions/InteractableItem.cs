@@ -39,7 +39,8 @@ namespace TimeSink.Entities.Actions
         private bool collided;
         protected EngineGame engine;
         private ItemPopup popup;
-        private bool used;
+        protected bool used;
+        protected bool heldUsed;
         private UserControlledCharacter character;
 
         public UserControlledCharacter Character { get { return character; } }
@@ -159,6 +160,7 @@ namespace TimeSink.Entities.Actions
             //TODO: destroy item popup too?
         }
 
+        private bool usedGuard;
         public override void HandleKeyboardInput(GameTime gameTime, EngineGame world)
         {
             if (collided && !used)
@@ -167,14 +169,25 @@ namespace TimeSink.Entities.Actions
                 {
                     ExecuteAction();
                 }
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Pickup))
+                {
+                    ExecuteHeldAction(gameTime);
+                }
             }
+            if (used && !usedGuard)
+            {
+                engine.LevelManager.RenderManager.UnregisterRenderable(popup);
+                registered = false;
+                usedGuard = true;
+            }
+        }
+
+        protected virtual void ExecuteHeldAction(GameTime gameTime)
+        {
         }
 
         protected virtual void ExecuteAction()
         {
-            // action logic here
-            engine.LevelManager.RenderManager.UnregisterRenderable(popup);
-            used = true;
         }
 
         public override void Load(IComponentContext engineRegistrations)

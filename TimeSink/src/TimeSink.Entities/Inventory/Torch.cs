@@ -195,5 +195,14 @@ namespace TimeSink.Entities.Inventory
             rendering.Position = PhysicsConstants.MetersToPixels(Physics.Position);
 
         }
+
+
+        public void ChargeInitiated(UserControlledCharacter character, GameTime gameTime)
+        {
+        }
+
+        public void ChargeReleased(UserControlledCharacter character, GameTime gameTime)
+        {
+        }
     }
 }

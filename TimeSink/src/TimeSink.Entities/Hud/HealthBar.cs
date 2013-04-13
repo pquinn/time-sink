@@ -19,8 +19,6 @@ namespace TimeSink.Entities.Hud
         {
         }
 
-
-
         public List<IRendering> Renderings
         {
             get
@@ -52,6 +50,5 @@ namespace TimeSink.Entities.Hud
         {
             scale = c.Health / 100;
         }
-
     }
 }

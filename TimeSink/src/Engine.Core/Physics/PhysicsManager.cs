@@ -18,10 +18,13 @@ namespace TimeSink.Engine.Core.Physics
 
         public World World { get; private set; }
 
+        public float GlobalReferenceScale { get; set; }
+
         public PhysicsManager(IComponentContext engineRegistrations)
         {
             World = new World(PhysicsConstants.Gravity);
             this.engineRegistrations = engineRegistrations;
+            GlobalReferenceScale = 1;
         }
 
         public void RegisterPhysicsBody(IPhysicsEnabledBody body)
@@ -36,12 +39,12 @@ namespace TimeSink.Engine.Core.Physics
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="globalReferenceScale">Scale world is ticking at.</param>
-        public void Update(GameTime gameTime, float globalReferenceScale=1)
+        public void Update(GameTime gameTime)
         {
             //time step from player's perspective
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            var scale = 1 / globalReferenceScale;
+            var scale = 1 / GlobalReferenceScale;
 
             //calculates time scale at specific positions
             Converter<Vector2, float> scaleLookup =

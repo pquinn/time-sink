@@ -86,8 +86,6 @@ namespace TimeSink.Engine.Core
 
             Camera = new Camera(Vector2.One, Vector3.Zero);
 
-
-
             // create default level
             LevelManager = Container.Resolve<LevelManager>();
             LevelManager.LevelLoaded += new LevelLoadedEventHandler(LevelLoaded);
