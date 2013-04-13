@@ -2891,7 +2891,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Objects\ladda.png">
+    <Compile Include="Textures\Tiles\ladda.png">
       <Name>ladda</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

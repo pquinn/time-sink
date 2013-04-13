@@ -95,8 +95,13 @@ namespace TimeSink.Entities.Triggers
         {
             if (cf.UserData.Equals("Ladder") && Active)
             {
-                c.Physics.IgnoreGravity = true;
-                c.CanJump = false;
+
+                if (FanDirection == FanDirection.Down || FanDirection == FanDirection.Up)
+                {
+                    c.CanJump = false;
+                    c.Physics.IgnoreGravity = true;
+                }
+
                 c.Physics.LinearVelocity = Vector2.Zero;
                 _character = c;
                 collided = true;
@@ -222,12 +227,15 @@ namespace TimeSink.Entities.Triggers
                     break;
                 case FanDirection.Down:
                     rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2(0,-(Height / 2));
+                    rendering.Rotation = (float)Math.PI;
                     break;
                 case FanDirection.Left:
                     rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2((Width / 2), 0);
+                    rendering.Rotation = (float)- Math.PI / 2;
                     break;
                 case FanDirection.Right:
                     rendering.Position = PhysicsConstants.MetersToPixels(position) + new Vector2(-(Width / 2), 0);
+                    rendering.Rotation = (float)Math.PI / 2;
                     break;
             }
             if (Active)

@@ -115,14 +115,25 @@ namespace TimeSink.Entities.Objects
         {
             get
             {
-                return new List<IRendering>() 
-                { 
+
+                if (Enabled)
+                {
+                    return new List<IRendering>() 
+                {
                     new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
                         Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
                     } 
                 };
+                }
+                else
+                {
+                    return new List<IRendering>()
+                    {
+                        new NullRendering()
+                    };
+                }
             }
         }
 

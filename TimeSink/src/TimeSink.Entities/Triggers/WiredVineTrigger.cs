@@ -25,10 +25,15 @@ namespace TimeSink.Entities.Triggers
 
         public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter obj, Fixture f2, Contact info)
         {
-            var bridge = (WireBridge) engineGame.LevelManager.Level.Entities.First(x => x.InstanceId == WireBridgeId);
-            bridge.ElectrifyWire();
+            if (f2.UserData.Equals("Ladder"))
+            {
+                var bridge = (WireBridge)engineGame.LevelManager.Level.Entities.First(x => x.InstanceId == WireBridgeId);
+                bridge.ElectrifyWire();
 
-            return true;
+                return true;
+            }
+            else
+                return false;
         }
 
         [SerializableField]
