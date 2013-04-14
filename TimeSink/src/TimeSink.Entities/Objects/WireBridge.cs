@@ -20,7 +20,6 @@ namespace TimeSink.Entities.Objects
         private const string editorName = "Wire Bridge";
         const string EDITOR_PREVIEW = "Textures/Objects/electric wireOn";
         private static readonly Guid guid = new Guid("51609f7d-8f65-46af-9eba-786f48352463");
-        public bool Electrified { get; set; }
         private UserControlledCharacter attachedChar = null;
 
         public WireBridge()
@@ -51,6 +50,14 @@ namespace TimeSink.Entities.Objects
             set
             {
             }
+        }
+
+        [SerializableField]
+        [EditableField("Electrified")]
+        public bool Electrified 
+        { 
+            get; 
+            set; 
         }
 
         public override bool OnCollidedWith(Fixture f, UserControlledCharacter character, Fixture charfix, Contact info)

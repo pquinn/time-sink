@@ -18,13 +18,15 @@ using TimeSink.Engine.Core;
 
 namespace TimeSink.Entities.Enemies
 {
+    public enum DropType { None, Health, Mana }
+
     [EditorEnabled]
     [SerializableEntity("849aaec2-7155-4a37-ab71-42d0c1611881")]
     public class Zoomer : Enemy
     {
         private const string EDITOR_NAME = "Zoomer";
         private const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
-        private const int ZOOM_SPEED = 50;
+        private const int ZOOM_SPEED = 300;
         private const int RAY_LENGTH = 50;
 
         private static readonly Guid GUID = new Guid("849aaec2-7155-4a37-ab71-42d0c1611881");
@@ -45,6 +47,14 @@ namespace TimeSink.Entities.Enemies
         [SerializableField]
         [EditableField("Facing (radians)")]
         public float Facing { get; set; }
+
+        [SerializableField]
+        [EditableField("Drop Type")]
+        public DropType DropType 
+        { 
+            get; 
+            set; 
+        }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -138,5 +148,23 @@ namespace TimeSink.Entities.Enemies
             Physics.ApplyForce(dir * ZOOM_SPEED);
             zoomed = true;
         }
+
+        protected override void OnDeath()
+        {
+            if (zoomed)
+            {
+                switch (DropType)
+                {
+                    case DropType.Health:
+                        //drop health pickup
+                        break;
+                    case DropType.Mana:
+                        //drop mana pickup
+                        break;
+                    default:
+                        break;
+                }
+            }    
+        } 
     }
 }

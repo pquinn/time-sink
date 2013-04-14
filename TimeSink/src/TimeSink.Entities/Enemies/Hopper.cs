@@ -17,8 +17,9 @@ namespace TimeSink.Entities.Enemies
     {
         private const string EDITOR_NAME = "Hopper";
         private const int MAX_JUMP_GUARD = 300;
-        private const int JUMP_FORCE_Y = 4000;
+        private const int JUMP_FORCE_Y = 3500;
         private const int JUMP_FORCE_X = 700;
+        private const int CHAR_DISTANCE_THRESH = 4000;
 
         private static readonly Guid GUID = new Guid("849aaec2-7155-4a37-aa71-42d0c1611881");
         private Guid charGuid = new Guid("defb4f64-1021-420d-8069-e24acebf70bb");
@@ -67,22 +68,18 @@ namespace TimeSink.Entities.Enemies
             if (TouchingGround)
             {
                 jumpGuard += time.ElapsedGameTime.Milliseconds;
-                if (jumpGuard >= MAX_JUMP_GUARD)
+                var character = game.LevelManager.Level.Entities.First(x => x.Id == charGuid);
+                var distToPlayer = Math.Abs(Position.X - character.Position.X);
+                if (jumpGuard >= MAX_JUMP_GUARD && distToPlayer < CHAR_DISTANCE_THRESH)
                 {
                     TouchingGround = false;
-                    jumpGuard = 0;  
-                 
-                    PerformJump(game.LevelManager.Level.Entities.First(x => x.Id == charGuid));
+                    jumpGuard = 0;
+
+                    Physics.ApplyForce(new Vector2(
+                        JUMP_FORCE_X * (character.Position.X < Position.X ? -1 : 1),
+                        -JUMP_FORCE_Y));
                 }
             }
-        }
-
-        private void PerformJump(Entity character)
-        {
-            Physics.ApplyForce(
-                new Vector2(
-                    JUMP_FORCE_X * (character.Position.X < Position.X ? -1 : 1), 
-                    -JUMP_FORCE_Y));
         }
     }
 }

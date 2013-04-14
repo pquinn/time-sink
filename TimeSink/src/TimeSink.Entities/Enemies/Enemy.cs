@@ -132,6 +132,7 @@ namespace TimeSink.Entities.Enemies
             if (health <= 0)
             {
                 Dead = true;
+                OnDeath();
             }
 
             RemoveInactiveDots();
@@ -147,6 +148,9 @@ namespace TimeSink.Entities.Enemies
                 world.LevelManager.RenderManager.UnregisterRenderable(this);
                 world.LevelManager.PhysicsManager.UnregisterPhysicsBody(this);
             }
+        }
+
+        protected virtual void OnDeath(){
         }
 
         private void RemoveInactiveDots()
@@ -207,6 +211,11 @@ namespace TimeSink.Entities.Enemies
             }
 
             base.InitializePhysics(false, engineRegistrations);
+        }
+
+        public override void DestroyPhysics()
+        {
+            Physics.Dispose();
         }
 
         protected virtual Texture2D GetTexture(IResourceCache<Texture2D> textureCache)
