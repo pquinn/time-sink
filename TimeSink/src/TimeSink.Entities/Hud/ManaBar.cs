@@ -12,7 +12,7 @@ namespace TimeSink.Entities.Hud
         const string TEXTURE = "Textures/HUD/ManaBarTemp";
         const string EDITOR_NAME = "Mana Bar";
         const int WIDTH = 300;
-        const int HEIGHT = 100;
+        const int HEIGHT = 25;
         private float scale = 1.0f;
 
         public ManaBar()

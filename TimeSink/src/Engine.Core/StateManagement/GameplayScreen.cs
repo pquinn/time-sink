@@ -308,9 +308,12 @@ namespace TimeSink.Engine.Core.StateManagement
         {
             IMenuItem item = (IMenuItem)character.InventoryItem;
 
-            arrowItem = new Grenade(currentLevel.RenderManager.TextureCache.GetResource(item.Texture));
-            arrowItem.IsPrimary = true;
-            hudElements[FindPrimary()] = new WeaponSlot(arrowItem, blank);
+            if (item != null)
+            {
+                arrowItem = new Grenade(currentLevel.RenderManager.TextureCache.GetResource(item.Texture));
+                arrowItem.IsPrimary = true;
+                hudElements[FindPrimary()] = new WeaponSlot(arrowItem, blank);
+            }
         }
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
