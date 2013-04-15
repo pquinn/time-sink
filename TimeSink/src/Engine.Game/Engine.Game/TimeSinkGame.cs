@@ -287,9 +287,7 @@ namespace TimeSink.Engine.Game
 
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
             levelTime = 0f;
-            levelStarted = true;
-
-            
+            levelStarted = true;            
             
             var save = ((Save)LevelManager.LevelCache["Save"]);
             Logger.Info(String.Format("LEVEL: {0}", save.LevelPath));

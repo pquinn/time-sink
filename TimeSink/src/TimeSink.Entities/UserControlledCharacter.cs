@@ -207,6 +207,7 @@ namespace TimeSink.Entities
         private const float MANA_REGEN_RATE = .2f; //percent/sec
         private const float CHARGE_MANA_COST = 5f; //mana/percent
         public const float MAX_MANA = 100;
+        public const float MAX_HEALTH = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
         private int timeSinceLastHit = 0;

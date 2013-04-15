@@ -106,8 +106,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.Mass = 5;
 
                 var fix = Physics.FixtureList[0];
-                fix.CollisionCategories = Category.Cat2;
-                fix.CollidesWith = Category.Cat2;
+
+                Physics.CollidesWith = ~Category.Cat31;
 
                 Physics.ApplyLinearImpulse(Velocity);
 
