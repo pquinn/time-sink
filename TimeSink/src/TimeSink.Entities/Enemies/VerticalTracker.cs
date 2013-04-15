@@ -19,6 +19,7 @@ namespace TimeSink.Entities.Enemies
     public class VerticalTracker : Enemy
     {
         private const string TEXTURE = "Textures/giroux";
+        private const string EDITOR_NAME = "Vertical Tracker";
         private float DEPTH = -50f;
         private float shotTimer = 0f;
         private float bulletTimer = 0f;
@@ -46,6 +47,13 @@ namespace TimeSink.Entities.Enemies
         }
 
         public override Guid Id { get { return guid; } set{} }
+        public override string EditorName
+        {
+            get
+            {
+                return EDITOR_NAME;
+            }
+        }
 
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
