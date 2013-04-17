@@ -398,18 +398,18 @@ namespace TimeSink.Entities
                         damageFlash = true;
                     }
 
-                    if (Shield > 0)
-                    {
-                        val = Math.Min(Shield, val);
-                        Shield -= val;
-                        timeSinceLastHit = 0;
-                    }
-                    else
-                    {
+                    //if (Shield > 0)
+                    //{
+                    //    val = Math.Min(Shield, val);
+                    //    Shield -= val;
+                    //    timeSinceLastHit = 0;
+                    //}
+                    //else
+                    //{
                         Health -= val;
                         damageTaken += val;
                         Logger.Info(String.Format("DAMAGED: {0}", val));
-                    }
+                    //}
 
 
                     Engine.UpdateHealth();
@@ -536,7 +536,7 @@ namespace TimeSink.Entities
             {
                 Logger.Info(String.Format("DEATH: {0}", FormatPosition(Position)));
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
-                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
+                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint, true);
             }
 
             if (ignoreOneWays)
@@ -1239,11 +1239,11 @@ namespace TimeSink.Entities
 
                     #region abilities
 
-                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Shield < SHIELD_MAX && Mana > 0)
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Health < MAX_HEALTH && Mana > 0)
                     {
                         var manaUsage = Math.Min(Mana, gameTime.ElapsedGameTime.Milliseconds * HEAL_MANA_BURN_PER_MILLI);
                         mana -= manaUsage; 
-                        Shield = Math.Min(SHIELD_MAX, Shield + manaUsage * MANA_TO_HEALTH_SCALE);
+                        Health = Math.Min(MAX_HEALTH, Health + manaUsage * MANA_TO_HEALTH_SCALE);
                         Engine.UpdateHealth();
                     }
 

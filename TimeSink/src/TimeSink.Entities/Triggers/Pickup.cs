@@ -10,6 +10,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using TimeSink.Engine.Core.Rendering;
 using Microsoft.Xna.Framework;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Entities.Triggers
 {
@@ -48,6 +49,7 @@ namespace TimeSink.Entities.Triggers
                     break;
             }
 
+            Engine.UpdateHealth();
             Engine.LevelManager.UnregisterEntity(this);
 
             return true;
@@ -77,7 +79,7 @@ namespace TimeSink.Entities.Triggers
                 {
                     new BasicRendering(DropType == DropType.Health ? HEALTH_TEXTURE : MANA_TEXTURE)
                     {
-                        Position = Position,
+                        Position = PhysicsConstants.MetersToPixels(Position),
                     }
                 };
             }
