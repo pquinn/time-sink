@@ -19,8 +19,16 @@ namespace TimeSink.Entities.Objects
     {
         private const string editorName = "Wire Bridge";
         const string EDITOR_PREVIEW = "Textures/Objects/electric wireOn";
+        const string TEXTURE = "Textures/Objects/electric wireOff";
         private static readonly Guid guid = new Guid("51609f7d-8f65-46af-9eba-786f48352463");
+        private float electrifyLength = 3000f;
+        private float electrifyTimer, electrifySwitchTimer = 0f;
+        private float electifySwitchInterval = 200f;
+        //private bool electrifying = false;
+        private string currentTexture = TEXTURE;
         private UserControlledCharacter attachedChar = null;
+        private BasicRendering anim;
+
 
         public WireBridge()
             : this(650, 50)
@@ -101,6 +109,35 @@ namespace TimeSink.Entities.Objects
             }
         }
 
+        public override void OnUpdate(GameTime time, Engine.Core.EngineGame world)
+        {
+            base.OnUpdate(time, world);
+
+
+            if (Electrified)
+            {
+                electrifyTimer += time.ElapsedGameTime.Milliseconds;
+                electrifySwitchTimer += time.ElapsedGameTime.Milliseconds;
+
+                if (electrifyTimer >= electrifyLength)
+                {
+                    Electrified = false;
+                    electrifyTimer = 0f;
+                }
+                else if (electrifySwitchTimer >= electifySwitchInterval)
+                {
+                    if (currentTexture.Equals(TEXTURE))
+                    {
+                        currentTexture = EDITOR_PREVIEW;
+                    }
+                    else
+                        currentTexture = TEXTURE;
+                    electrifySwitchTimer = 0f;
+                }
+
+            }
+        }
+
         private void AnimateElectricity()
         {
         }
@@ -111,10 +148,11 @@ namespace TimeSink.Entities.Objects
             {
                 return new List<IRendering>()
                 {
-                    new BasicRendering(EDITOR_PREVIEW)
+                 
+                    new BasicRendering(currentTexture)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, EDITOR_PREVIEW, TextureCache)
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, currentTexture, TextureCache)
                     }
                 };
             }
