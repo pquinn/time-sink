@@ -175,7 +175,6 @@ namespace TimeSink.Entities.Triggers
 
         public void OnSwitch()
         {
-            Enabled = !Enabled;
         }
 
         public override List<IRendering> Renderings

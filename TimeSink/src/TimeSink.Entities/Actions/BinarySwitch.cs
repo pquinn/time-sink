@@ -34,10 +34,17 @@ namespace TimeSink.Entities.Actions
             Targets = targets;
         }
 
+        [SerializableField]
+        [EditableField("Is Toggler")]
+        public bool IsToggler { get; set; }
 
         [SerializableField]
         [EditableField("Targets")]
         public string Targets { get; set; }
+
+        [SerializableField]
+        [EditableField("Enabled")]
+        public bool Enabled { get; set; }
 
         public List<String> TargetsList
         {
@@ -48,10 +55,6 @@ namespace TimeSink.Entities.Actions
         }
 
         private List<ISwitchable> targetObjects = new List<ISwitchable>();
-
-        [SerializableField]
-        [EditableField("Enabled")]
-        public bool Enabled { get; set; }
 
         public override Guid Id
         {
@@ -88,12 +91,16 @@ namespace TimeSink.Entities.Actions
 
         protected override void ExecuteAction()
         {
+            SwitchEnabledState();
+
             foreach (ISwitchable target in targetObjects)
             {
+                if (IsToggler)
+                    target.Enabled = !target.Enabled;
+                else
+                    target.Enabled = Enabled;
                 target.OnSwitch();
             }
-
-            SwitchEnabledState();
         }
 
         private void SwitchEnabledState()
@@ -121,7 +128,8 @@ namespace TimeSink.Entities.Actions
                 if (target != null)
                 {
                     targetObjects.Add(target);
-                    target.Enabled = Enabled;
+                    if (!IsToggler)
+                        target.Enabled = Enabled;
                 }
             }
         }

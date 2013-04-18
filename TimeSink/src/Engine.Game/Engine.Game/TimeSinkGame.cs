@@ -82,7 +82,7 @@ namespace TimeSink.Engine.Game
             base.Initialize();
             
             AddInitialScreens();
-            defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 100, 100, new List<IInventoryItem>());
+            defaultSave = new Save("Jungle_Tribal\\Hub_East", 0, 100, 0, new List<IInventoryItem>());
             LevelManager.LevelCache.ReplaceOrAdd("Save", defaultSave);
             LevelManager.DeserializeLevel("..\\..\\..\\..\\..\\Engine.Game\\Engine.GameContent\\TestLevels\\level_0.txt");
             Database.SetDBConnectionPath(PathToProject + "//DialoguePrototypeTestDB.s3db");

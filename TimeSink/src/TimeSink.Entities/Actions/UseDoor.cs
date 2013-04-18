@@ -274,7 +274,6 @@ namespace TimeSink.Entities.Actions
 
         public void OnSwitch()
         {
-            Enabled = !Enabled;
         }
     }
 }
