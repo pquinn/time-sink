@@ -156,6 +156,17 @@ namespace TimeSink.Engine.Game
                 levelTime += gameTime.ElapsedGameTime.Milliseconds;
             }
 
+            var entitiesToKill = new List<Entity>();
+            foreach (var entity in LevelManager.Level.Entities)
+            {
+                if (entity.Position.X < 0 || entity.Position.X > LevelManager.Level.CameraMax.X ||
+                    entity.Position.Y < 0 || entity.Position.Y > LevelManager.Level.CameraMax.Y)
+                {
+                    entitiesToKill.Add(entity);
+                }
+            }
+            LevelManager.UnregisterEntities(entitiesToKill);
+
             view = ProcessControllerInput(gameTime);
 
             if (!CameraLock)
@@ -258,10 +269,12 @@ namespace TimeSink.Engine.Game
 
         private string loadLevel;
         private int spawnPoint = -1;
-        public override void MarkAsLoadLevel(string levelPath, int spawnPoint)
+        private bool loadBecauseDead = true;
+        public override void MarkAsLoadLevel(string levelPath, int spawnPoint, object loadData)
         {
             loadLevel = levelPath;
             this.spawnPoint = spawnPoint;
+            loadBecauseDead = (bool)loadData;
         }
 
         public override void LoadLevel(string levelToLoad)
@@ -287,9 +300,7 @@ namespace TimeSink.Engine.Game
 
             Logger.Info(String.Format("LEVEL TIME(ms): {0}", levelTime));
             levelTime = 0f;
-            levelStarted = true;
-
-            
+            levelStarted = true;            
             
             var save = ((Save)LevelManager.LevelCache["Save"]);
             Logger.Info(String.Format("LEVEL: {0}", save.LevelPath));
@@ -298,21 +309,19 @@ namespace TimeSink.Engine.Game
                     LevelManager.Level.SpawnPoints[spawnPoint] :
                     LevelManager.Level.DefaultStart)
                     {
-                        Health = save.PlayerHealth,
-                        Mana = save.PlayerMana,
-                        Inventory = save.Inventory
+                        Health = loadBecauseDead ? save.PlayerHealth : Character.Health,
+                        Mana = loadBecauseDead ? save.PlayerMana : Character.Mana,
+                        Inventory = loadBecauseDead ? save.Inventory : Character.Inventory
                     };
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
             spawnPoint = -1;
 
             LevelManager.RenderManager.RegisterRenderable(healthBar);
-            LevelManager.RenderManager.RegisterRenderable(shieldBar);
             LevelManager.RenderManager.RegisterRenderable(manaBar);
             if (Character != null)
             {
                 healthBar.UpdateHealth(Character);
-                shieldBar.UpdateShield(Character);
                 manaBar.UpdateMana(Character);
             }
         }
@@ -321,7 +330,6 @@ namespace TimeSink.Engine.Game
         {
             base.UpdateHealth();
             healthBar.UpdateHealth(Character);
-            shieldBar.UpdateShield(Character);
             manaBar.UpdateMana(Character);
         }
 

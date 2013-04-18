@@ -12,7 +12,7 @@ namespace TimeSink.Entities.Hud
         const string TEXTURE = "Textures/HUD/ManaBarTemp";
         const string EDITOR_NAME = "Mana Bar";
         const int WIDTH = 300;
-        const int HEIGHT = 25;
+        const int HEIGHT = 100;
         private float scale = 1.0f;
 
         public ManaBar()
@@ -28,7 +28,7 @@ namespace TimeSink.Entities.Hud
                 {
                     new BasicRendering(TEXTURE)
                     {
-                        Position = new Vector2(WIDTH * width *.5f, HEIGHT),
+                        Position = new Vector2(WIDTH * width *.5f, HEIGHT * .6f),
                         Scale = new Vector2(width, .4f),
                         RenderLayer = RenderLayer.UI
                     }

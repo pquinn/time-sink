@@ -127,12 +127,17 @@ namespace TimeSink.Entities.Enemies
             return true;
         }
 
+        private bool onDeathGuard = false;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             if (health <= 0)
             {
                 Dead = true;
-                OnDeath();
+                if (!onDeathGuard)
+                {
+                    OnDeath();
+                    onDeathGuard = true;
+                }
             }
 
             RemoveInactiveDots();

@@ -2906,6 +2906,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Objects\Health_Pickup.png">
+      <Name>Health_Pickup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\Mana_Pickup.png">
+      <Name>Mana_Pickup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Tiles\Climbing Wire.png">
       <Name>Climbing Wire</Name>
       <Importer>TextureImporter</Importer>
@@ -2913,6 +2923,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Textures\Objects\ImDumbCrystal.png">
+      <Name>ImDumbCrystal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\Objects\heal.png">
       <Name>heal</Name>
       <Importer>TextureImporter</Importer>

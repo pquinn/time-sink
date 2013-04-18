@@ -119,7 +119,7 @@ namespace TimeSink.Entities.Triggers
             {
                 Engine.LevelManager.LevelCache.ReplaceOrAdd(
                     "Save",
-                    new Save(Engine.LevelManager.LevelPath, SpawnPoint, c.Health, c.Mana, c.Inventory));
+                    new Save(Engine.LevelManager.LevelPath, SpawnPoint, c.Health, c.Mana, c.Inventory.ToList()));
                 activating = true;
             }
 

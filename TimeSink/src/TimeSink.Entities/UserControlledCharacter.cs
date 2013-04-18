@@ -207,6 +207,7 @@ namespace TimeSink.Entities
         private const float MANA_REGEN_RATE = .2f; //percent/sec
         private const float CHARGE_MANA_COST = 5f; //mana/percent
         public const float MAX_MANA = 100;
+        public const float MAX_HEALTH = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
         private int timeSinceLastHit = 0;
@@ -399,18 +400,18 @@ namespace TimeSink.Entities
                         damageFlash = true;
                     }
 
-                    if (Shield > 0)
-                    {
-                        val = Math.Min(Shield, val);
-                        Shield -= val;
-                        timeSinceLastHit = 0;
-                    }
-                    else
-                    {
+                    //if (Shield > 0)
+                    //{
+                    //    val = Math.Min(Shield, val);
+                    //    Shield -= val;
+                    //    timeSinceLastHit = 0;
+                    //}
+                    //else
+                    //{
                         Health -= val;
                         damageTaken += val;
                         Logger.Info(String.Format("DAMAGED: {0}", val));
-                    }
+                    //}
 
 
                     Engine.UpdateHealth();
@@ -541,7 +542,7 @@ namespace TimeSink.Entities
             {
                 Logger.Info(String.Format("DEATH: {0}", FormatPosition(Position)));
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
-                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
+                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint, true);
             }
 
             if (ignoreOneWays)
@@ -1244,9 +1245,13 @@ namespace TimeSink.Entities
 
                     #region abilities
 
-                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Shield < SHIELD_MAX && Mana > 0)
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Health < MAX_HEALTH && Mana > 0)
                     {
                         var manaUsage = Math.Min(Mana, gameTime.ElapsedGameTime.Milliseconds * HEAL_MANA_BURN_PER_MILLI);
+
+                        mana -= manaUsage; 
+                        Health = Math.Min(MAX_HEALTH, Health + manaUsage * MANA_TO_HEALTH_SCALE);
+
                         if (healEmitter == null)
                         {
                             healEmitter = new Emitter(new Vector2(100f, 100f), new Vector2(0f, -1f),
@@ -1256,8 +1261,7 @@ namespace TimeSink.Entities
                                           PhysicsConstants.PixelsToMeters(Width * 2), PhysicsConstants.PixelsToMeters(Height * 2));
                             Engine.LevelManager.RegisterEntity(healEmitter);
                         }
-                        mana -= manaUsage;
-                        Shield = Math.Min(SHIELD_MAX, Shield + manaUsage * MANA_TO_HEALTH_SCALE);
+
                         Engine.UpdateHealth();
                     }
                     else

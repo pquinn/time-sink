@@ -218,7 +218,7 @@ namespace TimeSink.Entities.Actions
 
         private void ChangeLevel()
         {
-            engine.MarkAsLoadLevel(LevelPath, SpawnPoint);
+            engine.MarkAsLoadLevel(LevelPath, SpawnPoint, false);
         }
 
         public override void Load(IComponentContext engineRegistrations)
