@@ -44,15 +44,17 @@ namespace TimeSink.Entities.Triggers
         const string TEXTURE = "Textures/Objects/FanAnim";
 
         private Vector2 localOriginPoint;
-        private int forceFactor = 50;
+        private int forceFactor = 75;
         private double nextFlipTime = 0;
         private bool collided;
         private UserControlledCharacter _character;
+        private float _frictionHolder;
         private Emitter particles;
         private float animInterval = 50f;
         private float animTimer = 0f;
         private NewAnimationRendering rendering;
         private static readonly Vector2 SrcRectSize = new Vector2(158.9999f, 97);
+        private float _torqueHolder;
 
         public FanTrigger()
             : base()
@@ -84,6 +86,12 @@ namespace TimeSink.Entities.Triggers
         [EditableField("Fan Direction")]
         public FanDirection FanDirection { get; set; }
 
+        public bool IsSideways { 
+            get { 
+                return FanDirection == FanDirection.Left || FanDirection == FanDirection.Right; 
+            } 
+        }
+
         [SerializableField]
         public override Guid Id
         {
@@ -96,13 +104,20 @@ namespace TimeSink.Entities.Triggers
             if (cf.UserData.Equals("Ladder") && Active)
             {
 
-                if (FanDirection == FanDirection.Down || FanDirection == FanDirection.Up)
+                if (!IsSideways)
                 {
                     c.CanJump = false;
-                    c.Physics.IgnoreGravity = true;
+                    //c.Physics.IgnoreGravity = true;
+                }
+                else
+                {
+                    _frictionHolder = c.WheelBody.Friction;
+                    c.WheelBody.Friction = .01f;
+                    _torqueHolder = c.MotorJoint.MotorTorque;
+                    c.MotorJoint.MotorTorque = .01f;
                 }
 
-                c.Physics.LinearVelocity = Vector2.Zero;
+                //c.Physics.LinearVelocity = Vector2.Zero;
                 _character = c;
                 collided = true;
                 return true;
@@ -119,7 +134,7 @@ namespace TimeSink.Entities.Triggers
             var originPointInMeters = PhysicsConstants.PixelsToMeters(localOriginPoint);
             var originPointInWorld = Position + originPointInMeters;
 
-            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+            if (!IsSideways)
             {
                 originDirection = originPointInWorld.Y;
                 characterDirection = characterPosition.Y;
@@ -161,6 +176,11 @@ namespace TimeSink.Entities.Triggers
             c.CanJump = true;
             c.Physics.IgnoreGravity = false;
             collided = false;
+            if (IsSideways)
+            {
+                c.Physics.Friction = _frictionHolder;
+                c.MotorJoint.MotorTorque = _torqueHolder;
+            }
         }
 
         protected override void RegisterCollisions()
@@ -292,7 +312,9 @@ namespace TimeSink.Entities.Triggers
 
             if (Enabled && collided && Active)
             {
-                _character.Physics.ApplyForce(CalculateForce(_character.Position));
+                var force = CalculateForce(_character.Position);
+                _character.Physics.ApplyForce(force);
+                _character.WheelBody.ApplyForce(force);
             }
 
             base.OnUpdate(time, world);
