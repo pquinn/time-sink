@@ -9,7 +9,9 @@ namespace TimeSink.Entities.Hud
 {
     public class HealthBar : IRenderable
     {
-        const string TEXTURE = "Textures/HUD/HealthBarTemp";
+        const string TEXTURE = "Textures/HUD/HealthBar_overlay";
+        const string OUTLINE = "Textures/HUD/HealthBar_outline";
+        const string SPLATTER = "Textures/HUD/HealthBar_splatter";
         const string EDITOR_NAME = "Health Bar";
         const int WIDTH = 300;
         const int HEIGHT = 100;
@@ -30,6 +32,18 @@ namespace TimeSink.Entities.Hud
                     {
                         Position = new Vector2(WIDTH * width *.5f, HEIGHT * .2f),
                         Scale = new Vector2(width, .4f),
+                        RenderLayer = RenderLayer.UI
+                    },
+                    new BasicRendering(SPLATTER)
+                    {
+                        Position = new Vector2(WIDTH / 2, HEIGHT / 5),
+                        Scale = new Vector2(.65f, 4f),
+                        RenderLayer = RenderLayer.UI
+                    },
+                    new BasicRendering(OUTLINE)
+                    {
+                        Position = new Vector2(WIDTH / 2, HEIGHT / 5),
+                        Scale = new Vector2(.65f, 4f),
                         RenderLayer = RenderLayer.UI
                     }
                 };
