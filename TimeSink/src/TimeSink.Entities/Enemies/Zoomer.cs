@@ -27,7 +27,10 @@ namespace TimeSink.Entities.Enemies
     public class Zoomer : Enemy
     {
         private const string EDITOR_NAME = "Zoomer";
-        private const string DUMMY_TEXTURE = "Textures/Enemies/Dummy";
+        private const string DUMMY_TEXTURE = "Textures/Enemies/Hanger_normal_vertical";
+        private const string AGGRO_TEXTURE = "Textures/Enemies/Hanger_aggro_vertical";
+        private const string LAUNCH_TEXTURE = "Textures/Enemies/Hanger_launched_vertical";
+        private string currentTexture = DUMMY_TEXTURE;
         private const int ZOOM_SPEED = 300;
         private const int RAY_LENGTH = 50;
 
@@ -72,7 +75,7 @@ namespace TimeSink.Entities.Enemies
             {
                 return new List<IRendering>() 
                 { 
-                    new BasicRendering(DUMMY_TEXTURE)
+                    new BasicRendering(currentTexture)
                     { 
                         Position = PhysicsConstants.MetersToPixels(Position), 
                         Scale = new Vector2(.75f, .75f),
@@ -151,6 +154,7 @@ namespace TimeSink.Entities.Enemies
             var dir = new Vector2((float)Math.Sin(Facing), -(float)Math.Cos(Facing));
             Physics.ApplyForce(dir * ZOOM_SPEED);
             zoomed = true;
+            currentTexture = LAUNCH_TEXTURE;
         }
 
         protected override void OnDeath()
