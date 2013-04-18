@@ -481,6 +481,15 @@ namespace TimeSink.Entities
             game.LevelManager.PhysicsManager.World.RayCast(cb, startLeft, startLeft + distSides);
             game.LevelManager.PhysicsManager.World.RayCast(cb, startRight, startRight + distSides);
 
+            if (TouchingGround)
+            {
+                airClamp = 0;
+            }
+            else if (airClamp == 0)
+            {
+                airClamp = (isRunning ? RUN_X_CLAMP : WALK_X_CLAMP) * .8f;
+            }
+
             foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active && !Invulnerable)
@@ -1488,6 +1497,8 @@ namespace TimeSink.Entities
             Right = 1
         };
 
+        private float airClamp;
+
         private void MovePlayer(float dir)
         {
             if (dir == 0) return;
@@ -1497,7 +1508,7 @@ namespace TimeSink.Entities
             if (swinging)
                 x_vel = SWING_X_CLAMP;
             else if (!TouchingGround)
-                x_vel = RUN_X_CLAMP * .8f;
+                x_vel = airClamp;
             else if (isRunning)
             {
                 x_vel = RUN_X_CLAMP;
