@@ -14,8 +14,9 @@ namespace TimeSink.Entities.Hud
         const string SPLATTER = "Textures/HUD/HealthBar_splatter";
         const string EDITOR_NAME = "Health Bar";
         const int WIDTH = 300;
-        const int HEIGHT = 100;
+        const int HEIGHT = 50;
         private float scale = 1.0f;
+        private float SCALE_DOWN = .5f;
 
         public HealthBar()
         {
@@ -25,25 +26,25 @@ namespace TimeSink.Entities.Hud
         {
             get
             {
-                var width = scale * .65f;
+                var width = scale * SCALE_DOWN;
                 return new List<IRendering>()
                 {
                     new BasicRendering(TEXTURE)
                     {
-                        Position = new Vector2(WIDTH * width *.5f, HEIGHT * .2f),
-                        Scale = new Vector2(width, .4f),
+                        Position = new Vector2((WIDTH / 2) * width, (HEIGHT * SCALE_DOWN) / 2 ),
+                        Scale = new Vector2(width, SCALE_DOWN),
                         RenderLayer = RenderLayer.UI
                     },
                     new BasicRendering(SPLATTER)
                     {
-                        Position = new Vector2(WIDTH / 2, HEIGHT / 5),
-                        Scale = new Vector2(.65f, 4f),
+                        Position = new Vector2((WIDTH / 2) * SCALE_DOWN, (HEIGHT * SCALE_DOWN) / 2 ),
+                        Scale = new Vector2(SCALE_DOWN, SCALE_DOWN),
                         RenderLayer = RenderLayer.UI
                     },
                     new BasicRendering(OUTLINE)
                     {
-                        Position = new Vector2(WIDTH / 2, HEIGHT / 5),
-                        Scale = new Vector2(.65f, 4f),
+                        Position = new Vector2((WIDTH / 2) * SCALE_DOWN, (HEIGHT * SCALE_DOWN) / 2 ),
+                        Scale = new Vector2(SCALE_DOWN, SCALE_DOWN),
                         RenderLayer = RenderLayer.UI
                     }
                 };
