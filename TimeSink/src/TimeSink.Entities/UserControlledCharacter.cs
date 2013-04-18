@@ -2949,7 +2949,7 @@ namespace TimeSink.Entities
         }
 
         private bool initialized;
-        private RevoluteJoint MotorJoint;
+        public RevoluteJoint MotorJoint { get; set; }
         public float RopeAttachHeight;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
