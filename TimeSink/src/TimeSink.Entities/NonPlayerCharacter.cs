@@ -136,7 +136,7 @@ namespace TimeSink.Entities
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 game = engineRegistrations.ResolveOptional<EngineGame>();
 
-                if (game.GamepadEnabled)
+                if (game != null && game.GamepadEnabled)
                 {
                     ACTION_POPUP = InputManager.Instance.GamepadTextures[InputManager.ButtonActions.Pickup];
                 }

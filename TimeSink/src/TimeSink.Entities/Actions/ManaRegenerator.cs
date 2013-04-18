@@ -20,17 +20,16 @@ namespace TimeSink.Entities.Actions
         const string TEXTURE = "Textures/Objects/ImDumbCrystal";
         const string EDITOR_NAME = "Mana Regenerator";
         const float REGEN_RATE = .015f;
+        const int FIXED_WIDTH = 75;
+        const int FIXED_HEIGHT = 100;
+        const int FIXED_WIDTH_LARGE = 125;
+        const int FIXED_HEIGHT_LARGE = 150;
 
         private static readonly Guid guid = new Guid("e488c785-4483-43ae-95b5-d839c6d2089f");
         private float mana = 100;
 
         public ManaRegenerator()
-            : this(Vector2.Zero, 50, 50)
-        {
-        }
-
-        public ManaRegenerator(Vector2 position, int width, int height)
-            : base(position, width, height)
+            : base(Vector2.Zero, FIXED_WIDTH, FIXED_HEIGHT)
         {
         }
 
@@ -59,9 +58,21 @@ namespace TimeSink.Entities.Actions
                     new BasicRendering(TEXTURE)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        TintColor = new Color((int)(255 - scale), (int)(255 - scale), (int)scale)
+                        TintColor = new Color((int)(255 - scale), (int)(255 - scale), (int)scale),
+                        Scale = BasicRendering.CreateScaleFromSize(
+                            AllwaysFull ? FIXED_WIDTH_LARGE : FIXED_WIDTH, 
+                            AllwaysFull ? FIXED_HEIGHT_LARGE : FIXED_HEIGHT, 
+                            TEXTURE, TextureCache)
                     }
                 };
+            }
+        }
+
+        public override IRendering Preview
+        {
+            get
+            {
+                return Renderings[0];
             }
         }
 

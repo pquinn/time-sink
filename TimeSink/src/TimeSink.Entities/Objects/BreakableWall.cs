@@ -151,7 +151,8 @@ namespace TimeSink.Entities.Objects
 
         public void OnSwitch()
         {
-            DestroyPhysics();
+            if (!Enabled)
+                DestroyPhysics();
         }
     }
 }

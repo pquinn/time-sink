@@ -15,12 +15,13 @@ using FarseerPhysics.Factories;
 using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Entities.Objects;
+using TimeSink.Entities.Utils;
 
 namespace TimeSink.Entities.Enemies
 {
     [SerializableEntity("5774325e-ce5e-4db6-a036-4ed8e85a36d4")]
     [EditorEnabled]
-    public class Turret : Entity
+    public class Turret : Entity, ISwitchable
     {
         const string EDITOR_NAME = "Turret";
         private static readonly Guid GUID = new Guid("5774325e-ce5e-4db6-a036-4ed8e85a36d4");
@@ -189,9 +190,16 @@ namespace TimeSink.Entities.Enemies
                 Physics.BodyType = BodyType.Static;
 
                 gunRotation = Rotation;
+
+                initialized = true;
             }
 
             base.InitializePhysics(force, engineRegistrations);
+        }
+
+
+        public void OnSwitch()
+        {
         }
     }
 }
