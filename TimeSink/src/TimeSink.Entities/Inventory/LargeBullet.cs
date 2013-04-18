@@ -106,14 +106,16 @@ namespace TimeSink.Entities.Enemies
                 Physics.Mass = 5;
 
                 var fix = Physics.FixtureList[0];
-                fix.CollisionCategories = Category.Cat2;
-                fix.CollidesWith = Category.Cat2;
+
+                Physics.CollidesWith = ~Category.Cat31;
 
                 Physics.ApplyLinearImpulse(Velocity);
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<BreakableWall>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<Entity>(OnCollidedWith);
+
+                initialized = true;
             }
 
             base.InitializePhysics(false, engineRegistrations);
@@ -143,7 +145,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.OnUpdate(time,world);
+            base.OnUpdate(time, world);
             if (Dead)
             {
                 world.LevelManager.RenderManager.UnregisterRenderable(this);

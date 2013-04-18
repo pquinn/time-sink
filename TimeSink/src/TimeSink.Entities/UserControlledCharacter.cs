@@ -207,9 +207,12 @@ namespace TimeSink.Entities
         private const float MANA_REGEN_RATE = .2f; //percent/sec
         private const float CHARGE_MANA_COST = 5f; //mana/percent
         public const float MAX_MANA = 100;
+        public const float MAX_HEALTH = 100;
         private bool chargingWeapon = false;
         private float chargePercent = 0f;
         private int timeSinceLastHit = 0;
+
+        private Emitter healEmitter;
 
         private bool playerControlled = true;
 
@@ -397,18 +400,18 @@ namespace TimeSink.Entities
                         damageFlash = true;
                     }
 
-                    if (Shield > 0)
-                    {
-                        val = Math.Min(Shield, val);
-                        Shield -= val;
-                        timeSinceLastHit = 0;
-                    }
-                    else
-                    {
+                    //if (Shield > 0)
+                    //{
+                    //    val = Math.Min(Shield, val);
+                    //    Shield -= val;
+                    //    timeSinceLastHit = 0;
+                    //}
+                    //else
+                    //{
                         Health -= val;
                         damageTaken += val;
                         Logger.Info(String.Format("DAMAGED: {0}", val));
-                    }
+                    //}
 
 
                     Engine.UpdateHealth();
@@ -447,6 +450,10 @@ namespace TimeSink.Entities
             var startMid = Physics.Position + new Vector2(0, PhysicsConstants.PixelsToMeters(spriteHeight) / 2);
             var startLeft = WheelBody.Position + new Vector2(-PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
             var startRight = WheelBody.Position + new Vector2(PhysicsConstants.PixelsToMeters(spriteWidth) / 2, 0);
+            if (healEmitter != null)
+            {
+                healEmitter.Position = Physics.Position;
+            }
 
             RayCastCallback cb = delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
             {
@@ -535,7 +542,7 @@ namespace TimeSink.Entities
             {
                 Logger.Info(String.Format("DEATH: {0}", FormatPosition(Position)));
                 var save = (Save)Engine.LevelManager.LevelCache["Save"];
-                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint);
+                Engine.MarkAsLoadLevel(save.LevelPath, save.SpawnPoint, true);
             }
 
             if (ignoreOneWays)
@@ -1238,13 +1245,36 @@ namespace TimeSink.Entities
 
                     #region abilities
 
-                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Shield < SHIELD_MAX && Mana > 0)
+                    if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Heal) && Health < MAX_HEALTH && Mana > 0)
                     {
                         var manaUsage = Math.Min(Mana, gameTime.ElapsedGameTime.Milliseconds * HEAL_MANA_BURN_PER_MILLI);
+
                         mana -= manaUsage; 
-                        Shield = Math.Min(SHIELD_MAX, Shield + manaUsage * MANA_TO_HEALTH_SCALE);
+                        Health = Math.Min(MAX_HEALTH, Health + manaUsage * MANA_TO_HEALTH_SCALE);
+
+                        if (healEmitter == null)
+                        {
+                            healEmitter = new Emitter(new Vector2(100f, 100f), new Vector2(0f, -1f),
+                                          new Vector2(-.5f, .5f), new Vector2(1000f, 1000f),
+                                          Vector2.One, Vector2.One, Color.White, Color.Red, Color.White, Color.Red,
+                                          new Vector2(0f, PhysicsConstants.PixelsToMeters(.25f)), new Vector2(0, PhysicsConstants.PixelsToMeters(.25f)), 100, Vector2.Zero, "Textures/Objects/heal", new Random(), Physics.Position,
+                                          PhysicsConstants.PixelsToMeters(Width * 2), PhysicsConstants.PixelsToMeters(Height * 2));
+                            Engine.LevelManager.RegisterEntity(healEmitter);
+                        }
+
                         Engine.UpdateHealth();
                     }
+                    else
+                    {
+                        if (healEmitter != null)
+                        {
+                            Engine.LevelManager.UnregisterEntity(healEmitter);
+
+                            healEmitter.Clear();
+                        }
+                        healEmitter = null;
+                    }
+
 
                     #endregion
 
@@ -1293,6 +1323,12 @@ namespace TimeSink.Entities
                     //No keys are pressed and we're on the ground, we're neutral
                     if (keyboard.GetPressedKeys().GetLength(0) == 0 && InputManager.Instance.NoButtonsPressed(gamepad))
                     {
+                        if (healEmitter != null)
+                        {
+                            Engine.LevelManager.UnregisterEntity(healEmitter);
+                            healEmitter.Clear();
+                        }
+                        healEmitter = null;
                         if (TouchingGround && timer >= interval)
                         {
                             if (currentState == BodyStates.WalkingRight)

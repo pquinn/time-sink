@@ -36,6 +36,7 @@ namespace TimeSink.Entities.Objects
         public Vector2 EndSpeed;
         public float MaxWidth;
         public float MaxHeight;
+        private Vector2 centerPoint;
 
         public Emitter(Vector2 SecPerSpawn, Vector2 SpawnDirection, Vector2 SpawnNoiseAngle, Vector2 StartLife, Vector2 StartScale,
                     Vector2 EndScale, Color StartColor1, Color StartColor2, Color EndColor1, Color EndColor2, Vector2 StartSpeed,
@@ -65,20 +66,44 @@ namespace TimeSink.Entities.Objects
             Position = position;
         }
 
+        public Emitter(Vector2 SecPerSpawn, Vector2 SpawnDirection, Vector2 SpawnNoiseAngle, Vector2 StartLife, Vector2 StartScale,
+            Vector2 EndScale, Color StartColor1, Color StartColor2, Color EndColor1, Color EndColor2, Vector2 StartSpeed,
+            Vector2 EndSpeed, int Budget, Vector2 RelPosition, string ParticleSprite, Random random, Vector2 position, float maxWidth, float maxHeight, Vector2 centerPoint)
+            :this(SecPerSpawn, SpawnDirection, SpawnNoiseAngle, StartLife, StartScale, EndScale, StartColor1, StartColor2, EndColor1, EndColor2,
+                StartSpeed, EndSpeed, Budget, RelPosition, ParticleSprite, random, position, maxWidth, maxHeight)
+        {
+            this.centerPoint = centerPoint;
+        }
+
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             MSecPassed += time.ElapsedGameTime.Milliseconds;
             while (MSecPassed > NextSpawnIn)
             {
+                var rand = new Random().Next(-(int)MaxWidth, (int)MaxWidth);
+                var newRand = rand * new Random().NextDouble() * 1.5;
                 if (ActiveParticles.Count < Budget)
                 {
+                    var pos = RelPosition + new Vector2(PhysicsConstants.PixelsToMeters((float)newRand), 
+                                                        PhysicsConstants.PixelsToMeters((float)new Random().Next(-(int)MaxHeight / 5,(int)MaxHeight / 5))) + Position;
                     // Spawn a particle
-                    Vector2 StartDirection = Vector2.Transform(SpawnDirection, Matrix.CreateRotationZ(MathLib.LinearInterpolate(SpawnNoiseAngle.X, SpawnNoiseAngle.Y, random.NextDouble())));
-                    StartDirection.Normalize();
+                    Vector2 StartDirection = Vector2.Zero;
+                    if (centerPoint == Vector2.Zero)
+                    {
+                        StartDirection = Vector2.Transform(SpawnDirection, Matrix.CreateRotationZ(MathLib.LinearInterpolate(SpawnNoiseAngle.X, SpawnNoiseAngle.Y, random.NextDouble())));
+                        StartDirection.Normalize();
+                    }
+                    else
+                    {
+                        var dir = pos - centerPoint;
+                        StartDirection = Vector2.Transform(dir, Matrix.CreateRotationZ(MathLib.LinearInterpolate(SpawnNoiseAngle.X, SpawnNoiseAngle.Y, random.NextDouble())));
+                        StartDirection.Normalize();
+                    }
+
                     Vector2 EndDirection = StartDirection * MathLib.LinearInterpolate(EndSpeed.X, EndSpeed.Y, random.NextDouble());
                     StartDirection *= MathLib.LinearInterpolate(StartSpeed.X, StartSpeed.Y, random.NextDouble());
-                    var particle = new Particle(
-                        RelPosition + new Vector2(PhysicsConstants.PixelsToMeters((float)new Random().Next(-20, 20)), 0) + Position,
+
+                    var particle = new Particle(pos,
                         StartDirection,
                         EndDirection,
                         MathLib.LinearInterpolate(StartLife.X, StartLife.Y, random.NextDouble()),
@@ -87,6 +112,7 @@ namespace TimeSink.Entities.Objects
                         MathLib.LinearInterpolate(StartColor1, StartColor2, random.NextDouble()),
                         MathLib.LinearInterpolate(EndColor1, EndColor2, random.NextDouble()),
                         ParticleSprite, Engine.TextureCache, MaxHeight, MaxWidth);
+
                     ActiveParticles.AddLast(particle);
                     Engine.LevelManager.RenderManager.RegisterRenderable(particle);
                     

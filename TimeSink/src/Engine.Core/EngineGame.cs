@@ -181,7 +181,7 @@ namespace TimeSink.Engine.Core
             debugView.LoadContent(GraphicsDevice, Content);
         }
 
-        public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint) { }
+        public virtual void MarkAsLoadLevel(string levelPath, int spawnPoint, object loadData) { }
 
         public virtual void UpdateHealth() { }
     }

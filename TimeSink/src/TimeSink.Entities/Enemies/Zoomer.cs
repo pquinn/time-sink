@@ -15,6 +15,8 @@ using TimeSink.Entities.Inventory;
 using Autofac;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core;
+using TimeSink.Entities.Triggers;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -73,7 +75,7 @@ namespace TimeSink.Entities.Enemies
                     new BasicRendering(DUMMY_TEXTURE)
                     { 
                         Position = PhysicsConstants.MetersToPixels(Position), 
-                        Scale = new Vector2(.5f, .5f),
+                        Scale = new Vector2(.75f, .75f),
                         Rotation = Facing
                     }
                 };
@@ -87,8 +89,8 @@ namespace TimeSink.Entities.Enemies
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 var textureCache = engineRegistrations.Resolve<IResourceCache<Texture2D>>();
                 var texture = textureCache.GetResource(DUMMY_TEXTURE);
-                Width = texture.Width / 2;
-                Height = texture.Height / 2;
+                Width =  (int)(texture.Width * .75f);
+                Height = (int)(texture.Height * .75f);
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     PhysicsConstants.PixelsToMeters(Width),
@@ -100,6 +102,8 @@ namespace TimeSink.Entities.Enemies
                 Physics.UserData = this;
                 Physics.IgnoreGravity = true;
                 Physics.IsSensor = true;
+                Physics.CollisionCategories = Category.Cat3;
+                Physics.CollidesWith = Category.Cat1;
 
                 Physics.RegisterOnCollidedListener<Arrow>(OnCollidedWith);
                 Physics.RegisterOnCollidedListener<Dart>(OnCollidedWith);
@@ -151,20 +155,18 @@ namespace TimeSink.Entities.Enemies
 
         protected override void OnDeath()
         {
-            if (zoomed)
+            if (zoomed && DropType != DropType.None)
             {
-                switch (DropType)
-                {
-                    case DropType.Health:
-                        //drop health pickup
-                        break;
-                    case DropType.Mana:
-                        //drop mana pickup
-                        break;
-                    default:
-                        break;
-                }
+                var pickup = new Pickup(Position, DropType, 15);
+                Engine.LevelManager.RegisterEntity(pickup);
             }    
-        } 
+        }
+
+        protected override bool OnCollidedWith(Fixture f, EnergyBullet bullet, Fixture df, Contact info)
+        {
+            bullet.Dead = true;
+            Health -= 20;
+            return true;
+        }
     }
 }
