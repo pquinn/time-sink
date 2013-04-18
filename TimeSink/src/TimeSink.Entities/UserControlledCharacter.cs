@@ -1084,7 +1084,7 @@ namespace TimeSink.Entities
                     else if (jumpHoldTime > 0)
                     {
                         //Physics.ApplyLinearImpulse(new Vector2(0, 22f * .045f));
-                        var desiredVel = -1.2f;
+                        var desiredVel = -3.2f;
                         if (desiredVel > Physics.LinearVelocity.Y)
                         {
                             float velChange = desiredVel - Physics.LinearVelocity.Y;
