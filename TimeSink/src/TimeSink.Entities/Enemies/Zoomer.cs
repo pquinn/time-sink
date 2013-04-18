@@ -62,6 +62,10 @@ namespace TimeSink.Entities.Enemies
         }
 
         [SerializableField]
+        [EditableField("Speed")]
+        public float Speed { get; set; }
+
+        [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
 
         public override string EditorName
@@ -149,10 +153,11 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-        private void PerformZoom()
+        public void PerformZoom()
         {
+            var speed = Speed == 0 ? ZOOM_SPEED : Speed;
             var dir = new Vector2((float)Math.Sin(Facing), -(float)Math.Cos(Facing));
-            Physics.ApplyForce(dir * ZOOM_SPEED);
+            Physics.ApplyForce(dir * speed);
             zoomed = true;
             currentTexture = LAUNCH_TEXTURE;
         }
