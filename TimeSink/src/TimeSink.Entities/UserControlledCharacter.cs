@@ -1045,23 +1045,46 @@ namespace TimeSink.Entities
                             Physics.LinearDamping = canClimb.LinearDamping;
                             Physics.IgnoreGravity = WheelBody.IgnoreGravity = false;
                             PerformJump();
+                            jumpHoldTime = 275;
                         }
                         else if (jumpToggleGuard && TouchingGround)
                         {
                             if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
                             {
                                 PerformJump();
+                                jumpHoldTime = 275;
                             }
                             else
                             {
                                 WheelBody.CollidesWith = Category.Cat1;
                                 PerformJump(-1);
+                                jumpHoldTime = 0;
                                 ignoreOneWays = true;
                             }
                         }
 
                         numberOfJumps++;
                     }
+                    else if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Jump))
+                    {
+                        if (jumpHoldTime > 0)
+                        {
+                            jumpHoldTime -= gameTime.ElapsedGameTime.TotalMilliseconds;
+                        }
+                    }
+                    else if (jumpHoldTime > 0)
+                    {
+                        //Physics.ApplyLinearImpulse(new Vector2(0, 22f * .045f));
+                        var desiredVel = -1.2f;
+                        if (desiredVel > Physics.LinearVelocity.Y)
+                        {
+                            float velChange = desiredVel - Physics.LinearVelocity.Y;
+                            float impulse = (Physics.Mass + WheelBody.Mass) * velChange; //disregard time factor
+                            Physics.ApplyLinearImpulse(new Vector2(0, impulse));
+                        }
+                        jumpHoldTime = 0;
+                    }
+
                     //if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction) &&
                     //    InputManager.Instance.ActionPressed(InputManager.ButtonActions.Jump))
                     //{
@@ -3248,6 +3271,7 @@ namespace TimeSink.Entities
 
         private bool isSliding;
         private bool ignoreOneWays;
+        private double jumpHoldTime;
 
         public void AddSlideTrigger(SlideTrigger st)
         {
