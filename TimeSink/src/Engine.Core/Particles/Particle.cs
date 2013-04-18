@@ -76,7 +76,7 @@ namespace TimeSink.Engine.Core.Particles
                         Position = PhysicsConstants.MetersToPixels(this.Position),
                         Scale = Vector2.One,
                         TintColor = StartColor,
-                        DepthWithinLayer = -50
+                        DepthWithinLayer = -105
                     }
                 };
             }
