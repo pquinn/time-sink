@@ -15,6 +15,7 @@ using Autofac;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Entities.Inventory;
 using TimeSink.Engine.Core.Collisions;
+using TimeSink.Entities.Objects;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -61,7 +62,7 @@ namespace TimeSink.Entities.Enemies
 
             RayCastCallback cb = delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
             {
-                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform)
+                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform || fixture.Body.UserData is LabElevator)
                 {
                     TouchingGround = true;
                     return 0;

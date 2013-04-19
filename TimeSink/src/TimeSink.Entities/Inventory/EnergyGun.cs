@@ -24,13 +24,14 @@ namespace TimeSink.Entities.Inventory
     {
         private const string BULLET_TEXTURE = "";
         private const int BULLET_SPEED = 3000;
-        private const int MAX_AMMO = 30;
+        private const int MAX_AMMO = 20;
         private const int RADIUS = 15;
-        private const int TIME_BETWEEN_SHOTS = 100;
-        private const int RELOAD_TIME = 3000;
-        private const float MANA_DRAIN_PER_MILLI = .005f;
+        private const int TIME_BETWEEN_SHOTS = 300;
+        private const int RELOAD_TIME = 7500;
+        private const float MANA_DRAIN_PER_MILLI = .0025f;
         private const float TIME_SCALE = 2.5f;
         private const string TEXTURE = "Textures/Weapons/EnergyGun";
+        private const int Y_OFFSET = 0;
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -72,7 +73,7 @@ namespace TimeSink.Entities.Inventory
                     return new List<IRendering>() { 
                     new BasicRendering(TEXTURE)
                     {
-                        Position = PhysicsConstants.MetersToPixels(Character.Position) - new Vector2(0, 20),
+                        Position = PhysicsConstants.MetersToPixels(Character.Position) - new Vector2(0, Y_OFFSET),
                         Scale = new Vector2(.3f * Character.Facing, .3f),
                         Rotation = Character.Direction.Y * Character.Facing,
                         DepthWithinLayer = -250f
@@ -127,7 +128,7 @@ namespace TimeSink.Entities.Inventory
                 timeSinceLastShot = 0;
                 EnergyBullet bullet = new EnergyBullet(
                     new Vector2(character.Physics.Position.X,// + UserControlledCharacter.X_OFFSET,
-                                character.Physics.Position.Y + UserControlledCharacter.Y_OFFSET),
+                                character.Physics.Position.Y + Y_OFFSET),
                                 20, 20,
                                 PhysicsConstants.PixelsToMeters(BULLET_SPEED * character.Direction));
 

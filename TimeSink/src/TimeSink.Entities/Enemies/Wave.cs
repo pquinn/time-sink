@@ -53,6 +53,8 @@ private  bool deadGuard;
         public Wave(List<Enemy> enemies)
         {
             Enemies = enemies;
+            AliveEnemies = Enemies.ToList();
+            DeadEnemies = new List<Enemy>();
         }
 
         public WaveDead WaveDead { get; set; }

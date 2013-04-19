@@ -100,7 +100,6 @@ namespace TimeSink.Entities.Objects
         {
             if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.AimDown))
             {
-                Enabled = true;
                 OnSwitch();
             }
 
@@ -110,50 +109,43 @@ namespace TimeSink.Entities.Objects
 
         public void OnSwitch()
         {
-            if (Enabled)
+            Physics.LinearVelocity = Vector2.Zero;
+
+            segment++;
+            if (segment >= 3)
             {
-                segment++;
-                if (segment >= 3)
+                CreateWave2();
+                Enabled = false;
+                done = true;
+            }
+            else
+            {
+                switch (segment)
                 {
-                    Enabled = false;
-                    done = true;
-                    Physics.LinearVelocity = Vector2.Zero;
-                }
-                else
-                {
-                    switch (segment)
-                    {
-                        case 0:
-                            CreateWave0();
-                            break;
-                        case 1:
-                            CreateWave1();
-                            StartPosition = Position;
-                            EndPosition = EndPosition2;
-                            break;
-                        case 2:
-                            CreateWave2();
-                            StartPosition = Position;
-                            EndPosition = EndPosition3;
-                            break;
-                    }
-
-                    Enabled = false;
-
-                    var off = EndPosition - StartPosition;
-                    var dir = Vector2.Normalize(off);
-
-                    Physics.LinearVelocity = dir * (off.Length() / TimeSpan);
+                    case 0:
+                        SendOff();
+                        break;
+                    case 1:
+                        CreateWave0();
+                        StartPosition = Position;
+                        EndPosition = EndPosition2;
+                        break;
+                    case 2:
+                        CreateWave1();
+                        StartPosition = Position;
+                        EndPosition = EndPosition3;
+                        break;
                 }
             }
         }
 
         private void CreateWave0()
         {
-            var hopperOff = PhysicsConstants.PixelsToMeters(
-                new Vector2(Width, Engine.GraphicsDevice.Viewport.Height / 2));
-            var hopper1 = new Hopper(Position + hopperOff);
-            var hopper2 = new Hopper(Position - hopperOff);
+            var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
+            var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
+            var rand = new Random();
+            var hopper1 = new Hopper(Position + new Vector2(xOff  * rand.Next(0, 80) / 100, yOff));
+            var hopper2 = new Hopper(Position + new Vector2(-xOff * rand.Next(0, 80) / 100, yOff));
 
             var wave = new Wave(new List<Enemy>() { hopper1, hopper2 });
             wave.WaveDead += Wave0Dead;
@@ -162,7 +154,9 @@ namespace TimeSink.Entities.Objects
 
         private void Wave0Dead()
         {
-            Enabled = true;
+            SendOff();
+            //var hopper1 = new Hopper(Position + new Vector2(xOff * rand.Next(0, 80) / 100, yOff));
+            //var hopper2 = new Hopper(Position + new Vector2(-xOff * rand.Next(0, 80) / 100, yOff));
         }
 
         private void CreateWave1()
@@ -173,6 +167,14 @@ namespace TimeSink.Entities.Objects
         private void CreateWave2()
         {
 
+        }
+
+        private void SendOff()
+        {
+            var off = EndPosition - StartPosition;
+            var dir = Vector2.Normalize(off);
+
+            Physics.LinearVelocity = dir * (off.Length() / TimeSpan);
         }
 
         private bool initialized;
@@ -190,7 +192,7 @@ namespace TimeSink.Entities.Objects
                     Position);// + new Vector2(0, halfHeight));
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Kinematic;
-                Physics.Friction = 1f;
+                Physics.Friction = .25f;
                 Physics.IgnoreGravity = true;
                 Physics.CollidesWith = ~Category.Cat1;
                 Physics.CollisionCategories = Category.Cat1;
