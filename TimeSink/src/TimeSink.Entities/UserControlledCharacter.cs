@@ -81,7 +81,7 @@ namespace TimeSink.Entities
             HorizontalClimbLeft, HorizontalClimbRight, HorizontalClimbLeftNeut, HorizontalClimbRightNeut
             #endregion
         };
-        
+
         BodyStates currentState;
 
         //Texture strings for content loading
@@ -408,9 +408,9 @@ namespace TimeSink.Entities
                     //}
                     //else
                     //{
-                        Health -= val;
-                        damageTaken += val;
-                        Logger.Info(String.Format("DAMAGED: {0}", val));
+                    Health -= val;
+                    damageTaken += val;
+                    Logger.Info(String.Format("DAMAGED: {0}", val));
                     //}
 
 
@@ -507,7 +507,8 @@ namespace TimeSink.Entities
                 var gun = ((EnergyGun)Inventory[0]);
                 gun.OnUpdate(gameTime, Engine);
 
-                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot)){
+                if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot))
+                {
                     gun.Fire(this, Engine, gameTime, 0, chargingWeapon);
                 }
             }
@@ -959,14 +960,16 @@ namespace TimeSink.Entities
                     var down = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimDown);
                     var right = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimRight);
                     var left = InputManager.Instance.ActionHeld(InputManager.ButtonActions.AimLeft);
-                    if (!ClimbingState() && !swinging && !VineBridgeState())
+                    var notActive = !ClimbingState() && !swinging && !VineBridgeState();
+
+                    if (up && right)
                     {
-                        if (up && right)
+                        direction = new Vector2(0.707106769f, -0.707106769f);
+                        facing = 1;
+                        //     if (InHold)
+                        if (notActive)
                         {
-                            facing = 1;
-                            direction = new Vector2(0.707106769f, -0.707106769f);
-                       //     if (InHold)
-                            if(InventoryItem is Arrow)
+                            if (InventoryItem is Arrow)
                             {
                                 currentState = BodyStates.ShootingArrowRight;
                                 animations[currentState].CurrentFrame = animations[currentState].NumFrames - 1;
@@ -976,10 +979,13 @@ namespace TimeSink.Entities
                                 currentState = NeutralState();
                             }
                         }
-                        else if (up && left)
+                    }
+                    else if (up && left)
+                    {
+                        direction = new Vector2(-0.707106769f, -0.707106769f);
+                        facing = -1;
+                        if (notActive)
                         {
-                            direction = new Vector2(-0.707106769f, -0.707106769f);
-                            facing = -1;
                             if (InventoryItem is Arrow)
                             {
                                 currentState = BodyStates.ShootingArrowLeft;
@@ -990,42 +996,42 @@ namespace TimeSink.Entities
                                 currentState = NeutralState();
                             }
                         }
-                        else if (down && right)
-                        {
-                            direction = new Vector2(0.707106769f, 0.707106769f);
-                            currentState = BodyStates.NeutralRight;
-                            facing = 1;
-                        }
-                        else if (down && left)
-                        {
-                            direction = new Vector2(-0.707106769f, 0.707106769f);
-                            currentState = BodyStates.NeutralLeft;
-                            facing = -1;
-                        }
-                        else if (up)
-                        {
-                            direction = new Vector2(0, -1);
-                        }
-                        else if (down)
-                        {
-                            direction = new Vector2(0, 1);
-                        }
-                        else if (right)
-                        {
-                            direction = new Vector2(1, 0);
-                            facing = 1;
-                            currentState = NeutralState();
-                        }
-                        else if (left)
-                        {
-                            direction = new Vector2(-1, 0);
-                            facing = -1;
-                            currentState = NeutralState();
-                        }
-                        else
-                        {
-                            direction = new Vector2(1, 0) * facing;
-                        }
+                    }
+                    else if (down && right)
+                    {
+                        direction = new Vector2(0.707106769f, 0.707106769f);
+                        currentState = BodyStates.NeutralRight;
+                        facing = 1;
+                    }
+                    else if (down && left)
+                    {
+                        direction = new Vector2(-0.707106769f, 0.707106769f);
+                        currentState = BodyStates.NeutralLeft;
+                        facing = -1;
+                    }
+                    else if (up)
+                    {
+                        direction = new Vector2(0, -1);
+                    }
+                    else if (down)
+                    {
+                        direction = new Vector2(0, 1);
+                    }
+                    else if (right)
+                    {
+                        direction = new Vector2(1, 0);
+                        facing = 1;
+                        currentState = NeutralState();
+                    }
+                    else if (left)
+                    {
+                        direction = new Vector2(-1, 0);
+                        facing = -1;
+                        currentState = NeutralState();
+                    }
+                    else
+                    {
+                        direction = new Vector2(1, 0) * facing;
                     }
 
                     #endregion
@@ -1281,7 +1287,7 @@ namespace TimeSink.Entities
                     {
                         var manaUsage = Math.Min(Mana, gameTime.ElapsedGameTime.Milliseconds * HEAL_MANA_BURN_PER_MILLI);
 
-                        mana -= manaUsage; 
+                        mana -= manaUsage;
                         Health = Math.Min(MAX_HEALTH, Health + manaUsage * MANA_TO_HEALTH_SCALE);
 
                         if (healEmitter == null)
@@ -1924,7 +1930,7 @@ namespace TimeSink.Entities
                 }
 
                 timer = 0f;
-            } 
+            }
             if (currentState == BodyStates.JumpingLeftTorch && timer >= interval)
             {
                 if (!TouchingGround && Physics.LinearVelocity.Y < 0)
@@ -3327,6 +3333,17 @@ namespace TimeSink.Entities
                         return BodyStates.ShootingArrowRight;
                     }
                 }
+                else if (Climbing)
+                {
+                    if (currentState == BodyStates.ClimbingLeft ||
+                        currentState == BodyStates.ClimbingLeftNeutral ||
+                        currentState == BodyStates.ClimbingLookRight)
+                    {
+                        return BodyStates.ClimbingLeftNeutral;
+                    }
+                    else
+                        return BodyStates.ClimbingLookRight;
+                }
                 else
                     return BodyStates.NeutralRight;
             }
@@ -3343,6 +3360,17 @@ namespace TimeSink.Entities
                         animations[BodyStates.ShootingArrowLeft].CurrentFrame = 0;
                         return BodyStates.ShootingArrowLeft;
                     }
+                }
+                else if (Climbing)
+                {
+                    if (currentState == BodyStates.ClimbingRight ||
+                         currentState == BodyStates.ClimbingRightNeutral ||
+                         currentState == BodyStates.ClimbingLookLeft)
+                    {
+                        return BodyStates.ClimbingRightNeutral;
+                    }
+                    else
+                        return BodyStates.ClimbingLookLeft;
                 }
                 else
                     return BodyStates.NeutralLeft;

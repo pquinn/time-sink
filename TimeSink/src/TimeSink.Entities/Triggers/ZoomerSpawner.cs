@@ -24,6 +24,7 @@ namespace TimeSink.Entities.Triggers
 
         private UserControlledCharacter character;
         private float timeSinceLastSpawn;
+        private float spawnGuard;
 
         public override string EditorName
         {
@@ -33,6 +34,10 @@ namespace TimeSink.Entities.Triggers
         [EditableField("Time Between Spawns (mili)")]
         [SerializableField]
         public float TimeBetweenSpawns { get; set; }
+
+        [EditableField("Spawn Count")]
+        [SerializableField]
+        public float SpawnCount { get; set; }
 
         public override Guid Id
         {
@@ -63,20 +68,32 @@ namespace TimeSink.Entities.Triggers
             character = null;
         }
 
+        private float count;
         public override void OnUpdate(GameTime time, EngineGame world)
         {
             timeSinceLastSpawn += time.ElapsedGameTime.Milliseconds;
+            spawnGuard += time.ElapsedGameTime.Milliseconds;
             if (character != null && timeSinceLastSpawn > TimeBetweenSpawns)
             {
-                var zoomer = new Zoomer(character.Position + PhysicsConstants.PixelsToMeters(new Vector2(Engine.GraphicsDevice.Viewport.Width * .75f, 0)));
-                zoomer.Facing = 4.71f;
-                zoomer.Speed = 300;
+                if (spawnGuard > 1000)
+                {
+                    var zoomer = new Zoomer(character.Position + PhysicsConstants.PixelsToMeters(new Vector2(Engine.GraphicsDevice.Viewport.Width * .75f, 0)));
+                    zoomer.Facing = 4.71f;
+                    zoomer.Speed = 300;
 
-                Engine.LevelManager.RegisterEntity(zoomer);
+                    Engine.LevelManager.RegisterEntity(zoomer);
 
-                zoomer.PerformZoom();
+                    zoomer.PerformZoom();
+                    
+                    spawnGuard = 0;
+                    count++;
 
-                timeSinceLastSpawn = 0;
+                    if (count >= SpawnCount)
+                    {
+                        timeSinceLastSpawn = 0;
+                        count = 0;
+                    }
+                }
             }
         }
     }

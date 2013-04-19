@@ -16,12 +16,14 @@ using TimeSink.Engine.Core.Caching;
 using Microsoft.Xna.Framework.Graphics;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Utils;
+using TimeSink.Engine.Core.Collisions;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Enemies
 {
     [SerializableEntity("5774325e-ce5e-4db6-a036-4ed8e85a36d4")]
     [EditorEnabled]
-    public class Turret : Entity, ISwitchable
+    public class Turret : Enemy, ISwitchable
     {
         const string EDITOR_NAME = "Turret";
         private static readonly Guid GUID = new Guid("5774325e-ce5e-4db6-a036-4ed8e85a36d4");
@@ -69,7 +71,9 @@ namespace TimeSink.Entities.Enemies
 
         public override void OnUpdate(GameTime time, EngineGame game)
         {
-            if (Enabled && IsTargeting)
+            base.OnUpdate(time, game);
+
+            if (Enabled && IsTargeting  && !Dead)
             {
                 var mat = Matrix.CreateTranslation(new Vector3(.1f + Width / 2, 0, 0)) *
                     Matrix.CreateRotationX(gunRotation);
@@ -132,17 +136,21 @@ namespace TimeSink.Entities.Enemies
             get
             {
                 var renderList = new List<IRendering>();
+                var tint = Math.Min(255, 2.55f * health);
+                var tintCol = new Color((int)255f, (int) tint, (int) tint, (int) 255f);
                 renderList.Add(
                     new BasicRendering(Enabled ? BASE_ON : BASE_OFF)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Rotation = Rotation
+                        Rotation = Rotation,
+                        TintColor = tintCol
                     });
                 renderList.Add(
                     new BasicRendering(firing ? GUN_FIRING : GUN)
                     {
                         Position = PhysicsConstants.MetersToPixels(Position),
-                        Rotation = gunRotation
+                        Rotation = gunRotation,
+                        TintColor = tintCol
                     });
                 if (firing)
                 {
@@ -170,7 +178,6 @@ namespace TimeSink.Entities.Enemies
             get { return Physics.FixtureList; }
         }
 
-        private bool initialized;
         private Vector2 hitNormal;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
@@ -188,6 +195,9 @@ namespace TimeSink.Entities.Enemies
                 Physics.Friction = .2f;
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Static;
+                Physics.IgnoreGravity = true;
+
+                Physics.RegisterOnCollidedListener<EnergyBullet>(OnCollidedWith);
 
                 gunRotation = Rotation;
 
@@ -197,6 +207,13 @@ namespace TimeSink.Entities.Enemies
             base.InitializePhysics(force, engineRegistrations);
         }
 
+        protected override bool OnCollidedWith(Fixture f, EnergyBullet bullet, Fixture df, Contact info)
+        {
+            Health -= 2.5f;
+            bullet.Dead = true;
+
+            return true;
+        }
 
         public void OnSwitch()
         {

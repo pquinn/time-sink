@@ -31,7 +31,8 @@ namespace TimeSink.Entities.Enemies
         {
             if (info.Enabled && !(entity is UserControlledCharacter || 
                 entity is Trigger || entity is Ladder || entity is Torch || 
-                entity is TutorialTrigger || entity is NonPlayerCharacter))
+                entity is TutorialTrigger || entity is NonPlayerCharacter || 
+                entity is LargeBullet))
             {
                 Dead = true;
 
