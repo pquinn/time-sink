@@ -30,6 +30,7 @@ namespace TimeSink.Entities.Inventory
         private const int RELOAD_TIME = 3000;
         private const float MANA_DRAIN_PER_MILLI = .005f;
         private const float TIME_SCALE = 2.5f;
+        private const string TEXTURE = "Textures/Weapons/EnergyGun";
 
         private static readonly Guid GUID = new Guid("16b8d25a-25f1-4b0b-acae-c60114aade0e");
 
@@ -40,6 +41,8 @@ namespace TimeSink.Entities.Inventory
         private bool charged;
         private UserControlledCharacter character;
 
+        public bool Render { get; set; }
+
         public EnergyGun()
             : this(Vector2.Zero)
         {
@@ -49,6 +52,8 @@ namespace TimeSink.Entities.Inventory
         {
             Position = position;
         }
+
+        public UserControlledCharacter Character { get; set; }
 
         [SerializableField]
         public override Guid Id { get { return GUID; } set { } }
@@ -62,7 +67,22 @@ namespace TimeSink.Entities.Inventory
         {
             get
             {
-                return new List<IRendering>() { };
+                if (Character != null)
+                {
+                    return new List<IRendering>() { 
+                    new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Character.Position) - new Vector2(0, 20),
+                        Scale = new Vector2(.3f * Character.Facing, .3f),
+                        Rotation = Character.Direction.Y * Character.Facing,
+                        DepthWithinLayer = -250f
+                    }
+                };
+                }
+                else
+                {
+                    return new List<IRendering>();
+                }
             }
         }
 
@@ -101,6 +121,7 @@ namespace TimeSink.Entities.Inventory
 
         public void Fire(UserControlledCharacter character, EngineGame world, GameTime gameTime, double holdTime, bool charged)
         {
+            Character = character;
             if (timeSinceLastShot >= TIME_BETWEEN_SHOTS * Engine.LevelManager.PhysicsManager.GlobalReferenceScale && !reloading && ammo > 0)
             {
                 timeSinceLastShot = 0;

@@ -2396,21 +2396,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\Objects\MG-Turret-Base_Off.png">
-      <Name>MG-Turret-Base_Off</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Objects\MG-Turret-Base_On.png">
-      <Name>MG-Turret-Base_On</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Objects\MG-Turret-gun.png">
-      <Name>MG-Turret-gun</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Textures\Objects\MG-Turret-impact.png">
@@ -2420,11 +2405,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Objects\MG-Turret-gun-fire.png">
-      <Name>MG-Turret-gun-fire</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\Keys\PS\PS-L2.png">
       <Name>PS-L2</Name>
       <Importer>TextureImporter</Importer>
@@ -3051,6 +3031,42 @@
   <ItemGroup>
     <Compile Include="Textures\Tiles\Ladder_tile_side2.png">
       <Name>Ladder_tile_side2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Objects\MG-Turret-Base_Off.png">
+      <Name>MG-Turret-Base_Off</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\MG-Turret-Base_On.png">
+      <Name>MG-Turret-Base_On</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\MG-Turret-gun.png">
+      <Name>MG-Turret-gun</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Objects\MG-Turret-gun-fire.png">
+      <Name>MG-Turret-gun-fire</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Weapons\EnergyGun.png">
+      <Name>EnergyGun</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Enemies\Centipede\WalkingCyber.PNG">
+      <Name>WalkingCyber</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -105,11 +105,7 @@ namespace TimeSink.Entities.Triggers
             {
                 forceFactor = (float)(Math.Sqrt(2 * Engine.LevelManager.PhysicsManager.World.Gravity.Y) * c.Physics.Mass) / (4.5f * Length());
 
-                if (!IsSideways)
-                {
-                    
-                }
-                else
+                if (IsSideways)
                 {
                     forceFactor *= 3;
                     _frictionHolder = c.WheelBody.Friction;

@@ -72,6 +72,7 @@
     <Compile Include="Actions\ConditionalDoor.cs" />
     <Compile Include="Actions\ManaRegenerator.cs" />
     <Compile Include="Actions\PickupEnergyGun.cs" />
+    <Compile Include="Enemies\CyberCentipede.cs" />
     <Compile Include="Enemies\Hopper.cs" />
     <Compile Include="Enemies\InterpolatedEnemy.cs" />
     <Compile Include="Enemies\Turret.cs" />

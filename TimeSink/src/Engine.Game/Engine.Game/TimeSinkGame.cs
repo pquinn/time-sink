@@ -27,6 +27,7 @@ using TimeSink.Engine.Core.StateManagement;
 using Autofac;
 using TimeSink.Entities.Hud;
 using System.Linq;
+using TimeSink.Entities.Inventory;
 #endregion
 
 namespace TimeSink.Engine.Game
@@ -315,6 +316,13 @@ namespace TimeSink.Engine.Game
                     };
             Character.Load(Container);
             LevelManager.RegisterEntity(Character);
+
+            if (Character.Inventory.Count != 0 && Character.Inventory[0] is EnergyGun)
+            {
+                EnergyGun gun = (EnergyGun)Character.Inventory[0];
+                gun.Character = Character;
+                LevelManager.RegisterEntity(gun);
+            }
             spawnPoint = -1;
 
             LevelManager.RenderManager.RegisterRenderable(healthBar);

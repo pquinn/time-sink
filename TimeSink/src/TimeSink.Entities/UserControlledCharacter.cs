@@ -275,6 +275,8 @@ namespace TimeSink.Entities
         private float playerRotation = 0.0f;
         private int facing = 1; // 1 for right, -1 for left
 
+        public int Facing { get { return facing; } private set { facing = value; } }
+
         // not sure if these should be public
         private Vector2 direction;
         [SerializableField]
@@ -513,6 +515,13 @@ namespace TimeSink.Entities
 
                 if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot))
                 {
+                    if (!gun.Render)
+                    {
+                        gun.Character = this;
+                        Engine.LevelManager.RegisterEntity(gun);
+                        gun.Render = true;
+                    }
+
                     gun.Fire(this, Engine, gameTime, 0, chargingWeapon);
                 }
             }
