@@ -487,7 +487,7 @@ namespace TimeSink.Entities
             }
             else if (airClamp == 0)
             {
-                airClamp = (isRunning ? RUN_X_CLAMP : WALK_X_CLAMP) * .8f;
+                airClamp = (isRunning ? RUN_X_CLAMP * .8f : WALK_X_CLAMP);
             }
 
             foreach (DamageOverTimeEffect dot in Dots)
@@ -884,6 +884,8 @@ namespace TimeSink.Entities
                                 }
                                 else
                                 {
+                                    //var oldMass = Physics.Mass;
+                                    
                                     isDucking = true;
 
                                     var pos = Physics.Position;
@@ -916,6 +918,8 @@ namespace TimeSink.Entities
                                     MotorJoint = JointFactory.CreateRevoluteJoint(_world, Physics, WheelBody, Vector2.Zero);
                                     MotorJoint.MotorEnabled = true;
                                     MotorJoint.MaxMotorTorque = 10;
+
+                                    //Physics.Mass = oldMass;
 
                                     if (LeftFacingBodyState())
                                     {
@@ -1047,6 +1051,7 @@ namespace TimeSink.Entities
                                 isDucking = false;
                             }
                             vineBridge.ForceSeperation(this);
+                            airClamp = WALK_X_CLAMP;
                             if (!InputManager.Instance.ActionHeld(InputManager.ButtonActions.DownAction))
                                 PerformJump();
                         }
@@ -1059,6 +1064,7 @@ namespace TimeSink.Entities
                         {
                             Physics.LinearDamping = canClimb.LinearDamping;
                             Physics.IgnoreGravity = WheelBody.IgnoreGravity = false;
+                            airClamp = RUN_X_CLAMP * .8f;
                             PerformJump();
                             jumpHoldTime = 275;
                         }
@@ -1512,7 +1518,9 @@ namespace TimeSink.Entities
             float x_vel = WALK_X_CLAMP;
 
             if (swinging)
+            {
                 x_vel = SWING_X_CLAMP;
+            }
             else if (!TouchingGround)
                 x_vel = airClamp;
             else if (isRunning)
@@ -1540,9 +1548,13 @@ namespace TimeSink.Entities
             {
                 case MoveDirection.Left:
                     desiredVel = Math.Max(vel - accel, -x_vel);
+                    if (desiredVel > vel)
+                        return;
                     break;
                 case MoveDirection.Right:
                     desiredVel = Math.Min(vel + accel, x_vel);
+                    if (desiredVel < vel)
+                        return;
                     break;
             }
 
@@ -1596,7 +1608,8 @@ namespace TimeSink.Entities
         private const float WALK_X_CLAMP = 4;
         private const float WALK_Y_CLAMP = 15;
         private const float RUN_X_CLAMP = 10;
-        private const float SWING_X_CLAMP = 8;
+        private const float SWING_X_CLAMP = 14;
+        private const float FLING_X_CLAMP = 14;
 
         protected void UpdateAnimationStates()
         {
@@ -2188,6 +2201,7 @@ namespace TimeSink.Entities
             Physics.FixedRotation = true;
             _world.RemoveJoint(vineJoint);
             swinging = false;
+            airClamp = RUN_X_CLAMP*.8f;
         }
 
         public override List<IRendering> Renderings

@@ -18,8 +18,10 @@ namespace TimeSink.Entities.Enemies
     [SerializableEntity("a0a2ba1a-0692-4f49-adb5-1f333e462649")]
     public class VerticalTracker : Enemy
     {
-        private const string TEXTURE = "Textures/giroux";
+        private const string TEXTURE = "Textures/Enemies/Soldier_normal";
+        private const string AGGRO_TEXTURE = "Textures/Enemies/Soldier_aggro";
         private const string EDITOR_NAME = "Vertical Tracker";
+        private string currentTexture = TEXTURE;
         private float DEPTH = -50f;
         private float shotTimer = 0f;
         private float bulletTimer = 0f;
@@ -31,7 +33,7 @@ namespace TimeSink.Entities.Enemies
         public bool NeedToDescend { get; set; }
 
 
-        private UserControlledCharacter target;
+        public UserControlledCharacter target;
 
         private static readonly Guid guid = new Guid("a0a2ba1a-0692-4f49-adb5-1f333e462649");
 
@@ -81,7 +83,7 @@ namespace TimeSink.Entities.Enemies
             {
                 return new List<IRendering>() 
                 {
-                    new BasicRendering(TEXTURE)
+                    new BasicRendering(currentTexture)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position)
 
@@ -94,7 +96,7 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
-                return new BasicRendering(TEXTURE)
+                return new BasicRendering(currentTexture)
 
                 {
                     Position = PhysicsConstants.MetersToPixels(Position)
@@ -127,40 +129,45 @@ namespace TimeSink.Entities.Enemies
 
             var timeTick = time.ElapsedGameTime.Milliseconds;
 
-            bulletTimer += timeTick;
-            if (waitingToShoot)
+            if (target != null)
             {
-                shotTimer += timeTick;
-            }
-
-            if (shotTimer >= 2000)
-            {
-                waitingToShoot = false;
-                shotTimer = 0f;
-            }
-
-            if (!waitingToShoot)
-            {
-                if (bulletTimer >= 200)
+                bulletTimer += timeTick;
+                if (waitingToShoot)
                 {
-                    Shoot(world);
-                    bulletTimer = 0;
-                    shotsFired = (shotsFired + 1) % 3;
+                    shotTimer += timeTick;
                 }
-            }
 
-            if (shotsFired == 2)
-            {
-                waitingToShoot = true;
-                if (NeedToDescend)
+                if (shotTimer >= 2000)
                 {
-                    Descend();
-                    NeedToDescend = false;
+                    waitingToShoot = false;
+                    shotTimer = 0f;
                 }
-                if (NeedToJump)
+
+                if (!waitingToShoot)
                 {
-                    Jump();
-                    NeedToJump = false;
+                    currentTexture = AGGRO_TEXTURE;
+                    if (bulletTimer >= 200)
+                    {
+                        Shoot(world);
+                        bulletTimer = 0;
+                        shotsFired = (shotsFired + 1) % 3;
+                    }
+                }
+
+                if (shotsFired == 2)
+                {
+                    currentTexture = TEXTURE;
+                    waitingToShoot = true;
+                    if (NeedToDescend)
+                    {
+                        Descend();
+                        NeedToDescend = false;
+                    }
+                    if (NeedToJump)
+                    {
+                        Jump();
+                        NeedToJump = false;
+                    }
                 }
             }
         }

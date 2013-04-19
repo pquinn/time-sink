@@ -4,12 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TimeSink.Engine.Core.Physics;
+using TimeSink.Engine.Core.Rendering;
 
 namespace TimeSink.Entities.Enemies
 {
     public class SmallBullet : LargeBullet
     {
-        protected const string TEXTURE = "Textures/giroux";
+        protected const string TEXTURE = "Textures/Objects/Projectile_enemy";
+        const float DEPTH = -50f;
 
         public SmallBullet(Vector2 position, int width, int height, Vector2 velocity)
             : base(position, width, height, velocity)
@@ -22,6 +25,19 @@ namespace TimeSink.Entities.Enemies
                 character.TakeDamage(5, false);
 
             return false;
+        }
+
+        public override List<IRendering> Renderings
+        {
+            get
+            {
+                return new List<IRendering>() { new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
+                        DepthWithinLayer = DEPTH
+                    }};
+            }
         }
     }
 }

@@ -98,9 +98,11 @@ namespace TimeSink.Entities.Objects
                 VineAnchor.CollisionGroup = 2;
                 
                 RevJoint = JointFactory.CreateRevoluteJoint(world, Physics, VineAnchor, new Vector2(0, -TextureHeight / 2));
-                RevJoint.MotorEnabled = true;
-                RevJoint.MaxMotorTorque = 10;
+                RevJoint.MotorEnabled = false;
+                RevJoint.MaxMotorTorque = 1;
                 RevJoint.MotorSpeed = 0;
+
+                VineAnchor.AngularDamping = 30;
 
                 Physics.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
                 VineAnchor.RegisterOnCollidedListener<UserControlledCharacter>(OnCollidedWith);
