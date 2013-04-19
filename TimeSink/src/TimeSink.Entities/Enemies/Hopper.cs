@@ -109,7 +109,7 @@ namespace TimeSink.Entities.Enemies
                     world,
                     PhysicsConstants.PixelsToMeters(Width),
                     PhysicsConstants.PixelsToMeters(Height),
-                    1.5f,
+                    1.2f,
                     Position);
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;

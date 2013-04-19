@@ -34,8 +34,11 @@ namespace TimeSink.Entities.Actions
         const string EDITOR_PREVIEW_FORWARD = "Textures/Objects/Kyles_SpecialDoorForward";
         const string EDITOR_PREVIEW_BACKGROUND = "Textures/Objects/Kyles_SpecialDoorBackward";
         const string EDITOR_PREVIEW_SIDE = "Textures/Objects/Kyles_SpecialDoorForward";
+        const string OPEN_TEXTURE = "Textures/Objects/Door_open";
+        const string CLOSED_TEXTURE = "Textures/Objects/Door_closed";
         const string IN_OVERLAY = "Textures/Objects/Inner_Door_Overlay";
         const float DEPTH = 0;
+
 
         string UP_POPUP = "Textures/Keys/w-key";
         string DOWN_POPUP = "Textures/Keys/s-key";
@@ -43,8 +46,10 @@ namespace TimeSink.Entities.Actions
         private static readonly Guid guid = new Guid("66c116cc-60bf-4808-a4c0-f5bb8cad053b");
 
         private bool collided;
+        private bool switchable = false;
         private EngineGame engine;
         private ItemPopup popup;
+        private string currentTexture = OPEN_TEXTURE;
 
         public UseDoor()
             : this(Vector2.Zero, 50, 50, DoorType.Up, string.Empty, 0)
@@ -267,6 +272,19 @@ namespace TimeSink.Entities.Actions
                         }
                     };
                 }
+                else if (switchable)
+                {
+                    return new List<IRendering>()
+                    {
+                        new BasicRendering(currentTexture)
+                        {
+                            Position = PhysicsConstants.MetersToPixels(Position),
+                          //  Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
+                            DepthWithinLayer = -200,
+                            TintColor = Color.White
+                        }
+                    };
+                }
                 else
                     return new List<IRendering>() { new NullRendering() };
             }
@@ -274,6 +292,12 @@ namespace TimeSink.Entities.Actions
 
         public void OnSwitch()
         {
+            switchable = true;
+
+            if (Enabled)
+                currentTexture = OPEN_TEXTURE;
+            else
+                currentTexture = CLOSED_TEXTURE;
         }
     }
 }

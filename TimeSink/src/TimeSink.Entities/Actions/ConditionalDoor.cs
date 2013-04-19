@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using TimeSink.Engine.Core;
 using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Entities.Actions
 {
@@ -45,14 +47,16 @@ namespace TimeSink.Entities.Actions
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            if (!Enabled) 
+            if (!Enabled)
             {
                 object result;
                 world.LevelManager.LevelCache.TryGetValue(ConditionKey, out result);
                 if (result != null) Enabled = (bool)result;
             }
+            else
 
             base.OnUpdate(time, world);
         }
+
     }
 }

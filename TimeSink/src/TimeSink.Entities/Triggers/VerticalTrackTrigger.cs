@@ -63,10 +63,11 @@ namespace TimeSink.Entities.Triggers
             get { return EDITOR_NAME; }
         }
 
-        public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter monster, Fixture f2, Contact info)
+        public virtual bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture f2, Contact info)
         {
             if (f2.UserData.ToString().Equals("Ladder"))
             {
+                Enemy.target = c;
                 if (Enemy.WaitingToShoot)
                 {
                     Enemy.Descend();

@@ -10,12 +10,15 @@ using Engine.Defaults;
 using TimeSink.Entities.Objects;
 using TimeSink.Entities.Inventory;
 using TimeSink.Entities.Triggers;
+using TimeSink.Engine.Core.Rendering;
+using TimeSink.Engine.Core.Physics;
 
 namespace TimeSink.Entities.Enemies
 {
     public class EnergyBullet : LargeBullet
     {
-        protected const string TEXTURE = "Textures/giroux";
+        protected const string TEXTURE = "Textures/Objects/Projectile_character";
+        const float DEPTH = -50f;
 
         public EnergyBullet(Vector2 position, int width, int height, Vector2 velocity)
             : base(position, width, height, velocity)
@@ -45,6 +48,18 @@ namespace TimeSink.Entities.Enemies
                 return false;
             }
             return info.Enabled;
+        }
+        public override List<IRendering> Renderings
+        {
+            get
+            {
+                return new List<IRendering>() { new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
+                        DepthWithinLayer = DEPTH
+                    }};
+            }
         }
     }
 }
