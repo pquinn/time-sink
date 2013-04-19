@@ -73,6 +73,8 @@ namespace TimeSink.Entities.Actions
                 initialized = false;
             }
             var gun = new EnergyGun();
+            gun.Character = Character;
+            gun.Render = true;
             Character.AddInventoryItem(gun);
             Engine.LevelManager.RegisterEntity(gun);
             DestroyPhysics();
