@@ -40,6 +40,7 @@ namespace TimeSink.Entities.Enemies
         public bool HittingPlayer { get; set; }
 
         private BasicRendering impact;
+        private BasicRendering laser;
         private bool firing;
         private int timeSinceLastFire;
 
@@ -84,6 +85,17 @@ namespace TimeSink.Entities.Enemies
                     character.Physics.Position);
                 var offset = character.Position - Position;
                 gunRotation = (float)Math.Atan2(offset.Y, offset.X);
+
+                var width = PhysicsConstants.MetersToPixels(Vector2.Distance(Position, hitPosition));
+                var off = hitPosition - Position;
+                laser = new BasicRendering("blank")
+                {
+                    Position = PhysicsConstants.MetersToPixels(Position),
+                    DepthWithinLayer = -200,
+                    Rotation = (float)Math.Atan2(off.Y, off.X),
+                    TintColor = Color.Red,
+                    Scale = BasicRendering.CreateScaleFromSize((int)width, 3, "blank", TextureCache)
+                };
 
                 timeSinceLastFire += time.ElapsedGameTime.Milliseconds;
 
@@ -152,6 +164,10 @@ namespace TimeSink.Entities.Enemies
                         Rotation = gunRotation,
                         TintColor = tintCol
                     });
+                if (IsTargeting)
+                {
+                    renderList.Add(laser);
+                }
                 if (firing)
                 {
                     renderList.Add(impact);
