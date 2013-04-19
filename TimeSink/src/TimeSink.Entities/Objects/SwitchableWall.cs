@@ -147,7 +147,10 @@ namespace TimeSink.Entities.Objects
 
         public void OnSwitch()
         {
-            Physics.Enabled = Enabled;
+            if (Physics != null)
+            {
+                Physics.Enabled = Enabled;
+            }
         }
     }
 }

@@ -107,7 +107,8 @@ namespace TimeSink.Entities.Triggers
                 if (!IsSideways)
                 {
                     c.CanJump = false;
-                    //c.Physics.IgnoreGravity = true;
+                    c.Physics.IgnoreGravity = true;
+                    c.Physics.LinearVelocity = Vector2.Zero;
                 }
                 else
                 {
