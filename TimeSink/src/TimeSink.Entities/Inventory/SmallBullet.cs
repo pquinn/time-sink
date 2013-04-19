@@ -23,7 +23,7 @@ namespace TimeSink.Entities.Enemies
         {
             if (!character.Invulnerable)
             {
-                character.TakeDamage(25, true);
+                character.TakeDamage(25, true, true);
                 Dead = true;
             }
 

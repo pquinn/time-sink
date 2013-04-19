@@ -75,6 +75,7 @@
     <Compile Include="Enemies\Hopper.cs" />
     <Compile Include="Enemies\InterpolatedEnemy.cs" />
     <Compile Include="Enemies\Turret.cs" />
+    <Compile Include="Enemies\Wave.cs" />
     <Compile Include="Enemies\Zoomer.cs" />
     <Compile Include="Hud\ManaBar.cs" />
     <Compile Include="Inventory\SmallBullet.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="NPCs\TribalGuard.cs" />
     <Compile Include="NPCs\Guard.cs" />
     <Compile Include="Objects\Emitter.cs" />
+    <Compile Include="Objects\LabElevator.cs" />
     <Compile Include="Objects\PushableBox.cs" />
     <Compile Include="Objects\SwitchableWall.cs" />
     <Compile Include="Objects\Wall.cs" />

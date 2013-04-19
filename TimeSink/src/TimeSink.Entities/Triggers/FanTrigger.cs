@@ -44,7 +44,7 @@ namespace TimeSink.Entities.Triggers
         const string TEXTURE = "Textures/Objects/FanAnim";
 
         private Vector2 localOriginPoint;
-        private int forceFactor = 75;
+        private float forceFactor = 150;
         private double nextFlipTime = 0;
         private bool collided;
         private UserControlledCharacter _character;
@@ -103,21 +103,21 @@ namespace TimeSink.Entities.Triggers
         {
             if (cf.UserData.Equals("Ladder") && Active)
             {
+                forceFactor = (float)(Math.Sqrt(2 * Engine.LevelManager.PhysicsManager.World.Gravity.Y) * c.Physics.Mass) / (4.5f * Length());
 
                 if (!IsSideways)
                 {
-                    c.CanJump = false;
-                    //c.Physics.IgnoreGravity = true;
+                    
                 }
                 else
                 {
+                    forceFactor *= 3;
                     _frictionHolder = c.WheelBody.Friction;
                     c.WheelBody.Friction = .01f;
                     _torqueHolder = c.MotorJoint.MotorTorque;
                     c.MotorJoint.MotorTorque = .01f;
                 }
 
-                //c.Physics.LinearVelocity = Vector2.Zero;
                 _character = c;
                 collided = true;
                 return true;
@@ -128,7 +128,7 @@ namespace TimeSink.Entities.Triggers
             }
         }
 
-        private Vector2 CalculateForce(Vector2 characterPosition)
+        private Vector2 CalculateForce(Vector2 characterPosition, float elapsedTime)
         {
             float originDirection, characterDirection, dimensionDirection;
             var originPointInMeters = PhysicsConstants.PixelsToMeters(localOriginPoint);
@@ -147,8 +147,18 @@ namespace TimeSink.Entities.Triggers
                 dimensionDirection = PhysicsConstants.PixelsToMeters(Width);
             }
 
-            var magnitude = (dimensionDirection - (Math.Abs((characterDirection - originDirection)))) / dimensionDirection;
-            return DetermineDirection(magnitude * forceFactor);
+            //var magnitude = (dimensionDirection - (Math.Abs((characterDirection - originDirection)))) / dimensionDirection;
+            var amount = Length() - Math.Abs(characterDirection - originDirection) / Length();
+            var magnitude = amount * forceFactor * elapsedTime;
+            return DetermineDirection(magnitude);
+        }
+
+        private float Length()
+        {
+            if (FanDirection == FanDirection.Up || FanDirection == FanDirection.Down)
+                return PhysicsConstants.PixelsToMeters(Height);
+            else
+                return PhysicsConstants.PixelsToMeters(Width);
         }
 
         private Vector2 DetermineDirection(float magnitude)
@@ -166,9 +176,7 @@ namespace TimeSink.Entities.Triggers
                 default:
                     // this should never happen
                     return Vector2.Zero;
-            }
-
-            
+            }            
         }
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
@@ -307,12 +315,11 @@ namespace TimeSink.Entities.Triggers
                     new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), new Vector2(0, PhysicsConstants.PixelsToMeters(1f)), 100, Vector2.Zero, "Textures/Objects/dust", new Random(), Position + offset,
                     PhysicsConstants.PixelsToMeters(Width * 2), PhysicsConstants.PixelsToMeters(Height * 2));
                 Engine.LevelManager.RegisterEntity(particles);
-
             }
 
             if (Enabled && collided && Active)
             {
-                var force = CalculateForce(_character.Position);
+                var force = CalculateForce(_character.Position, time.ElapsedGameTime.Milliseconds);
                 _character.Physics.ApplyForce(force);
                 _character.WheelBody.ApplyForce(force);
             }

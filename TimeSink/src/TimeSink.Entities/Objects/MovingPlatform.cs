@@ -124,7 +124,7 @@ namespace TimeSink.Entities
         {
         }
 
-        private bool initialized;
+        protected bool initialized;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -134,9 +134,9 @@ namespace TimeSink.Entities
                 Physics = BodyFactory.CreateRectangle(
                     world,
                     PhysicsConstants.PixelsToMeters(Width * .75f),
-                    halfHeight,
+                    PhysicsConstants.PixelsToMeters(Height * .75f),
                     1,
-                    Position + new Vector2(0, halfHeight));
+                    Position);// + new Vector2(0, halfHeight));
                 Physics.UserData = this;
                 Physics.BodyType = BodyType.Kinematic;
                 Physics.Friction = 5f;

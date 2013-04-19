@@ -80,6 +80,9 @@ namespace TimeSink.Entities.Objects
                 Physics.CollisionCategories = Category.Cat2 | Category.Cat1;
                 Physics.CollidesWith = Category.Cat2 | Category.Cat3;
 
+                if (initGuard)
+                    Physics.Enabled = initEnabled;
+
                 initialized = true;
             }
 
@@ -145,9 +148,17 @@ namespace TimeSink.Entities.Objects
             Physics.Dispose();
         }
 
+        private bool initGuard;
+        private bool initEnabled;
         public void OnSwitch()
         {
-            Physics.Enabled = Enabled;
+            if (Physics == null)
+            {
+                initGuard = true;
+                initEnabled = Enabled;
+            }
+            else
+                Physics.Enabled = Enabled;
         }
     }
 }

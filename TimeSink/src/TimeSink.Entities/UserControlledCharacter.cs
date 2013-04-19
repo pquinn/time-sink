@@ -178,6 +178,8 @@ namespace TimeSink.Entities
         const float HEAL_MANA_BURN_PER_MILLI = .02f;
         const float MANA_TO_HEALTH_SCALE = 1f;
 
+        private int HIT_CLIMB_GUARD = 500;
+
         private SoundEffect jumpSound;
         private SoundEffect jumpImpactSound;
         private SoundEffect arrowSound;
@@ -388,7 +390,7 @@ namespace TimeSink.Entities
             jumpImpactSound = soundCache.LoadResource(JUMP_IMPACT_SOUND);
         }
 
-        public void TakeDamage(float val, bool doesKnockBack)
+        public void TakeDamage(float val, bool doesKnockBack, bool knockOffClimbing)
         {
             if (EngineGame.Instance.ScreenManager.CurrentGameplay != null)
             {
@@ -413,6 +415,7 @@ namespace TimeSink.Entities
                     Logger.Info(String.Format("DAMAGED: {0}", val));
                     //}
 
+                    climbGuard = 0;
 
                     Engine.UpdateHealth();
                     PlaySound(takeDamageSound);
@@ -457,7 +460,8 @@ namespace TimeSink.Entities
 
             RayCastCallback cb = delegate(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
             {
-                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform || fixture.Body.UserData is TutorialBreakBridge)
+                if (fixture.Body.UserData is WorldGeometry2 || fixture.Body.UserData is MovingPlatform || 
+                    fixture.Body.UserData is TutorialBreakBridge || fixture.Body.UserData is LabElevator)
                 {
                     if (jumpToggleGuard == false)
                     {
@@ -493,7 +497,7 @@ namespace TimeSink.Entities
             foreach (DamageOverTimeEffect dot in Dots)
             {
                 if (dot.Active && !Invulnerable)
-                    TakeDamage(dot.Tick(gameTime), dot.DoesKnockBack);
+                    TakeDamage(dot.Tick(gameTime), dot.DoesKnockBack, false);
             }
 
             //timeSinceLastHit += gameTime.ElapsedGameTime.Milliseconds;
@@ -1116,10 +1120,11 @@ namespace TimeSink.Entities
                     //}
                     #endregion
 
+                    climbGuard += timeFrame_ms;
                     #region climbing
                     if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.UpAction))
                     {
-                        if ((canClimb != null))
+                        if (climbGuard >= HIT_CLIMB_GUARD && (canClimb != null))
                         {
                             Climbing = true;
                             //Insert anim state change here for climbing anim
@@ -1319,6 +1324,27 @@ namespace TimeSink.Entities
                         healEmitter = null;
                     }
 
+
+                    #endregion
+
+                    #region Admin
+
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.GiveEnergyGun))
+                    {
+                        var gun = new EnergyGun();
+                        Inventory.Add(gun);
+                        Engine.LevelManager.RegisterEntity(gun);
+                    }
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.FullHealth))
+                    {
+                        Health = 100;
+                        Engine.UpdateHealth();
+                    }
+                    if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.FullMana))
+                    {
+                        Mana = 100;
+                        Engine.UpdateHealth();
+                    }
 
                     #endregion
 
@@ -2152,7 +2178,7 @@ namespace TimeSink.Entities
                 /*  this.RegisterDot(bramble.dot);
                   bramble.dot.Active = true;
                   return true;*/
-                TakeDamage(10, true);
+                TakeDamage(10, true, true);
                 return true;
             }
             else
@@ -3303,6 +3329,7 @@ namespace TimeSink.Entities
         private bool isSliding;
         private bool ignoreOneWays;
         private double jumpHoldTime;
+        private float climbGuard;
 
         public void AddSlideTrigger(SlideTrigger st)
         {

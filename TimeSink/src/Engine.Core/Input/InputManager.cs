@@ -19,7 +19,8 @@ namespace TimeSink.Engine.Core.Input
             MoveLeft, MoveRight, Jump, Sprint, Shoot, ChargeShot,
             UpAction, DownAction, Heal,
             AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
-            AimUpRight, AimUpLeft, AimDownLeft, AimDownRight
+            AimUpRight, AimUpLeft, AimDownLeft, AimDownRight,
+            GiveEnergyGun, FullHealth, FullMana
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
@@ -98,6 +99,14 @@ namespace TimeSink.Engine.Core.Input
             gamepadDictionary.Add(ButtonActions.Jump, Buttons.A);
             gamepadDictionary.Add(ButtonActions.Pickup, Buttons.Y);
 
+            //admin stuff
+            keyDictionary.Add(ButtonActions.GiveEnergyGun, Keys.F5);
+            keyDictionary.Add(ButtonActions.FullHealth, Keys.F6);
+            keyDictionary.Add(ButtonActions.FullMana, Keys.F7);
+            gamepadDictionary.Add(ButtonActions.GiveEnergyGun, (Buttons)(-1));
+            gamepadDictionary.Add(ButtonActions.FullHealth, (Buttons)(-1));
+            gamepadDictionary.Add(ButtonActions.FullMana, (Buttons)(-1));
+
             keyboardTextures.Add(ButtonActions.MoveLeft, "Textures/Keys/a-Key");
             keyboardTextures.Add(ButtonActions.MoveRight, "Textures/Keys/d-Key");
             keyboardTextures.Add(ButtonActions.DownAction, "Textures/Keys/s-Key");
@@ -163,6 +172,8 @@ namespace TimeSink.Engine.Core.Input
 
         public bool Pressed(Buttons button)
         {
+            if (button == (Buttons)(-1))
+                return false;
 
             if (LastPadState.IsButtonDown(button))
             {
@@ -175,6 +186,9 @@ namespace TimeSink.Engine.Core.Input
 
         public bool IsNewKey(Buttons button)
         {
+            if (button == (Buttons)(-1))
+                return false;
+
             CurrentPadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
             bool result;
             result = CurrentPadState.IsButtonDown(button) &&
@@ -184,6 +198,9 @@ namespace TimeSink.Engine.Core.Input
 
         public bool KeyReleased(Buttons button)
         {
+            if (button == (Buttons)(-1))
+                return false;
+
             CurrentPadState = GamePad.GetState(PlayerIndex.One, GamePadDeadZone.Circular);
             bool result;
             result = CurrentPadState.IsButtonUp(button) &&
