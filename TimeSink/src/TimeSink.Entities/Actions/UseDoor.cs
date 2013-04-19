@@ -37,7 +37,7 @@ namespace TimeSink.Entities.Actions
         const string OPEN_TEXTURE = "Textures/Objects/Door_open";
         const string CLOSED_TEXTURE = "Textures/Objects/Door_closed";
         const string IN_OVERLAY = "Textures/Objects/Inner_Door_Overlay";
-        const float DEPTH = 0;
+        const float DEPTH = 100;
 
 
         string UP_POPUP = "Textures/Keys/w-key";
@@ -101,6 +101,10 @@ namespace TimeSink.Entities.Actions
         [SerializableField]
         [EditableField("Enabled")]
         public bool Enabled { get; set; }
+
+        [SerializableField]
+        [EditableField("Future")]
+        public bool Future { get; set; }
 
         private bool registered = false;
         public bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
@@ -240,7 +244,7 @@ namespace TimeSink.Entities.Actions
                 var tex = EDITOR_PREVIEW_SIDE;
                 if (DoorType == DoorType.Up) tex = EDITOR_PREVIEW_FORWARD;
                 if (DoorType == DoorType.Down) tex = EDITOR_PREVIEW_BACKGROUND;
-                return new BasicRendering(tex)
+                return new BasicRendering(Future ? OPEN_TEXTURE : tex)
                 {
                     Position = PhysicsConstants.MetersToPixels(Position),
                     Scale = BasicRendering.CreateScaleFromSize(Width, Height, tex, TextureCache),
@@ -267,21 +271,19 @@ namespace TimeSink.Entities.Actions
                         {
                             Position = PhysicsConstants.MetersToPixels(Position),
                             Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
-                            DepthWithinLayer = -200,
-                            TintColor = Color.White
+                            DepthWithinLayer = DEPTH
                         }
                     };
                 }
-                else if (switchable)
+                else if (Future)
                 {
                     return new List<IRendering>()
                     {
-                        new BasicRendering(currentTexture)
+                        new BasicRendering(Enabled ? OPEN_TEXTURE : CLOSED_TEXTURE)
                         {
                             Position = PhysicsConstants.MetersToPixels(Position),
-                          //  Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
-                            DepthWithinLayer = -200,
-                            TintColor = Color.White
+                            //  Scale = BasicRendering.CreateScaleFromSize(Width, Height, IN_OVERLAY, TextureCache),
+                            DepthWithinLayer = DEPTH
                         }
                     };
                 }
@@ -292,12 +294,6 @@ namespace TimeSink.Entities.Actions
 
         public void OnSwitch()
         {
-            switchable = true;
-
-            if (Enabled)
-                currentTexture = OPEN_TEXTURE;
-            else
-                currentTexture = CLOSED_TEXTURE;
         }
     }
 }

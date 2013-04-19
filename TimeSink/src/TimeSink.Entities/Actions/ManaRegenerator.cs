@@ -19,7 +19,7 @@ namespace TimeSink.Entities.Actions
     {
         const string TEXTURE = "Textures/Objects/ImDumbCrystal";
         const string EDITOR_NAME = "Mana Regenerator";
-        const float REGEN_RATE = .015f;
+        const float REGEN_RATE = .03f;
         const int FIXED_WIDTH = 75;
         const int FIXED_HEIGHT = 100;
         const int FIXED_WIDTH_LARGE = 125;

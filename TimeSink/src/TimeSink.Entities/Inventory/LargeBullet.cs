@@ -73,7 +73,7 @@ namespace TimeSink.Entities.Enemies
         }
 
         private bool initialized;
-        public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (!initialized || force)
             {
@@ -121,7 +121,7 @@ namespace TimeSink.Entities.Enemies
             base.InitializePhysics(false, engineRegistrations);
         }
 
-        private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        private bool OnCollidedWith(Fixture f1, BreakableWall wall, Fixture f2, Contact contact)
         {
             wall.BulletHit();
             Engine.LevelManager.RenderManager.UnregisterRenderable(this);
@@ -130,10 +130,14 @@ namespace TimeSink.Entities.Enemies
             return true;
         }
 
-        public virtual bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        public virtual bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, Contact contact)
         {
             if (!character.Invulnerable)
+            {
                 character.TakeDamage(30, true);
+                Dead = true;
+            }
+
 
             return false;
         }

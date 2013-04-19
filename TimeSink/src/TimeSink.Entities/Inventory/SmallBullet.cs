@@ -22,7 +22,10 @@ namespace TimeSink.Entities.Enemies
         public override bool OnCollidedWith(Fixture f1, UserControlledCharacter character, Fixture f2, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             if (!character.Invulnerable)
-                character.TakeDamage(5, false);
+            {
+                character.TakeDamage(25, true);
+                Dead = true;
+            }
 
             return false;
         }

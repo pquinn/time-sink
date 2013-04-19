@@ -129,7 +129,10 @@ namespace TimeSink.Entities.Actions
                 {
                     targetObjects.Add(target);
                     if (!IsToggler)
+                    {
                         target.Enabled = Enabled;
+                        target.OnSwitch();
+                    }
                 }
             }
         }

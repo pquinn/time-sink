@@ -175,8 +175,8 @@ namespace TimeSink.Entities
         const int RECHARGE_WAIT_TIME = 3000;
         const int RECHARGE_AMOUNT = 20;
         const int SHIELD_MAX = 50;
-        const float HEAL_MANA_BURN_PER_MILLI = .003f;
-        const float MANA_TO_HEALTH_SCALE = 2f;
+        const float HEAL_MANA_BURN_PER_MILLI = .02f;
+        const float MANA_TO_HEALTH_SCALE = 1f;
 
         private SoundEffect jumpSound;
         private SoundEffect jumpImpactSound;
