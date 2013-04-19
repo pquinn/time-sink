@@ -137,6 +137,7 @@
     <Compile Include="Triggers\TutorialMonsterAttackTrigger.cs" />
     <Compile Include="Triggers\VerticalTrackTrigger.cs" />
     <Compile Include="Triggers\WiredVineTrigger.cs" />
+    <Compile Include="Triggers\ZoomerSpawner.cs" />
     <Compile Include="UserControlledCharacter.cs" />
     <Compile Include="Inventory\Arrow.cs" />
     <Compile Include="Inventory\Dart.cs" />

@@ -72,6 +72,10 @@ namespace TimeSink.Entities.Objects
         [EditableField("Height")]
         public override int Height { get; set; }
 
+        [SerializableField]
+        [EditableField("Invisible")]
+        public bool Invisible { get; set; }
+
         private bool initialized;
         public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
         {
@@ -120,21 +124,32 @@ namespace TimeSink.Entities.Objects
 
         public override IRendering Preview
         {
-            get { return Renderings[0]; }
+            get 
+            {
+                return new BasicRendering(TEXTURE)
+                    {
+                        Position = PhysicsConstants.MetersToPixels(Position),
+                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                    };
+            }
         }
 
         public override List<IRendering> Renderings
         {
             get 
             {
-                return new List<IRendering>()
+                var list = new List<IRendering>();
+                if (!Invisible)
                 {
-                    new BasicRendering(TEXTURE)
-                    {
-                        Position = PhysicsConstants.MetersToPixels(Position),
-                        Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
-                    }
-                };
+                    list.Add(
+                        new BasicRendering(TEXTURE)
+                        {
+                            Position = PhysicsConstants.MetersToPixels(Position),
+                            Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache)
+                        });
+                }
+
+                return list;
             }
         }
 
