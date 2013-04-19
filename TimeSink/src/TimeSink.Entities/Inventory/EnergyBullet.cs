@@ -39,7 +39,7 @@ namespace TimeSink.Entities.Enemies
             {
                 Dead = true;
 
-                if (entity is Enemy)
+                if (entity is Enemy && !(entity is CyberCentipede))
                 {
                     ((Enemy)entity).Health -= 7;
                 }
