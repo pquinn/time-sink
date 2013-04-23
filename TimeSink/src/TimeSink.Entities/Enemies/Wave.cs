@@ -50,9 +50,14 @@ private  bool deadGuard;
         }
         #endregion
 
+        private int batchDead;
+        private int spawnCount;
+
         public Wave(List<Enemy> enemies)
         {
             Enemies = enemies;
+            AliveEnemies = Enemies.ToList();
+            DeadEnemies = new List<Enemy>();
         }
 
         public WaveDead WaveDead { get; set; }
@@ -61,10 +66,12 @@ private  bool deadGuard;
         public List<Enemy> AliveEnemies { get; set; }
         public List<Enemy> DeadEnemies { get; set; }
 
+        public int BatchCount { get; set; }
+
         public void Init(EngineGame game)
         {
             game.LevelManager.RegisterEntity(this);
-            game.LevelManager.RegisterEntities(Enemies);
+            SpawnBatch(game);
         }
 
         public override void OnUpdate(GameTime time, EngineGame game)
@@ -75,6 +82,13 @@ private  bool deadGuard;
                     if (e.Dead)
                     {
                         DeadEnemies.Add(e);
+
+                        batchDead++;
+                        if (batchDead == BatchCount)
+                        {
+                            batchDead = 0;
+                            SpawnBatch(game);
+                        }
                     }
 
                     return e.Dead;
@@ -91,6 +105,15 @@ private  bool deadGuard;
         {
             if (WaveDead != null)
                 WaveDead();
+        }
+
+        private void SpawnBatch(EngineGame game)
+        {
+            var spawnMax = spawnCount + 2;
+            for (; spawnCount < spawnMax && spawnCount < Enemies.Count; spawnCount++)
+            {
+                game.LevelManager.RegisterEntity(Enemies[spawnCount]);
+            }
         }
     }
 }
