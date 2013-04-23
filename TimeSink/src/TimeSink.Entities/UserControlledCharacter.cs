@@ -515,6 +515,7 @@ namespace TimeSink.Entities
 
                 if (InputManager.Instance.ActionHeld(InputManager.ButtonActions.Shoot))
                 {
+                    currentState = NeutralState();
                     if (!gun.Render)
                     {
                         gun.Character = this;

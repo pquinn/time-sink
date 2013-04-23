@@ -16,6 +16,7 @@ using Autofac;
 using FarseerPhysics.Factories;
 using TimeSink.Entities.Triggers;
 using TimeSink.Entities.Enemies;
+using TimeSink.Entities.Hud;
 
 namespace TimeSink.Entities.Inventory
 {
@@ -40,6 +41,7 @@ namespace TimeSink.Entities.Inventory
         private int reload_count;
         private bool charged;
         private UserControlledCharacter character;
+        private ChargeBar chargeBar;
 
         public bool Render { get; set; }
 
@@ -75,7 +77,7 @@ namespace TimeSink.Entities.Inventory
                         Position = PhysicsConstants.MetersToPixels(Character.Position) - new Vector2(0, 20),
                         Scale = new Vector2(.3f * Character.Facing, .3f),
                         Rotation = Character.Direction.Y * Character.Facing,
-                        DepthWithinLayer = -250f
+                        DepthWithinLayer = -220f
                     }
                 };
                 }
@@ -103,8 +105,12 @@ namespace TimeSink.Entities.Inventory
             if (reloading)
             {
                 reload_count += time.ElapsedGameTime.Milliseconds;
+                chargeBar.UpdateProgress(reload_count, RELOAD_TIME);
+                chargeBar.Position = Character.Position;
+
                 if (reload_count > RELOAD_TIME * Engine.LevelManager.PhysicsManager.GlobalReferenceScale)
                 {
+                    Engine.LevelManager.RenderManager.UnregisterRenderable(chargeBar);
                     reload_count = 0;
                     reloading = false;
                     ammo = MAX_AMMO;
@@ -146,6 +152,9 @@ namespace TimeSink.Entities.Inventory
         {
             if (!reloading)
             {
+                chargeBar = new ChargeBar(Character.Position);
+                Engine.LevelManager.RenderManager.RegisterRenderable(chargeBar);
+                chargeBar.UpdateProgress(reload_count, RELOAD_TIME);
                 reloading = true;
                 reload_count = 0;
                 //add reload animations

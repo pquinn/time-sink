@@ -79,6 +79,7 @@
     <Compile Include="Enemies\Wave.cs" />
     <Compile Include="Enemies\Zoomer.cs" />
     <Compile Include="Hud\ManaBar.cs" />
+    <Compile Include="Hud\ChargeBar.cs" />
     <Compile Include="Inventory\SmallBullet.cs" />
     <Compile Include="Inventory\EnergyGun.cs" />
     <Compile Include="Inventory\EnergyBullet.cs" />
