@@ -16,10 +16,11 @@ namespace TimeSink.Engine.Core.Input
 
         public enum ButtonActions
         {
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, ChargeShot,
-            UpAction, DownAction, Heal,
+            MoveLeft, MoveRight, Jump, Sprint, Shoot,
+            UpAction, DownAction,
             AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
             AimUpRight, AimUpLeft, AimDownLeft, AimDownRight,
+            ChargeShot, Heal,
             GiveEnergyGun, FullHealth, FullMana
         }
 
