@@ -1,4 +1,5 @@
-﻿using FarseerPhysics.Dynamics;
+﻿using Autofac;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using TimeSink.Engine.Core.Editor;
 using TimeSink.Engine.Core.Physics;
 using TimeSink.Engine.Core.Rendering;
 using TimeSink.Engine.Core.States;
+using TimeSink.Engine.Core.Collisions;
+using FarseerPhysics.Dynamics.Contacts;
 
 namespace TimeSink.Entities.Enemies
 {
@@ -84,7 +87,6 @@ namespace TimeSink.Entities.Enemies
             }
         }
 
-
         public override List<IRendering> Renderings
         {
             get
@@ -93,6 +95,35 @@ namespace TimeSink.Entities.Enemies
                 anim.Rotation = angle;
                 return new List<IRendering>() { anim };
             }
+        }
+
+        public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
+        {
+            base.InitializePhysics(force, engineRegistrations);
+
+            Physics.RegisterOnCollidedListener<CyberCentipede>(OnCollidedWith);
+            Physics.RegisterOnCollidedListener<WorldGeometry2>(OnCollidedWith);
+        }
+
+        private bool OnCollidedWith(Fixture f1, WorldGeometry2 collidedWith, Fixture f2, Contact contact)
+        {
+            this.PatrolDirection *= -1;
+
+            return true;
+        }
+
+        private bool OnCollidedWith(Fixture f1, CyberCentipede collidedWith, Fixture f2, Contact contact)
+        {
+            this.PatrolDirection *= -1;
+
+            return true;
+        }
+
+        protected override bool OnCollidedWith(Fixture f, UserControlledCharacter c, Fixture cf, Contact info)
+        {
+            this.PatrolDirection *= -1;
+
+            return true;
         }
     }
 }

@@ -141,32 +141,50 @@ namespace TimeSink.Entities.Objects
 
         private void CreateWave0()
         {
-            var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
-            var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
-            var rand = new Random();
-            var hopper1 = new Hopper(Position + new Vector2(xOff  * rand.Next(0, 80) / 100, yOff));
-            var hopper2 = new Hopper(Position + new Vector2(-xOff * rand.Next(0, 80) / 100, yOff));
-
-            var wave = new Wave(new List<Enemy>() { hopper1, hopper2 });
-            wave.WaveDead += Wave0Dead;
-            wave.Init(Engine);    
+            CreateWave(2);
         }
 
         private void Wave0Dead()
         {
-            SendOff();
+            switch (segment)
+            {
+                case 1:
+                    SendOff();
+                    break;
+                case 2:
+                    SendOff();
+                    break;
+            }
             //var hopper1 = new Hopper(Position + new Vector2(xOff * rand.Next(0, 80) / 100, yOff));
             //var hopper2 = new Hopper(Position + new Vector2(-xOff * rand.Next(0, 80) / 100, yOff));
         }
 
         private void CreateWave1()
         {
-
+            CreateWave(4);
         }
 
         private void CreateWave2()
         {
+            CreateWave(6);
+        }
 
+        private void CreateWave(int numHoppers)
+        {
+            var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
+            var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
+            var rand = new Random();
+            var list = new List<Enemy>();
+
+            for (int i = 0; i < numHoppers; i++)
+            {
+                list.Add(new Hopper(Position + new Vector2(xOff * rand.Next(-40, 40) / 100, yOff)));
+            }
+
+            var wave = new Wave(list);
+            wave.BatchCount = 2;
+            wave.WaveDead += Wave0Dead;
+            wave.Init(Engine);    
         }
 
         private void SendOff()
