@@ -124,9 +124,9 @@ namespace TimeSink.Entities.Objects
                 timeSinceLastWaver = 0;
                 var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
                 var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
-                var waver = new Waver(Position + new Vector2(xOff * (random.Next(-80, 80) / 100f), yOff), waverCount % 2);
+                var waver = new Waver(Position + new Vector2(xOff * (random.Next(-80, 80) / 100f), yOff));
                 Engine.LevelManager.RegisterEntity(waver);
-                waverCount++;
+                waverCount++; //todo
             }
 
             if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.AimDown))
