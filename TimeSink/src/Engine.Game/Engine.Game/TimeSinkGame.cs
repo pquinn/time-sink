@@ -160,8 +160,8 @@ namespace TimeSink.Engine.Game
             var entitiesToKill = new List<Entity>();
             foreach (var entity in LevelManager.Level.Entities)
             {
-                if (entity.Position.X < 0 || entity.Position.X > LevelManager.Level.CameraMax.X ||
-                    entity.Position.Y < 0 || entity.Position.Y > LevelManager.Level.CameraMax.Y)
+                if (entity.Position.X < -10 || entity.Position.X > LevelManager.Level.CameraMax.X ||
+                    entity.Position.Y < -10 || entity.Position.Y > LevelManager.Level.CameraMax.Y)
                 {
                     entitiesToKill.Add(entity);
                 }

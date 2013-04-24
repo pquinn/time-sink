@@ -50,6 +50,7 @@ namespace TimeSink.Entities.Objects
         {
             Width = width;
             Height = height;
+            BulletPassable = false;
         }
 
         [SerializableField]
@@ -69,7 +70,7 @@ namespace TimeSink.Entities.Objects
             {
                 var world = engineRegistrations.Resolve<PhysicsManager>().World;
                 float spriteWidthMeters = PhysicsConstants.PixelsToMeters(Width);
-                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height / 2);
+                float spriteHeightMeters = PhysicsConstants.PixelsToMeters(Height);
 
                 Physics = BodyFactory.CreateRectangle(
                     world,
@@ -80,7 +81,7 @@ namespace TimeSink.Entities.Objects
                 Physics.UserData = this;
 
                 Physics.CollisionCategories = Category.Cat2 | Category.Cat1;
-                Physics.CollidesWith = Category.Cat2 | Category.Cat3;
+                //Physics.CollidesWith = Category.Cat2 | Category.Cat3;
 
                 initialized = true;
             }

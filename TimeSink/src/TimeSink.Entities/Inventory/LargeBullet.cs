@@ -107,7 +107,8 @@ namespace TimeSink.Entities.Enemies
 
                 var fix = Physics.FixtureList[0];
 
-                Physics.CollidesWith = ~Category.Cat31;
+                //Physics.CollidesWith = ~Category.Cat31;
+                Physics.CollidesWith = Category.All;
 
                 Physics.ApplyLinearImpulse(Velocity);
 
@@ -135,7 +136,6 @@ namespace TimeSink.Entities.Enemies
             if (!character.Invulnerable)
             {
                 character.TakeDamage(30, true, true);
-                Dead = true;
             }
 
 
