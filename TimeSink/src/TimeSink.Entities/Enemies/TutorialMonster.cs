@@ -71,7 +71,7 @@ namespace TimeSink.Entities.Enemies
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
-            base.OnUpdate(time, world);
+            //base.OnUpdate(time, world);
 
             if (IsShooting)
             {
@@ -134,6 +134,10 @@ namespace TimeSink.Entities.Enemies
             world.LevelManager.RegisterEntity(largeBullet);
             numShotsFired++;
         }
+        public override void DestroyPhysics()
+        {
+            base.DestroyPhysics();
+        }
 
         public override List<IRendering> Renderings
         {
@@ -186,7 +190,7 @@ namespace TimeSink.Entities.Enemies
                 Physics.FixedRotation = true;
                 Physics.BodyType = BodyType.Dynamic;
                 Physics.UserData = this;
-                Physics.Mass = 0f;
+                Physics.Mass = 10f;
                 Physics.CollidesWith = Category.Cat1;
                 Physics.CollisionCategories = Category.Cat3;
 
