@@ -57,7 +57,7 @@ private  float lastGlobalReference;
         {
             get
             {
-                var slowDown = Engine.LevelManager.PhysicsManager.GlobalReferenceScale;
+                var slowDown = Engine == null ? 1 : Engine.LevelManager.PhysicsManager.GlobalReferenceScale;
                 if (lastGlobalReference != slowDown)
                 {
                     elapsedCycle *= slowDown / lastGlobalReference;

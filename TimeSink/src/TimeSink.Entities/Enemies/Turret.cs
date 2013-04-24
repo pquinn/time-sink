@@ -225,7 +225,7 @@ namespace TimeSink.Entities.Enemies
 
         protected override bool OnCollidedWith(Fixture f, EnergyBullet bullet, Fixture df, Contact info)
         {
-            Health -= 2.5f;
+            Health -= 10f;
             bullet.Dead = true;
 
             return true;

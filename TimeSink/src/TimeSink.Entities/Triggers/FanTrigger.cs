@@ -177,6 +177,7 @@ namespace TimeSink.Entities.Triggers
 
         public void OnSeparation(Fixture f1, UserControlledCharacter c, Fixture f2)
         {
+            _character = null;
             c.CanJump = true;
             c.Physics.IgnoreGravity = false;
             collided = false;
