@@ -77,6 +77,7 @@
     <Compile Include="Enemies\InterpolatedEnemy.cs" />
     <Compile Include="Enemies\Turret.cs" />
     <Compile Include="Enemies\Wave.cs" />
+    <Compile Include="Enemies\Waver.cs" />
     <Compile Include="Enemies\Zoomer.cs" />
     <Compile Include="Hud\ManaBar.cs" />
     <Compile Include="Hud\ChargeBar.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Objects\TutorialBreakBridge.cs" />
     <Compile Include="Inventory\Torch.cs" />
     <Compile Include="Save.cs" />
+    <Compile Include="Triggers\WaverTestTrigger.cs" />
     <Compile Include="Triggers\FanTrigger.cs" />
     <Compile Include="Triggers\Pickup.cs" />
     <Compile Include="Triggers\QuestCompletionTrigger.cs" />

@@ -23,10 +23,14 @@ namespace TimeSink.Entities.Objects
     {
         const string TEXTURE = "blank";
         const string EDITOR_NAME = "Lab Elevator";
+        const int TIME_BETWEEN_WAVERS = 500;
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f3de-4ca3-a091-521583c6c6bf");
+        private static Random random = new Random();
         private int segment = -1;
         private bool done;
+        private float timeSinceLastWaver;
+        private bool startWavers;
 
         public LabElevator()
             : this(Vector2.Zero, Vector2.Zero, Vector2.Zero, false, Vector2.Zero, 0, 0, 0)
@@ -98,6 +102,33 @@ namespace TimeSink.Entities.Objects
 
         public override void OnUpdate(GameTime time, EngineGame world)
         {
+            timeSinceLastWaver += time.ElapsedGameTime.Milliseconds;
+
+            if (cameraTweak)
+            {
+                Engine.Camera.MoveCameraTo(new Vector3(
+                    -PhysicsConstants.MetersToPixels(Position.X) + Engine.GraphicsDevice.Viewport.Width / 2,
+                    -PhysicsConstants.MetersToPixels(Position.Y) + Engine.GraphicsDevice.Viewport.Height,
+                    0));
+            }
+
+            var slowDown = Engine.LevelManager.PhysicsManager.GlobalReferenceScale;
+            if (lastGlobalReference != slowDown)
+            {
+                timeSinceLastWaver *= slowDown / lastGlobalReference;
+                lastGlobalReference = slowDown;
+            }
+
+            if (startWavers && timeSinceLastWaver >= (TIME_BETWEEN_WAVERS * slowDown))
+            {
+                timeSinceLastWaver = 0;
+                var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
+                var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
+                var waver = new Waver(Position + new Vector2(xOff * (random.Next(-80, 80) / 100f), yOff), waverCount % 2);
+                Engine.LevelManager.RegisterEntity(waver);
+                waverCount++;
+            }
+
             if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.AimDown))
             {
                 OnSwitch();
@@ -109,6 +140,8 @@ namespace TimeSink.Entities.Objects
 
         public void OnSwitch()
         {
+            cameraTweak = true;
+
             Physics.LinearVelocity = Vector2.Zero;
 
             segment++;
@@ -171,14 +204,15 @@ namespace TimeSink.Entities.Objects
 
         private void CreateWave(int numHoppers)
         {
+            startWavers = false;
+
             var xOff = PhysicsConstants.PixelsToMeters(Width / 2);
             var yOff = PhysicsConstants.PixelsToMeters(-Engine.GraphicsDevice.Viewport.Height);
-            var rand = new Random();
             var list = new List<Enemy>();
 
             for (int i = 0; i < numHoppers; i++)
             {
-                list.Add(new Hopper(Position + new Vector2(xOff * rand.Next(-40, 40) / 100, yOff)));
+                list.Add(new Hopper(Position + new Vector2(xOff * (random.Next(-80, 80) / 100f), yOff)));
             }
 
             var wave = new Wave(list);
@@ -193,9 +227,14 @@ namespace TimeSink.Entities.Objects
             var dir = Vector2.Normalize(off);
 
             Physics.LinearVelocity = dir * (off.Length() / TimeSpan);
+
+            startWavers = true;
         }
 
         private bool initialized;
+        private float lastGlobalReference;
+        private bool cameraTweak;
+        private int waverCount;
         public override void InitializePhysics(bool force, IComponentContext engineRegistrations)
         {
             if (force || !initialized)
@@ -223,6 +262,7 @@ namespace TimeSink.Entities.Objects
             }
 
             base.InitializePhysics(false, engineRegistrations);
+            lastGlobalReference = Engine.LevelManager.PhysicsManager.GlobalReferenceScale;
         }
 
         public override IRendering Preview
