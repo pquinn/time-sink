@@ -21,7 +21,7 @@ namespace TimeSink.Entities.Objects
     [SerializableEntity("c31fb7ad-f3de-4ca3-a091-521583c6c6bf")]
     public class LabElevator : Entity, ISwitchable
     {
-        const string TEXTURE = "blank";
+        const string TEXTURE = "Textures/Objects/Lab_Elevator";
         const string EDITOR_NAME = "Lab Elevator";
 
         private static readonly Guid GUID = new Guid("c31fb7ad-f3de-4ca3-a091-521583c6c6bf");
@@ -64,9 +64,9 @@ namespace TimeSink.Entities.Objects
                 {
                     new BasicRendering(TEXTURE)
                     { 
-                        Position = PhysicsConstants.MetersToPixels(Position) - new Vector2(Width / 2, Height / 2),
+                        Position = PhysicsConstants.MetersToPixels(Position),// - new Vector2(Width / 2, Height / 2),
                         Scale = BasicRendering.CreateScaleFromSize(Width, Height, TEXTURE, TextureCache),
-                        TintColor = Color.Gray
+                       // TintColor = Color.Gray
                     }
                 };
             }

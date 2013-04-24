@@ -16,20 +16,12 @@ namespace TimeSink.Engine.Core.Input
 
         public enum ButtonActions
         {
-<<<<<<< HEAD
-            MoveLeft, MoveRight, Jump, Sprint, Shoot, 
-            UpAction, DownAction, Heal,
-            AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
-            AimUpRight, AimUpLeft, AimDownLeft, AimDownRight,
-            GiveEnergyGun, FullHealth, FullMana, ChargeShot
-=======
             MoveLeft, MoveRight, Jump, Sprint, Shoot,
             UpAction, DownAction,
             AimUp, AimLeft, AimRight, AimDown, Interact, Pickup, 
             AimUpRight, AimUpLeft, AimDownLeft, AimDownRight,
             ChargeShot, Heal,
             GiveEnergyGun, FullHealth, FullMana
->>>>>>> 8db5a5e56b28b6566c8996449f07d2ae8cc57a81
         }
 
         private Dictionary<ButtonActions, Keys> keyDictionary;
