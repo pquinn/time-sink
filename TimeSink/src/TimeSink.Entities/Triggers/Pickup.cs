@@ -55,6 +55,15 @@ namespace TimeSink.Entities.Triggers
             return true;
         }
 
+        public override void InitializePhysics(bool force, Autofac.IComponentContext engineRegistrations)
+        {
+            base.InitializePhysics(force, engineRegistrations);
+            Physics.BodyType = BodyType.Dynamic;
+            Physics.IgnoreGravity = false;
+            Physics.IsSensor = false;
+            Physics.Mass = .0000001f;
+        }
+
         public override string EditorName
         {
             get { return EditorName; }

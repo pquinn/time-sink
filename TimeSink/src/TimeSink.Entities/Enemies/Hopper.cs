@@ -90,9 +90,10 @@ namespace TimeSink.Entities.Enemies
 
                     currentTexture = AWESOME_TEXTURE;
 
+                    var slowDown = Engine.LevelManager.PhysicsManager.GlobalReferenceScale;
                     Physics.ApplyForce(new Vector2(
-                        JUMP_FORCE_X * (character.Position.X < Position.X ? -1 : 1),
-                        -JUMP_FORCE_Y));
+                        (JUMP_FORCE_X * slowDown) * (character.Position.X < Position.X ? -1 : 1),
+                        -(JUMP_FORCE_Y * slowDown)));
                 }
             }
         }
@@ -132,6 +133,8 @@ namespace TimeSink.Entities.Enemies
 
                 initialized = true;
             }
+
+            base.InitializePhysics(false, engineRegistrations);
         }
 
         public override List<IRendering> Renderings
