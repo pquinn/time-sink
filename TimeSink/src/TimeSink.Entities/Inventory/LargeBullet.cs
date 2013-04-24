@@ -41,6 +41,7 @@ namespace TimeSink.Entities.Enemies
         {
             get
             {
+                
                 throw new NotImplementedException();
             }
             set
