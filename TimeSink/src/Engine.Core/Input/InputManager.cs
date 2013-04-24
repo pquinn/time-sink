@@ -131,7 +131,7 @@ namespace TimeSink.Engine.Core.Input
             gamepadTextures.Add(ButtonActions.AimUp, "Textures/Keys/PS/PS-RStickUp");
             gamepadTextures.Add(ButtonActions.AimDown, "Textures/Keys/PS/PS-RStickDown");
             gamepadTextures.Add(ButtonActions.Jump, "Textures/Keys/PS/PS-X");
-            gamepadTextures.Add(ButtonActions.Pickup, "Textures/Keys/PS/PS-O");
+            gamepadTextures.Add(ButtonActions.Pickup, "Textures/Keys/PS/PS-TRI");
             gamepadTextures.Add(ButtonActions.AimUpRight, "Textures/Keys/PS/PS-RStickUpRight");
             gamepadTextures.Add(ButtonActions.AimLeft, "Textures/Keys/PS/PS-RStickLeft");
             gamepadTextures.Add(ButtonActions.AimRight, "Textures/Keys/PS/PS-RStickRight");
