@@ -20,7 +20,7 @@ namespace TimeSink.Entities.Actions
     class PickupEnergyGun : InteractableItem
     {
         const string EDITOR_NAME = "Energy Gun";
-        const  string TEXTURE = "Textures/Weapons/Bow_Neutral";
+        const  string TEXTURE = "Textures/Weapons/EnergyGun";
         const float DEPTH = 0;
         bool initialized = true;
 
