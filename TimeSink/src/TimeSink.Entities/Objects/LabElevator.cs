@@ -31,6 +31,7 @@ namespace TimeSink.Entities.Objects
         private bool done;
         private float timeSinceLastWaver;
         private bool startWavers;
+        private bool startGuard;
 
         public LabElevator()
             : this(Vector2.Zero, Vector2.Zero, Vector2.Zero, false, Vector2.Zero, 0, 0, 0)
@@ -129,8 +130,9 @@ namespace TimeSink.Entities.Objects
                 waverCount++; //todo
             }
 
-            if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.AimDown))
+            if (InputManager.Instance.ActionPressed(InputManager.ButtonActions.AimDown) && !startGuard)
             {
+                startGuard = true;
                 OnSwitch();
             }
 
